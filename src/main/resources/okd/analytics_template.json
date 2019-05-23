@@ -1969,7 +1969,7 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "https://github.com/mrizzi/sample-analytics-integration.git",
+                        "uri": "https://github.com/project-xavier/xavier-integration.git",
                         "ref": "master"
                     }
                 },
