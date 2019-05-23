@@ -40,14 +40,14 @@ Instructions from https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3
 1. `oc create -f <secret>.yaml`
 1. `oc secrets link default <secret> --for=pull`
 1. `oc secrets link builder <secret> --for=pull`
-1. `for template in eap7-app-secret.json mysql-secret.json analytics_template.json;  do  oc process -f https://raw.githubusercontent.com/mrizzi/sample-analytics-integration/master/src/main/resources/okd/${template}| oc create -f -;  done`
+1. `for template in eap7-app-secret.json mysql-secret.json analytics_template.json;  do  oc process -f https://raw.githubusercontent.com/project-xavier/xavier-integration/master/src/main/resources/okd/${template}| oc create -f -;  done`
 
 ## Decision Manager
 1. go to Application -> Routes page and click on the URL in the `Hostname` column beside the `myapp-rhdmcentr` service
 1. login with `adminUser`-`SxNhwF2!`
 1. click on `Design` link
 1. click on `Import Project` button
-1. in the `Repository URL` field paste `https://github.com/mrizzi/sample-analytics.git`
+1. in the `Repository URL` field paste `https://github.com/project-xavier/xavier-analytics.git`
 1. select `sample-analytics` box and click the `OK` button on the upper right side
 1. once the import has finished, click the `Build & Install` button from the upper right `Build` menu
 1. once the build has been successfully done, click on the `Deploy` button
