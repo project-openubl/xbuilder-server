@@ -1,0 +1,2087 @@
+{
+    "kind": "Template",
+    "apiVersion": "template.openshift.io/v1",
+    "metadata": {
+        "name": "migration-analytics",
+        "creationTimestamp": null
+    },
+    "objects": [
+        {
+            "kind": "Secret",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${DATABASE_SERVICE_NAME}",
+                "annotations": {
+                    "template.openshift.io/expose-username": "{.data['database-user']}",
+                    "template.openshift.io/expose-password": "{.data['database-password']}",
+                    "template.openshift.io/expose-database_name": "{.data['database-name']}"
+                }
+            },
+            "stringData" : {
+                "database-user" : "${POSTGRESQL_USER}",
+                "database-password" : "${POSTGRESQL_PASSWORD}",
+                "database-name" : "${POSTGRESQL_DATABASE}"
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "broker-amq",
+                "generation": 2,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "amq-broker",
+                    "application": "migration-analytics",
+                    "template": "amq-broker-73-basic",
+                    "xpaas": "1.4.16"
+                }
+            },
+            "spec": {
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "selector": {
+                    "deploymentConfig": "broker-amq"
+                },
+                "strategy": {
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "updatePeriodSeconds": 1,
+                        "intervalSeconds": 1,
+                        "timeoutSeconds": 600,
+                        "maxUnavailable": "25%",
+                        "maxSurge": 0
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "test": false,
+                "template": {
+                    "metadata": {
+                        "name": "broker-amq",
+                        "labels": {
+                            "application": "migration-analytics",
+                            "deploymentConfig": "broker-amq"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "broker-amq",
+                                "image": "registry.redhat.io/amq-broker-7/amq-broker-73-openshift:7.3",
+                                "ports": [
+                                    {
+                                        "name": "console-jolokia",
+                                        "containerPort": 8161,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "amqp",
+                                        "containerPort": 5672,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "mqtt",
+                                        "containerPort": 1883,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "stomp",
+                                        "containerPort": 61613,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "artemis",
+                                        "containerPort": 61616,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "AMQ_USER",
+                                        "value": "userk0N"
+                                    },
+                                    {
+                                        "name": "AMQ_PASSWORD",
+                                        "value": "i7MN2pkw"
+                                    },
+                                    {
+                                        "name": "AMQ_ROLE",
+                                        "value": "admin"
+                                    },
+                                    {
+                                        "name": "AMQ_NAME",
+                                        "value": "broker"
+                                    },
+                                    {
+                                        "name": "AMQ_TRANSPORTS",
+                                        "value": "openwire,amqp,stomp,mqtt,hornetq"
+                                    },
+                                    {
+                                        "name": "AMQ_QUEUES"
+                                    },
+                                    {
+                                        "name": "AMQ_ADDRESSES"
+                                    },
+                                    {
+                                        "name": "AMQ_GLOBAL_MAX_SIZE",
+                                        "value": "100 gb"
+                                    },
+                                    {
+                                        "name": "AMQ_REQUIRE_LOGIN"
+                                    },
+                                    {
+                                        "name": "AMQ_EXTRA_ARGS"
+                                    },
+                                    {
+                                        "name": "AMQ_ANYCAST_PREFIX"
+                                    },
+                                    {
+                                        "name": "AMQ_MULTICAST_PREFIX"
+                                    }
+                                ],
+                                "resources": {},
+                                "readinessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "/bin/bash",
+                                            "-c",
+                                            "/opt/amq/bin/readinessProbe.sh"
+                                        ]
+                                    },
+                                    "timeoutSeconds": 1,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 60,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "analytics-kieserver",
+                "generation": 2,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "service": "analytics-kieserver",
+                    "template": "rhdm73-authoring"
+                },
+                "annotations": {
+                    "template.alpha.openshift.io/wait-for-ready": "true"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "analytics-kieserver"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "${NAMESPACE}",
+                                "name": "rhdm73-kieserver-openshift:1.0"
+                            },
+                            "lastTriggeredImage": "172.30.1.1:5000/openshift/rhdm73-kieserver-openshift@sha256:0db3dd7fad9bdd144c758482d59c55a19867bbb9429fee58ed8bdf11f3f2f0b0"
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "deploymentConfig": "analytics-kieserver"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "analytics-kieserver",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "application": "migration-analytics",
+                            "deploymentConfig": "analytics-kieserver",
+                            "service": "analytics-kieserver"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "kieserver-keystore-volume",
+                                "secret": {
+                                    "secretName": "eap7-app-secret",
+                                    "defaultMode": 420
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "analytics-kieserver",
+                                "image": "172.30.1.1:5000/openshift/rhdm73-kieserver-openshift@sha256:0db3dd7fad9bdd144c758482d59c55a19867bbb9429fee58ed8bdf11f3f2f0b0",
+                                "ports": [
+                                    {
+                                        "name": "jolokia",
+                                        "containerPort": 8778,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "http",
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "https",
+                                        "containerPort": 8443,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "KIE_ADMIN_USER",
+                                        "value": "adminUser"
+                                    },
+                                    {
+                                        "name": "KIE_ADMIN_PWD",
+                                        "value": "SxNhwF2!"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_MODE",
+                                        "value": "DEVELOPMENT"
+                                    },
+                                    {
+                                        "name": "KIE_MBEANS",
+                                        "value": "enabled"
+                                    },
+                                    {
+                                        "name": "DROOLS_SERVER_FILTER_CLASSES",
+                                        "value": "true"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_BYPASS_AUTH_USER",
+                                        "value": "false"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_CONTROLLER_USER",
+                                        "value": "controllerUser"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_CONTROLLER_PWD",
+                                        "value": "AYdlha0!"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_CONTROLLER_TOKEN"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_CONTROLLER_SERVICE",
+                                        "value": "analytics-rhdmcentr"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_CONTROLLER_PROTOCOL",
+                                        "value": "ws"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_ID",
+                                        "value": "analytics-kieserver"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_ROUTE_NAME",
+                                        "value": "analytics-kieserver"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_USE_SECURE_ROUTE_NAME",
+                                        "value": "false"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_USER",
+                                        "value": "executionUser"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_PWD",
+                                        "value": "rksxsp2!"
+                                    },
+                                    {
+                                        "name": "MAVEN_MIRROR_URL"
+                                    },
+                                    {
+                                        "name": "MAVEN_REPOS",
+                                        "value": "RHDMCENTR,EXTERNAL"
+                                    },
+                                    {
+                                        "name": "RHDMCENTR_MAVEN_REPO_SERVICE",
+                                        "value": "analytics-rhdmcentr"
+                                    },
+                                    {
+                                        "name": "RHDMCENTR_MAVEN_REPO_PATH",
+                                        "value": "/maven2/"
+                                    },
+                                    {
+                                        "name": "RHDMCENTR_MAVEN_REPO_USERNAME",
+                                        "value": "mavenUser"
+                                    },
+                                    {
+                                        "name": "RHDMCENTR_MAVEN_REPO_PASSWORD",
+                                        "value": "HipiAC1!"
+                                    },
+                                    {
+                                        "name": "EXTERNAL_MAVEN_REPO_ID"
+                                    },
+                                    {
+                                        "name": "EXTERNAL_MAVEN_REPO_URL"
+                                    },
+                                    {
+                                        "name": "EXTERNAL_MAVEN_REPO_USERNAME"
+                                    },
+                                    {
+                                        "name": "EXTERNAL_MAVEN_REPO_PASSWORD"
+                                    },
+                                    {
+                                        "name": "HTTPS_KEYSTORE_DIR",
+                                        "value": "/etc/kieserver-secret-volume"
+                                    },
+                                    {
+                                        "name": "HTTPS_KEYSTORE",
+                                        "value": "keystore.jks"
+                                    },
+                                    {
+                                        "name": "HTTPS_NAME",
+                                        "value": "jboss"
+                                    },
+                                    {
+                                        "name": "HTTPS_PASSWORD",
+                                        "value": "mykeystorepass"
+                                    },
+                                    {
+                                        "name": "SSO_URL"
+                                    },
+                                    {
+                                        "name": "SSO_OPENIDCONNECT_DEPLOYMENTS",
+                                        "value": "ROOT.war"
+                                    },
+                                    {
+                                        "name": "SSO_REALM"
+                                    },
+                                    {
+                                        "name": "SSO_SECRET"
+                                    },
+                                    {
+                                        "name": "SSO_CLIENT"
+                                    },
+                                    {
+                                        "name": "SSO_USERNAME"
+                                    },
+                                    {
+                                        "name": "SSO_PASSWORD"
+                                    },
+                                    {
+                                        "name": "SSO_DISABLE_SSL_CERTIFICATE_VALIDATION",
+                                        "value": "false"
+                                    },
+                                    {
+                                        "name": "SSO_PRINCIPAL_ATTRIBUTE",
+                                        "value": "preferred_username"
+                                    },
+                                    {
+                                        "name": "HOSTNAME_HTTP"
+                                    },
+                                    {
+                                        "name": "HOSTNAME_HTTPS"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_URL"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_BIND_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_BIND_CREDENTIAL"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_JAAS_SECURITY_DOMAIN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_BASE_CTX_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_BASE_FILTER"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_SEARCH_SCOPE"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_SEARCH_TIME_LIMIT"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_DISTINGUISHED_NAME_ATTRIBUTE"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_PARSE_USERNAME"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_USERNAME_BEGIN_STRING"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_USERNAME_END_STRING"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_ATTRIBUTE_ID"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLES_CTX_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_FILTER"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_RECURSION"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_DEFAULT_ROLE"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_NAME_ATTRIBUTE_ID"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_PARSE_ROLE_NAME_FROM_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_ATTRIBUTE_IS_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_REFERRAL_USER_ATTRIBUTE_ID_TO_CHECK"
+                                    },
+                                    {
+                                        "name": "AUTH_ROLE_MAPPER_ROLES_PROPERTIES"
+                                    },
+                                    {
+                                        "name": "AUTH_ROLE_MAPPER_REPLACE_ROLE"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "1Gi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "kieserver-keystore-volume",
+                                        "readOnly": true,
+                                        "mountPath": "/etc/kieserver-secret-volume"
+                                    }
+                                ],
+                                "livenessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "/bin/bash",
+                                            "-c",
+                                            "curl --fail --silent -u 'adminUser:SxNhwF2!' http://localhost:8080/services/rest/server/healthcheck"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 180,
+                                    "timeoutSeconds": 2,
+                                    "periodSeconds": 15,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "/bin/bash",
+                                            "-c",
+                                            "curl --fail --silent -u 'adminUser:SxNhwF2!' http://localhost:8080/services/rest/server/readycheck"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 60,
+                                    "timeoutSeconds": 2,
+                                    "periodSeconds": 30,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 6
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 60,
+                        "dnsPolicy": "ClusterFirst",
+                        "serviceAccountName": "myapp-rhdmsvc",
+                        "serviceAccount": "myapp-rhdmsvc",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "analytics-rhdmcentr",
+                "generation": 2,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "service": "analytics-rhdmcentr",
+                    "template": "rhdm73-authoring"
+                },
+                "annotations": {
+                    "template.alpha.openshift.io/wait-for-ready": "true"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "analytics-rhdmcentr"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "${NAMESPACE}",
+                                "name": "rhdm73-decisioncentral-openshift:1.0"
+                            },
+                            "lastTriggeredImage": "172.30.1.1:5000/openshift/rhdm73-decisioncentral-openshift@sha256:f7b7bf8cb010e8d5e2222c8c099124b5fa08955985722c5dd89d806933c08b5c"
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "deploymentConfig": "analytics-rhdmcentr"
+                },
+                "template": {
+                    "metadata": {
+                        "name": "analytics-rhdmcentr",
+                        "creationTimestamp": null,
+                        "labels": {
+                            "application": "migration-analytics",
+                            "deploymentConfig": "analytics-rhdmcentr",
+                            "service": "analytics-rhdmcentr"
+                        }
+                    },
+                    "spec": {
+                        "volumes": [
+                            {
+                                "name": "decisioncentral-keystore-volume",
+                                "secret": {
+                                    "secretName": "eap7-app-secret",
+                                    "defaultMode": 420
+                                }
+                            },
+                            {
+                                "name": "analytics-rhdmcentr-pvol",
+                                "persistentVolumeClaim": {
+                                    "claimName": "analytics-rhdmcentr-claim"
+                                }
+                            }
+                        ],
+                        "containers": [
+                            {
+                                "name": "analytics-rhdmcentr",
+                                "image": "172.30.1.1:5000/openshift/rhdm73-decisioncentral-openshift@sha256:f7b7bf8cb010e8d5e2222c8c099124b5fa08955985722c5dd89d806933c08b5c",
+                                "ports": [
+                                    {
+                                        "name": "jolokia",
+                                        "containerPort": 8778,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "http",
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "https",
+                                        "containerPort": 8443,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "git-ssh",
+                                        "containerPort": 8001,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "KIE_ADMIN_USER",
+                                        "value": "adminUser"
+                                    },
+                                    {
+                                        "name": "KIE_ADMIN_PWD",
+                                        "value": "SxNhwF2!"
+                                    },
+                                    {
+                                        "name": "KIE_MBEANS",
+                                        "value": "enabled"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_CONTROLLER_USER",
+                                        "value": "controllerUser"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_CONTROLLER_PWD",
+                                        "value": "AYdlha0!"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_CONTROLLER_TOKEN"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_USER",
+                                        "value": "executionUser"
+                                    },
+                                    {
+                                        "name": "KIE_SERVER_PWD",
+                                        "value": "rksxsp2!"
+                                    },
+                                    {
+                                        "name": "WORKBENCH_ROUTE_NAME",
+                                        "value": "analytics-rhdmcentr"
+                                    },
+                                    {
+                                        "name": "MAVEN_MIRROR_URL"
+                                    },
+                                    {
+                                        "name": "MAVEN_REPO_ID"
+                                    },
+                                    {
+                                        "name": "MAVEN_REPO_URL"
+                                    },
+                                    {
+                                        "name": "MAVEN_REPO_USERNAME"
+                                    },
+                                    {
+                                        "name": "MAVEN_REPO_PASSWORD"
+                                    },
+                                    {
+                                        "name": "KIE_MAVEN_USER",
+                                        "value": "mavenUser"
+                                    },
+                                    {
+                                        "name": "KIE_MAVEN_PWD",
+                                        "value": "HipiAC1!"
+                                    },
+                                    {
+                                        "name": "GIT_HOOKS_DIR"
+                                    },
+                                    {
+                                        "name": "HTTPS_KEYSTORE_DIR",
+                                        "value": "/etc/decisioncentral-secret-volume"
+                                    },
+                                    {
+                                        "name": "HTTPS_KEYSTORE",
+                                        "value": "keystore.jks"
+                                    },
+                                    {
+                                        "name": "HTTPS_NAME",
+                                        "value": "jboss"
+                                    },
+                                    {
+                                        "name": "HTTPS_PASSWORD",
+                                        "value": "mykeystorepass"
+                                    },
+                                    {
+                                        "name": "SSO_URL"
+                                    },
+                                    {
+                                        "name": "SSO_OPENIDCONNECT_DEPLOYMENTS",
+                                        "value": "ROOT.war"
+                                    },
+                                    {
+                                        "name": "SSO_REALM"
+                                    },
+                                    {
+                                        "name": "SSO_SECRET"
+                                    },
+                                    {
+                                        "name": "SSO_CLIENT"
+                                    },
+                                    {
+                                        "name": "SSO_USERNAME"
+                                    },
+                                    {
+                                        "name": "SSO_PASSWORD"
+                                    },
+                                    {
+                                        "name": "SSO_DISABLE_SSL_CERTIFICATE_VALIDATION",
+                                        "value": "false"
+                                    },
+                                    {
+                                        "name": "SSO_PRINCIPAL_ATTRIBUTE",
+                                        "value": "preferred_username"
+                                    },
+                                    {
+                                        "name": "HOSTNAME_HTTP"
+                                    },
+                                    {
+                                        "name": "HOSTNAME_HTTPS"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_URL"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_BIND_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_BIND_CREDENTIAL"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_JAAS_SECURITY_DOMAIN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_BASE_CTX_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_BASE_FILTER"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_SEARCH_SCOPE"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_SEARCH_TIME_LIMIT"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_DISTINGUISHED_NAME_ATTRIBUTE"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_PARSE_USERNAME"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_USERNAME_BEGIN_STRING"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_USERNAME_END_STRING"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_ATTRIBUTE_ID"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLES_CTX_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_FILTER"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_RECURSION"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_DEFAULT_ROLE"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_NAME_ATTRIBUTE_ID"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_PARSE_ROLE_NAME_FROM_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_ROLE_ATTRIBUTE_IS_DN"
+                                    },
+                                    {
+                                        "name": "AUTH_LDAP_REFERRAL_USER_ATTRIBUTE_ID_TO_CHECK"
+                                    },
+                                    {
+                                        "name": "AUTH_ROLE_MAPPER_ROLES_PROPERTIES"
+                                    },
+                                    {
+                                        "name": "AUTH_ROLE_MAPPER_REPLACE_ROLE"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "2Gi"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "decisioncentral-keystore-volume",
+                                        "readOnly": true,
+                                        "mountPath": "/etc/decisioncentral-secret-volume"
+                                    },
+                                    {
+                                        "name": "analytics-rhdmcentr-pvol",
+                                        "mountPath": "/opt/eap/standalone/data/kie"
+                                    }
+                                ],
+                                "livenessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "/bin/bash",
+                                            "-c",
+                                            "curl --fail --silent -u 'adminUser:SxNhwF2!' http://localhost:8080/kie-wb.jsp"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 180,
+                                    "timeoutSeconds": 2,
+                                    "periodSeconds": 15,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "exec": {
+                                        "command": [
+                                            "/bin/bash",
+                                            "-c",
+                                            "curl --fail --silent -u 'adminUser:SxNhwF2!' http://localhost:8080/kie-wb.jsp"
+                                        ]
+                                    },
+                                    "initialDelaySeconds": 60,
+                                    "timeoutSeconds": 2,
+                                    "periodSeconds": 30,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 6
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 60,
+                        "dnsPolicy": "ClusterFirst",
+                        "serviceAccountName": "myapp-rhdmsvc",
+                        "serviceAccount": "myapp-rhdmsvc",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${DATABASE_SERVICE_NAME}",
+                "labels": {
+                    "app": "${DATABASE_SERVICE_NAME}-persistent",
+                    "application": "migration-analytics"
+                },
+                "annotations": {
+                    "template.alpha.openshift.io/wait-for-ready": "true"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Recreate"
+                },
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "postgresql"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "namespace": "${NAMESPACE}",
+                                "name": "postgresql:${POSTGRESQL_VERSION}"
+                            },
+                            "lastTriggeredImage": ""
+                        }
+                    },
+                    {
+                        "type": "ConfigChange"
+                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "name": "${DATABASE_SERVICE_NAME}"
+                },
+                "template": {
+                    "metadata": {
+                        "labels": {
+                            "name": "${DATABASE_SERVICE_NAME}"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "postgresql",
+                                "image": " ",
+                                "ports": [
+                                    {
+                                        "containerPort": 5432,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "readinessProbe": {
+                                    "timeoutSeconds": 1,
+                                    "initialDelaySeconds": 5,
+                                    "exec": {
+                                        "command": [ "/usr/libexec/check-container" ]
+                                    }
+                                },
+                                "livenessProbe": {
+                                    "timeoutSeconds": 10,
+                                    "initialDelaySeconds": 120,
+                                    "exec": {
+                                        "command": [ "/usr/libexec/check-container", "--live" ]
+                                    }
+                                },
+                                "env": [
+                                    {
+                                        "name": "POSTGRESQL_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef" : {
+                                                "name" : "${DATABASE_SERVICE_NAME}",
+                                                "key" : "database-user"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef" : {
+                                                "name" : "${DATABASE_SERVICE_NAME}",
+                                                "key" : "database-password"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_DATABASE",
+                                        "valueFrom": {
+                                            "secretKeyRef" : {
+                                                "name" : "${DATABASE_SERVICE_NAME}",
+                                                "key" : "database-name"
+                                            }
+                                        }
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "memory": "${POSTGRESQL_MEMORY_LIMIT}"
+                                    }
+                                },
+                                "volumeMounts": [
+                                    {
+                                        "name": "${DATABASE_SERVICE_NAME}-data",
+                                        "mountPath": "/var/lib/pgsql/data"
+                                    }
+                                ],
+                                "terminationMessagePath": "/dev/termination-log",
+                                "imagePullPolicy": "IfNotPresent",
+                                "capabilities": {},
+                                "securityContext": {
+                                    "capabilities": {},
+                                    "privileged": false
+                                }
+                            }
+                        ],
+                        "volumes": [
+                            {
+                                "name": "${DATABASE_SERVICE_NAME}-data",
+                                "persistentVolumeClaim": {
+                                    "claimName": "${DATABASE_SERVICE_NAME}"
+                                }
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "dnsPolicy": "ClusterFirst"
+                    }
+                }
+            },
+            "status": {}
+        },
+        {
+            "kind": "DeploymentConfig",
+            "apiVersion": "apps.openshift.io/v1",
+            "metadata": {
+                "name": "analytics-integration",
+                "generation": 63,
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics-integration",
+                    "application": "migration-analytics",
+                    "component": "analytics-integration",
+                    "provider": "s2i",
+                    "template": "analytics-integration",
+                    "version": "1.0.0.fuse-730046-redhat-00002"
+                }
+            },
+            "spec": {
+                "strategy": {
+                    "type": "Rolling",
+                    "rollingParams": {
+                        "updatePeriodSeconds": 1,
+                        "intervalSeconds": 1,
+                        "timeoutSeconds": 600,
+                        "maxUnavailable": "25%",
+                        "maxSurge": "25%"
+                    },
+                    "resources": {},
+                    "activeDeadlineSeconds": 21600
+                },
+                "triggers": [
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "ImageChange",
+                        "imageChangeParams": {
+                            "automatic": true,
+                            "containerNames": [
+                                "analytics-integration"
+                            ],
+                            "from": {
+                                "kind": "ImageStreamTag",
+                                "name": "analytics-integration:latest"
+                            }
+                        }
+                    }
+                ],
+                "replicas": 1,
+                "revisionHistoryLimit": 10,
+                "test": false,
+                "selector": {
+                    "app": "analytics-integration",
+                    "component": "analytics-integration",
+                    "deploymentconfig": "analytics-integration",
+                    "provider": "s2i",
+                    "version": "1.0.0.fuse-730046-redhat-00002"
+                },
+                "template": {
+                    "metadata": {
+                        "creationTimestamp": null,
+                        "labels": {
+                            "app": "analytics-integration",
+                            "component": "analytics-integration",
+                            "deploymentconfig": "analytics-integration",
+                            "provider": "s2i",
+                            "version": "1.0.0.fuse-730046-redhat-00002"
+                        }
+                    },
+                    "spec": {
+                        "containers": [
+                            {
+                                "name": "analytics-integration",
+                                "image": "library/analytics-integration:latest",
+                                "ports": [
+                                    {
+                                        "name": "jolokia",
+                                        "containerPort": 8778,
+                                        "protocol": "TCP"
+                                    },
+                                    {
+                                        "name": "rest",
+                                        "containerPort": 8080,
+                                        "protocol": "TCP"
+                                    }
+                                ],
+                                "env": [
+                                    {
+                                        "name": "KUBERNETES_NAMESPACE",
+                                        "valueFrom": {
+                                            "fieldRef": {
+                                                "apiVersion": "v1",
+                                                "fieldPath": "metadata.namespace"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "KIESERVER_SERVICE",
+                                        "value": "analytics-kieserver"
+                                    },
+                                    {
+                                        "name": "KIESERVER_USERNAME",
+                                        "value": "executionUser"
+                                    },
+                                    {
+                                        "name": "KIESERVER_PASSWORD",
+                                        "value": "rksxsp2!"
+                                    },
+                                    {
+                                        "name": "KIESERVER_PATH",
+                                        "value": "services/rest/server/containers/instances/${kieserver.container}"
+                                    },
+                                    {
+                                        "name": "KIESERVER_CONTAINER",
+                                        "value": "sample-analytics_1.0.0-SNAPSHOT"
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_USER",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "key": "database-user"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_PASSWORD",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "key": "database-password"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "POSTGRESQL_DATABASE",
+                                        "valueFrom": {
+                                            "secretKeyRef": {
+                                                "name": "${DATABASE_SERVICE_NAME}",
+                                                "key": "database-name"
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "name": "AMQ_SERVER",
+                                        "value": "broker-amq-tcp"
+                                    }
+                                ],
+                                "resources": {
+                                    "limits": {
+                                        "cpu": "1",
+                                        "memory": "512Mi"
+                                    },
+                                    "requests": {
+                                        "cpu": "200m",
+                                        "memory": "512Mi"
+                                    }
+                                },
+                                "livenessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8081,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 180,
+                                    "timeoutSeconds": 1,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "readinessProbe": {
+                                    "httpGet": {
+                                        "path": "/health",
+                                        "port": 8081,
+                                        "scheme": "HTTP"
+                                    },
+                                    "initialDelaySeconds": 10,
+                                    "timeoutSeconds": 1,
+                                    "periodSeconds": 10,
+                                    "successThreshold": 1,
+                                    "failureThreshold": 3
+                                },
+                                "terminationMessagePath": "/dev/termination-log",
+                                "terminationMessagePolicy": "File",
+                                "imagePullPolicy": "Always"
+                            }
+                        ],
+                        "restartPolicy": "Always",
+                        "terminationGracePeriodSeconds": 30,
+                        "dnsPolicy": "ClusterFirst",
+                        "securityContext": {},
+                        "schedulerName": "default-scheduler"
+                    }
+                }
+            },
+            "status": {
+                "latestVersion": 0,
+                "observedGeneration": 0,
+                "replicas": 0,
+                "updatedReplicas": 0,
+                "availableReplicas": 0,
+                "unavailableReplicas": 0
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "amq-console",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "amq-broker",
+                    "application": "migration-analytics",
+                    "template": "amq-broker-73-basic",
+                    "xpaas": "1.4.16"
+                },
+                "annotations": {
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "",
+                "to": {
+                    "kind": "Service",
+                    "name": "broker-amq-jolokia",
+                    "weight": 100
+                },
+                "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "analytics-kieserver",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "service": "analytics-kieserver",
+                    "template": "rhdm73-authoring"
+                },
+                "annotations": {
+                    "description": "Route for KIE server's http service.",
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "",
+                "to": {
+                    "kind": "Service",
+                    "name": "analytics-kieserver",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "http"
+                },
+                "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "analytics-rhdmcentr",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "service": "analytics-rhdmcentr",
+                    "template": "rhdm73-authoring"
+                },
+                "annotations": {
+                    "description": "Route for Decision Central's http service.",
+                    "haproxy.router.openshift.io/timeout": "60s",
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "",
+                "to": {
+                    "kind": "Service",
+                    "name": "analytics-rhdmcentr",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "http"
+                },
+                "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "analytics-integration",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics-integration-http",
+                    "application": "migration-analytics"
+                },
+                "annotations": {
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "",
+                "to": {
+                    "kind": "Service",
+                    "name": "analytics-integration",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "http"
+                },
+                "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "secure-analytics-kieserver",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "service": "analytics-kieserver",
+                    "template": "rhdm73-authoring"
+                },
+                "annotations": {
+                    "description": "Route for KIE server's https service.",
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "",
+                "to": {
+                    "kind": "Service",
+                    "name": "analytics-kieserver",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "https"
+                },
+                "tls": {
+                    "termination": "passthrough"
+                },
+                "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "Route",
+            "apiVersion": "route.openshift.io/v1",
+            "metadata": {
+                "name": "secure-analytics-rhdmcentr",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "service": "analytics-rhdmcentr",
+                    "template": "rhdm73-authoring"
+                },
+                "annotations": {
+                    "description": "Route for Decision Central's https service.",
+                    "haproxy.router.openshift.io/timeout": "60s",
+                    "openshift.io/host.generated": "true"
+                }
+            },
+            "spec": {
+                "host": "",
+                "to": {
+                    "kind": "Service",
+                    "name": "analytics-rhdmcentr",
+                    "weight": 100
+                },
+                "port": {
+                    "targetPort": "https"
+                },
+                "tls": {
+                    "termination": "passthrough"
+                },
+                "wildcardPolicy": "None"
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "broker-amq-amqp",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "amq-broker",
+                    "application": "migration-analytics",
+                    "template": "amq-broker-73-basic",
+                    "xpaas": "1.4.16"
+                },
+                "annotations": {
+                    "description": "The broker's AMQP port."
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 5672,
+                        "targetPort": 5672
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "broker-amq"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "broker-amq-jolokia",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "amq-broker",
+                    "application": "migration-analytics",
+                    "template": "amq-broker-73-basic",
+                    "xpaas": "1.4.16"
+                },
+                "annotations": {
+                    "description": "The broker's console and Jolokia port."
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 8161,
+                        "targetPort": 8161
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "broker-amq"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "broker-amq-mqtt",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "amq-broker",
+                    "application": "migration-analytics",
+                    "template": "amq-broker-73-basic",
+                    "xpaas": "1.4.16"
+                },
+                "annotations": {
+                    "description": "The broker's MQTT port."
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 1883,
+                        "targetPort": 1883
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "broker-amq"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "broker-amq-stomp",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "amq-broker",
+                    "application": "migration-analytics",
+                    "template": "amq-broker-73-basic",
+                    "xpaas": "1.4.16"
+                },
+                "annotations": {
+                    "description": "The broker's STOMP port."
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 61613,
+                        "targetPort": 61613
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "broker-amq"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "broker-amq-tcp",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "amq-broker",
+                    "application": "migration-analytics",
+                    "template": "amq-broker-73-basic",
+                    "xpaas": "1.4.16"
+                },
+                "annotations": {
+                    "description": "The broker's OpenWire port.",
+                    "service.alpha.openshift.io/dependencies": "[{\"name\": \"broker-amq-amqp\", \"kind\": \"Service\"},{\"name\": \"broker-amq-mqtt\", \"kind\": \"Service\"},{\"name\": \"broker-amq-stomp\", \"kind\": \"Service\"}]"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "protocol": "TCP",
+                        "port": 61616,
+                        "targetPort": 61616
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "broker-amq"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "analytics-kieserver",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "service": "analytics-kieserver",
+                    "template": "rhdm73-authoring"
+                },
+                "annotations": {
+                    "description": "All the KIE server web server's ports."
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "http",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    },
+                    {
+                        "name": "https",
+                        "protocol": "TCP",
+                        "port": 8443,
+                        "targetPort": 8443
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "analytics-kieserver"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "analytics-rhdmcentr",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "service": "analytics-rhdmcentr",
+                    "template": "rhdm73-authoring"
+                },
+                "annotations": {
+                    "description": "All the Decision Central web server's ports."
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "http",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    },
+                    {
+                        "name": "https",
+                        "protocol": "TCP",
+                        "port": 8443,
+                        "targetPort": 8443
+                    },
+                    {
+                        "name": "git-ssh",
+                        "protocol": "TCP",
+                        "port": 8001,
+                        "targetPort": 8001
+                    }
+                ],
+                "selector": {
+                    "deploymentConfig": "analytics-rhdmcentr"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${DATABASE_SERVICE_NAME}",
+                "annotations": {
+                    "template.openshift.io/expose-uri": "postgres://{.spec.clusterIP}:{.spec.ports[?(.name==\"postgresql\")].port}"
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "postgresql",
+                        "protocol": "TCP",
+                        "port": 5432,
+                        "targetPort": 5432,
+                        "nodePort": 0
+                    }
+                ],
+                "selector": {
+                    "name": "${DATABASE_SERVICE_NAME}"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "analytics-integration",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics-integration-http",
+                    "application": "migration-analytics",
+                    "service": "analytics-integration"
+                },
+                "annotations": {
+                    "description": "The web server's http port."
+                }
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "http",
+                        "protocol": "TCP",
+                        "port": 8080,
+                        "targetPort": 8080
+                    }
+                ],
+                "selector": {
+                    "deploymentconfig": "analytics-integration"
+                },
+                "type": "ClusterIP",
+                "sessionAffinity": "None"
+            },
+            "status": {
+                "loadBalancer": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "minio"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "http",
+                        "protocol": "TCP",
+                        "port": 9000,
+                        "targetPort": 9000,
+                        "nodePort": 0
+                    }
+                ],
+                "selector": {}
+            }
+        },
+        {
+            "kind": "Service",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "kafka"
+            },
+            "spec": {
+                "ports": [
+                    {
+                        "name": "http",
+                        "protocol": "TCP",
+                        "port": 29092,
+                        "targetPort": 29092,
+                        "nodePort": 0
+                    }
+                ],
+                "selector": {}
+            }
+        },
+        {
+            "kind": "Endpoints",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "kafka"
+            },
+            "subsets": [
+                {
+                    "addresses": [
+                        {
+                            "ip": "192.168.1.44"
+                        }
+                    ],
+                    "ports": [
+                        {
+                            "name": "http",
+                            "port": 29092,
+                            "protocol": "TCP"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "kind": "Endpoints",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "minio"
+            },
+            "subsets": [
+                {
+                    "addresses": [
+                        {
+                            "ip": "192.168.1.44"
+                        }
+                    ],
+                    "ports": [
+                        {
+                            "name": "http",
+                            "port": 9000,
+                            "protocol": "TCP"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "kind": "ImageStream",
+            "apiVersion": "image.openshift.io/v1",
+            "metadata": {
+                "name": "analytics-integration",
+                "generation": 1,
+                "labels": {
+                    "app": "analytics-integration",
+                    "application": "migration-analytics",
+                    "component": "analytics-integration",
+                    "provider": "s2i",
+                    "template": "analytics-integration",
+                    "version": "1.0.0.fuse-730046-redhat-00002"
+                }
+            },
+            "status": {
+                "dockerImageRepository": ""
+            }
+        },
+        {
+            "kind": "PersistentVolumeClaim",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "analytics-rhdmcentr-claim",
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "service": "analytics-rhdmcentr",
+                    "template": "rhdm73-authoring"
+                }
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteMany"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "1Gi"
+                    }
+                }
+            }
+        },
+        {
+            "kind": "PersistentVolumeClaim",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "${DATABASE_SERVICE_NAME}",
+                "labels": {
+                    "app": "${DATABASE_SERVICE_NAME}-persistent",
+                    "application": "migration-analytics"
+                }
+            },
+            "spec": {
+                "accessModes": [
+                    "ReadWriteOnce"
+                ],
+                "resources": {
+                    "requests": {
+                        "storage": "${DATABASE_VOLUME_CAPACITY}"
+                    }
+                }
+            }
+        },
+        {
+            "kind": "ServiceAccount",
+            "apiVersion": "v1",
+            "metadata": {
+                "name": "myapp-rhdmsvc",
+                "creationTimestamp": null,
+                "labels": {
+                    "app": "analytics",
+                    "application": "migration-analytics",
+                    "rhdm": "1.0",
+                    "template": "rhdm73-authoring"
+                }
+            }
+        },
+        {
+            "kind": "BuildConfig",
+            "apiVersion": "build.openshift.io/v1",
+            "metadata": {
+                "name": "analytics-integration",
+                "labels": {
+                    "app": "analytics-integration",
+                    "application": "migration-analytics",
+                    "component": "analytics-integration",
+                    "provider": "s2i",
+                    "template": "analytics-integration",
+                    "version": "1.0.0.fuse-730046-redhat-00002"
+                }
+            },
+            "spec": {
+                "triggers": [
+                    {
+                        "type": "ImageChange",
+                        "imageChange": {}
+                    },
+                    {
+                        "type": "ConfigChange"
+                    },
+                    {
+                        "type": "GitHub",
+                        "github": {
+                            "secret": "jpFfohWRXRpCyjKOJa6e3PCLqs3BTJCFrn6ND6T5"
+                        }
+                    },
+                    {
+                        "type": "Generic",
+                        "generic": {
+                            "secret": "jpFfohWRXRpCyjKOJa6e3PCLqs3BTJCFrn6ND6T5"
+                        }
+                    }
+                ],
+                "runPolicy": "Serial",
+                "source": {
+                    "type": "Git",
+                    "git": {
+                        "uri": "https://github.com/mrizzi/sample-analytics-integration.git",
+                        "ref": "master"
+                    }
+                },
+                "strategy": {
+                    "type": "Source",
+                    "sourceStrategy": {
+                        "from": {
+                            "kind": "ImageStreamTag",
+                            "namespace": "${NAMESPACE}",
+                            "name": "fuse7-java-openshift:1.3"
+                        },
+                        "env": [
+                            {
+                                "name": "BUILD_LOGLEVEL",
+                                "value": "5"
+                            },
+                            {
+                                "name": "ARTIFACT_DIR"
+                            },
+                            {
+                                "name": "MAVEN_ARGS",
+                                "value": "package -DskipTests -Dfabric8.skip -e -B"
+                            },
+                            {
+                                "name": "MAVEN_ARGS_APPEND"
+                            }
+                        ],
+                        "incremental": true,
+                        "forcePull": true
+                    }
+                },
+                "output": {
+                    "to": {
+                        "kind": "ImageStreamTag",
+                        "name": "analytics-integration:latest"
+                    }
+                },
+                "resources": {
+                    "limits": {
+                        "memory": "800M"
+                    },
+                    "requests": {
+                        "memory": "700M"
+                    }
+                },
+                "postCommit": {},
+                "nodeSelector": null,
+                "successfulBuildsHistoryLimit": 5,
+                "failedBuildsHistoryLimit": 5
+            },
+            "status": {
+                "lastVersion": 0
+            }
+        }
+    ],
+    "parameters": [
+        {
+            "name": "POSTGRESQL_MEMORY_LIMIT",
+            "displayName": "Database Memory Limit",
+            "description": "Database maximum amount of memory the container can use.",
+            "value": "512Mi",
+            "required": true
+        },
+        {
+            "name": "NAMESPACE",
+            "displayName": "Namespace",
+            "description": "The OpenShift Namespace where the ImageStream resides.",
+            "value": "openshift"
+        },
+        {
+            "name": "DATABASE_SERVICE_NAME",
+            "displayName": "Database Service Name",
+            "description": "The name of the OpenShift Service exposed for the database.",
+            "value": "postgresql",
+            "required": true
+        },
+        {
+            "name": "POSTGRESQL_USER",
+            "displayName": "PostgreSQL Connection Username",
+            "description": "Username for PostgreSQL user that will be used for accessing the database.",
+            "generate": "expression",
+            "from": "user[A-Z0-9]{3}",
+            "required": true
+        },
+        {
+            "name": "POSTGRESQL_PASSWORD",
+            "displayName": "PostgreSQL Connection Password",
+            "description": "Password for the PostgreSQL connection user.",
+            "generate": "expression",
+            "from": "[a-zA-Z0-9]{16}",
+            "required": true
+        },
+        {
+            "name": "POSTGRESQL_DATABASE",
+            "displayName": "PostgreSQL Database Name",
+            "description": "Name of the PostgreSQL database accessed.",
+            "value": "migration-analytics",
+            "required": true
+        },
+        {
+            "name": "DATABASE_VOLUME_CAPACITY",
+            "displayName": "Database Volume Capacity",
+            "description": "Database volume space available for data, e.g. 512Mi, 2Gi.",
+            "value": "1Gi",
+            "required": true
+        },
+        {
+            "name": "POSTGRESQL_VERSION",
+            "displayName": "Version of PostgreSQL Image",
+            "description": "Version of PostgreSQL image to be used.",
+            "value": "9.6",
+            "required": true
+        }
+    ]
+}
