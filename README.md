@@ -40,7 +40,7 @@ Instructions from https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3
 1. `oc create -f <secret>.yaml`
 1. `oc secrets link default <secret> --for=pull`
 1. `oc secrets link builder <secret> --for=pull`
-1. `for template in eap7-app-secret.json mysql-secret.json analytics_template.json;  do  oc process -f https://raw.githubusercontent.com/project-xavier/xavier-integration/master/src/main/resources/okd/${template}| oc create -f -;  done`
+1. `oc process -f https://raw.githubusercontent.com/project-xavier/xavier-integration/master/src/main/resources/okd/analytics_template.json| oc create -f -`
 
 ## Decision Manager
 1. go to Application -> Routes page and click on the URL in the `Hostname` column beside the `myapp-rhdmcentr` service

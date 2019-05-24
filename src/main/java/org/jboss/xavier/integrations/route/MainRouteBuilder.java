@@ -45,13 +45,13 @@ public class MainRouteBuilder extends RouteBuilder {
     private String kafkaHost;
 
     private SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
-    
+
     @Value("${insights.upload.mimetype}")
     private String mimeType;
-    
+
     @Value("${insights.upload.accountnumber}")
     private String accountNumber;
-    
+
     @Value("${insights.upload.origin}")
     private String origin;
 
@@ -112,7 +112,7 @@ public class MainRouteBuilder extends RouteBuilder {
                 .to("http4://" + uploadHost + "/api/ingress/v1/upload")
                 .end();
 
-        from("kafka:" + kafkaHost + "?topic=platform.upload.testareno&brokers=" + kafkaHost + "&autoOffsetReset=latest&autoCommitEnable=true")
+        from("kafka:" + kafkaHost + "?topic={{insights.kafka.topic}}&brokers=" + kafkaHost + "&autoOffsetReset=latest&autoCommitEnable=true")
                 .process(exchange -> {
                     String messageKey = "";
                     if (exchange.getIn() != null) {
