@@ -35,6 +35,17 @@ Instructions from https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3
 # Deployment
 
 ## OCP templates
+### Using OCP Web UI
+1. click on `Create Project` button to create a new project
+1. use `migration-analytics` as value for the name
+1. once the project has been created and added to the list of the available project, click on `migration-analytics`
+1. from the `migration-analytics` Overview page, click on `Import YAML / JSON` button
+1. copy and paste the content of the [analytics_template.json](src/main/resources/okd/analytics_template.json) (using the `Raw` button will let you have the plain text version of this file)
+1. click on `Create` button
+1. check that `Process the template` is selected (no need to select `Save template`)
+1. click on `Continue` button
+1. click on `Create` button
+### Using `oc` command line tool
 1. `oc login -u developer`
 1. `oc new-project migration-analytics`
 1. `oc create -f <secret>.yaml`
