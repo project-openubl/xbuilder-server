@@ -44,7 +44,7 @@ Instructions from https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3
 1. click on `Create` button
 1. check that `Process the template` is selected (no need to select `Save template`)
 1. click on `Continue` button
-1. click on `Create` button
+1. click on `Create` button (No need to change the form values unless the user wants to customize them)
 ### Using `oc` command line tool
 1. `oc login -u developer`
 1. `oc new-project migration-analytics`
