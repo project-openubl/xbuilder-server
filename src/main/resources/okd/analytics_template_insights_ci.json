@@ -241,8 +241,7 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "${NAMESPACE}",
                                 "name": "rhdm73-kieserver-openshift:1.0"
-                            },
-                            "lastTriggeredImage": "172.30.1.1:5000/openshift/rhdm73-kieserver-openshift@sha256:0db3dd7fad9bdd144c758482d59c55a19867bbb9429fee58ed8bdf11f3f2f0b0"
+                            }
                         }
                     },
                     {
@@ -519,7 +518,12 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "memory": "1Gi"
+                                        "cpu": "1",
+                                        "memory": "2Gi"
+                                    },
+                                    "requests": {
+                                        "cpu": "400m",
+                                        "memory": "2Gi"
                                     }
                                 },
                                 "volumeMounts": [
@@ -620,8 +624,7 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "${NAMESPACE}",
                                 "name": "rhdm73-decisioncentral-openshift:1.0"
-                            },
-                            "lastTriggeredImage": "172.30.1.1:5000/openshift/rhdm73-decisioncentral-openshift@sha256:f7b7bf8cb010e8d5e2222c8c099124b5fa08955985722c5dd89d806933c08b5c"
+                            }
                         }
                     },
                     {
@@ -872,6 +875,11 @@
                                 ],
                                 "resources": {
                                     "limits": {
+                                        "memory": "2Gi",
+                                        "cpu": "1"
+                                    },
+                                    "requests": {
+                                        "cpu": "400m",
                                         "memory": "2Gi"
                                     }
                                 },
@@ -967,8 +975,7 @@
                                 "kind": "ImageStreamTag",
                                 "namespace": "${NAMESPACE}",
                                 "name": "postgresql:${POSTGRESQL_VERSION}"
-                            },
-                            "lastTriggeredImage": ""
+                            }
                         }
                     },
                     {
@@ -1094,13 +1101,9 @@
             },
             "spec": {
                 "strategy": {
-                    "type": "Rolling",
-                    "rollingParams": {
-                        "updatePeriodSeconds": 1,
-                        "intervalSeconds": 1,
-                        "timeoutSeconds": 600,
-                        "maxUnavailable": "25%",
-                        "maxSurge": "25%"
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
@@ -1221,6 +1224,22 @@
                                     {
                                         "name": "AMQ_SERVER",
                                         "value": "broker-amq-tcp"
+                                    },
+                                    {
+                                        "name": "INSIGHTS_KAFKA_HOST",
+                                        "value": "${INSIGHTS_KAFKA_HOST}"
+                                    },
+                                    {
+                                        "name": "INSIGHTS_UPLOAD_HOST",
+                                        "value": "${INSIGHTS_UPLOAD_HOST}"
+                                    },
+                                    {
+                                        "name": "INSIGHTS_KAFKA_VALIDATION_TOPIC",
+                                        "value": "${INSIGHTS_KAFKA_VALIDATION_TOPIC}"
+                                    },
+                                    {
+                                        "name": "INSIGHTS_KAFKA_UPLOAD_TOPIC",
+                                        "value": "${INSIGHTS_KAFKA_UPLOAD_TOPIC}"
                                     }
                                 ],
                                 "resources": {
@@ -1229,7 +1248,7 @@
                                         "memory": "512Mi"
                                     },
                                     "requests": {
-                                        "cpu": "200m",
+                                        "cpu": "400m",
                                         "memory": "512Mi"
                                     }
                                 },
@@ -1372,10 +1391,10 @@
             "kind": "Route",
             "apiVersion": "route.openshift.io/v1",
             "metadata": {
-                "name": "analytics-integration",
+                "name": "xavier",
                 "creationTimestamp": null,
                 "labels": {
-                    "app": "analytics-integration-http",
+                    "app": "xavier-http",
                     "application": "migration-analytics"
                 },
                 "annotations": {
@@ -1386,7 +1405,7 @@
                 "host": "",
                 "to": {
                     "kind": "Service",
-                    "name": "analytics-integration",
+                    "name": "xavier",
                     "weight": 100
                 },
                 "port": {
@@ -1732,6 +1751,10 @@
                 "name": "${DATABASE_SERVICE_NAME}",
                 "annotations": {
                     "template.openshift.io/expose-uri": "postgres://{.spec.clusterIP}:{.spec.ports[?(.name==\"postgresql\")].port}"
+                },
+                "labels": {
+                    "app": "${DATABASE_SERVICE_NAME}-persistent",
+                    "application": "migration-analytics"
                 }
             },
             "spec": {
@@ -1758,12 +1781,11 @@
             "kind": "Service",
             "apiVersion": "v1",
             "metadata": {
-                "name": "analytics-integration",
-                "creationTimestamp": null,
+                "name": "xavier",
                 "labels": {
-                    "app": "analytics-integration-http",
+                    "app": "xavier-http",
                     "application": "migration-analytics",
-                    "service": "analytics-integration"
+                    "service": "xavier"
                 },
                 "annotations": {
                     "description": "The web server's http port."
@@ -1787,90 +1809,6 @@
             "status": {
                 "loadBalancer": {}
             }
-        },
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "minio"
-            },
-            "spec": {
-                "ports": [
-                    {
-                        "name": "http",
-                        "protocol": "TCP",
-                        "port": 9000,
-                        "targetPort": 9000,
-                        "nodePort": 0
-                    }
-                ],
-                "selector": {}
-            }
-        },
-        {
-            "kind": "Service",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "kafka"
-            },
-            "spec": {
-                "ports": [
-                    {
-                        "name": "http",
-                        "protocol": "TCP",
-                        "port": 29092,
-                        "targetPort": 29092,
-                        "nodePort": 0
-                    }
-                ],
-                "selector": {}
-            }
-        },
-        {
-            "kind": "Endpoints",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "kafka"
-            },
-            "subsets": [
-                {
-                    "addresses": [
-                        {
-                            "ip": "192.168.1.44"
-                        }
-                    ],
-                    "ports": [
-                        {
-                            "name": "http",
-                            "port": 29092,
-                            "protocol": "TCP"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "kind": "Endpoints",
-            "apiVersion": "v1",
-            "metadata": {
-                "name": "minio"
-            },
-            "subsets": [
-                {
-                    "addresses": [
-                        {
-                            "ip": "192.168.1.44"
-                        }
-                    ],
-                    "ports": [
-                        {
-                            "name": "http",
-                            "port": 9000,
-                            "protocol": "TCP"
-                        }
-                    ]
-                }
-            ]
         },
         {
             "kind": "ImageStream",
@@ -1906,7 +1844,7 @@
             },
             "spec": {
                 "accessModes": [
-                    "ReadWriteMany"
+                    "ReadWriteOnce"
                 ],
                 "resources": {
                     "requests": {
@@ -1941,7 +1879,6 @@
             "apiVersion": "v1",
             "metadata": {
                 "name": "myapp-rhdmsvc",
-                "creationTimestamp": null,
                 "labels": {
                     "app": "analytics",
                     "application": "migration-analytics",
@@ -2103,6 +2040,34 @@
             "description": "Version of PostgreSQL image to be used.",
             "value": "9.6",
             "required": true
+        },
+        {
+            "name": "INSIGHTS_KAFKA_HOST",
+            "displayName": "AMQ Streams (Kafka) host",
+            "description": "AMQ Streams (Kafka) host",
+            "value": "platform-mq-ci-kafka-bootstrap.platform-mq-ci.svc:9092",
+            "required": false
+        },
+        {
+            "name": "INSIGHTS_UPLOAD_HOST",
+            "displayName": "Insights Upload Service Endpoint",
+            "description": "Insights Upload Service Endpoint",
+            "value": "upload-service.platform-ci:8080",
+            "required": false
+        },
+        {
+            "name": "INSIGHTS_KAFKA_VALIDATION_TOPIC",
+            "displayName": "Kafka topic for upload payload validation",
+            "description": "Kafka topic for upload payload validation",
+            "value": "platform.upload.validation",
+            "required": false
+        },
+        {
+            "name": "INSIGHTS_KAFKA_UPLOAD_TOPIC",
+            "displayName": "Kafka topic for upload payload available",
+            "description": "Kafka topic for upload payload available",
+            "value": "platform.upload.testareno",
+            "required": false
         }
     ]
 }

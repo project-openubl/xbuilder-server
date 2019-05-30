@@ -76,6 +76,6 @@ AMQ Web Console
 ## Camel routes
 To enable the `DEBUG` level for logging, please add the environment variable `logging.level.org` (or whatever package you want) with value `DEBUG` to the the `analytics-integration` deployment configuration. 
 # Undeploy
-1. `oc delete all,pvc -l application=migration-analytics -n migration-analytics`
+1. `oc delete all,pvc,secrets -l application=migration-analytics -n migration-analytics`
 
 # References
