@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/project-xavier/xavier-integration.svg?branch=master)](https://travis-ci.org/project-xavier/xavier-integration)
+[![codecov](https://codecov.io/gh/project-xavier/xavier-integration/branch/master/graph/badge.svg)](https://codecov.io/gh/project-xavier/xavier-integration)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=project-xavier_xavier-integration&metric=alert_status)](https://sonarcloud.io/dashboard?id=project-xavier_xavier-integration)
+
 Fuse (on Spring Boot) to create a prototype to integrate JPA (with external DB), JMA (AMQ Broker), Drools (remote invocation), Rest APIs, Swagger.
 # Installation
 

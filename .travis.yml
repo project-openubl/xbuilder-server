@@ -1,0 +1,20 @@
+language: java
+notifications:
+  email: false
+jdk:
+  - openjdk8
+addons:
+  sonarcloud:
+    organization: project-xavier
+    token:
+      secure: $SONAR_TOKEN
+install:
+  - cp ./configuration/settings.xml $HOME/.m2/settings.xml
+  - mvn install -P !fuse-fabric8-docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+jobs:
+  include:
+    - stage: Test
+      script:
+        - mvn test -Pcoverage
+        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then sonar-scanner; fi'
+        - bash <(curl -s https://codecov.io/bash)
