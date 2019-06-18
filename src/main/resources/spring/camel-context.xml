@@ -22,7 +22,7 @@
 
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
 
-        <restConfiguration contextPath="/camel-rest-jpa" apiContextPath="/api-doc" apiContextRouteId="doc-api" component="servlet" bindingMode="json">
+        <restConfiguration apiContextPath="/api-doc" apiContextRouteId="doc-api" component="servlet" bindingMode="json">
             <apiProperty key="api.title" value="Migration Analytics REST API"/>
             <apiProperty key="api.version" value="0.1"/>
             <apiProperty key="cors" value="true"/>
