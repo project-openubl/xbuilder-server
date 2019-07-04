@@ -103,13 +103,13 @@ public class MainRouteBuilder extends RouteBuilder {
                     exchange.getIn().setHeader(Exchange.FILE_NAME, filename);
 
                     String file = exchange.getIn().getBody(String.class);
-                    multipartEntityBuilder.addPart("upload", new ByteArrayBody(file.getBytes(), ContentType.create(mimeType), filename));
+                    multipartEntityBuilder.addPart("file", new ByteArrayBody(file.getBytes(), ContentType.create(mimeType), filename));
                     exchange.getIn().setBody(multipartEntityBuilder.build());
                 })
-                .setHeader(Exchange.HTTP_METHOD, constant(org.apache.camel.component.http4.HttpMethods.POST))
                 .setHeader("x-rh-identity", method(MainRouteBuilder.class, "getRHIdentity(${header.customerid}, ${header.CamelFileName})"))
-                .setHeader("x-rh-insights-request-id", constant(getRHInsightsRequestId()))
+                .setHeader("x-rh-insights-request-id", method(MainRouteBuilder.class, "getRHInsightsRequestId()"))
                 .removeHeaders("Camel*")
+                .setHeader(Exchange.HTTP_METHOD, constant(org.apache.camel.component.http4.HttpMethods.POST))
                 .to("http4://" + uploadHost + "/api/ingress/v1/upload")
                 .to("log:INFO?showBody=true&showHeaders=true")
                 .end();
@@ -197,7 +197,7 @@ public class MainRouteBuilder extends RouteBuilder {
         return (originHeader != null && originHeader.equalsIgnoreCase(origin));
     }
 
-    private String getRHInsightsRequestId() {
+    public String getRHInsightsRequestId() {
         // 52df9f748eabcfea
         return UUID.randomUUID().toString();
     }
@@ -208,6 +208,7 @@ public class MainRouteBuilder extends RouteBuilder {
         internal.put("customerid", customerid);
         internal.put("filename", filename);
         internal.put("origin", origin);
+        internal.put("org_id", "000001");
         String rhIdentity_json = "";
         try {
             rhIdentity_json = new ObjectMapper().writer().withRootName("identity").writeValueAsString(RHIdentity.builder()

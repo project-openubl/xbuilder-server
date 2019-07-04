@@ -14,6 +14,7 @@ public class FilePersistedNotification {
     String rh_account;
     String principal;
     String payload_id;
+    String request_id;
     String hash;
     Long size;
     String service;
