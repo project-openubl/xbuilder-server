@@ -82,4 +82,7 @@ To enable the `DEBUG` level for logging, please add the environment variable `lo
 # Undeploy
 1. `oc delete all,pvc,secrets -l application=migration-analytics -n migration-analytics`
 
+# Sonar
+1.  https://sonarcloud.io/dashboard?id=project-xavier_xavier-integration
+2. mvn clean verify -Psonar -Dsonar.login={{token generated for the user on SonarCloud}}
 # References

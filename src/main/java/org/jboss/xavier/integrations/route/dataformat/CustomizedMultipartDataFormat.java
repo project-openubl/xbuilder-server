@@ -1,5 +1,6 @@
 package org.jboss.xavier.integrations.route.dataformat;
 
+import org.apache.camel.Attachment;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.dataformat.mime.multipart.MimeMultipartDataFormat;
@@ -7,7 +8,6 @@ import org.apache.camel.impl.DefaultAttachment;
 import org.apache.camel.util.IOHelper;
 import org.apache.camel.util.MessageHelper;
 
-import javax.activation.DataHandler;
 import javax.mail.BodyPart;
 import javax.mail.Header;
 import javax.mail.MessagingException;
@@ -22,24 +22,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CustomizedMultipartDataFormat extends MimeMultipartDataFormat {
-    private static final String MIME_VERSION = "MIME-Version";
-    private static final String CONTENT_TYPE = "Content-Type";
-    private static final String CONTENT_TRANSFER_ENCODING = "Content-Transfer-Encoding";
-    private static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
-    private static final String[] STANDARD_HEADERS = {"Message-ID", "MIME-Version", "Content-Type"};
+    public static final String MIME_VERSION = "MIME-Version";
+    public static final String CONTENT_TYPE = "Content-Type";
+    public static final String CONTENT_DISPOSITION = "Content-Disposition";
 
     @Override
     public Object unmarshal(Exchange exchange, InputStream stream) throws IOException, MessagingException {
-        MimeBodyPart mimeMessage;
-        String contentType;
-        Message camelMessage;
-        Object content = null;
-
         // check if this a multipart at all. Otherwise do nothing
-        contentType = exchange.getIn().getHeader(CONTENT_TYPE, String.class);
+        String contentType = exchange.getIn().getHeader(CONTENT_TYPE, String.class);
         if (contentType == null) {
             return stream;
         }
@@ -53,30 +50,24 @@ public class CustomizedMultipartDataFormat extends MimeMultipartDataFormat {
             return stream;
         }
 
-        camelMessage = exchange.getOut();
+        Message camelMessage = exchange.getOut();
         MessageHelper.copyHeaders(exchange.getIn(), camelMessage, true);
+        
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         IOHelper.copyAndCloseInput(stream, bos);
+        
         InternetHeaders headers = new InternetHeaders();
         extractHeader(CONTENT_TYPE, camelMessage, headers);
         extractHeader(MIME_VERSION, camelMessage, headers);
-        mimeMessage = new MimeBodyPart(headers, bos.toByteArray());
+
+        MimeBodyPart mimeMessage = new MimeBodyPart(headers, bos.toByteArray());
         bos.close();
 
-        DataHandler dh;
-        try {
-            dh = mimeMessage.getDataHandler();
-            if (dh != null) {
-                content = dh.getContent();
-                contentType = dh.getContentType();
-            }
-        } catch (MessagingException e) {
-        }
+        Object content = mimeMessage.getDataHandler().getContent();
 
         if (content instanceof MimeMultipart) {
             MimeMultipart mp = (MimeMultipart) content;
-            content = null; // CHANGED
-            for (int i = 0; i < mp.getCount(); i++) { // CHANGED
+            for (int i = 0; i < mp.getCount(); i++) { 
                 BodyPart bp = mp.getBodyPart(i);
                 DefaultAttachment camelAttachment = new DefaultAttachment(bp.getDataHandler());
 
@@ -86,34 +77,36 @@ public class CustomizedMultipartDataFormat extends MimeMultipartDataFormat {
                     Header header = bpAllHeaders.nextElement();
                     camelAttachment.addHeader(header.getName(), header.getValue());
                 }
-
+                // All non file parts are considered parameters and set as headers of the whole message
+                if (!camelAttachment.getHeader(CONTENT_DISPOSITION).contains("filename")) {
+                    Map ma_metadata = camelMessage.getHeader("MA_metadata", new HashMap<String,String>(), java.util.Map.class);
+                    ma_metadata.put(getFieldNameFromMultipart(camelAttachment), camelAttachment.getDataHandler().getContent());
+                    camelMessage.setHeader("MA_metadata", ma_metadata);
+                }
+                
                 camelMessage.addAttachmentObject(getAttachmentKey(bp), camelAttachment);
             }
         }
 
-        if (content instanceof BodyPart) {
-            BodyPart bp = (BodyPart) content;
-            camelMessage.setBody(bp.getInputStream());
-            contentType = bp.getContentType();
-            if (contentType != null && !DEFAULT_CONTENT_TYPE.equals(contentType)) {
-                camelMessage.setHeader(CONTENT_TYPE, contentType);
-                ContentType ct = new ContentType(contentType);
-                String charset = ct.getParameter("charset");
-                if (charset != null) {
-                    camelMessage.setHeader(Exchange.CONTENT_ENCODING, MimeUtility.javaCharset(charset));
-                }
-            }
-        } else {
-            // If we find no body part, try to leave the message alone
-        }
-
-
         return camelMessage;
     }
-
+    /**
+     * With multipartform data , info will come in the Content-Disposition header
+     * in the form of : form-data;name="myname"
+     * @param body
+     * @return
+     */
+    private String getFieldNameFromMultipart(Attachment body) {
+        String header = body.getHeader(CONTENT_DISPOSITION);
+        Matcher matcher = Pattern.compile("=\"(.*?)\"").matcher(header);
+        matcher.find();
+        return matcher.group(1);
+    }
+    
     private String getAttachmentKey(BodyPart bp) throws MessagingException, UnsupportedEncodingException {
         // use the filename as key for the map
         String key = bp.getFileName();
+        
         // if there is no file name we use the Content-ID header
         if (key == null && bp instanceof MimeBodyPart) {
             key = ((MimeBodyPart) bp).getContentID();
@@ -122,6 +115,7 @@ public class CustomizedMultipartDataFormat extends MimeMultipartDataFormat {
                 key = key.substring(1, key.length() - 1);
             }
         }
+        
         // or a generated content id
         if (key == null) {
             key = UUID.randomUUID().toString() + "@camel.apache.org";

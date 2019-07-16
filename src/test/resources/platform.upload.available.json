@@ -1,0 +1,35 @@
+{
+  "identity": {
+    "internal": {
+      "auth_time": 0,
+      "auth_type": "basic-auth",
+      "org_id": "711497"
+    },
+    "account_number": "477931",
+    "user": {
+      "first_name": "Quality",
+      "last_name": "Assurance",
+      "is_internal": true,
+      "is_active": true,
+      "locale": "en_US",
+      "is_org_admin": true,
+      "username": "qa@redhat.com",
+      "email": "qa+qa@redhat.com"
+    },
+    "type": "User"
+  },
+  "entitlements": {
+    "insights": {
+      "is_entitled": true
+    },
+    "openshift": {
+      "is_entitled": true
+    },
+    "smart_management": {
+      "is_entitled": false
+    },
+    "hybrid_cloud": {
+      "is_entitled": true
+    }
+  }
+}

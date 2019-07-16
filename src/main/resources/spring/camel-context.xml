@@ -39,13 +39,14 @@
                 <description>Get the list of all the reports</description>
                 <param name="summary" type="query" defaultValue="true" required="false" description="Disable the output objects to have only the fields needed in the reports summary page setting the parameter 'summary=false'" />
                 <route id="reports-get-all">
+                    <log message="${headers} ${body}" />
                     <choice>
                         <when>
                             <simple>${header.summary} == 'false'</simple>
-                            <bean beanType="org.jboss.xavier.integrations.jpa.service.ReportService" method="findReports" />
+                            <bean ref="reportService" method="findReports" />
                         </when>
                         <otherwise>
-                            <bean beanType="org.jboss.xavier.integrations.jpa.service.ReportService" method="findReportSummary" />
+                            <bean ref="reportService" method="findReportSummary" />
                         </otherwise>
                     </choice>
                 </route>
@@ -58,20 +59,12 @@
             </get>
         </rest>
 
-        <route id="sample-inputDataModel-generator" autoStartup="{{sig.autoStartup}}">
-            <description>Example route that will regularly create an InputDataModel and send it to a JMS queue</description>
-            <from id="route-timer" uri="timer:testRoute?period=10s" />
-            <bean id="route-new-inputDataModel" method="createSampleInputDataModel" ref="decisionServerHelper" />
-            <to id="route-to-jms" uri="jms:queue:inputDataModel" />
-            <log id="route-log-message-sent" message="Message with sample InputDataModel sent" />
-        </route>
-
-        <route id="test-route-ma" trace="false">
+        <route id="call-kie-extract-reports" trace="true">
             <from uri="jms:queue:inputDataModel" />
             <log message="Message received" />
             <to uri="log:INFO?showBody=true&amp;showHeaders=true" />
-            <bean method="createRandomMigrationAnalyticsCommand(${body})" ref="decisionServerHelper"/>
-            <to uri="direct:decisionserver"/>
+            <bean method="createMigrationAnalyticsCommand(${body})" ref="decisionServerHelper"/>
+            <to id="decisionserver" uri="direct:decisionserver"/>
             <bean id="route-extract-reports" method="extractReports" ref="decisionServerHelper"/>
             <log id="route-log-totalPrice" message="totalPrice = ${body.totalPrice}"/>
             <to uri="jpa:org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel" />
@@ -80,7 +73,7 @@
         <!--
             The following route is used as sub-route to send generic commands to the kie server.
         -->
-        <route id="decision-server-rest" trace="false">
+        <route id="decision-server-rest">
             <!-- Using the xstream marshalling -->
             <from id="route-from-decision-server-rest" uri="direct:decisionserver"/>
             <setHeader headerName="CamelHttpMethod" id="header-post">

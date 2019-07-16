@@ -16,10 +16,10 @@
 package org.jboss.xavier.integrations;
 
 import com.thoughtworks.xstream.XStream;
-import org.jboss.xavier.integrations.migrationanalytics.input.InputDataModel;
-import org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
 import org.apache.camel.spi.DataFormatFactory;
+import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
+import org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel;
 import org.kie.internal.runtime.helper.BatchExecutionHelper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,8 +28,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DecisionServerAutoConfiguration {
 
-    private static final String MIGRATION_ANALYTICS_INPUT_MODELS_PACKAGE_NAME = "com.myspace.sample_analytics.pojo.input";
-    private static final String MIGRATION_ANALYTICS_OUTPUT_MODELS_PACKAGE_NAME = "com.myspace.sample_analytics.pojo.output";
+    private static final String MIGRATION_ANALYTICS_INPUT_MODELS_PACKAGE_NAME = "org.jboss.xavier.analytics.pojo.input";
+    private static final String MIGRATION_ANALYTICS_OUTPUT_MODELS_PACKAGE_NAME = "org.jboss.xavier.analytics.pojo.output";
 
     /**
      * Adding a customized XStream data-format to the registry.
@@ -39,7 +39,7 @@ public class DecisionServerAutoConfiguration {
     public XStreamDataFormat xStreamDataFormat() {
         XStream xstream = BatchExecutionHelper.newXStreamMarshaller();
         // Use the "model" package instead of the one used on the kie server
-        xstream.aliasPackage(MIGRATION_ANALYTICS_INPUT_MODELS_PACKAGE_NAME, InputDataModel.class.getPackage().getName());
+        xstream.aliasPackage(MIGRATION_ANALYTICS_INPUT_MODELS_PACKAGE_NAME, UploadFormInputDataModel.class.getPackage().getName());
         xstream.aliasPackage(MIGRATION_ANALYTICS_OUTPUT_MODELS_PACKAGE_NAME, ReportDataModel.class.getPackage().getName());
         xstream.alias("response", org.kie.server.api.model.ServiceResponse.class);
 

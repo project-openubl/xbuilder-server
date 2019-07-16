@@ -1,0 +1,12 @@
+{
+  "account": "123454",
+  "rh_account": "123454",
+  "principal": null,
+  "payload_id": "440c88f9-5930-416e-9799-fa01d156df29",
+  "hash": "440c88f9-5930-416e-9799-fa01d156df29",
+  "size": 5391,
+  "service": "xavier",
+  "category": "cloudforms",
+  "b64_identity": "eyJpZGVudGl0eSI6eyJhY2NvdW50X251bWJlciI6IjEyMzQ1NCIsImludGVybmFsIjp7ImZpbGVuYW1lIjoidmNlbnRlci52MnYuYm9zLnJlZGhhdC5jb20uanNvbiIsIm9yaWdpbiI6Im1hLXhhdmllciIsImN1c3RvbWVyaWQiOiJDSUQ4ODgifX19",
+  "url": "http://172.17.0.1:9000/insights-upload-perm-test/440c88f9-5930-416e-9799-fa01d156df29?AWSAccessKeyId=BQA2GEXO711FVBVXDWKM&Signature=V2hJED3EgA%2FDmOqcGrzgI5W2GtY%3D&Expires=1559398049 "
+}

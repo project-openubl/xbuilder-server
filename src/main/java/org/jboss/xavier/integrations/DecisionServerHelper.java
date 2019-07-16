@@ -15,14 +15,7 @@
  */
 package org.jboss.xavier.integrations;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import org.jboss.xavier.integrations.migrationanalytics.input.InputDataModel;
-
+import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel;
 import org.kie.api.KieServices;
 import org.kie.api.command.BatchExecutionCommand;
@@ -34,31 +27,14 @@ import org.kie.api.runtime.rule.QueryResultsRow;
 import org.kie.server.api.model.KieServiceResponse;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class DecisionServerHelper {
 
-    /** The random. */
-    private final Random random = new Random();
-
-    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-
-    public BatchExecutionCommand createRandomMigrationAnalyticsCommand() {
-        return createRandomMigrationAnalyticsCommand(createSampleInputDataModel());
-    }
-
-    public BatchExecutionCommand createRandomMigrationAnalyticsCommand(InputDataModel inputDataModel) {
+    public BatchExecutionCommand createMigrationAnalyticsCommand(UploadFormInputDataModel inputDataModel) {
         return generateCommands(inputDataModel, "get reports", "kiesession0");
-    }
-
-    public InputDataModel createSampleInputDataModel()
-    {
-        InputDataModel inputDataModel = new InputDataModel();
-        String customerId = Integer.toString(random.nextInt(99999999));
-        inputDataModel.setCustomerId(customerId);
-        inputDataModel.setFileName(format.format(new Date()) + "-" + customerId + "-payload.json");
-        inputDataModel.setNumberOfHosts(random.nextInt(99999));
-        inputDataModel.setTotalDiskSpace(Integer.toUnsignedLong(random.nextInt(999999999)));
-        return inputDataModel;
     }
 
     private BatchExecutionCommand generateCommands(Object insert, String retrieveQueryId, String kiseSessionId)

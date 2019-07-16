@@ -1,0 +1,60 @@
+----------------------------781795870797375185213430
+Content-Disposition: form-data; name="redhat"; filename="pom.xml"
+Content-Type: application/xml
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+     implied.  See the License for the specific language governing
+     permissions and limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <build>
+        <plugins>
+                 <executions>
+                    <execution>
+                        <goals>
+                            <goal>resource</goal>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>
+
+----------------------------781795870797375185213430
+Content-Disposition: form-data; name="tercer"; filename="nA9mj6GR"
+Content-Type: application/octet-stream
+
+select lower(substring(email_address, position('@' in email_address), 20)), count(*) from tickets_reservation where status='COMPLETE' group by lower(substring(email_address, position('@' in email_address), 20));
+----------------------------781795870797375185213430
+Content-Disposition: form-data; name="otro"; filename="m0001.txt"
+Content-Type: text/plain
+
+selbst. Auf, la�t uns ein f�r allemal sterben."
+
+In einem nahen Teich wollten sie sich nun ers�ufen; sie eilten ihm zu;
+allein das au�erordentliche Get�se und ihre wunderbare Gestalt erschreckte
+eine Menge Fr�sche, die am Ufer sa�en, so sehr, da� sie aufs schnellste
+untertauchten.
+
+"Halt", rief nun eben dieser Sprecher, "wir wollen das Ers�ufen noch ein
+wenig aufschieben, denn auch uns f�rchten, wie ihr seht, einige Tiere,
+welche also wohl noch ungl�cklicher sein m�ssen als wir."
+
+
+----------------------------781795870797375185213430
+Content-Disposition: form-data; name="customerid"
+
+CID12345
+----------------------------781795870797375185213430
+Content-Disposition: form-data; name="ficherito"; filename="icon-spring-cloud.svg"
+Content-Type: image/svg+xml
+
+<svg xmlns="http://www.w3.org/2000/svg" width="244.11" height="161.44" viewBox="0 0 244.11 161.44"><defs><style>.a{fill:#77bc1f;}</style></defs><title>Asset 1</title><path class="a" d="M208.36,61c-2.28-15.29-7-32.54-13.39-51.64A75.79,75.79,0,0,1,186.19,25,82.37,82.37,0,0,0,56.42,40.1,54.57,54.57,0,0,1,90.09,54.25a56.91,56.91,0,0,0-31.81-9.38,58.28,58.28,0,0,0,0,116.57h134.4A51.42,51.42,0,0,0,208.36,61ZM82.79,143.47a7,7,0,1,1-1-9.91A7,7,0,0,1,82.79,143.47Zm111.83-24.68c-20.34,27.09-63.76,18-91.61,19.26,0,0-4.93.28-9.9,1.1,0,0,1.88-.8,4.28-1.63,19.55-6.76,28.8-8.12,40.69-14.23,22.32-11.44,44.55-36.35,49.06-62.23-8.5,24.9-34.35,46.32-57.88,55C113.14,122,84,127.8,84,127.81l-1.18-.63C63,117.54,62.45,74.63,98.43,60.8c15.78-6.07,30.87-2.73,47.92-6.8,18.19-4.32,39.25-18,47.81-35.79C203.77,46.69,215.3,91.24,194.62,118.79Z"/></svg>
+----------------------------781795870797375185213430--
