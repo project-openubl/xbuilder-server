@@ -7,7 +7,7 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
-import org.jboss.xavier.integrations.Application;
+import org.jboss.xavier.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,21 +26,21 @@ import java.util.Map;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("direct:store|direct:calculate")
 @UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class}) 
+@SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
 public class MainRouteBuilder_DirectUnzipFileTest {
     @Autowired
     CamelContext camelContext;
 
     @EndpointInject(uri = "mock:direct:store")
-    private MockEndpoint mockStore;    
-    
+    private MockEndpoint mockStore;
+
     @EndpointInject(uri = "mock:direct:calculate")
     private MockEndpoint mockCalculate;
-    
+
     @Value("#{'${insights.properties}'.split(',')}")
     List<String> properties;
-    
+
     @Inject
     MainRouteBuilder mainRouteBuilder;
 
@@ -60,14 +60,14 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "application/zip");
         headers.put(Exchange.FILE_NAME, "txt-files-samples.zip");
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers);
 
         //Then
         mockCalculate.assertIsSatisfied();
 
         camelContext.stop();
-    }    
-       
+    }
+
     @Test
     public void mainRouteBuilder_routeDirectUnzip_TarGzFileWith2FilesGiven_ShouldReturn2Messages() throws Exception {
         //Given
@@ -84,14 +84,14 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "application/zip");
         headers.put(Exchange.FILE_NAME, "cloudforms-export-v1-multiple-files.tar.gz");
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers);
 
         //Then
         mockCalculate.assertIsSatisfied();
 
         camelContext.stop();
-    }     
-    
+    }
+
     @Test
     public void mainRouteBuilder_routeDirectUnzip_JsonFileGiven_ShouldReturn1Messages() throws Exception {
         //Given
@@ -108,15 +108,15 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "text/plain");
         headers.put(Exchange.FILE_NAME, "cloudforms-export-v1-json");
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers);
 
         //Then
         mockCalculate.assertIsSatisfied();
 
         camelContext.stop();
-    }    
-    
-       
+    }
 
-    
+
+
+
 }

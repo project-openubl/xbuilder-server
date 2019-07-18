@@ -7,7 +7,7 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
-import org.jboss.xavier.integrations.Application;
+import org.jboss.xavier.Application;
 import org.jboss.xavier.integrations.DecisionServerHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("http:*")
 @UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class}) 
+@SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
 public class XmlRoutes_DirectDecisionServerTest {
     @Autowired
@@ -29,7 +29,7 @@ public class XmlRoutes_DirectDecisionServerTest {
 
     @EndpointInject(uri="mock:http:{{kieserver.devel-service}}/{{kieserver.path}}")
     MockEndpoint kieServer;
-    
+
     @Autowired
     DecisionServerHelper decisionServerHelper;
 
@@ -54,15 +54,15 @@ public class XmlRoutes_DirectDecisionServerTest {
         Double year3hypervisorpercentage = 30D;
         Double growthratepercentage = 7D;
         UploadFormInputDataModel inputDataModel = new UploadFormInputDataModel(customerId, fileName, hypervisor, totaldiskspace, sourceproductindicator, year1hypervisorpercentage, year2hypervisorpercentage, year3hypervisorpercentage, growthratepercentage);
-        
-        
+
+
         BatchExecutionCommand sentBody = decisionServerHelper.createMigrationAnalyticsCommand(inputDataModel);
-        
+
         camelContext.createProducerTemplate().sendBody("direct:decisionserver", sentBody );
-        
+
         //Then
         kieServer.assertIsSatisfied();
         camelContext.stop();
     }
-    
+
 }

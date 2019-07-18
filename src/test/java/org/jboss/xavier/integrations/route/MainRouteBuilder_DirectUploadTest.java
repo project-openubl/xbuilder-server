@@ -8,7 +8,7 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
-import org.jboss.xavier.integrations.Application;
+import org.jboss.xavier.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("direct:store")
 @UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class}) 
+@SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
 public class MainRouteBuilder_DirectUploadTest {
     @Autowired
@@ -40,10 +40,10 @@ public class MainRouteBuilder_DirectUploadTest {
 
     @EndpointInject(uri = "mock:direct:store")
     private MockEndpoint mockStore;
-    
+
     @Value("#{'${insights.properties}'.split(',')}")
     List<String> properties;
-    
+
     @Inject
     MainRouteBuilder mainRouteBuilder;
 
@@ -62,7 +62,7 @@ public class MainRouteBuilder_DirectUploadTest {
         String rhidentity = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";
         headers.put("x-rh-identity", rhidentity);
         headers.put("MA_metadata", metadata);
-        
+
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
         mockStore.expectedMessageCount(4);
@@ -73,15 +73,15 @@ public class MainRouteBuilder_DirectUploadTest {
 
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("mime-message-several-files-sample.txt");
 
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:upload", IOUtils.toString(resourceAsStream, Charset.forName("UTF-8")), headers); 
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:upload", IOUtils.toString(resourceAsStream, Charset.forName("UTF-8")), headers);
 
         //Then
         mockStore.assertIsSatisfied();
         assertThat(mockStore.getExchanges().stream().filter(e -> "CID12345".equalsIgnoreCase(e.getIn().getHeader("MA_metadata", Map.class).get("customerid").toString())).count()).isEqualTo(4);
 
         camelContext.stop();
-    }    
-    
+    }
+
     @Test
     public void mainRouteBuilder_routeDirectUpload_ContentWithSeveralFilesButNotCustomerIdFieldGiven_ShouldReturnError() throws Exception {
         //Given
@@ -92,25 +92,25 @@ public class MainRouteBuilder_DirectUploadTest {
         //When
         camelContext.start();
         camelContext.startRoute("direct-upload");
-        
+
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("mime-message-several-files-sample.txt");
 
         String body = IOUtils.toString(resourceAsStream, Charset.forName("UTF-8"));
         String bodyWithoutCustomerId = body.replaceAll("customerid", "dummyid");
-        
+
         Exchange message = camelContext.createProducerTemplate().request("direct:upload", exchange -> {
             exchange.getIn().setBody(bodyWithoutCustomerId);
             exchange.getIn().setHeader("Content-Type", "multipart/mixed");
         });
-        
+
         //Then
         mockStore.assertIsSatisfied();
         assertThat(message.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE)).isEqualTo(400);
         assertThat(message.getIn().getBody(String.class)).isEqualTo("{ \"error\": \"Bad Request\"}");
 
         camelContext.stop();
-    }    
-    
+    }
+
     @Test
     public void mainRouteBuilder_routeDirectUpload_ContentWithSeveralFilesButMissingMetadataFieldGiven_ShouldReturnError() throws Exception {
         //Given
@@ -121,18 +121,18 @@ public class MainRouteBuilder_DirectUploadTest {
         //When
         camelContext.start();
         camelContext.startRoute("direct-upload");
-        
+
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("mime-message-several-files-sample.txt");
 
         String body = IOUtils.toString(resourceAsStream, Charset.forName("UTF-8"));
         properties.add("userid");
         mainRouteBuilder.insightsProperties = properties;
-        
+
         Exchange message = camelContext.createProducerTemplate().request("direct:upload", exchange -> {
             exchange.getIn().setBody(body);
             exchange.getIn().setHeader("Content-Type", "multipart/mixed");
         });
-        
+
         //Then
         mockStore.assertIsSatisfied();
         assertThat(message.getIn().getHeader(Exchange.HTTP_RESPONSE_CODE)).isEqualTo(400);
@@ -140,7 +140,7 @@ public class MainRouteBuilder_DirectUploadTest {
 
         camelContext.stop();
     }
-    
+
     @Test
     public void mainRouteBuilder_routeDirectUpload_ContentWithZipFilesGiven_ShouldReturn1Message() throws Exception {
         //Given
@@ -151,12 +151,12 @@ public class MainRouteBuilder_DirectUploadTest {
         //When
         camelContext.start();
         camelContext.startRoute("direct-upload");
-        
+
 
 
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("txt-files-samples.zip");
         assertThat(resourceAsStream).isNotNull();
-        
+
         String mimeHeader = "----------------------------378483299686133026113807\n" +
                 "Content-Disposition: form-data; name=\"redhat\"; filename=\"txt-files-samples.zip\"\n" +
                 "Content-Type: application/zip\n\n";
@@ -174,7 +174,7 @@ public class MainRouteBuilder_DirectUploadTest {
 
         camelContext.stop();
     }
-    
+
     @Test
     public void mainRouteBuilder_routeDirectUpload_ContentWithTarGZFileGiven_ShouldReturn1Message() throws Exception {
         //Given
@@ -191,7 +191,7 @@ public class MainRouteBuilder_DirectUploadTest {
         String filename = "cloudforms-export-v1-multiple-files.tar.gz";
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(filename);
         assertThat(resourceAsStream).isNotNull();
-        
+
         String mimeHeader = "----------------------------378483299686133026113807\n" +
                 "Content-Disposition: form-data; name=\"redhat\"; filename=\"" + filename + "\"\n" +
                 "Content-Type: application/zip\n\n";
@@ -209,7 +209,7 @@ public class MainRouteBuilder_DirectUploadTest {
 
         camelContext.stop();
     }
-    
 
-    
+
+
 }

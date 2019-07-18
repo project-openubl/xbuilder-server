@@ -8,7 +8,7 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
-import org.jboss.xavier.integrations.Application;
+import org.jboss.xavier.Application;
 import org.jboss.xavier.integrations.DecisionServerHelper;
 import org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel;
 import org.junit.Before;
@@ -27,9 +27,9 @@ import static org.mockito.Mockito.doReturn;
 
 @RunWith(CamelSpringBootRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("jpa:org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel|direct:decisionserver")  
+@MockEndpointsAndSkip("jpa:org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel|direct:decisionserver")
 @UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class}) 
+@SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
 public class XmlRoutes_CallKieExtractReportsTest {
     @Autowired
@@ -37,10 +37,10 @@ public class XmlRoutes_CallKieExtractReportsTest {
 
     @EndpointInject(uri = "mock:jpa:org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel")
     private MockEndpoint mockJPA;
-    
+
     @SpyBean
     DecisionServerHelper decisionServerHelper;
-    
+
     @Before
     public void setup() throws Exception {
         camelContext.getRouteDefinition("call-kie-extract-reports").adviceWith(camelContext, new AdviceWithRouteBuilder() {
@@ -49,14 +49,14 @@ public class XmlRoutes_CallKieExtractReportsTest {
                 replaceFromWith("direct:inputDataModel");
                 weaveById("decisionserver").after().process(exchange -> exchange.getIn().setBody(new ServiceResponse<ExecutionResults>()));
             }
-        });     
+        });
         doReturn(getReportModelSample()).when(decisionServerHelper).extractReports(any());
     }
 
     @Test
     public void xmlroutes_directInputDataModel_InputDataModelGiven_ShouldReportDecisionServerHelperValues() throws Exception
     {
-      
+
         mockJPA.expectedBodiesReceived(getReportModelSample());
 
         camelContext.setTracing(true);
@@ -67,13 +67,13 @@ public class XmlRoutes_CallKieExtractReportsTest {
         camelContext.createProducerTemplate().sendBody("direct:inputDataModel", getInputDataModelSample());
 
         mockJPA.assertIsSatisfied();
-        
+
         camelContext.stop();
     }
 
     private ReportDataModel getReportModelSample() {
         return ReportDataModel.builder().numberOfHosts(10).totalDiskSpace(100L).totalPrice(1000).build();
-    }    
+    }
 
     private UploadFormInputDataModel getInputDataModelSample() {
         String customerId = "CID123";
@@ -87,5 +87,5 @@ public class XmlRoutes_CallKieExtractReportsTest {
         Double growthratepercentage = 7D;
         return new UploadFormInputDataModel(customerId, fileName, hypervisor, totaldiskspace, sourceproductindicator, year1hypervisorpercentage, year2hypervisorpercentage, year3hypervisorpercentage, growthratepercentage);
     }
-    
+
 }

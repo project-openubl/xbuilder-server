@@ -8,7 +8,7 @@ import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
-import org.jboss.xavier.integrations.Application;
+import org.jboss.xavier.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("http4:{{insights.upload.host}}/api/ingress/v1/upload")
 @UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class}) 
+@SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
 public class MainRouteBuilder_DirectInsightsTest {
     @Autowired
@@ -37,21 +37,21 @@ public class MainRouteBuilder_DirectInsightsTest {
 
     @Autowired
     MainRouteBuilder routeBuilder;
-    
+
     @Test
     public void mainRouteBuilder_routeDirectInsights_ContentGiven_ShouldStoreinLocalFile() throws Exception {
         //Given
-                
+
         String body = "this is a test body";
         String filename = "testfilename.txt";
         String customerid = "CID90765";
         Map<String,Object> metadata = new HashMap<>();
         metadata.put("customerid", customerid);
-        
+
         Map<String,Object> headers = new HashMap<>();
         headers.put("CamelFileName", filename);
         headers.put("MA_metadata", metadata);
-        
+
         String rhidentity = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";;
         headers.put("x-rh-identity", rhidentity);
 
@@ -70,13 +70,13 @@ public class MainRouteBuilder_DirectInsightsTest {
         HttpEntity bodyResult = mockInsightsServiceHttp4.getExchanges().get(0).getIn().getBody(HttpEntity.class);
         String receivedBody = IOUtils.toString(bodyResult.getContent(), Charset.forName("UTF-8"));
         assertThat(receivedBody.indexOf(body)).isGreaterThanOrEqualTo(0);
-        
+
         String expectedRHIdentity = routeBuilder.getRHIdentity(rhidentity, filename, headers);
         assertThat(mockInsightsServiceHttp4.getExchanges().get(0).getIn().getHeader("x-rh-identity", String.class)).isEqualToIgnoringCase(expectedRHIdentity);
 
         camelContext.stop();
     }
-    
 
-    
+
+
 }

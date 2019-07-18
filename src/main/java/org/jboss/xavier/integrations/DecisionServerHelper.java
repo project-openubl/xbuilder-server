@@ -16,6 +16,8 @@
 package org.jboss.xavier.integrations;
 
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
+import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
+import org.jboss.xavier.analytics.pojo.output.InitialSavingsEstimationReportModel;
 import org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel;
 import org.kie.api.KieServices;
 import org.kie.api.command.BatchExecutionCommand;
@@ -27,14 +29,36 @@ import org.kie.api.runtime.rule.QueryResultsRow;
 import org.kie.server.api.model.KieServiceResponse;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Component
 public class DecisionServerHelper {
 
-    public BatchExecutionCommand createMigrationAnalyticsCommand(UploadFormInputDataModel inputDataModel) {
-        return generateCommands(inputDataModel, "get reports", "kiesession0");
+    /** The random. */
+    private final Random random = new Random();
+
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+    public BatchExecutionCommand createMigrationAnalyticsCommand(Object inputDataModel) {
+        return generateCommands(inputDataModel, "get InitialSavingsEstimationReports", "kiesession0");
+    }
+
+    public UploadFormInputDataModel createSampleUploadFormInputDataModel()
+    {
+        UploadFormInputDataModel uploadFormInputDataModel = new UploadFormInputDataModel();
+        String customerId = Integer.toString(random.nextInt(99999999));
+        uploadFormInputDataModel.setCustomerId(customerId);
+        uploadFormInputDataModel.setFileName(format.format(new Date()) + "-" + customerId + "-payload.json");
+        uploadFormInputDataModel.setHypervisor(random.nextInt(99999));
+        uploadFormInputDataModel.setGrowthRatePercentage(0.05);
+        uploadFormInputDataModel.setYear1HypervisorPercentage(0.5);
+        uploadFormInputDataModel.setYear2HypervisorPercentage(0.3);
+        uploadFormInputDataModel.setYear3HypervisorPercentage(0.15);
+        return uploadFormInputDataModel;
     }
 
     private BatchExecutionCommand generateCommands(Object insert, String retrieveQueryId, String kiseSessionId)
@@ -59,6 +83,40 @@ public class DecisionServerHelper {
         }
 
         return report;
+    }
+
+    public InitialSavingsEstimationReportModel extractInitialSavingsEstimationReportModel(KieServiceResponse<ExecutionResults> response) {
+        ExecutionResults res = response.getResult();
+        InitialSavingsEstimationReportModel report = null;
+        if (res != null) {
+            QueryResults queryResults = (QueryResults) res.getValue("output");
+            for (QueryResultsRow queryResult : queryResults) {
+                report = (InitialSavingsEstimationReportModel) queryResult.get("report");
+                break;
+            }
+        }
+        report.getEnvironmentModel().setReport(report);
+        report.getSourceCostsModel().setReport(report);
+        report.getSourceRampDownCostsModel().setReport(report);
+        report.getRhvRampUpCostsModel().setReport(report);
+        report.getRhvYearByYearCostsModel().setReport(report);
+        report.getRhvSavingsModel().setReport(report);
+        /*report.getRhvAdditionalContainerCapacityModel().setReport(report);
+        report.getRhvOrderFormModel().setReport(report);*/
+        return report;
+    }
+
+    public AnalysisModel createSampleAnalysisModel(KieServiceResponse<ExecutionResults> response)
+    {
+        AnalysisModel analysis = new AnalysisModel();
+        analysis.setStatus("CREATED");
+        InitialSavingsEstimationReportModel initialSavingsEstimationReport = extractInitialSavingsEstimationReportModel(response);
+        analysis.setInitialSavingsEstimationReportModel(initialSavingsEstimationReport);
+        initialSavingsEstimationReport.setAnalysis(analysis);
+        analysis.setPayloadName(initialSavingsEstimationReport.getFileName());
+        analysis.setReportName("Report Name");
+        analysis.setReportDescription("Report Description");
+        return analysis;
     }
 
 }

@@ -15,6 +15,6 @@ import java.util.Map;
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RHIdentity {
-    String account_number;
-    Map<String,String> internal = new HashMap<>();
+    Identity identity;
+    Map<String, Map<String,String>> entitlements = new HashMap<>();
 }

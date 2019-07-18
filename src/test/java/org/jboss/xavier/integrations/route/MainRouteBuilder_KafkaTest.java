@@ -8,7 +8,7 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
-import org.jboss.xavier.integrations.Application;
+import org.jboss.xavier.Application;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("kafka:*|direct:download-file")
 @UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class}) 
+@SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
 public class MainRouteBuilder_KafkaTest {
     @Autowired
@@ -40,7 +40,7 @@ public class MainRouteBuilder_KafkaTest {
                 replaceFromWith("direct:kafka");
             }
         });
-    }    
+    }
 
     @Test
     public void mainRouteBuilder_Kafka_ContentWithSeveralFilesGiven_ShouldReturnSameNumberOfMessages() throws Exception {
@@ -63,5 +63,5 @@ public class MainRouteBuilder_KafkaTest {
 
         camelContext.stop();
     }
-    
+
 }

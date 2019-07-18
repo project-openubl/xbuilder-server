@@ -4,7 +4,7 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
-import org.jboss.xavier.integrations.Application;
+import org.jboss.xavier.Application;
 import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.doReturn;
 @UseAdviceWith // Disables automatic start of Camel context
 @ActiveProfiles("test")
 public class ParamsCalculatorTest {
-    @SpyBean 
+    @SpyBean
     private Calculator reportCalculator;
 
     @Test
@@ -56,14 +56,14 @@ public class ParamsCalculatorTest {
         headers.put("year2hypervisorpercentage", year2hypervisorpercentage);
         headers.put("year3hypervisorpercentage", year3hypervisorpercentage);
         headers.put("growthratepercentage", growthratepercentage);
-        
+
         // When
         UploadFormInputDataModel inputDataModelCalculated = reportCalculator.calculate(cloudFormJSON, headers);
 
         // Then
         assertThat(inputDataModelCalculated).isEqualToComparingFieldByFieldRecursively(expectedFormInputDataModel);
-    }    
-    
+    }
+
     @Test
     public void analyticsCalculator_calculate_CloudFormsModelWithNotExistingVersionGiven_ShouldReturn1HostAndTotalDiskSpace() throws IOException {
         // Given
@@ -90,9 +90,9 @@ public class ParamsCalculatorTest {
         headers.put("year2hypervisorpercentage", year2hypervisorpercentage);
         headers.put("year3hypervisorpercentage", year3hypervisorpercentage);
         headers.put("growthratepercentage", growthratepercentage);
-        
+
         doReturn("v2").when(reportCalculator).getManifestVersion(any());
-        
+
         // When
         UploadFormInputDataModel inputDataModelCalculated = reportCalculator.calculate(cloudFormJSON, headers);
 

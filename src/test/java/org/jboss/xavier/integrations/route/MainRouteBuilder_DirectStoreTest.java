@@ -6,7 +6,7 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
-import org.jboss.xavier.integrations.Application;
+import org.jboss.xavier.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("direct:insights|file:*")
 @UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class}) 
+@SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
 public class MainRouteBuilder_DirectStoreTest {
     @Autowired
@@ -30,7 +30,7 @@ public class MainRouteBuilder_DirectStoreTest {
     @Test
     public void mainRouteBuilder_routeDirectStore_ContentGiven_ShouldStoreinLocalFile() throws Exception {
         //Given
-                
+
         String body = "this is a test body";
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -43,10 +43,10 @@ public class MainRouteBuilder_DirectStoreTest {
 
         //Then
         mockInsights.assertIsSatisfied();
-        
+
         camelContext.stop();
     }
-    
 
-    
+
+
 }
