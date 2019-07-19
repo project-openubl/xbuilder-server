@@ -2,6 +2,7 @@ package org.jboss.xavier.integrations.migrationanalytics.business;
 
 import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.springframework.core.env.Environment;
 
@@ -25,7 +26,7 @@ public class ParamsCalculator implements Calculator {
     @Override
     public UploadFormInputDataModel calculate(String cloudFormsJson, Map<String, Object> headers) {
         String payloadVersion = getManifestVersion(cloudFormsJson);
-
+        
         String hypervisorPath = env.getProperty("cloudforms.manifest." + payloadVersion + ".hypervisor", env.getProperty("cloudforms.manifest.v1.hypervisor"));
         String cpuTotalCoresPath = env.getProperty("cloudforms.manifest." + payloadVersion + ".hypervisor.cpuTotalCoresPath", env.getProperty("cloudforms.manifest.v1.hypervisor.cpuTotalCoresPath"));
         String cpuCoresPerSocketPath = env.getProperty("cloudforms.manifest." + payloadVersion + ".hypervisor.cpuCoresPerSocketPath", env.getProperty("cloudforms.manifest.v1.hypervisor.cpuCoresPerSocketPath"));
@@ -35,8 +36,9 @@ public class ParamsCalculator implements Calculator {
         Integer numberofhypervisors = ((JSONArray) JsonPath.read(cloudFormsJson, hypervisorPath)).stream().map(e -> calculateHypervisors(e, cpuTotalCoresPath, cpuCoresPerSocketPath)).mapToInt(Integer::intValue).sum();
         Long totalspace = ((List<Number>) JsonPath.parse(cloudFormsJson).read(totalSpacePath)).stream().mapToLong(Number::longValue).sum();
 
+        
         // User properties
-        String customerid = headers.get(Calculator.CUSTOMERID).toString();
+        String customerid = StringUtils.defaultString((String) headers.get(Calculator.CUSTOMERID));
         String filename = headers.get(Calculator.FILENAME).toString();
 //        int sourceproductindicator = Integer.parseInt(headers.get(Calculator.SOURCEPRODUCTINDICATOR) != null ? headers.get(Calculator.SOURCEPRODUCTINDICATOR).toString() : "0");
         double year1hypervisorpercentage = Double.parseDouble(headers.get(Calculator.YEAR_1_HYPERVISORPERCENTAGE) != null ? headers.get(Calculator.YEAR_1_HYPERVISORPERCENTAGE).toString() : "0") / 100;

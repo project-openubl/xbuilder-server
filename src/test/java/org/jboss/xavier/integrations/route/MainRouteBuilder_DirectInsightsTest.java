@@ -17,6 +17,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,14 +48,14 @@ public class MainRouteBuilder_DirectInsightsTest {
         String filename = "testfilename.txt";
         String customerid = "CID90765";
         Map<String,Object> metadata = new HashMap<>();
-        metadata.put("customerid", customerid);
-
+        metadata.put("dummy", customerid);
+        
         Map<String,Object> headers = new HashMap<>();
         headers.put("CamelFileName", filename);
         headers.put("MA_metadata", metadata);
-
-        String rhidentity = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";;
-        headers.put("x-rh-identity", rhidentity);
+        
+        String rhidentity = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";
+        headers.put("x-rh-identity", Base64.getEncoder().encodeToString(rhidentity.getBytes(StandardCharsets.UTF_8)));
 
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -71,7 +73,7 @@ public class MainRouteBuilder_DirectInsightsTest {
         String receivedBody = IOUtils.toString(bodyResult.getContent(), Charset.forName("UTF-8"));
         assertThat(receivedBody.indexOf(body)).isGreaterThanOrEqualTo(0);
 
-        String expectedRHIdentity = routeBuilder.getRHIdentity(rhidentity, filename, headers);
+        String expectedRHIdentity = routeBuilder.getRHIdentity(Base64.getEncoder().encodeToString(rhidentity.getBytes(StandardCharsets.UTF_8)), filename, headers);
         assertThat(mockInsightsServiceHttp4.getExchanges().get(0).getIn().getHeader("x-rh-identity", String.class)).isEqualToIgnoringCase(expectedRHIdentity);
 
         camelContext.stop();

@@ -45,11 +45,10 @@
                     <choice>
                         <when>
                             <simple>${header.summary} == 'false'</simple>
-                            <bean beanType="org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService" method="findReports" />
-<!--                            <bean ref="initialSavingsEstimationReportService" method="findReports" />-->
+                            <bean ref="initialSavingsEstimationReportService" method="findReports()" />
                         </when>
                         <otherwise>
-                            <bean beanType="org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService" method="findReportSummary(${header.page}, ${header.size})" />
+                            <bean ref="initialSavingsEstimationReportService" method="findReportSummary(${header.page}, ${header.size})" />
                         </otherwise>
                     </choice>
                 </route>

@@ -3,8 +3,8 @@ package org.jboss.xavier.integrations.migrationanalytics.output;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
-import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.Application;
+import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,31 +31,32 @@ public class ParamsCalculatorTest {
     private Calculator reportCalculator;
 
     @Test
-    public void analyticsCalculator_calculate_CloudFormsModelWith32coresAnd16cpupercoreGiven_ShouldReturn1HostAndTotalDiskSpace() throws IOException {
+    public void analyticsCalculator_calculate_CloudFormsModelGiven_ShouldReturn2HostAndTotalDiskSpace() throws IOException {
         // Given
         String filename = "cloudforms-export-v1.json";
         String customerid = "CIDE9988";
 
         String cloudFormJSON = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(filename), "UTF-8");
-
-        Integer hypervisor = 1;
-        Long totaldiskspace = 281951062016L;
-
-        Integer sourceproductindicator = 1;
+        Integer hypervisor = 2;
+        Long totaldiskspace = 563902124032L;
+        Integer sourceproductindicator = null;
         Double year1hypervisorpercentage = 10D;
         Double year2hypervisorpercentage = 20D;
         Double year3hypervisorpercentage = 30D;
         Double growthratepercentage = 7D;
-        UploadFormInputDataModel expectedFormInputDataModel = new UploadFormInputDataModel(customerid, filename, hypervisor, totaldiskspace, sourceproductindicator, year1hypervisorpercentage, year2hypervisorpercentage, year3hypervisorpercentage, growthratepercentage);
+        
+        UploadFormInputDataModel expectedFormInputDataModel = new UploadFormInputDataModel(customerid, filename, hypervisor,
+                totaldiskspace, sourceproductindicator, 
+                year1hypervisorpercentage/100, year2hypervisorpercentage/100, 
+                year3hypervisorpercentage/100, growthratepercentage/100);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("filename", filename);
-        headers.put("customerid", customerid);
-        headers.put("sourceproductindicator", sourceproductindicator);
-        headers.put("year1hypervisorpercentage", year1hypervisorpercentage);
-        headers.put("year2hypervisorpercentage", year2hypervisorpercentage);
-        headers.put("year3hypervisorpercentage", year3hypervisorpercentage);
-        headers.put("growthratepercentage", growthratepercentage);
+        headers.put("org_id", customerid);
+        headers.put(Calculator.YEAR_1_HYPERVISORPERCENTAGE, year1hypervisorpercentage);
+        headers.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
+        headers.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
+        headers.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
 
         // When
         UploadFormInputDataModel inputDataModelCalculated = reportCalculator.calculate(cloudFormJSON, headers);
@@ -65,38 +66,9 @@ public class ParamsCalculatorTest {
     }
 
     @Test
-    public void analyticsCalculator_calculate_CloudFormsModelWithNotExistingVersionGiven_ShouldReturn1HostAndTotalDiskSpace() throws IOException {
+    public void analyticsCalculator_calculate_CloudFormsModelWithNotExistingVersionGiven_ShouldFallbackToV1AndReturn2HostAndTotalDiskSpace() throws IOException {
         // Given
-        String filename = "cloudforms-export-v1.json";
-        String customerid = "CIDE9988";
-
-        String cloudFormJSON = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(filename), "UTF-8");
-
-        Integer hypervisor = 1;
-        Long totaldiskspace = 281951062016L;
-
-        Integer sourceproductindicator = 1;
-        Double year1hypervisorpercentage = 10D;
-        Double year2hypervisorpercentage = 20D;
-        Double year3hypervisorpercentage = 30D;
-        Double growthratepercentage = 7D;
-        UploadFormInputDataModel expectedFormInputDataModel = new UploadFormInputDataModel(customerid, filename, hypervisor, totaldiskspace, sourceproductindicator, year1hypervisorpercentage, year2hypervisorpercentage, year3hypervisorpercentage, growthratepercentage);
-
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("filename", filename);
-        headers.put("customerid", customerid);
-        headers.put("sourceproductindicator", sourceproductindicator);
-        headers.put("year1hypervisorpercentage", year1hypervisorpercentage);
-        headers.put("year2hypervisorpercentage", year2hypervisorpercentage);
-        headers.put("year3hypervisorpercentage", year3hypervisorpercentage);
-        headers.put("growthratepercentage", growthratepercentage);
-
         doReturn("v2").when(reportCalculator).getManifestVersion(any());
-
-        // When
-        UploadFormInputDataModel inputDataModelCalculated = reportCalculator.calculate(cloudFormJSON, headers);
-
-        // Then
-        assertThat(inputDataModelCalculated).isEqualToComparingFieldByFieldRecursively(expectedFormInputDataModel);
+        analyticsCalculator_calculate_CloudFormsModelGiven_ShouldReturn2HostAndTotalDiskSpace();
     }
 }

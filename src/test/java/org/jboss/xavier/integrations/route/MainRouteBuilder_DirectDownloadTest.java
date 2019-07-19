@@ -7,6 +7,7 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
+import org.apache.commons.codec.binary.Base64;
 import org.jboss.xavier.integrations.route.model.notification.FilePersistedNotification;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,17 +55,17 @@ public class MainRouteBuilder_DirectDownloadTest {
         camelContext.startRoute("download-file");
         Map<String, Object> headers = new HashMap<>();
         Map<String,Object> metadata = new HashMap<>();
-        metadata.put("customerid", "CID1234");
+        metadata.put("dummy", "CID1234");
         headers.put("MA_metadata", metadata);
 
         String rhidentity = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";
-        FilePersistedNotification body = FilePersistedNotification.builder().url("http://dummyurl.com").category("cat").service("xavier").b64_identity(mainRouteBuilder.getRHIdentity(rhidentity, "ficherito.txt", headers)).build();
+        FilePersistedNotification body = FilePersistedNotification.builder().url("http://dummyurl.com").category("cat").service("xavier").b64_identity(mainRouteBuilder.getRHIdentity(Base64.encodeBase64String(rhidentity.getBytes(StandardCharsets.UTF_8)), "ficherito.txt", headers)).build();
 
         camelContext.createProducerTemplate().sendBody("direct:download-file", body);
 
         //Then
         mockOldHost.assertIsSatisfied();
-        assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader("MA_metadata", Map.class).get("customerid")).isEqualTo("CID1234");
+        assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader("MA_metadata", Map.class).get("dummy")).isEqualTo("CID1234");
         assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader("MA_metadata", Map.class).get("auth_time")).isEqualTo("0");
         mockUnzipFile.assertIsSatisfied();
 

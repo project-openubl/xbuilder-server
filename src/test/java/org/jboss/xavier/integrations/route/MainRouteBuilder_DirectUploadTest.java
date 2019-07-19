@@ -53,7 +53,7 @@ public class MainRouteBuilder_DirectUploadTest {
         String filename = "testfilename.txt";
         String customerid = "CID90765";
         Map<String,Object> metadata = new HashMap<>();
-        metadata.put("customerid", customerid);
+        metadata.put("dummy", customerid);
 
         Map<String,Object> headers = new HashMap<>();
         headers.put("CamelFileName", filename);
@@ -161,7 +161,7 @@ public class MainRouteBuilder_DirectUploadTest {
                 "Content-Disposition: form-data; name=\"redhat\"; filename=\"txt-files-samples.zip\"\n" +
                 "Content-Type: application/zip\n\n";
         String mimeFooter = "\n----------------------------378483299686133026113807\n" +
-                "Content-Disposition: form-data; name=\"customerid\"\n" +
+                "Content-Disposition: form-data; name=\"dummy\"\n" +
                 "\n" +
                 "CID12345" +
                 "\n\n----------------------------378483299686133026113807--\n";
@@ -196,7 +196,7 @@ public class MainRouteBuilder_DirectUploadTest {
                 "Content-Disposition: form-data; name=\"redhat\"; filename=\"" + filename + "\"\n" +
                 "Content-Type: application/zip\n\n";
         String mimeFooter = "\n----------------------------378483299686133026113807\n" +
-                "Content-Disposition: form-data; name=\"customerid\"\n" +
+                "Content-Disposition: form-data; name=\"dummy\"\n" +
                 "\n" +
                 "CID12345" +
                 "\n\n----------------------------378483299686133026113807--\n";

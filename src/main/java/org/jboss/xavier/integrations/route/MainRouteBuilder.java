@@ -1,8 +1,5 @@
 package org.jboss.xavier.integrations.route;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -20,13 +17,13 @@ import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.ByteArrayBody;
 import org.jboss.xavier.integrations.route.dataformat.CustomizedMultipartDataFormat;
-import org.jboss.xavier.integrations.route.model.RHIdentity;
 import org.jboss.xavier.integrations.route.model.notification.FilePersistedNotification;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.activation.DataHandler;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -142,29 +139,6 @@ public class MainRouteBuilder extends RouteBuilder {
                 .end();
     }
 
-    private void extractAndEnrichRHIdentityFromNotification(Exchange exchange) throws IOException {
-        FilePersistedNotification filePersistedNotification = exchange.getIn().getBody(FilePersistedNotification.class);
-/*
-        String identity_json = new String(Base64.getDecoder().decode(filePersistedNotification.getB64_identity()));
-        RHIdentity rhIdentity = new ObjectMapper().reader().forType(RHIdentity.class).withRootName("identity").readValue(identity_json);
-
-        rhIdentity.getIdentity().getInternal().forEach((key,value) -> {
-            Map header = exchange.getIn().getHeader("MA_metadata", new HashMap<String, String>(), Map.class);
-            header.put(key, value);
-            exchange.getIn().setHeader("MA_metadata", header);
-        });
-*/
-
-        JsonNode node= new ObjectMapper().reader().readTree(new String(Base64.getDecoder().decode(filePersistedNotification.getB64_identity())));
-        ObjectNode objectNode = (ObjectNode) node.get("identity").get("internal");
-
-        objectNode.fields().forEachRemaining(entry -> {
-            Map header = exchange.getIn().getHeader("MA_metadata", new HashMap<String, String>(), Map.class);
-            header.put(entry.getKey(), entry.getValue().toString());
-            exchange.getIn().setHeader("MA_metadata", header);
-        });
-    }
-
     public Map<String,String> extractMAmetadataHeaderFromIdentity(FilePersistedNotification filePersistedNotification) throws IOException {
         String identity_json = new String(Base64.getDecoder().decode(filePersistedNotification.getB64_identity()));
         JsonNode node= new ObjectMapper().reader().readTree(identity_json);
@@ -209,7 +183,7 @@ public class MainRouteBuilder extends RouteBuilder {
         // we add all properties defined on the Insights Properties, that we should have as Headers of the message
         insightsProperties.forEach(e -> objectNode.put(e, ((Map<String,Object>) headers.get("MA_metadata")).get(e).toString()));
 
-        return Base64.getEncoder().encodeToString(node.toString().getBytes());
+        return Base64.getEncoder().encodeToString(node.toString().getBytes(StandardCharsets.UTF_8));
     }
 
     private Predicate isZippedFile(String extension) {
@@ -220,9 +194,10 @@ public class MainRouteBuilder extends RouteBuilder {
             return zipContentType && zipExtension;
         };
     }
-
+    
     private boolean isZipContentType(Exchange exchange) {
-        return "application/zip".equalsIgnoreCase(exchange.getMessage().getHeader(CustomizedMultipartDataFormat.CONTENT_TYPE).toString());
+        String mimetype = exchange.getMessage().getHeader(CustomizedMultipartDataFormat.CONTENT_TYPE).toString();
+        return "application/zip".equalsIgnoreCase(mimetype) || "application/gzip".equalsIgnoreCase(mimetype) || "application/tar+gz".equalsIgnoreCase(mimetype);
     }
 
     private Processor processMultipart() {

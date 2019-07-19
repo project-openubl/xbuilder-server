@@ -55,12 +55,20 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         camelContext.start();
         camelContext.startRoute("unzip-file");
 
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("txt-files-samples.zip");
+        String nameOfFile = "txt-files-samples.zip";
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(nameOfFile);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "application/zip");
-        headers.put(Exchange.FILE_NAME, "txt-files-samples.zip");
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers);
+        headers.put(Exchange.FILE_NAME, nameOfFile);
+
+        Map<String,Object> metadata = new HashMap<>();
+        metadata.put("filename", nameOfFile);
+        metadata.put("dummy", "CID123");
+        headers.put("MA_metadata", metadata);
+
+
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
 
         //Then
         mockCalculate.assertIsSatisfied();
@@ -79,12 +87,50 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         camelContext.start();
         camelContext.startRoute("unzip-file");
 
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("cloudforms-export-v1-multiple-files.tar.gz");
+        String nameOfFile = "cloudforms-export-v1-multiple-files.tar.gz";
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(nameOfFile);
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put("Content-Type", "application/zip");
-        headers.put(Exchange.FILE_NAME, "cloudforms-export-v1-multiple-files.tar.gz");
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers);
+        headers.put("Content-Type", "application/gzip");
+        headers.put(Exchange.FILE_NAME, nameOfFile);
+
+        Map<String,Object> metadata = new HashMap<>();
+        metadata.put("filename", nameOfFile);
+        metadata.put("dummy", "CID123");
+        headers.put("MA_metadata", metadata);        
+        
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
+
+        //Then
+        mockCalculate.assertIsSatisfied();
+
+        camelContext.stop();
+    }
+    
+    @Test
+    public void mainRouteBuilder_routeDirectUnzip_TarGzFileWith2FilesGivenAndTarGzContentType_ShouldReturn2Messages() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+        mockCalculate.expectedMessageCount(2);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("unzip-file");
+
+        String nameOfFile = "cloudforms-export-v1-multiple-files.tar.gz";
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(nameOfFile);
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("Content-Type", "application/tar+gz");
+        headers.put(Exchange.FILE_NAME, nameOfFile);
+
+        Map<String,Object> metadata = new HashMap<>();
+        metadata.put("filename", nameOfFile);
+        metadata.put("dummy", "CID123");
+        headers.put("MA_metadata", metadata);        
+        
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
 
         //Then
         mockCalculate.assertIsSatisfied();
@@ -103,12 +149,19 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         camelContext.start();
         camelContext.startRoute("unzip-file");
 
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("cloudforms-export-v1-json");
+        String nameOfFile = "cloudforms-export-v1-json";
+        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(nameOfFile);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "text/plain");
-        headers.put(Exchange.FILE_NAME, "cloudforms-export-v1-json");
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers);
+        headers.put(Exchange.FILE_NAME, nameOfFile);
+
+        Map<String,Object> metadata = new HashMap<>();
+        metadata.put("filename", nameOfFile);
+        metadata.put("dummy", "CID123");
+        headers.put("MA_metadata", metadata);
+
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
 
         //Then
         mockCalculate.assertIsSatisfied();

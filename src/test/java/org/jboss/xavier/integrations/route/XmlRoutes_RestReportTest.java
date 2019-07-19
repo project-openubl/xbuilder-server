@@ -5,7 +5,7 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
-import org.jboss.xavier.integrations.jpa.service.ReportService;
+import org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.verify;
 
 
@@ -37,7 +38,7 @@ public class XmlRoutes_RestReportTest {
     private TestRestTemplate restTemplate;
 
     @MockBean
-    private ReportService reportService;
+    private InitialSavingsEstimationReportService reportService;
 
     @Value("${camel.component.servlet.mapping.context-path}")
     String camel_context;
@@ -61,7 +62,7 @@ public class XmlRoutes_RestReportTest {
         restTemplate.getForEntity(camel_context + "report?summary={summary}", String.class, variables);
 
         //Then
-        verify(reportService).findReportSummary();
+        verify(reportService).findReportSummary(anyInt(), anyInt());
         camelContext.stop();
     }
 
