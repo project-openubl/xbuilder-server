@@ -3,8 +3,6 @@ package org.jboss.xavier.analytics.pojo.output;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.CascadeType;
@@ -12,7 +10,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Component
@@ -32,6 +33,10 @@ public class AnalysisModel
     @OneToOne(mappedBy = "analysis", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
     @JsonIgnore
     private InitialSavingsEstimationReportModel initialSavingsEstimationReportModel;
+
+    @OneToMany(mappedBy = "analysis", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<WorkloadInventoryReportModel> workloadInventoryReportModels;
 
     private String reportName;
     private String reportDescription;
@@ -55,6 +60,22 @@ public class AnalysisModel
     public void setInitialSavingsEstimationReportModel(InitialSavingsEstimationReportModel initialSavingsEstimationReportModel) {
         this.initialSavingsEstimationReportModel = initialSavingsEstimationReportModel;
         initialSavingsEstimationReportModel.setAnalysis(this);
+    }
+
+    public List<WorkloadInventoryReportModel> getWorkloadInventoryReportModels() {
+        return workloadInventoryReportModels;
+    }
+
+    public void setWorkloadInventoryReportModels(List<WorkloadInventoryReportModel> workloadInventoryReportModels) {
+        this.workloadInventoryReportModels = workloadInventoryReportModels;
+        workloadInventoryReportModels.forEach(workloadInventoryReportModel -> workloadInventoryReportModel.setAnalysis(this));
+    }
+
+    public void addWorkloadInventoryReportModel(WorkloadInventoryReportModel workloadInventoryReportModel)
+    {
+        if (this.workloadInventoryReportModels == null) this.workloadInventoryReportModels = new ArrayList<>();
+        this.workloadInventoryReportModels.add(workloadInventoryReportModel);
+        workloadInventoryReportModel.setAnalysis(this);
     }
 
     public String getReportName() {
