@@ -56,13 +56,21 @@
             <get uri="/{id}">
                 <description>Get the details of a report</description>
                 <route id="report-get-details">
-                    <bean beanType="org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService" method="findReportSummaryById(${header.id})" />
+                    <bean ref="initialSavingsEstimationReportService" method="findReportSummaryById(${header.id})" />
                 </route>
             </get>
             <get uri="/{id}/initial-saving-estimation">
                 <description>Get the Initial Cost Saving report</description>
                 <route id="reports-get-details">
-                    <bean beanType="org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService" method="findReportDetails(${header.id})" />
+                    <bean ref="initialSavingsEstimationReportService" method="findReportDetails(${header.id})" />
+                </route>
+            </get>
+            <get uri="/{id}/workload-inventory">
+                <description>Get the Workload Inventory Reports</description>
+                <param name="page" type="query" defaultValue="0" required="false" description="Define the page requested" />
+                <param name="size" type="query" defaultValue="10" required="false" description="Define the size of the requested page" />
+                <route id="workload-inventory-report-get-details">
+                    <bean ref="workloadInventoryReportService" method="findByAnalysisId(${header.id}, ${header.page}, ${header.size})" />
                 </route>
             </get>
         </rest>

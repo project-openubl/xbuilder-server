@@ -6,6 +6,7 @@ import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService;
+import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +39,10 @@ public class XmlRoutes_RestReportTest {
     private TestRestTemplate restTemplate;
 
     @MockBean
-    private InitialSavingsEstimationReportService reportService;
+    private InitialSavingsEstimationReportService initialSavingsEstimationReportService;
+
+    @MockBean
+    private WorkloadInventoryReportService workloadInventoryReportService;
 
     @Value("${camel.component.servlet.mapping.context-path}")
     String camel_context;
@@ -49,7 +53,7 @@ public class XmlRoutes_RestReportTest {
     }
 
     @Test
-    public void mainRouteBuilder_RestReport_SummaryParamGiven_ShouldCallFindReportSummary() throws Exception {
+    public void xmlRouteBuilder_RestReport_SummaryParamGiven_ShouldCallFindReportSummary() throws Exception {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -62,12 +66,12 @@ public class XmlRoutes_RestReportTest {
         restTemplate.getForEntity(camel_context + "report?summary={summary}", String.class, variables);
 
         //Then
-        verify(reportService).findReportSummary(anyInt(), anyInt());
+        verify(initialSavingsEstimationReportService).findReportSummary(anyInt(), anyInt());
         camelContext.stop();
     }
 
     @Test
-    public void mainRouteBuilder_RestReport_NotSummaryParamGiven_ShouldCallFindReports() throws Exception {
+    public void xmlRouteBuilder_RestReport_NotSummaryParamGiven_ShouldCallFindReports() throws Exception {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -80,7 +84,87 @@ public class XmlRoutes_RestReportTest {
         restTemplate.getForEntity(camel_context + "report?summary={summary}", String.class, variables);
 
         //Then
-        verify(reportService).findReports();
+        verify(initialSavingsEstimationReportService).findReports();
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportId_IdParamGiven_ShouldCallFindReportSummaryById() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("report-get-details");
+        Map<String, Long> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        restTemplate.getForEntity(camel_context + "report/{id}", String.class, variables);
+
+        //Then
+        verify(initialSavingsEstimationReportService).findReportSummaryById(one);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdInitialSavingsEstimation_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("reports-get-details");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        restTemplate.getForEntity(camel_context + "report/{id}/initial-saving-estimation", String.class, variables);
+
+        //Then
+        verify(initialSavingsEstimationReportService).findReportDetails(one);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_PageParamGiven_SizeParamGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("workload-inventory-report-get-details");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        int page = 2;
+        variables.put("page", page);
+        int size = 3;
+        variables.put("size", size);
+        restTemplate.getForEntity(camel_context + "report/{id}/workload-inventory?page={page}&size={size}", String.class, variables);
+
+        //Then
+        verify(workloadInventoryReportService).findByAnalysisId(one, page, size);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("workload-inventory-report-get-details");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        restTemplate.getForEntity(camel_context + "report/{id}/workload-inventory", String.class, variables);
+
+        //Then
+        verify(workloadInventoryReportService).findByAnalysisId(one, 0, 10);
         camelContext.stop();
     }
 
