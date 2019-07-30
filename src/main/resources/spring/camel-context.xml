@@ -59,6 +59,29 @@
                     <bean ref="initialSavingsEstimationReportService" method="findReportSummaryById(${header.id})" />
                 </route>
             </get>
+            <delete uri="/{id}">
+                <description>Delete a report</description>
+                <route id="report-delete">
+                    <bean ref="analysisService" method="findById(${header.id})"/>
+                    <choice>
+                        <when>
+                            <simple>${body} != null</simple>
+                            <bean ref="analysisService" method="deleteById(${header.id})" />
+                            <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
+                                <simple resultType="String">${type:javax.servlet.http.HttpServletResponse.SC_NO_CONTENT}</simple>
+                            </setHeader>
+                        </when>
+                        <otherwise>
+                            <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
+                                <simple resultType="String">${type:javax.servlet.http.HttpServletResponse.SC_NOT_FOUND}</simple>
+                            </setHeader>
+                            <setBody>
+                                <constant>Analysis not found</constant>
+                            </setBody>
+                        </otherwise>
+                    </choice>
+                </route>
+            </delete>
             <get uri="/{id}/initial-saving-estimation">
                 <description>Get the Initial Cost Saving report</description>
                 <route id="reports-get-details">

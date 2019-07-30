@@ -5,8 +5,11 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
+import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
+import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService;
 import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,15 +17,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 @RunWith(CamelSpringBootRunner.class)
@@ -43,6 +50,9 @@ public class XmlRoutes_RestReportTest {
 
     @MockBean
     private WorkloadInventoryReportService workloadInventoryReportService;
+
+    @SpyBean
+    private AnalysisService analysisService;
 
     @Value("${camel.component.servlet.mapping.context-path}")
     String camel_context;
@@ -165,6 +175,56 @@ public class XmlRoutes_RestReportTest {
 
         //Then
         verify(workloadInventoryReportService).findByAnalysisId(one, 0, 10);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportId_IdParamGiven_AndIdNotExists_ShouldReturnNotFount404Status() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        Long one = 1L;
+        when(analysisService.findById(one)).thenReturn(null);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("report-delete");
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("id", one);
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}" , HttpMethod.DELETE, null, String.class, variables);
+
+        //Then
+        Assert.assertEquals(response.getStatusCodeValue(), HttpServletResponse.SC_NOT_FOUND);
+        verify(analysisService).findById(one);
+        verify(analysisService, never()).deleteById(one);
+        camelContext.stop();
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportId_IdParamGiven_AndIdExists_ShouldCallDeleteById() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        Long one = 1L;
+        when(analysisService.findById(one)).thenReturn(new AnalysisModel());
+        doNothing().when(analysisService).deleteById(one);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("report-delete");
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("id", one);
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}" , HttpMethod.DELETE, null, String.class, variables);
+
+        //Then
+        Assert.assertEquals(response.getStatusCodeValue(), HttpServletResponse.SC_NO_CONTENT);
+        Assert.assertNull(response.getBody());
+        verify(analysisService).findById(one);
+        verify(analysisService).deleteById(one);
+        camelContext.stop();
         camelContext.stop();
     }
 
