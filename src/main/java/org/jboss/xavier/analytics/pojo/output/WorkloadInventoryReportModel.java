@@ -4,40 +4,49 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
 @Transactional
+@Table(
+        indexes = {
+                @Index(name = "WorkloadInventoryReportModel_" +
+                        WorkloadInventoryReportModel.ANALYSIS_ID + "_index",
+                        columnList = WorkloadInventoryReportModel.ANALYSIS_ID, unique = false)
+        }
+)
 public class WorkloadInventoryReportModel
 {
     static final long serialVersionUID = 1L;
+    static final String ANALYSIS_ID = "analysis_id";
 
     @Id
-    @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO, generator = "WORLOADINVENTORYREPORTMODEL_ID_GENERATOR")
+    @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO, generator = "WORKLOADINVENTORYREPORTMODEL_ID_GENERATOR")
     @GenericGenerator(
-            name = "WORLOADINVENTORYREPORTMODEL_ID_GENERATOR",
+            name = "WORKLOADINVENTORYREPORTMODEL_ID_GENERATOR",
             strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
             parameters = {
-                    @Parameter(name = "sequence_name", value = "WORLOADINVENTORYREPORT_SEQUENCE")
+                    @Parameter(name = "sequence_name", value = "WORKLOADINVENTORYREPORT_SEQUENCE")
             }
     )
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "analysis_id")
+    @JoinColumn(name = ANALYSIS_ID)
     @JsonBackReference
     private AnalysisModel analysis;
 
@@ -51,13 +60,28 @@ public class WorkloadInventoryReportModel
     private Integer memory;
     private Integer cpuCores;
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            indexes = {
+                    @Index(columnList = "workload_inventory_report_model_id", unique = false)
+            }
+    )
     private Set<String> workloads;
     private String complexity;
     // with "IMS" suffix in case one day we will have
     // their "AMM" counterparts
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            indexes = {
+                    @Index(columnList = "workload_inventory_report_model_id", unique = false)
+            }
+    )
     private Set<String> recommendedTargetsIMS;
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            indexes = {
+                    @Index(columnList = "workload_inventory_report_model_id", unique = false)
+            }
+    )
     private Set<String> flagsIMS;
     private Date creationDate;
 

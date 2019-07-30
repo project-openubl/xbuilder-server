@@ -11,9 +11,11 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -21,11 +23,19 @@ import java.util.Date;
  */
 
 @Entity
+@Table(
+        indexes = {
+                @Index(name = "InitialSavingsEstimationReportModel_" +
+                        InitialSavingsEstimationReportModel.ANALYSIS_ID + "_index",
+                        columnList = InitialSavingsEstimationReportModel.ANALYSIS_ID, unique = false)
+        }
+)
 public class InitialSavingsEstimationReportModel
         implements
         java.io.Serializable {
 
     static final long serialVersionUID = 1L;
+    static final String ANALYSIS_ID = "analysis_id";
 
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO, generator = "INITIALSAVINGSESTIMATIONREPORTMODEL_ID_GENERATOR")
@@ -39,7 +49,7 @@ public class InitialSavingsEstimationReportModel
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "analysis_id")
+    @JoinColumn(name = ANALYSIS_ID)
     @JsonBackReference
     private AnalysisModel analysis;
 
