@@ -1,10 +1,8 @@
 package org.jboss.xavier.integrations.migrationanalytics.business;
 
-import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
-
 import java.util.Map;
 
-public interface Calculator {
+public interface Calculator<T> {
     String CUSTOMERID = "org_id";
     String FILENAME = "filename";
     String SOURCEPRODUCTINDICATOR = "sourceproductindicator";
@@ -13,8 +11,10 @@ public interface Calculator {
     String YEAR_3_HYPERVISORPERCENTAGE = "percentageOfHypervisorsMigratedOnYear3";
     String GROWTHRATEPERCENTAGE = "yearOverYearGrowthRatePercentage";
 
-    UploadFormInputDataModel calculate(String cloudFormsJson, Map<String, Object> headers);
+    T calculate(String cloudFormsJson, Map<String, Object> headers);
 
     // It will try to extract the version of the payload from the JSON file, falling back to v1
-    String getManifestVersion(String cloudFormsJson);
+    default String getManifestVersion(String cloudFormsJson) {
+        return "v1";
+    }
 }

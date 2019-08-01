@@ -19,7 +19,9 @@ import com.thoughtworks.xstream.XStream;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
 import org.apache.camel.spi.DataFormatFactory;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
+import org.jboss.xavier.analytics.pojo.input.workload.inventory.VMWorkloadInventoryModel;
 import org.jboss.xavier.analytics.pojo.output.InitialSavingsEstimationReportModel;
+import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel;
 import org.kie.internal.runtime.helper.BatchExecutionHelper;
 import org.springframework.context.annotation.Bean;
@@ -41,8 +43,10 @@ public class DecisionServerAutoConfiguration {
         XStream xstream = BatchExecutionHelper.newXStreamMarshaller();
         // Use the "model" package instead of the one used on the kie server
         xstream.aliasPackage(MIGRATION_ANALYTICS_INPUT_MODELS_PACKAGE_NAME, UploadFormInputDataModel.class.getPackage().getName());
+        xstream.aliasPackage(MIGRATION_ANALYTICS_INPUT_MODELS_PACKAGE_NAME + ".workload.inventory", VMWorkloadInventoryModel.class.getPackage().getName());
         xstream.aliasPackage(MIGRATION_ANALYTICS_OUTPUT_MODELS_PACKAGE_NAME, ReportDataModel.class.getPackage().getName());
         xstream.aliasPackage(MIGRATION_ANALYTICS_OUTPUT_MODELS_PACKAGE_NAME, InitialSavingsEstimationReportModel.class.getPackage().getName());
+        xstream.aliasPackage(MIGRATION_ANALYTICS_OUTPUT_MODELS_PACKAGE_NAME + ".workload.inventory" , WorkloadInventoryReportModel.class.getPackage().getName());
         xstream.alias("response", org.kie.server.api.model.ServiceResponse.class);
 
         return new XStreamDataFormat(xstream);

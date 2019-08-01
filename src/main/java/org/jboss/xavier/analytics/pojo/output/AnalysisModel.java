@@ -3,6 +3,7 @@ package org.jboss.xavier.analytics.pojo.output;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.CascadeType;

@@ -13,7 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.util.Date;
@@ -215,7 +214,6 @@ public class InitialSavingsEstimationReportModel
     }
 
     public void setAnalysis(AnalysisModel analysis) {
-        System.out.println("#### setAnalysis");
         this.analysis = analysis;
     }
 }

@@ -10,6 +10,7 @@ import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
+import org.jboss.xavier.analytics.pojo.input.workload.inventory.VMWorkloadInventoryModel;
 import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +19,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.inject.Inject;
-import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(CamelSpringBootRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel")
+@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|jms:queue:vm-workload-inventory")
 @UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
@@ -39,7 +40,10 @@ public class MainRouteBuilder_DirectCalculateTest {
     MainRouteBuilder mainRouteBuilder;
 
     @EndpointInject(uri = "mock:jms:queue:uploadFormInputDataModel")
-    private MockEndpoint mockJmsQueue;
+    private MockEndpoint mockJmsQueueCostSavings;    
+    
+    @EndpointInject(uri = "mock:jms:queue:vm-workload-inventory")
+    private MockEndpoint mockJmsQueueWorkloadInventory;
 
     @Test
     public void mainRouteBuilder_DirectCalculate_PersistedNotificationGiven_ShouldCallFileWithGivenHeaders() throws Exception {
@@ -74,13 +78,13 @@ public class MainRouteBuilder_DirectCalculateTest {
 
         //When
         camelContext.start();
-        camelContext.startRoute("calculate");
-        InputStream body = getClass().getClassLoader().getResourceAsStream(fileName);
+        camelContext.startRoute("calculate-costsavings");
+        String body = IOUtils.resourceToString(fileName, StandardCharsets.UTF_8, MainRouteBuilder_DirectCalculateTest.class.getClassLoader());
         
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:calculate", body, headers);
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:calculate-costsavings", body, headers);
 
         //Then
-        assertThat(mockJmsQueue.getExchanges().get(0).getIn().getBody()).isEqualToComparingFieldByFieldRecursively(expectedFormInputDataModelExpected);
+        assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody()).isEqualToComparingFieldByFieldRecursively(expectedFormInputDataModelExpected);
 
         camelContext.stop();
     }
@@ -90,7 +94,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
-        mockJmsQueue.expectedMessageCount(0);
+        mockJmsQueueCostSavings.expectedMessageCount(0);
 
         String customerId = "CID123";
         String fileName = "cloudforms-export-v1.json";
@@ -100,16 +104,16 @@ public class MainRouteBuilder_DirectCalculateTest {
 
         //When
         camelContext.start();
-        camelContext.startRoute("calculate");
+        camelContext.startRoute("calculate-costsavings");
         String body = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(fileName), Charset.forName("UTF-8"));
 
-        Exchange message = camelContext.createProducerTemplate().request("direct:calculate", exchange -> {
+        Exchange message = camelContext.createProducerTemplate().request("direct:calculate-costsavings", exchange -> {
             exchange.getIn().setBody("{ \"ñkajsñlkj\" : " + body);
             exchange.getIn().setHeaders(headers);
         });
 
         //Then
-        mockJmsQueue.assertIsSatisfied();
+        mockJmsQueueCostSavings.assertIsSatisfied();
         assertThat(message.getIn().getBody(String.class)).isEqualToIgnoringCase("Exception on parsing Cloudforms file");
         camelContext.stop();
     }    
@@ -119,7 +123,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
-        mockJmsQueue.expectedMessageCount(1);
+        mockJmsQueueCostSavings.expectedMessageCount(1);
 
         String fileName = "cloudforms-export-v1.json";
 
@@ -139,17 +143,21 @@ public class MainRouteBuilder_DirectCalculateTest {
         camelContext.start();
         camelContext.startRoute("unzip-file");
         camelContext.startRoute("calculate");
+        camelContext.startRoute("calculate-costsavings");
+        camelContext.startRoute("calculate-vmworkloadinventory");
         String body = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(fileName), Charset.forName("UTF-8"));
 
-        Exchange message = camelContext.createProducerTemplate().request("direct:unzip-file", exchange -> {
-            exchange.getIn().setBody(body);
+        camelContext.createProducerTemplate().request("direct:calculate", exchange -> {
+            exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
             exchange.getIn().setHeaders(headers);
         });
 
+        Thread.sleep(5000);
         //Then
-        mockJmsQueue.assertIsSatisfied();
-        assertThat(message.getIn().getBody(UploadFormInputDataModel.class).getTotalDiskSpace()).isEqualTo(563902124032L);
-        assertThat(message.getIn().getBody(UploadFormInputDataModel.class).getHypervisor()).isEqualTo(2);
+        mockJmsQueueCostSavings.assertIsSatisfied();
+        assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getTotalDiskSpace()).isEqualTo(563902124032L);
+        assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getHypervisor()).isEqualTo(2);
+        assertThat(mockJmsQueueWorkloadInventory.getExchanges().get(0).getIn().getBody(VMWorkloadInventoryModel.class).getVmName()).isNotEmpty();
         camelContext.stop();
     }
 

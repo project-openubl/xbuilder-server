@@ -1,6 +1,6 @@
 package org.jboss.xavier.integrations.jpa.service;
 
-import org.jboss.xavier.analytics.pojo.output.WorkloadInventoryReportModel;
+import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.integrations.jpa.repository.WorkloadInventoryReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

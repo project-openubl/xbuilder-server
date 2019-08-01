@@ -6,6 +6,7 @@ import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
+import org.jboss.xavier.integrations.migrationanalytics.business.ParamsCalculator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.doReturn;
 @ActiveProfiles("test")
 public class ParamsCalculatorTest {
     @SpyBean
-    private Calculator reportCalculator;
+    private ParamsCalculator reportCalculator;
 
     @Test
     public void analyticsCalculator_calculate_CloudFormsModelGiven_ShouldReturn2HostAndTotalDiskSpace() throws IOException {

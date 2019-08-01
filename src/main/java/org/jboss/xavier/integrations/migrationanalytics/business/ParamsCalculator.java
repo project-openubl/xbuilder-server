@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Named("calculator")
-public class ParamsCalculator implements Calculator {
+public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
     @Inject
     private Environment env;
 
@@ -51,11 +51,5 @@ public class ParamsCalculator implements Calculator {
                 null, year1hypervisorpercentage,
                 year2hypervisorpercentage,
                 year3hypervisorpercentage, growthratepercentage);
-    }
-
-    // It will try to extract the version of the payload from the JSON file, falling back to v1
-    @Override
-    public String getManifestVersion(String cloudFormsJson) {
-        return "v1";
     }
 }

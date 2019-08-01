@@ -18,6 +18,7 @@ package org.jboss.xavier.integrations;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.analytics.pojo.output.InitialSavingsEstimationReportModel;
+import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel;
 import org.kie.api.KieServices;
 import org.kie.api.command.BatchExecutionCommand;
@@ -61,7 +62,7 @@ public class DecisionServerHelper {
         return uploadFormInputDataModel;
     }
 
-    private BatchExecutionCommand generateCommands(Object insert, String retrieveQueryId, String kiseSessionId)
+    public BatchExecutionCommand generateCommands(Object insert, String retrieveQueryId, String kiseSessionId)
     {
         List<Command<?>> cmds = new ArrayList<Command<?>>();
         KieCommands commands = KieServices.Factory.get().getCommands();
@@ -101,8 +102,21 @@ public class DecisionServerHelper {
         report.getRhvRampUpCostsModel().setReport(report);
         report.getRhvYearByYearCostsModel().setReport(report);
         report.getRhvSavingsModel().setReport(report);
-        /*report.getRhvAdditionalContainerCapacityModel().setReport(report);
-        report.getRhvOrderFormModel().setReport(report);*/
+        report.getRhvAdditionalContainerCapacityModel().setReport(report);
+//        report.getRhvOrderFormModel().setReport(report);
+        return report;
+    }
+
+    public WorkloadInventoryReportModel extractWorkloadInventoryReportModel(KieServiceResponse<ExecutionResults> response) {
+        ExecutionResults res = response.getResult();
+        WorkloadInventoryReportModel report = null;
+        if (res != null) {
+            QueryResults queryResults = (QueryResults) res.getValue("output");
+            for (QueryResultsRow queryResult : queryResults) {
+                report = (WorkloadInventoryReportModel) queryResult.get("report");
+                break;
+            }
+        }
         return report;
     }
 
