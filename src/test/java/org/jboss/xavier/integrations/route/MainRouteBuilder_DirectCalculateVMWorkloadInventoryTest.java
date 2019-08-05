@@ -18,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,18 +54,25 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         Double year3hypervisorpercentage = 30D;
         Double growthratepercentage = 7D;
 
-        VMWorkloadInventoryModel expectedVmWorkloadInventoryModel = new VMWorkloadInventoryModel();
-        expectedVmWorkloadInventoryModel.setCluster("V2V_Cluster");
-        expectedVmWorkloadInventoryModel.setCpuCores(1);
-        expectedVmWorkloadInventoryModel.setDatacenter("V2V-DC");
-        expectedVmWorkloadInventoryModel.setDiskSpace(1355808768L);
-        expectedVmWorkloadInventoryModel.setGuestOSFullName("Red Hat Enterprise Linux Server release 7.4 (Maipo)");
-        expectedVmWorkloadInventoryModel.setHasRdmDisk(false);
-        expectedVmWorkloadInventoryModel.setMemory(2147483648L);
-        expectedVmWorkloadInventoryModel.setNicsCount(1);
-        expectedVmWorkloadInventoryModel.setOsProductName("Linux");
-        expectedVmWorkloadInventoryModel.setProvider("VMware");
-        expectedVmWorkloadInventoryModel.setVmName("james-db-03-copy");
+        VMWorkloadInventoryModel expectedModel = new VMWorkloadInventoryModel();
+        expectedModel.setVmName("dev-windows-server-2008-TEST");
+        expectedModel.setProvider("VMware");
+        expectedModel.setOsProductName("ServerNT");
+        expectedModel.setNicsCount(1);
+        expectedModel.setMemory(4294967296L);
+        expectedModel.setHasRdmDisk(false);
+        expectedModel.setGuestOSFullName("Microsoft Windows Server 2008 R2 (64-bit)");
+        expectedModel.setDiskSpace(7437787136L);
+        expectedModel.setDatacenter("V2V-DC");
+        expectedModel.setCpuCores(1);
+        expectedModel.setCluster("V2V_Cluster");
+        expectedModel.setSystemServicesNames(Arrays.asList("{02B0078E-2148-45DD-B7D3-7E37AAB3B31D}","xmlprov","wudfsvc"));
+        expectedModel.setVmDiskFilenames(Arrays.asList("[NFS_Datastore] dev-windows-server-2008/dev-windows-server-2008.vmdk"));
+
+        HashMap<String, String> files = new HashMap<>();
+        files.put("/root/.bash_profile","# .bash_profile\n\n# Get the aliases and functions\nif [ -f ~/.bashrc ]; then\n\t. ~/.bashrc\nfi\n\n# User specific environment and startup programs\n\nPATH=$PATH:$HOME/bin\nexport PATH\nexport JAVA_HOME=/usr/java/jdk1.5.0_07/bin/java\nexport WAS_HOME=/opt/IBM/WebSphere/AppServer\n");
+        files.put("/opt/IBM", null);
+        expectedModel.setFiles(files);
         
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("filename", fileName);
@@ -87,7 +95,7 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         Thread.sleep(5000);
         
         //Then
-        assertThat(mockJmsQueue.getExchanges().get(0).getIn().getBody(VMWorkloadInventoryModel.class)).isEqualToComparingFieldByFieldRecursively(expectedVmWorkloadInventoryModel);
+        assertThat(mockJmsQueue.getExchanges().stream().map(e -> e.getIn().getBody(VMWorkloadInventoryModel.class)).filter(e -> e.getVmName().equalsIgnoreCase("dev-windows-server-2008-TEST")).findFirst().get()).isEqualToComparingFieldByFieldRecursively(expectedModel);
         assertThat(mockJmsQueue.getExchanges().size()).isEqualTo(21);
 
         camelContext.stop();
