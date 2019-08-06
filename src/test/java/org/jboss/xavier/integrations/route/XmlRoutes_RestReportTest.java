@@ -63,7 +63,7 @@ public class XmlRoutes_RestReportTest {
     }
 
     @Test
-    public void xmlRouteBuilder_RestReport_SummaryParamGiven_ShouldCallFindReportSummary() throws Exception {
+    public void xmlRouteBuilder_RestReport_NoParamGiven_ShouldCallFindReports() throws Exception {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -71,9 +71,7 @@ public class XmlRoutes_RestReportTest {
         //When
         camelContext.start();
         camelContext.startRoute("reports-get-all");
-        Map<String, String> variables = new HashMap<>();
-        variables.put("summary", "true");
-        restTemplate.getForEntity(camel_context + "report?summary={summary}", String.class, variables);
+        restTemplate.getForEntity(camel_context + "report", String.class);
 
         //Then
         verify(analysisService).findReports(0, 10);
@@ -81,7 +79,7 @@ public class XmlRoutes_RestReportTest {
     }
 
     @Test
-    public void xmlRouteBuilder_RestReport_NotSummaryParamGiven_ShouldCallFindReports() throws Exception {
+    public void xmlRouteBuilder_RestReport_PageAndSizeParamGiven_ShouldCallFindReports() throws Exception {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -89,12 +87,38 @@ public class XmlRoutes_RestReportTest {
         //When
         camelContext.start();
         camelContext.startRoute("reports-get-all");
-        Map<String, String> variables = new HashMap<>();
-        variables.put("summary", "false");
-        restTemplate.getForEntity(camel_context + "report?summary={summary}", String.class, variables);
+        Map<String, Object> variables = new HashMap<>();
+        int page = 2;
+        variables.put("page", page);
+        int size = 3;
+        variables.put("size", size);
+        restTemplate.getForEntity(camel_context + "report?page={page}&size={size}", String.class, variables);
 
         //Then
-        verify(analysisService).findReports(0, 10);
+        verify(analysisService).findReports(page, size);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReport_FilterTextPageAndSizeParamGiven_ShouldCallFindReports() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("reports-get-all");
+        Map<String, Object> variables = new HashMap<>();
+        int page = 2;
+        variables.put("page", page);
+        int size = 3;
+        variables.put("size", size);
+        String filterText = "my report name which I'm searching";
+        variables.put("filterText", filterText);
+        restTemplate.getForEntity(camel_context + "report?page={page}&size={size}&filterText={filterText}", String.class, variables);
+
+        //Then
+        verify(analysisService).findReports(filterText, page, size);
         camelContext.stop();
     }
 

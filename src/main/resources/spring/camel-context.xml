@@ -37,18 +37,18 @@
             <description>Report REST API</description>
             <get uri="/">
                 <description>Get the list of all the reports</description>
-                <param name="summary" type="query" defaultValue="true" required="false" description="Disable the output objects to have only the fields needed in the reports summary page setting the parameter 'summary=false'" />
                 <param name="page" type="query" defaultValue="0" required="false" description="Define the page requested" />
                 <param name="size" type="query" defaultValue="10" required="false" description="Define the size of the requested page" />
+                <param name="filterText" type="query" required="false" description="Define the text which will be used to filter the results" />
                 <route id="reports-get-all">
                     <log message="${headers} ${body}" />
                     <choice>
                         <when>
-                            <simple>${header.summary} == 'false'</simple>
+                            <simple>${header.filterText} == null</simple>
                             <bean ref="analysisService" method="findReports(${header.page}, ${header.size})" />
                         </when>
                         <otherwise>
-                            <bean ref="analysisService" method="findReports(${header.page}, ${header.size})" />
+                            <bean ref="analysisService" method="findReports(${header.filterText}, ${header.page}, ${header.size})" />
                         </otherwise>
                     </choice>
                 </route>
