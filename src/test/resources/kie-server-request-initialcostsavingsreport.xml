@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<batch-execution lookup="kiesession0">
+    <insert>
+        <org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel>
+            <customerId>99</customerId>
+            <fileName>vcenter.v2v.bos.redhat.com.json.zip</fileName>
+            <hypervisor>2</hypervisor>
+            <totalDiskSpace>563902124032</totalDiskSpace>
+            <year1HypervisorPercentage>10.0</year1HypervisorPercentage>
+            <year2HypervisorPercentage>10.0</year2HypervisorPercentage>
+            <year3HypervisorPercentage>10.0</year3HypervisorPercentage>
+            <growthRatePercentage>20.0</growthRatePercentage>
+            <dealIndicator>1</dealIndicator>
+            <openStackIndicator>1</openStackIndicator>
+            <sourceProductIndicator>1</sourceProductIndicator>
+        </org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel>
+    </insert>
+    <fire-all-rules/>
+    <query out-identifier="output" name="get InitialSavingsEstimationReports"/>
+</batch-execution>
+
+<!--
+Remember to set X-KIE-ContentType to xstream in order to receive values
+-->

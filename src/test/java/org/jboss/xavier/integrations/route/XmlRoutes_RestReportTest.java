@@ -76,7 +76,7 @@ public class XmlRoutes_RestReportTest {
         restTemplate.getForEntity(camel_context + "report?summary={summary}", String.class, variables);
 
         //Then
-        verify(initialSavingsEstimationReportService).findReportSummary(anyInt(), anyInt());
+        verify(analysisService).findReports(0, 10);
         camelContext.stop();
     }
 
@@ -94,12 +94,12 @@ public class XmlRoutes_RestReportTest {
         restTemplate.getForEntity(camel_context + "report?summary={summary}", String.class, variables);
 
         //Then
-        verify(initialSavingsEstimationReportService).findReports();
+        verify(analysisService).findReports(0, 10);
         camelContext.stop();
     }
 
     @Test
-    public void xmlRouteBuilder_RestReportId_IdParamGiven_ShouldCallFindReportSummaryById() throws Exception {
+    public void xmlRouteBuilder_RestReportId_IdParamGiven_ShouldCallFindById() throws Exception {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -113,12 +113,12 @@ public class XmlRoutes_RestReportTest {
         restTemplate.getForEntity(camel_context + "report/{id}", String.class, variables);
 
         //Then
-        verify(initialSavingsEstimationReportService).findReportSummaryById(one);
+        verify(analysisService).findById(one);
         camelContext.stop();
     }
 
     @Test
-    public void xmlRouteBuilder_RestReportIdInitialSavingsEstimation_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
+    public void xmlRouteBuilder_RestReportIdInitialSavingsEstimation_IdParamGiven_ShouldCallFindOneByAnalysisId() throws Exception {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -132,7 +132,7 @@ public class XmlRoutes_RestReportTest {
         restTemplate.getForEntity(camel_context + "report/{id}/initial-saving-estimation", String.class, variables);
 
         //Then
-        verify(initialSavingsEstimationReportService).findReportDetails(one);
+        verify(initialSavingsEstimationReportService).findOneByAnalysisId(one);
         camelContext.stop();
     }
 

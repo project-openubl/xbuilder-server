@@ -7,6 +7,7 @@ import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
 import org.jboss.xavier.integrations.migrationanalytics.business.ParamsCalculator;
+import org.jboss.xavier.integrations.route.MainRouteBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,11 +46,12 @@ public class ParamsCalculatorTest {
         Double year2hypervisorpercentage = 20D;
         Double year3hypervisorpercentage = 30D;
         Double growthratepercentage = 7D;
-        
+        Long analysisId = 3L;
+
         UploadFormInputDataModel expectedFormInputDataModel = new UploadFormInputDataModel(customerid, filename, hypervisor,
-                totaldiskspace, sourceproductindicator, 
-                year1hypervisorpercentage/100, year2hypervisorpercentage/100, 
-                year3hypervisorpercentage/100, growthratepercentage/100);
+                totaldiskspace, sourceproductindicator,
+                year1hypervisorpercentage/100, year2hypervisorpercentage/100,
+                year3hypervisorpercentage/100, growthratepercentage/100, analysisId);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("filename", filename);
@@ -58,6 +60,7 @@ public class ParamsCalculatorTest {
         headers.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
         headers.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
         headers.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
+        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId);
 
         // When
         UploadFormInputDataModel inputDataModelCalculated = reportCalculator.calculate(cloudFormJSON, headers);

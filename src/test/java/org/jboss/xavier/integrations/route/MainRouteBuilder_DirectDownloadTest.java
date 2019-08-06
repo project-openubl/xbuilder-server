@@ -56,6 +56,7 @@ public class MainRouteBuilder_DirectDownloadTest {
         Map<String, Object> headers = new HashMap<>();
         Map<String,Object> metadata = new HashMap<>();
         metadata.put("dummy", "CID1234");
+        metadata.put("analysisId", "3");
         headers.put("MA_metadata", metadata);
 
         String rhidentity = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";

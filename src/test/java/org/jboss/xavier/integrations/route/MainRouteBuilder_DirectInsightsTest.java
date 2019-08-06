@@ -49,11 +49,12 @@ public class MainRouteBuilder_DirectInsightsTest {
         String customerid = "CID90765";
         Map<String,Object> metadata = new HashMap<>();
         metadata.put("dummy", customerid);
-        
+        metadata.put("analysisId", "30");
+
         Map<String,Object> headers = new HashMap<>();
         headers.put("CamelFileName", filename);
         headers.put("MA_metadata", metadata);
-        
+
         String rhidentity = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";
         headers.put("x-rh-identity", Base64.getEncoder().encodeToString(rhidentity.getBytes(StandardCharsets.UTF_8)));
 

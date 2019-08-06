@@ -48,4 +48,9 @@ public class InitialSavingsEstimationReportService
     {
         return reportRepository.findOne(id);
     }
+
+    public InitialSavingsEstimationReportModel findOneByAnalysisId(Long id)
+    {
+        return reportRepository.findOneByAnalysisId(id);
+    }
 }

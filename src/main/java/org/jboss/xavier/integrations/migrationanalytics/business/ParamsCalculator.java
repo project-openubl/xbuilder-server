@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
+import org.jboss.xavier.integrations.route.MainRouteBuilder;
 import org.springframework.core.env.Environment;
 
 import javax.inject.Inject;
@@ -26,7 +27,7 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
     @Override
     public UploadFormInputDataModel calculate(String cloudFormsJson, Map<String, Object> headers) {
         String payloadVersion = getManifestVersion(cloudFormsJson);
-        
+
         String hypervisorPath = env.getProperty("cloudforms.manifest." + payloadVersion + ".hypervisor", env.getProperty("cloudforms.manifest.v1.hypervisor"));
         String cpuTotalCoresPath = env.getProperty("cloudforms.manifest." + payloadVersion + ".hypervisor.cpuTotalCoresPath", env.getProperty("cloudforms.manifest.v1.hypervisor.cpuTotalCoresPath"));
         String cpuCoresPerSocketPath = env.getProperty("cloudforms.manifest." + payloadVersion + ".hypervisor.cpuCoresPerSocketPath", env.getProperty("cloudforms.manifest.v1.hypervisor.cpuCoresPerSocketPath"));
@@ -36,7 +37,7 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
         Integer numberofhypervisors = ((JSONArray) JsonPath.read(cloudFormsJson, hypervisorPath)).stream().map(e -> calculateHypervisors(e, cpuTotalCoresPath, cpuCoresPerSocketPath)).mapToInt(Integer::intValue).sum();
         Long totalspace = ((List<Number>) JsonPath.parse(cloudFormsJson).read(totalSpacePath)).stream().mapToLong(Number::longValue).sum();
 
-        
+
         // User properties
         String customerid = StringUtils.defaultString((String) headers.get(Calculator.CUSTOMERID));
         String filename = headers.get(Calculator.FILENAME).toString();
@@ -50,6 +51,7 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
         return new UploadFormInputDataModel(customerid, filename, numberofhypervisors.intValue(), totalspace,
                 null, year1hypervisorpercentage,
                 year2hypervisorpercentage,
-                year3hypervisorpercentage, growthratepercentage);
+                year3hypervisorpercentage, growthratepercentage,
+                Long.parseLong(headers.get(MainRouteBuilder.ANALYSIS_ID).toString()));
     }
 }

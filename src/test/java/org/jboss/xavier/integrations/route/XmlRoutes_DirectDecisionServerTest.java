@@ -53,7 +53,8 @@ public class XmlRoutes_DirectDecisionServerTest {
         Double year2hypervisorpercentage = 20D;
         Double year3hypervisorpercentage = 30D;
         Double growthratepercentage = 7D;
-        UploadFormInputDataModel inputDataModel = new UploadFormInputDataModel(customerId, fileName, hypervisor, totaldiskspace, sourceproductindicator, year1hypervisorpercentage, year2hypervisorpercentage, year3hypervisorpercentage, growthratepercentage);
+        Long analysiId = 30L;
+        UploadFormInputDataModel inputDataModel = new UploadFormInputDataModel(customerId, fileName, hypervisor, totaldiskspace, sourceproductindicator, year1hypervisorpercentage, year2hypervisorpercentage, year3hypervisorpercentage, growthratepercentage, analysiId);
 
 
         BatchExecutionCommand sentBody = decisionServerHelper.createMigrationAnalyticsCommand(inputDataModel);

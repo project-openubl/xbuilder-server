@@ -5,6 +5,7 @@ import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.workload.inventory.VMWorkloadInventoryModel;
+import org.jboss.xavier.integrations.route.MainRouteBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,12 +30,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class VMWorkloadInventoryCalculatorTest {
     @Inject
     VMWorkloadInventoryCalculator calculator;
-    
+
     @Test
     public void calculate_jsonGiven_ShouldReturnCalculatedValues() throws IOException {
         String cloudFormsJson = IOUtils.resourceToString("cloudforms-export-v1.json", StandardCharsets.UTF_8, VMWorkloadInventoryCalculatorTest.class.getClassLoader());
         Map<String, Object> headers = new HashMap<>();
-        
+        Long analysisId = 30L;
+        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId);
+
         Collection<VMWorkloadInventoryModel> modelList = calculator.calculate(cloudFormsJson, headers);
         assertThat(Integer.valueOf(modelList.size())).isEqualTo(21);
         assertThat(modelList.stream().filter(e -> e.getNicsCount() == 2).count()).isEqualTo(4);
@@ -42,7 +45,7 @@ public class VMWorkloadInventoryCalculatorTest {
         assertThat(modelList.stream().filter(e -> e.getVmName().equalsIgnoreCase("dev-windows-server-2008-TEST")).count()).isEqualTo(1);
         assertThat(modelList.stream().filter(e -> e.getGuestOSFullName().equalsIgnoreCase("Microsoft Windows Server 2008 R2 (64-bit)")).count()).isEqualTo(1);
         assertThat(modelList.stream().filter(e -> e.getDiskSpace() == (17179869184L + 10737418240L)).count()).isEqualTo(2);
-  
+
         VMWorkloadInventoryModel expectedModel = new VMWorkloadInventoryModel();
         expectedModel.setVmName("dev-windows-server-2008-TEST");
         expectedModel.setProvider("VMware");
@@ -57,7 +60,8 @@ public class VMWorkloadInventoryCalculatorTest {
         expectedModel.setCluster("V2V_Cluster");
         expectedModel.setSystemServicesNames(Arrays.asList("{02B0078E-2148-45DD-B7D3-7E37AAB3B31D}","xmlprov","wudfsvc"));
         expectedModel.setVmDiskFilenames(Arrays.asList("[NFS_Datastore] dev-windows-server-2008/dev-windows-server-2008.vmdk"));
-        
+        expectedModel.setAnalysisId(analysisId);
+
         HashMap<String, String> files = new HashMap<>();
         files.put("/root/.bash_profile","# .bash_profile\n\n# Get the aliases and functions\nif [ -f ~/.bashrc ]; then\n\t. ~/.bashrc\nfi\n\n# User specific environment and startup programs\n\nPATH=$PATH:$HOME/bin\nexport PATH\nexport JAVA_HOME=/usr/java/jdk1.5.0_07/bin/java\nexport WAS_HOME=/opt/IBM/WebSphere/AppServer\n");
         files.put("/opt/IBM", null);

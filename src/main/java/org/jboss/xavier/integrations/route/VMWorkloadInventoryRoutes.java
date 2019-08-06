@@ -1,13 +1,19 @@
 package org.jboss.xavier.integrations.route;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
+import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.migrationanalytics.business.VMWorkloadInventoryCalculator;
 
+import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Map;
 
 @Named
 public class VMWorkloadInventoryRoutes extends RouteBuilder {
-   
+   @Inject
+    AnalysisService analysisService;
+
     @Override
     public void configure() {
         from("direct:calculate-vmworkloadinventory")
@@ -21,16 +27,14 @@ public class VMWorkloadInventoryRoutes extends RouteBuilder {
                     .to("log:error?showCaughtException=true&showStackTrace=true")
                     .setBody(simple("Exception on parsing Cloudforms file"))
                 .end();
-        
-        from ("jms:queue:vm-workload-inventory")
-                .id("extract-vmworkloadinventory")
+
+        from ("jms:queue:vm-workload-inventory").id("extract-vmworkloadinventory")
             .to("log:INFO?showBody=true&showHeaders=true")
+//            .setHeader(MainRouteBuilder.ANALYSIS_ID, simple("${body.analysisId}"))
+            .setHeader(MainRouteBuilder.ANALYSIS_ID, simple("${body." + MainRouteBuilder.ANALYSIS_ID + "}"))
             .transform().method("decisionServerHelper", "generateCommands(${body}, \"GetWorkloadInventoryReports\", \"WorkloadInventoryKSession0\")")
-            .to("direct:decisionserver")
+            .to("direct:decisionserver").id("workload-decisionserver")
             .transform().method("decisionServerHelper", "extractWorkloadInventoryReportModel")
-            .transform().method("analysisModel", "addWorkloadInventoryReportModel(${body})")
-            .setBody().simple("${ref:analysisModel}")
-            .to("jpa:org.jboss.xavier.analytics.pojo.output.AnalysisModel");
-            
+            .process(e -> analysisService.addWorkloadInventoryReportModel(e.getIn().getBody(WorkloadInventoryReportModel.class), (Long) e.getIn().getHeader(MainRouteBuilder.ANALYSIS_ID)));
     }
 }

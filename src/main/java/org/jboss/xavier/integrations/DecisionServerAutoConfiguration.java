@@ -18,6 +18,7 @@ package org.jboss.xavier.integrations;
 import com.thoughtworks.xstream.XStream;
 import org.apache.camel.dataformat.xstream.XStreamDataFormat;
 import org.apache.camel.spi.DataFormatFactory;
+import org.jboss.xavier.analytics.pojo.input.AbstractInputModel;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.analytics.pojo.input.workload.inventory.VMWorkloadInventoryModel;
 import org.jboss.xavier.analytics.pojo.output.InitialSavingsEstimationReportModel;
@@ -41,6 +42,7 @@ public class DecisionServerAutoConfiguration {
     @Bean(name = "xstream-dataformat")
     public XStreamDataFormat xStreamDataFormat() {
         XStream xstream = BatchExecutionHelper.newXStreamMarshaller();
+        xstream.processAnnotations(AbstractInputModel.class);
         // Use the "model" package instead of the one used on the kie server
         xstream.aliasPackage(MIGRATION_ANALYTICS_INPUT_MODELS_PACKAGE_NAME, UploadFormInputDataModel.class.getPackage().getName());
         xstream.aliasPackage(MIGRATION_ANALYTICS_INPUT_MODELS_PACKAGE_NAME + ".workload.inventory", VMWorkloadInventoryModel.class.getPackage().getName());

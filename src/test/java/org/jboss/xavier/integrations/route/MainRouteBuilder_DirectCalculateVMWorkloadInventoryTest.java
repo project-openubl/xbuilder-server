@@ -53,6 +53,7 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         Double year2hypervisorpercentage = 20D;
         Double year3hypervisorpercentage = 30D;
         Double growthratepercentage = 7D;
+        Long analysisId = 11L;
 
         VMWorkloadInventoryModel expectedModel = new VMWorkloadInventoryModel();
         expectedModel.setVmName("dev-windows-server-2008-TEST");
@@ -68,12 +69,13 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         expectedModel.setCluster("V2V_Cluster");
         expectedModel.setSystemServicesNames(Arrays.asList("{02B0078E-2148-45DD-B7D3-7E37AAB3B31D}","xmlprov","wudfsvc"));
         expectedModel.setVmDiskFilenames(Arrays.asList("[NFS_Datastore] dev-windows-server-2008/dev-windows-server-2008.vmdk"));
+        expectedModel.setAnalysisId(analysisId);
 
         HashMap<String, String> files = new HashMap<>();
         files.put("/root/.bash_profile","# .bash_profile\n\n# Get the aliases and functions\nif [ -f ~/.bashrc ]; then\n\t. ~/.bashrc\nfi\n\n# User specific environment and startup programs\n\nPATH=$PATH:$HOME/bin\nexport PATH\nexport JAVA_HOME=/usr/java/jdk1.5.0_07/bin/java\nexport WAS_HOME=/opt/IBM/WebSphere/AppServer\n");
         files.put("/opt/IBM", null);
         expectedModel.setFiles(files);
-        
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("filename", fileName);
         metadata.put("org_id", customerId);
@@ -81,6 +83,7 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
         metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
         metadata.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("MA_metadata", metadata);
@@ -89,11 +92,11 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         camelContext.start();
         camelContext.startRoute("calculate-vmworkloadinventory");
         String body = IOUtils.resourceToString(fileName, StandardCharsets.UTF_8, this.getClass().getClassLoader());
-        
+
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:calculate-vmworkloadinventory", body, headers);
 
         Thread.sleep(5000);
-        
+
         //Then
         assertThat(mockJmsQueue.getExchanges().stream().map(e -> e.getIn().getBody(VMWorkloadInventoryModel.class)).filter(e -> e.getVmName().equalsIgnoreCase("dev-windows-server-2008-TEST")).findFirst().get()).isEqualToComparingFieldByFieldRecursively(expectedModel);
         assertThat(mockJmsQueue.getExchanges().size()).isEqualTo(21);

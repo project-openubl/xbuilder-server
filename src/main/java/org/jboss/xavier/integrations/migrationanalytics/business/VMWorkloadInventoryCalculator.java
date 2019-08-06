@@ -3,6 +3,7 @@ package org.jboss.xavier.integrations.migrationanalytics.business;
 import com.jayway.jsonpath.JsonPath;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.xavier.analytics.pojo.input.workload.inventory.VMWorkloadInventoryModel;
+import org.jboss.xavier.integrations.route.MainRouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -54,10 +55,10 @@ public class VMWorkloadInventoryCalculator implements Calculator<Collection<VMWo
         this.cloudFormsJson = cloudFormsJson;
 
         List<Map> vmList = readListValuesFromExpandedEnvVarPath(VMPATH, null);
-        return vmList.stream().map(e -> createVMWorkloadInventoryModel(e)).collect(Collectors.toList());
+        return vmList.stream().map(e -> createVMWorkloadInventoryModel(e, Long.parseLong(headers.get(MainRouteBuilder.ANALYSIS_ID).toString()))).collect(Collectors.toList());
     }
 
-    private VMWorkloadInventoryModel createVMWorkloadInventoryModel(Map vmStructMap) {
+    private VMWorkloadInventoryModel createVMWorkloadInventoryModel(Map vmStructMap, Long analysisId) {
         VMWorkloadInventoryModel model = new VMWorkloadInventoryModel();
         model.setProvider(readValueFromExpandedEnvVarPath(PROVIDERPATH, vmStructMap));
 
@@ -81,6 +82,8 @@ public class VMWorkloadInventoryCalculator implements Calculator<Collection<VMWo
         model.setFiles(readMapValuesFromExpandedEnvVarPath(FILESCONTENTPATH, vmStructMap, getExpandedPath(FILESCONTENTPATH_FILENAME, vmStructMap), getExpandedPath(FILESCONTENTPATH_CONTENTS, vmStructMap)));
         model.setSystemServicesNames(readListValuesFromExpandedEnvVarPath(SYSTEMSERVICESNAMESPATH, vmStructMap));
         model.setVmDiskFilenames(readListValuesFromExpandedEnvVarPath(VMDISKSFILENAMESPATH, vmStructMap));
+
+        model.setAnalysisId(analysisId);
 
         return model;
     }

@@ -45,10 +45,10 @@
                     <choice>
                         <when>
                             <simple>${header.summary} == 'false'</simple>
-                            <bean ref="initialSavingsEstimationReportService" method="findReports()" />
+                            <bean ref="analysisService" method="findReports(${header.page}, ${header.size})" />
                         </when>
                         <otherwise>
-                            <bean ref="initialSavingsEstimationReportService" method="findReportSummary(${header.page}, ${header.size})" />
+                            <bean ref="analysisService" method="findReports(${header.page}, ${header.size})" />
                         </otherwise>
                     </choice>
                 </route>
@@ -56,7 +56,7 @@
             <get uri="/{id}">
                 <description>Get the details of a report</description>
                 <route id="report-get-details">
-                    <bean ref="initialSavingsEstimationReportService" method="findReportSummaryById(${header.id})" />
+                    <bean ref="analysisService" method="findById(${header.id})" />
                 </route>
             </get>
             <delete uri="/{id}">
@@ -85,7 +85,7 @@
             <get uri="/{id}/initial-saving-estimation">
                 <description>Get the Initial Cost Saving report</description>
                 <route id="reports-get-details">
-                    <bean ref="initialSavingsEstimationReportService" method="findReportDetails(${header.id})" />
+                    <bean ref="initialSavingsEstimationReportService" method="findOneByAnalysisId(${header.id})" />
                 </route>
             </get>
             <get uri="/{id}/workload-inventory">
@@ -131,19 +131,14 @@
             <from uri="jms:queue:uploadFormInputDataModel" />
             <log message="Message received" />
             <to uri="log:INFO?showBody=true&amp;showHeaders=true" />
+            <setHeader headerName="analysisId">
+                <simple>${body.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.ANALYSIS_ID}}</simple>
+            </setHeader>
             <bean method="createMigrationAnalyticsCommand(${body})" ref="decisionServerHelper"/>
-            <to uri="direct:decisionserver"/>
+            <to uri="direct:decisionserver" id="route-ma-decisionserver"/>
             <bean id="route-extract-ics-reports" method="extractInitialSavingsEstimationReportModel" ref="decisionServerHelper"/>
-<!--            <log id="route-log-sourceLicenseValue" message="totalPrice = ${body.sourceCostsModel.sourceLicenseValue}"/>
-            <to uri="jpa:org.jboss.xavier.analytics.pojo.output.InitialSavingsEstimationReportModel" />-->
             <log id="route-log-sourceLicenseValue" message="totalPrice = ${body.sourceCostsModel.sourceLicenseValue}"/>
-            <bean ref="analysisModel" method="setInitialSavingsEstimationReportModel(${body})" />
-            <setBody>
-                <simple>${ref:analysisModel}</simple>
-            </setBody>
-            <log message="######## AnalysisModel ${body}" />
-            <to uri="log:INFO?showBody=true&amp;showHeaders=true" />
-            <to uri="jpa:org.jboss.xavier.analytics.pojo.output.AnalysisModel" />
+            <bean ref="analysisService" method="setInitialSavingsEstimationReportModel(${body}, ${header.analysisId})" />
         </route>
 
         <!--

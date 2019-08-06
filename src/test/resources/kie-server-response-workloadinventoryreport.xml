@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<response type="SUCCESS" msg="Container xavier-analytics_0.0.1-SNAPSHOT successfully called.">
+    <result class="execution-results">
+        <result identifier="output">
+            <query-results>
+                <identifiers>
+                    <identifier>report</identifier>
+                </identifiers>
+                <row>
+                    <identifier id="report">
+                        <org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel>
+                            <provider>VMWare</provider>
+                            <datacenter>datacenter</datacenter>
+                            <cluster>cluster</cluster>
+                            <vmName>vmname</vmName>
+                            <osName>osname</osName>
+                            <osDescription>osdescription</osDescription>
+                            <diskSpace>0</diskSpace>
+                            <memory>0</memory>
+                            <cpuCores>0</cpuCores>
+                            <workloads></workloads>
+                            <complexity>complexity</complexity>
+                            <recommendedTargetsIMS></recommendedTargetsIMS>
+                            <flagsIMS></flagsIMS>
+                            <creationDate> 2019-08-04 15:35:18.474 EST</creationDate>
+                        </org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel>
+                        <fact-handle external-form="0:2:181540827:181540827:29:DEFAULT:NON_TRAIT:org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel"/>
+                    </identifier>
+                </row>
+            </query-results>
+        </result>
+    </result>
+</response>

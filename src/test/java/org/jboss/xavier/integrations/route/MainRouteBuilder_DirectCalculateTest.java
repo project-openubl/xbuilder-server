@@ -40,8 +40,8 @@ public class MainRouteBuilder_DirectCalculateTest {
     MainRouteBuilder mainRouteBuilder;
 
     @EndpointInject(uri = "mock:jms:queue:uploadFormInputDataModel")
-    private MockEndpoint mockJmsQueueCostSavings;    
-    
+    private MockEndpoint mockJmsQueueCostSavings;
+
     @EndpointInject(uri = "mock:jms:queue:vm-workload-inventory")
     private MockEndpoint mockJmsQueueWorkloadInventory;
 
@@ -60,10 +60,11 @@ public class MainRouteBuilder_DirectCalculateTest {
         Double year2hypervisorpercentage = 20D;
         Double year3hypervisorpercentage = 30D;
         Double growthratepercentage = 7D;
+        Long analysisId = 3L;
 
-        UploadFormInputDataModel expectedFormInputDataModelExpected = new UploadFormInputDataModel(customerId, fileName, hypervisor, totaldiskspace, 
-                sourceproductindicator, year1hypervisorpercentage/100, year2hypervisorpercentage/100, 
-                year3hypervisorpercentage/100, growthratepercentage/100);
+        UploadFormInputDataModel expectedFormInputDataModelExpected = new UploadFormInputDataModel(customerId, fileName, hypervisor, totaldiskspace,
+                sourceproductindicator, year1hypervisorpercentage/100, year2hypervisorpercentage/100,
+                year3hypervisorpercentage/100, growthratepercentage/100, analysisId);
 
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("filename", fileName);
@@ -72,6 +73,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
         metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
         metadata.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, 3L);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("MA_metadata", metadata);
@@ -80,7 +82,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         camelContext.start();
         camelContext.startRoute("calculate-costsavings");
         String body = IOUtils.resourceToString(fileName, StandardCharsets.UTF_8, MainRouteBuilder_DirectCalculateTest.class.getClassLoader());
-        
+
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:calculate-costsavings", body, headers);
 
         //Then
@@ -116,8 +118,8 @@ public class MainRouteBuilder_DirectCalculateTest {
         mockJmsQueueCostSavings.assertIsSatisfied();
         assertThat(message.getIn().getBody(String.class)).isEqualToIgnoringCase("Exception on parsing Cloudforms file");
         camelContext.stop();
-    }    
-    
+    }
+
     @Test
     public void mainRouteBuilder_DirectCalculate_FileGiven_ShouldSendMessageToJMS() throws Exception {
         //Given
@@ -134,11 +136,12 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, 20D);
         metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, 30D);
         metadata.put(Calculator.GROWTHRATEPERCENTAGE, 7D);
-        
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, 7L);
+
         Map<String, Object> headers = new HashMap<>();
         headers.put("MA_metadata", metadata);
         headers.put("Content-type", "application/zip");
-        
+
         //When
         camelContext.start();
         camelContext.startRoute("unzip-file");

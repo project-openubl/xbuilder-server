@@ -6,7 +6,7 @@ package org.jboss.xavier.analytics.pojo.input;
 
 import org.kie.api.definition.type.Label;
 
-public class UploadFormInputDataModel implements java.io.Serializable {
+public class UploadFormInputDataModel extends AbstractInputModel implements java.io.Serializable {
 
     @Label("Customer ID")
     private String customerId;
@@ -119,7 +119,8 @@ public class UploadFormInputDataModel implements java.io.Serializable {
                                     Double year1HypervisorPercentage,
                                     Double year2HypervisorPercentage,
                                     Double year3HypervisorPercentage,
-                                    Double growthRatePercentage) {
+                                    Double growthRatePercentage,
+                                    Long analyisId) {
         this.customerId = customerId;
         this.fileName = fileName;
         this.hypervisor = hypervisor;
@@ -129,6 +130,7 @@ public class UploadFormInputDataModel implements java.io.Serializable {
         this.year2HypervisorPercentage = year2HypervisorPercentage;
         this.year3HypervisorPercentage = year3HypervisorPercentage;
         this.growthRatePercentage = growthRatePercentage;
+        this.setAnalysisId(analyisId);
     }
 
 }
