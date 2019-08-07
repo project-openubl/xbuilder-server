@@ -5,16 +5,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.HashSet;
@@ -26,13 +17,26 @@ import java.util.Set;
         indexes = {
                 @Index(name = "WorkloadInventoryReportModel_" +
                         WorkloadInventoryReportModel.ANALYSIS_ID + "_index",
-                        columnList = WorkloadInventoryReportModel.ANALYSIS_ID, unique = false)
+                        columnList = WorkloadInventoryReportModel.ANALYSIS_ID, unique = false),
+                @Index(name = "WorkloadInventoryReportModel_" +
+                        WorkloadInventoryReportModel.VM_NAME + "_index",
+                        columnList = WorkloadInventoryReportModel.VM_NAME, unique = false),
+                @Index(name = "WorkloadInventoryReportModel_" +
+                        WorkloadInventoryReportModel.OS_NAME + "_index",
+                        columnList = WorkloadInventoryReportModel.OS_NAME, unique = false),
+                @Index(name = "WorkloadInventoryReportModel_" +
+                        WorkloadInventoryReportModel.COMPLEXITY + "_index",
+                        columnList = WorkloadInventoryReportModel.COMPLEXITY, unique = false)
         }
 )
 public class WorkloadInventoryReportModel
 {
     static final long serialVersionUID = 1L;
+
     static final String ANALYSIS_ID = "analysis_id";
+    static final String VM_NAME = "vm_name";
+    static final String OS_NAME = "os_name";
+    static final String COMPLEXITY = "complexity";
 
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO, generator = "WORKLOADINVENTORYREPORTMODEL_ID_GENERATOR")
@@ -53,7 +57,11 @@ public class WorkloadInventoryReportModel
     private String provider;
     private String datacenter;
     private String cluster;
+
+    @Column(name = VM_NAME)
     private String vmName;
+
+    @Column(name = OS_NAME)
     private String osName;
     private String osDescription;
     private Long diskSpace;
@@ -66,6 +74,8 @@ public class WorkloadInventoryReportModel
             }
     )
     private Set<String> workloads;
+
+    @Column(name = COMPLEXITY)
     private String complexity;
     // with "IMS" suffix in case one day we will have
     // their "AMM" counterparts

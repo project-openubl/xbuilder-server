@@ -90,10 +90,14 @@
             </get>
             <get uri="/{id}/workload-inventory">
                 <description>Get the Workload Inventory Reports</description>
-                <param name="page" type="query" defaultValue="0" required="false" description="Define the page requested" />
-                <param name="size" type="query" defaultValue="10" required="false" description="Define the size of the requested page" />
+                <param name="page" type="query" defaultValue="0" required="false" description="Define the page requested" dataType="int" />
+                <param name="size" type="query" defaultValue="10" required="false" description="Define the size of the requested page" dataType="int" />
+                <param name="orderBy" type="query" defaultValue="id" required="false" description="Define sort field which will be use" />
+                <param name="orderAsc" type="query" defaultValue="false" required="false" description="Define if sort is ascending" dataType="boolean" />
                 <route id="workload-inventory-report-get-details">
-                    <bean ref="workloadInventoryReportService" method="findByAnalysisId(${header.id}, ${header.page}, ${header.size})" />
+                    <to uri="direct:to-paginationBean"/>
+                    <to uri="direct:to-sortBean"/>
+                    <bean ref="workloadInventoryReportService" method="findByAnalysisId(${header.id}, ${header.pageBean}, ${header.sortBean})" />
                 </route>
             </get>
         </rest>

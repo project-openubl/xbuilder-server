@@ -9,6 +9,8 @@ import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService;
 import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
+import org.jboss.xavier.integrations.route.model.PageBean;
+import org.jboss.xavier.integrations.route.model.SortBean;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -168,6 +170,8 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        camelContext.startRoute("to-paginationBean");
+        camelContext.startRoute("to-sortBean");
         camelContext.startRoute("workload-inventory-report-get-details");
         Map<String, Object> variables = new HashMap<>();
         Long one = 1L;
@@ -179,7 +183,10 @@ public class XmlRoutes_RestReportTest {
         restTemplate.getForEntity(camel_context + "report/{id}/workload-inventory?page={page}&size={size}", String.class, variables);
 
         //Then
-        verify(workloadInventoryReportService).findByAnalysisId(one, page, size);
+        PageBean pageBean = new PageBean(page, size);
+        SortBean sortBean = new SortBean("id", false);
+
+        verify(workloadInventoryReportService).findByAnalysisId(one, pageBean, sortBean);
         camelContext.stop();
     }
 
@@ -191,6 +198,8 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        camelContext.startRoute("to-paginationBean");
+        camelContext.startRoute("to-sortBean");
         camelContext.startRoute("workload-inventory-report-get-details");
         Map<String, Object> variables = new HashMap<>();
         Long one = 1L;
@@ -198,7 +207,38 @@ public class XmlRoutes_RestReportTest {
         restTemplate.getForEntity(camel_context + "report/{id}/workload-inventory", String.class, variables);
 
         //Then
-        verify(workloadInventoryReportService).findByAnalysisId(one, 0, 10);
+        PageBean pageBean = new PageBean(0, 10);
+        SortBean sortBean = new SortBean("id", false);
+
+        verify(workloadInventoryReportService).findByAnalysisId(one, pageBean, sortBean);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_SortParamGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("to-paginationBean");
+        camelContext.startRoute("to-sortBean");
+        camelContext.startRoute("workload-inventory-report-get-details");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        String orderBy = "vmName";
+        variables.put("orderBy", orderBy);
+        Boolean orderAsc = true;
+        variables.put("orderAsc", orderAsc);
+        restTemplate.getForEntity(camel_context + "report/{id}/workload-inventory?orderBy={orderBy}&orderAsc={orderAsc}", String.class, variables);
+
+        //Then
+        PageBean pageBean = new PageBean(0, 10);
+        SortBean sortBean = new SortBean(orderBy, orderAsc);
+
+        verify(workloadInventoryReportService).findByAnalysisId(one, pageBean, sortBean);
         camelContext.stop();
     }
 
