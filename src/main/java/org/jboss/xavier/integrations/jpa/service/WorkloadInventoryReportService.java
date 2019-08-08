@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 import java.util.function.Function;
 
 @Component
@@ -39,6 +41,10 @@ public class WorkloadInventoryReportService
         }
         return result;
     };
+
+    public List<WorkloadInventoryReportModel> findByAnalysisId(Long analysisId) {
+        return reportRepository.findByAnalysisId(analysisId);
+    }
 
     public Page<WorkloadInventoryReportModel> findByAnalysisId(Long analysisId, PageBean pageBean, SortBean sortBean) {
         // Sort

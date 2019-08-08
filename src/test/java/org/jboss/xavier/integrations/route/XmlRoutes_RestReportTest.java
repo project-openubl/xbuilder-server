@@ -21,6 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
@@ -30,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.*;
 
 
@@ -289,6 +290,33 @@ public class XmlRoutes_RestReportTest {
         verify(analysisService).findById(one);
         verify(analysisService).deleteById(one);
         camelContext.stop();
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_ShouldCallFindByAnalysisIdAndReturnCsv() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("workload-inventory-report-get-details-as-csv");
+        camelContext.startRoute("workload-inventory-report-model-to-csv");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("whatever", "this header should not be copied");
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-inventory/csv" , HttpMethod.GET, entity, String.class, variables);
+
+        //Then
+        verify(workloadInventoryReportService).findByAnalysisId(one);
+        Assert.assertTrue(response.getHeaders().get("Content-Type").contains("text/csv"));
+        Assert.assertTrue(response.getHeaders().get("Content-Disposition").contains("attachment;filename=workloadInventory_1.csv"));
+        Assert.assertNull(response.getHeaders().get("whatever"));
+        Assert.assertNotNull(response.getBody());
         camelContext.stop();
     }
 

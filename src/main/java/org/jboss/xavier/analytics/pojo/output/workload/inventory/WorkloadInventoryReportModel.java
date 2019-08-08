@@ -1,16 +1,23 @@
 package org.jboss.xavier.analytics.pojo.output.workload.inventory;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
+import org.apache.camel.dataformat.bindy.annotation.DataField;
+import org.apache.camel.dataformat.bindy.annotation.FormatFactories;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jboss.xavier.analytics.pojo.BindyStringSetFormatFactory;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+@FormatFactories({BindyStringSetFormatFactory.class})
+@CsvRecord(separator = ",", crlf = "UNIX", generateHeaderColumns = true)
 @Entity
 @Transactional
 @Table(
@@ -54,19 +61,36 @@ public class WorkloadInventoryReportModel
     @JsonBackReference
     private AnalysisModel analysis;
 
+    @DataField(pos = 1, columnName = "Provider")
     private String provider;
+
+    @DataField(pos = 2, columnName = "Datacenter")
     private String datacenter;
+
+    @DataField(pos = 3, columnName = "Cluster")
     private String cluster;
 
+    @DataField(pos = 4 , columnName = "VM name")
     @Column(name = VM_NAME)
     private String vmName;
 
+    @DataField(pos = 5, columnName = "OS type")
     @Column(name = OS_NAME)
     private String osName;
+
+    @DataField(pos = 6, columnName = "Operating system description")
     private String osDescription;
+
+    @DataField(pos = 7, precision = 2, columnName = "Disk space")
     private Long diskSpace;
+
+    @DataField(pos = 8, columnName = "Memory")
     private Long memory;
+
+    @DataField(pos = 9, columnName = "CPU cores")
     private Integer cpuCores;
+
+    @DataField(pos = 10, columnName = "Workload")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             indexes = {
@@ -75,8 +99,11 @@ public class WorkloadInventoryReportModel
     )
     private Set<String> workloads;
 
+    @DataField(pos = 11, columnName = "Effort")
     @Column(name = COMPLEXITY)
     private String complexity;
+
+    @DataField(pos = 12, columnName = "Recommended targets")
     // with "IMS" suffix in case one day we will have
     // their "AMM" counterparts
     @ElementCollection(fetch = FetchType.EAGER)
@@ -86,6 +113,8 @@ public class WorkloadInventoryReportModel
             }
     )
     private Set<String> recommendedTargetsIMS;
+
+    @DataField(pos = 13, columnName = "Flags IMS")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             indexes = {
@@ -93,6 +122,7 @@ public class WorkloadInventoryReportModel
             }
     )
     private Set<String> flagsIMS;
+
     private Date creationDate;
 
     public WorkloadInventoryReportModel() {}

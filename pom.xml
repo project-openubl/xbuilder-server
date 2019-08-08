@@ -168,6 +168,11 @@
             <version>1.redhat-4</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-bindy-starter</artifactId>
+        </dependency>
+
         <!-- For decision server auto-configuration -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -20,8 +20,13 @@
         <property name="connectionFactory" ref="artemisConnectionFactory"/>
     </bean>
 
-    <bean id="restResponseHeaderRemover" class="org.apache.camel.impl.DefaultHeaderFilterStrategy">
+    <bean id="restResponseHeaderRemover" class="org.jboss.xavier.integrations.route.filter.RestHeaderFilterStrategy">
         <property name="outFilterPattern" value=".*" />
+        <property name="outAllowFilter">
+            <set>
+                <value>Content-Disposition</value>
+            </set>
+        </property>
     </bean>
 
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
@@ -100,6 +105,16 @@
                     <bean ref="workloadInventoryReportService" method="findByAnalysisId(${header.id}, ${header.pageBean}, ${header.sortBean})" />
                 </route>
             </get>
+            <get uri="/{id}/workload-inventory/csv" produces="text/csv">
+                <description>Get the Workload Inventory Reports in CSV format</description>
+                <route id="workload-inventory-report-get-details-as-csv">
+                    <bean ref="workloadInventoryReportService" method="findByAnalysisId(${header.id})" />
+                    <to uri="direct:toWorkloadInventoryReportCsv" />
+                    <setHeader headerName="Content-Disposition">
+                        <simple>attachment;filename=workloadInventory_${header.id}.csv</simple>
+                    </setHeader>
+                </route>
+            </get>
         </rest>
 
         <rest path="/user">
@@ -111,6 +126,13 @@
                 </route>
             </get>
         </rest>
+
+        <route id="workload-inventory-report-model-to-csv">
+            <from uri="direct:toWorkloadInventoryReportCsv" />
+            <marshal>
+                <bindy id="workloadInventoryReportModelBindyDataformat" type="Csv" classType="org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel"/>
+            </marshal>
+        </route>
 
         <route id="call-kie-extract-reports" trace="true">
             <from uri="jms:queue:inputDataModel" />
