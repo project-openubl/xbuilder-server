@@ -115,6 +115,12 @@
                     </setHeader>
                 </route>
             </get>
+            <get uri="/{id}/workload-summary">
+                <description>Get the Workload Summary Report</description>
+                <route id="workload-summary-report-get">
+                    <bean ref="workloadSummaryReportService" method="findByAnalysisId(${header.id})" />
+                </route>
+            </get>
         </rest>
 
         <rest path="/user">
@@ -143,14 +149,6 @@
             <bean id="route-extract-reports" method="extractReports" ref="decisionServerHelper"/>
             <log id="route-log-totalPrice" message="totalPrice = ${body.totalPrice}"/>
             <to uri="jpa:org.jboss.xavier.integrations.migrationanalytics.output.ReportDataModel" />
-        </route>
-
-        <route id="sample-uploadFormInputDataModel-generator" autoStartup="{{sig.autoStartup}}">
-            <description>Example route that will regularly create an InputDataModel and send it to a JMS queue</description>
-            <from id="route-timer" uri="timer:testRoute?period=10s" />
-            <bean id="route-new-uploadFormInputDataModel" method="createSampleUploadFormInputDataModel" ref="decisionServerHelper" />
-            <to id="route-to-new-jms" uri="jms:queue:uploadFormInputDataModel" />
-            <log message="Message with sample UploadFormInputDataModel sent" />
         </route>
 
         <route id="route-ma">

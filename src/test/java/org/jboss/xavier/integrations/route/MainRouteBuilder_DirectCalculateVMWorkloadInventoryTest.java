@@ -19,6 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(CamelSpringBootRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("jms:queue:vm-workload-inventory")
+@MockEndpointsAndSkip("jms:queue:vm-workload-inventory|direct:aggregate-vmworkloadinventory")
 @UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
@@ -40,6 +41,9 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
     @EndpointInject(uri = "mock:jms:queue:vm-workload-inventory")
     private MockEndpoint mockJmsQueue;
 
+    @EndpointInject(uri = "mock:direct:aggregate-vmworkloadinventory")
+    private MockEndpoint mockAggregateVMWorkloadInventoryModel;
+
     @Test
     public void mainRouteBuilder_DirectCalculate_JSONGiven_ShouldReturnExpectedCalculatedValues() throws Exception {
         //Given
@@ -48,11 +52,6 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
 
         String customerId = "CID123";
         String fileName = "cloudforms-export-v1.json";
-        Integer sourceproductindicator = null;
-        Double year1hypervisorpercentage = 10D;
-        Double year2hypervisorpercentage = 20D;
-        Double year3hypervisorpercentage = 30D;
-        Double growthratepercentage = 7D;
         Long analysisId = 11L;
 
         VMWorkloadInventoryModel expectedModel = new VMWorkloadInventoryModel();
@@ -79,11 +78,7 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("filename", fileName);
         metadata.put("org_id", customerId);
-        metadata.put(Calculator.YEAR_1_HYPERVISORPERCENTAGE, year1hypervisorpercentage);
-        metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
-        metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
-        metadata.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("MA_metadata", metadata);
@@ -100,6 +95,8 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         //Then
         assertThat(mockJmsQueue.getExchanges().stream().map(e -> e.getIn().getBody(VMWorkloadInventoryModel.class)).filter(e -> e.getVmName().equalsIgnoreCase("dev-windows-server-2008-TEST")).findFirst().get()).isEqualToComparingFieldByFieldRecursively(expectedModel);
         assertThat(mockJmsQueue.getExchanges().size()).isEqualTo(21);
+        assertThat(mockAggregateVMWorkloadInventoryModel.getExchanges().size()).isEqualTo(1);
+        assertThat(mockAggregateVMWorkloadInventoryModel.getExchanges().get(0).getIn().getBody()).isInstanceOf(Collection.class);
 
         camelContext.stop();
     }

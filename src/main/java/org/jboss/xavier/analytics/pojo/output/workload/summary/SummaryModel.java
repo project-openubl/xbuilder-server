@@ -1,0 +1,129 @@
+package org.jboss.xavier.analytics.pojo.output.workload.summary;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+
+import javax.persistence.ColumnResult;
+import javax.persistence.ConstructorResult;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedNativeQuery;
+import javax.persistence.SqlResultSetMapping;
+
+@SqlResultSetMapping(
+        name = "mappingSummaryModels",
+        classes = @ConstructorResult(
+                targetClass = SummaryModel.class,
+                columns = {
+                        @ColumnResult(name = "provider", type = String.class),
+                        @ColumnResult(name = "clusters", type = Integer.class),
+                        @ColumnResult(name = "sockets", type = Long.class),
+                        @ColumnResult(name = "vms", type = Integer.class)
+                }
+        )
+)
+
+@NamedNativeQuery(
+        name = "SummaryModel.calculateSummaryModels",
+        query = "select provider, count(distinct cluster) as clusters, sum(cpu_cores)*2 as sockets, count(*) as vms from workload_inventory_report_model  where analysis_id = :analysisId group by provider order by provider;",
+        resultSetMapping = "mappingSummaryModels"
+)
+
+@Entity
+public class SummaryModel
+{
+    @Id
+    @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO, generator = "SUMMARYMODEL_ID_GENERATOR")
+    @GenericGenerator(
+            name = "SUMMARYMODEL_ID_GENERATOR",
+            strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+            parameters = {
+                    @Parameter(name = "sequence_name", value = "SUMMARYMODEL_SEQUENCE")
+            }
+    )
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "report_id")
+    @JsonBackReference
+    private WorkloadSummaryReportModel report;
+
+    private String provider;
+    private Integer clusters;
+    private Long sockets;
+    private Integer vms;
+
+    public SummaryModel() {}
+
+    public SummaryModel(String provider, Integer clusters, Long sockets, Integer vms) {
+        this.provider = provider;
+        this.clusters = clusters;
+        this.sockets = sockets;
+        this.vms = vms;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public WorkloadSummaryReportModel getReport() {
+        return report;
+    }
+
+    public void setReport(WorkloadSummaryReportModel report) {
+        this.report = report;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public Integer getClusters() {
+        return clusters;
+    }
+
+    public void setClusters(Integer clusters) {
+        this.clusters = clusters;
+    }
+
+    public Long getSockets() {
+        return sockets;
+    }
+
+    public void setSockets(Long sockets) {
+        this.sockets = sockets;
+    }
+
+    public Integer getVms() {
+        return vms;
+    }
+
+    public void setVms(Integer vms) {
+        this.vms = vms;
+    }
+
+    @Override
+    public String toString() {
+        return "SummaryModel{" +
+                "id=" + id +
+                ", report=" + report +
+                ", providers='" + provider + '\'' +
+                ", clusters=" + clusters +
+                ", sockets=" + sockets +
+                ", vms=" + vms +
+                '}';
+    }
+}

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
+import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadSummaryReportModel;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -37,6 +38,10 @@ public class AnalysisModel
     @OneToMany(mappedBy = "analysis", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     private List<WorkloadInventoryReportModel> workloadInventoryReportModels;
+
+    @OneToOne(mappedBy = "analysis", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private WorkloadSummaryReportModel workloadSummaryReportModels;
 
     private String reportName;
     private String reportDescription;
@@ -124,5 +129,13 @@ public class AnalysisModel
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public WorkloadSummaryReportModel getWorkloadSummaryReportModels() {
+        return workloadSummaryReportModels;
+    }
+
+    public void setWorkloadSummaryReportModels(WorkloadSummaryReportModel workloadSummaryReportModels) {
+        this.workloadSummaryReportModels = workloadSummaryReportModels;
     }
 }

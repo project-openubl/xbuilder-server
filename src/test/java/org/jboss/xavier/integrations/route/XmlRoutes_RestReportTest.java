@@ -9,6 +9,7 @@ import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService;
 import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
+import org.jboss.xavier.integrations.jpa.service.WorkloadSummaryReportService;
 import org.jboss.xavier.integrations.route.model.PageBean;
 import org.jboss.xavier.integrations.route.model.SortBean;
 import org.junit.Assert;
@@ -56,6 +57,9 @@ public class XmlRoutes_RestReportTest {
 
     @SpyBean
     private AnalysisService analysisService;
+
+    @SpyBean
+    private WorkloadSummaryReportService workloadSummaryReportService;
 
     @Value("${camel.component.servlet.mapping.context-path}")
     String camel_context;
@@ -317,6 +321,29 @@ public class XmlRoutes_RestReportTest {
         Assert.assertTrue(response.getHeaders().get("Content-Disposition").contains("attachment;filename=workloadInventory_1.csv"));
         Assert.assertNull(response.getHeaders().get("whatever"));
         Assert.assertNotNull(response.getBody());
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadSummary_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("workload-summary-report-get");
+        Map<String, Object> variables = new HashMap<>();
+        Long analysisId = 11L;
+        variables.put("id", analysisId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("whatever", "this header should not be copied");
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-summary" , HttpMethod.GET, entity, String.class, variables);
+
+        //Then
+        verify(workloadSummaryReportService).findByAnalysisId(analysisId);
+        Assert.assertNull(response.getHeaders().get("whatever"));
         camelContext.stop();
     }
 

@@ -48,20 +48,6 @@ public class DecisionServerHelper {
         return generateCommands(inputDataModel, "get InitialSavingsEstimationReports", "kiesession0");
     }
 
-    public UploadFormInputDataModel createSampleUploadFormInputDataModel()
-    {
-        UploadFormInputDataModel uploadFormInputDataModel = new UploadFormInputDataModel();
-        String customerId = Integer.toString(random.nextInt(99999999));
-        uploadFormInputDataModel.setCustomerId(customerId);
-        uploadFormInputDataModel.setFileName(format.format(new Date()) + "-" + customerId + "-payload.json");
-        uploadFormInputDataModel.setHypervisor(random.nextInt(99999));
-        uploadFormInputDataModel.setGrowthRatePercentage(0.05);
-        uploadFormInputDataModel.setYear1HypervisorPercentage(0.5);
-        uploadFormInputDataModel.setYear2HypervisorPercentage(0.3);
-        uploadFormInputDataModel.setYear3HypervisorPercentage(0.15);
-        return uploadFormInputDataModel;
-    }
-
     public BatchExecutionCommand generateCommands(Object insert, String retrieveQueryId, String kiseSessionId)
     {
         List<Command<?>> cmds = new ArrayList<Command<?>>();

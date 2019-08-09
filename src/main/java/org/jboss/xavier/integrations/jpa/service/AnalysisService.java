@@ -3,6 +3,7 @@ package org.jboss.xavier.integrations.jpa.service;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.analytics.pojo.output.InitialSavingsEstimationReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
+import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadSummaryReportModel;
 import org.jboss.xavier.integrations.jpa.repository.AnalysisRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,14 +45,21 @@ public class AnalysisService
     public void setInitialSavingsEstimationReportModel(InitialSavingsEstimationReportModel reportModel, Long id) {
         AnalysisModel analysisModel = findById(id);
         analysisModel.setInitialSavingsEstimationReportModel(reportModel);
-        // TODO remove this since it's just a temporary workaround to change the status
-        analysisModel.setStatus("CREATED");
         analysisRepository.save(analysisModel);
     }
 
     public void addWorkloadInventoryReportModel(WorkloadInventoryReportModel reportModel, Long id) {
         AnalysisModel analysisModel = findById(id);
         analysisModel.addWorkloadInventoryReportModel(reportModel);
+        analysisRepository.save(analysisModel);
+    }
+
+    public void setWorkloadSummaryReportModel(WorkloadSummaryReportModel reportModel, Long id) {
+        AnalysisModel analysisModel = findById(id);
+        analysisModel.setWorkloadSummaryReportModels(reportModel);
+        reportModel.setAnalysis(analysisModel);
+        // TODO remove this since it's just a temporary workaround to change the status
+        analysisModel.setStatus("CREATED");
         analysisRepository.save(analysisModel);
     }
 
