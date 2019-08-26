@@ -90,13 +90,12 @@ public class MainRouteBuilder extends RouteBuilder {
                 });
 
         from("direct:store").id("direct-store")
-                .convertBodyTo(String.class)
+                .convertBodyTo(byte[].class) // we need this to fully read the stream and close it
                 .to("file:./upload")
                 .to("direct:analysis-model")
                 .to("direct:insights");
 
-        from("direct:insights")
-                .id("call-insights-upload-service")
+        from("direct:insights").id("call-insights-upload-service")
                 .process(this::createMultipartToSendToInsights)
                 .setHeader(Exchange.HTTP_METHOD, constant(org.apache.camel.component.http4.HttpMethods.POST))
                 .setHeader("x-rh-identity", method(MainRouteBuilder.class, "getRHIdentity(${header.x-rh-identity}, ${header.CamelFileName}, ${headers})"))
@@ -190,8 +189,8 @@ public class MainRouteBuilder extends RouteBuilder {
         multipartEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         multipartEntityBuilder.setContentType(ContentType.MULTIPART_FORM_DATA);
 
-        String file = exchange.getIn().getBody(String.class);
-        multipartEntityBuilder.addPart("file", new ByteArrayBody(file.getBytes(), ContentType.create(mimeType), exchange.getIn().getHeader(Exchange.FILE_NAME, String.class)));
+        byte[] file = exchange.getIn().getBody(byte[].class);
+        multipartEntityBuilder.addPart("file", new ByteArrayBody(file, ContentType.create(mimeType), exchange.getIn().getHeader(Exchange.FILE_NAME, String.class)));
         exchange.getIn().setBody(multipartEntityBuilder.build());
     }
 
@@ -216,16 +215,9 @@ public class MainRouteBuilder extends RouteBuilder {
 
     private Predicate isZippedFile(String extension) {
         return exchange -> {
-            boolean zipContentType = isZipContentType(exchange);
             String filename = (String) exchange.getIn().getHeader("MA_metadata", Map.class).get("filename");
-            boolean zipExtension = extension.equalsIgnoreCase(filename.substring(filename.length() - extension.length()));
-            return zipContentType && zipExtension;
+            return extension.equalsIgnoreCase(filename.substring(filename.length() - extension.length()));
         };
-    }
-
-    private boolean isZipContentType(Exchange exchange) {
-        String mimetype = exchange.getMessage().getHeader(CustomizedMultipartDataFormat.CONTENT_TYPE).toString();
-        return "application/zip".equalsIgnoreCase(mimetype) || "application/gzip".equalsIgnoreCase(mimetype) || "application/tar+gz".equalsIgnoreCase(mimetype);
     }
 
     private Processor processMultipart() {

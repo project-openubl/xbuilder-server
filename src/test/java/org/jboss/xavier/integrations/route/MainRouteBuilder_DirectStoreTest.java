@@ -6,6 +6,7 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
+import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.Application;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,26 @@ public class MainRouteBuilder_DirectStoreTest {
         camelContext.start();
         camelContext.startRoute("direct-store");
         camelContext.createProducerTemplate().sendBodyAndHeader("direct:store", body, "CamelFileName", "testfilename.txt");
+
+        //Then
+        mockInsights.assertIsSatisfied();
+
+        camelContext.stop();
+    }
+
+    @Test
+    public void mainRouteBuilder_routeDirectStore_BinaryContentGiven_ShouldStoreinLocalFile() throws Exception {
+        //Given
+
+        byte[] body = IOUtils.resourceToByteArray("cloudforms-export-v1.tar.gz", this.getClass().getClassLoader());
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+        mockInsights.expectedBodiesReceived(body);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("direct-store");
+        camelContext.createProducerTemplate().sendBodyAndHeader("direct:store", body, "CamelFileName", "cloudforms-export-v1.tar.gz");
 
         //Then
         mockInsights.assertIsSatisfied();
