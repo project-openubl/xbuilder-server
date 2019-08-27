@@ -2,7 +2,6 @@ package org.jboss.xavier.integrations.route;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
-import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
@@ -28,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(CamelSpringBootRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|jms:queue:vm-workload-inventory")
+@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|jms:queue:vm-workload-inventory|direct:aggregate-vmworkloadinventory")
 @UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
@@ -73,7 +72,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
         metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
         metadata.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, 3L);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, "3");
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("MA_metadata", metadata);
@@ -88,35 +87,6 @@ public class MainRouteBuilder_DirectCalculateTest {
         //Then
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody()).isEqualToComparingFieldByFieldRecursively(expectedFormInputDataModelExpected);
 
-        camelContext.stop();
-    }
-
-    @Test
-    public void mainRouteBuilder_DirectCalculate_WrongJSONFileGiven_ShouldLogExceptionButNotCrash() throws Exception {
-        //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
-        mockJmsQueueCostSavings.expectedMessageCount(0);
-
-        String customerId = "CID123";
-        String fileName = "cloudforms-export-v1.json";
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("customerid", customerId);
-        headers.put("filename", fileName);
-
-        //When
-        camelContext.start();
-        camelContext.startRoute("calculate-costsavings");
-        String body = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(fileName), Charset.forName("UTF-8"));
-
-        Exchange message = camelContext.createProducerTemplate().request("direct:calculate-costsavings", exchange -> {
-            exchange.getIn().setBody("{ \"ñkajsñlkj\" : " + body);
-            exchange.getIn().setHeaders(headers);
-        });
-
-        //Then
-        mockJmsQueueCostSavings.assertIsSatisfied();
-        assertThat(message.getIn().getBody(String.class)).isEqualToIgnoringCase("Exception on parsing Cloudforms file");
         camelContext.stop();
     }
 
@@ -136,7 +106,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, 20D);
         metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, 30D);
         metadata.put(Calculator.GROWTHRATEPERCENTAGE, 7D);
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, 7L);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, "7");
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("MA_metadata", metadata);

@@ -17,6 +17,12 @@ import java.util.Date;
 @Component
 public class AnalysisService
 {
+    public enum STATUS {
+        FAILED,
+        IN_PROGRESS,
+        CREATED
+    }
+
     @Autowired
     AnalysisRepository analysisRepository;
 
@@ -37,7 +43,7 @@ public class AnalysisService
         analysisModel.setReportName(reportName);
         analysisModel.setInserted(new Date());
         analysisModel.setLastUpdate(new Date());
-        analysisModel.setStatus("IN_PROGRESS");
+        analysisModel.setStatus(STATUS.IN_PROGRESS.toString());
 
         return analysisRepository.save(analysisModel);
     }
@@ -59,7 +65,7 @@ public class AnalysisService
         analysisModel.setWorkloadSummaryReportModels(reportModel);
         reportModel.setAnalysis(analysisModel);
         // TODO remove this since it's just a temporary workaround to change the status
-        analysisModel.setStatus("CREATED");
+        analysisModel.setStatus(STATUS.CREATED.toString());
         analysisRepository.save(analysisModel);
     }
 
@@ -75,4 +81,9 @@ public class AnalysisService
         return analysisRepository.findByReportNameIgnoreCaseContaining(filterText.trim(), pageable);
     }
 
+    public void updateStatus(String status, Long id) {
+        AnalysisModel analysisModel = findById(id);
+        analysisModel.setStatus(status);
+        analysisRepository.save(analysisModel);
+    }
 }

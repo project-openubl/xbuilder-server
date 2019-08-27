@@ -36,7 +36,7 @@ public class VMWorkloadInventoryCalculatorTest {
         String cloudFormsJson = IOUtils.resourceToString("cloudforms-export-v1.json", StandardCharsets.UTF_8, VMWorkloadInventoryCalculatorTest.class.getClassLoader());
         Map<String, Object> headers = new HashMap<>();
         Long analysisId = 30L;
-        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId);
+        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
 
         Collection<VMWorkloadInventoryModel> modelList = calculator.calculate(cloudFormsJson, headers);
         assertThat(Integer.valueOf(modelList.size())).isEqualTo(21);

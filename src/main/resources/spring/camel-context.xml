@@ -153,16 +153,23 @@
 
         <route id="route-ma">
             <from uri="jms:queue:uploadFormInputDataModel" />
-            <log message="Message received" />
-            <to uri="log:INFO?showBody=true&amp;showHeaders=true" />
-            <setHeader headerName="analysisId">
-                <simple>${body.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.ANALYSIS_ID}}</simple>
-            </setHeader>
-            <bean method="createMigrationAnalyticsCommand(${body})" ref="decisionServerHelper"/>
-            <to uri="direct:decisionserver" id="route-ma-decisionserver"/>
-            <bean id="route-extract-ics-reports" method="extractInitialSavingsEstimationReportModel" ref="decisionServerHelper"/>
-            <log id="route-log-sourceLicenseValue" message="totalPrice = ${body.sourceCostsModel.sourceLicenseValue}"/>
-            <bean ref="analysisService" method="setInitialSavingsEstimationReportModel(${body}, ${header.analysisId})" />
+            <doTry>
+                <log message="Message received" />
+                <to uri="log:INFO?showBody=true&amp;showHeaders=true" />
+                <setHeader headerName="analysisId">
+                    <simple>${body.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.ANALYSIS_ID}}</simple>
+                </setHeader>
+                <bean method="createMigrationAnalyticsCommand(${body})" ref="decisionServerHelper"/>
+                <to uri="direct:decisionserver" id="route-ma-decisionserver"/>
+                <bean id="route-extract-ics-reports" method="extractInitialSavingsEstimationReportModel" ref="decisionServerHelper"/>
+                <log id="route-log-sourceLicenseValue" message="totalPrice = ${body.sourceCostsModel.sourceLicenseValue}"/>
+                <bean ref="analysisService" method="setInitialSavingsEstimationReportModel(${body}, ${header.analysisId})" />
+
+                <doCatch>
+                    <exception>java.lang.Exception</exception>
+                    <bean ref="analysisService" method='updateStatus("FAILED", ${header.analysisId})'/>
+                </doCatch>
+            </doTry>
         </route>
 
         <!--
@@ -186,6 +193,13 @@
             </marshal>
             <to id="log-request" uri="log:INFO?showBody=true&amp;showHeaders=true" />
             <to id="route-to-decision-server-rest" uri="http://{{service:{{kieserver.service}}:{{kieserver.devel-service}}}}/{{kieserver.path}}?authMethod=Basic&amp;authUsername={{kieserver.username}}&amp;authPassword={{kieserver.password}}"/>
+            <choice>
+                <when>
+                    <simple>${header.CamelHttpResponseCode} != 200</simple>
+                    <throwException exceptionType="org.apache.commons.httpclient.HttpException" message="Unsuccessful response from KIE Server"/>
+                    <stop/>
+                </when>
+            </choice>
             <!-- Unmarshal the response -->
             <unmarshal id="route-unmarshal">
                 <xstream/>

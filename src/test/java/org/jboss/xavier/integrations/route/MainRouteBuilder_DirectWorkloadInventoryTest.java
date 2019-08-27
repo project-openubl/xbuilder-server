@@ -77,7 +77,7 @@ public class MainRouteBuilder_DirectWorkloadInventoryTest {
         metadata.put("reportName", "report name");
         metadata.put("reportDescription", "report description");
         metadata.put("file", "fichero.zip");
-        metadata.put("analysis_id", analysisModel.getId());
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId().toString());
         headers.put("MA_metadata", metadata);
 
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:vm-workload-inventory", getInputDataModelSample(analysisModel.getId()), headers);

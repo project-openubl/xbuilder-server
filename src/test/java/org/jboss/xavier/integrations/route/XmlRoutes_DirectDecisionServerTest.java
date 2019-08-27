@@ -2,6 +2,8 @@ package org.jboss.xavier.integrations.route;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
+import org.apache.camel.Exchange;
+import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
@@ -36,6 +38,15 @@ public class XmlRoutes_DirectDecisionServerTest {
     @Test
     public void mainRouteBuilder_DirectDecisionServer_ContentWithSeveralFilesGiven_ShouldReturnSameNumberOfMessages() throws Exception {
         //Given
+        camelContext.getRouteDefinition("decision-server-rest").adviceWith(camelContext, new AdviceWithRouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                weaveById("route-to-decision-server-rest")
+                        .after()
+                        .setHeader(Exchange.HTTP_RESPONSE_CODE, simple("200"));
+            }
+        });
+
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
         String expectedBody = "<?xml version='1.0' encoding='UTF-8'?><batch-execution lookup=\"kiesession0\"><insert><org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel><customerId>CID123</customerId><fileName>cloudforms-export-v1.json</fileName><hypervisor>1</hypervisor><totalDiskSpace>1000</totalDiskSpace><sourceProductIndicator>1</sourceProductIndicator><year1HypervisorPercentage>10.0</year1HypervisorPercentage><year2HypervisorPercentage>20.0</year2HypervisorPercentage><year3HypervisorPercentage>30.0</year3HypervisorPercentage><growthRatePercentage>7.0</growthRatePercentage><dealIndicator>1</dealIndicator><openStackIndicator>1</openStackIndicator></org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel></insert><fire-all-rules/><query out-identifier=\"output\" name=\"get InitialSavingsEstimationReports\"/></batch-execution>";

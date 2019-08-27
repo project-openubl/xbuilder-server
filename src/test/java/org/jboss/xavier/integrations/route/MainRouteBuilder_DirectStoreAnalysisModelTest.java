@@ -73,7 +73,7 @@ public class MainRouteBuilder_DirectStoreAnalysisModelTest {
 
         List<AnalysisModel> list = analysisRepository.findAll();
         assertThat(list.size()).isEqualTo(1);
-        assertThat(((Map) mockInsights.getExchanges().get(0).getIn().getHeader("MA_metadata")).get(MainRouteBuilder.ANALYSIS_ID)).isEqualTo(list.get(0).getId().toString());
+        assertThat((String) mockInsights.getExchanges().get(0).getIn().getHeader("MA_metadata", Map.class).get(MainRouteBuilder.ANALYSIS_ID)).isEqualTo(list.get(0).getId().toString());
         camelContext.stop();
     }
 

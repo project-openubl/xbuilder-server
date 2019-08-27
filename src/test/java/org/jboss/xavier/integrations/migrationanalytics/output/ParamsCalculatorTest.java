@@ -60,7 +60,7 @@ public class ParamsCalculatorTest {
         headers.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
         headers.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
         headers.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
-        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId);
+        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
 
         // When
         UploadFormInputDataModel inputDataModelCalculated = reportCalculator.calculate(cloudFormJSON, headers);
