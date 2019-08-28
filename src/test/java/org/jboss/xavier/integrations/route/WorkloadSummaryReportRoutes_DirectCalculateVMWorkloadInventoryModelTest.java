@@ -9,6 +9,7 @@ import org.jboss.xavier.analytics.pojo.input.workload.inventory.VMWorkloadInvent
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.ComplexityModel;
+import org.jboss.xavier.analytics.pojo.output.workload.summary.RecommendedTargetsIMSModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.SummaryModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadSummaryReportModel;
 import org.jboss.xavier.integrations.jpa.repository.AnalysisRepository;
@@ -24,11 +25,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @RunWith(CamelSpringBootRunner.class)
@@ -57,6 +54,15 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
     {
         String[] complexities = new String[]{"Easy", "Easy", "Medium", "Hard", "Unknown", null};
 
+        List<Set<String>> recommendedTargetsIMS = new ArrayList<>(Arrays.asList(
+                new HashSet<>(Arrays.asList("rhv", "osp", "convert2rhel")),
+                new HashSet<>(Arrays.asList("rhv", "osp")),
+                new HashSet<>(Arrays.asList("osp", "convert2rhel")),
+                new HashSet<>(Collections.singletonList("convert2rhel")),
+                new HashSet<>(Collections.singletonList("other")),
+                new HashSet<>()
+        ));
+
         final AnalysisModel analysisModel = analysisRepository.save(new AnalysisModel());
         analysisId = analysisModel.getId();
         IntStream.range(0, collectionSize).forEach(value -> {
@@ -66,6 +72,7 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
             workloadInventoryReportModel.setCluster("Cluster" + (value % 3));
             workloadInventoryReportModel.setCpuCores(value % 4);
             workloadInventoryReportModel.setComplexity(complexities[value]);
+            workloadInventoryReportModel.setRecommendedTargetsIMS(recommendedTargetsIMS.get(value));
             System.out.println("Saved WorkloadInventoryReportModel with ID #" + workloadInventoryReportRepository.save(workloadInventoryReportModel).getId());
         });
     }
@@ -149,6 +156,45 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         Assert.assertEquals(1, (int) complexityModel.getMedium());
         Assert.assertEquals(1, (int) complexityModel.getHard());
         Assert.assertEquals(2, (int) complexityModel.getUnknown());
+
+        camelContext.stop();
+    }
+
+    @Test
+    public void DirectCalculateVMWorkloadInventoryModel_ShouldPersistWorkloadRecommendedTargetIMSReportModel() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("calculate-workloadsummaryreportmodel");
+
+        Collection<VMWorkloadInventoryModel> vmWorkloadInventoryModels = new ArrayList<>(collectionSize);
+        IntStream.range(0, collectionSize).forEach(value -> vmWorkloadInventoryModels.add(new VMWorkloadInventoryModel()));
+
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("MA_metadata", metadata);
+
+        Exchange message = camelContext.createProducerTemplate().request("direct:calculate-workloadsummaryreportmodel", exchange -> {
+            exchange.getIn().setBody(vmWorkloadInventoryModels);
+            exchange.getIn().setHeaders(headers);
+        });
+
+        //Then
+        AnalysisModel analysisModel = analysisRepository.findOne(analysisId);
+        Assert.assertNotNull(analysisModel);
+        WorkloadSummaryReportModel workloadSummaryReportModel = analysisModel.getWorkloadSummaryReportModels();
+        Assert.assertNotNull(workloadSummaryReportModel);
+        workloadSummaryReportModel = workloadSummaryReportRepository.findOne(workloadSummaryReportModel.getId());
+        RecommendedTargetsIMSModel recommendedTargetsIMS = workloadSummaryReportModel.getRecommendedTargetsIMSModel();
+        Assert.assertNotNull(recommendedTargetsIMS);
+        Assert.assertEquals(6, (int) recommendedTargetsIMS.getTotal());
+        Assert.assertEquals(2, (int) recommendedTargetsIMS.getRhv());
+        Assert.assertEquals(3, (int) recommendedTargetsIMS.getOsp());
+        Assert.assertEquals(3, (int) recommendedTargetsIMS.getRhel());
 
         camelContext.stop();
     }

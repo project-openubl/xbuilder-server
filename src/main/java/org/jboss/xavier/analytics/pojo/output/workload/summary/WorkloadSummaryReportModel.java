@@ -58,6 +58,10 @@ public class WorkloadSummaryReportModel
     @JsonManagedReference
     private ComplexityModel complexityModel;
 
+    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private RecommendedTargetsIMSModel recommendedTargetsIMSModel;
+
     public WorkloadSummaryReportModel() {}
 
     public Long getId() {
@@ -92,5 +96,14 @@ public class WorkloadSummaryReportModel
     public void setComplexityModel(ComplexityModel complexityModel) {
         complexityModel.setReport(this);
         this.complexityModel = complexityModel;
+    }
+
+    public RecommendedTargetsIMSModel getRecommendedTargetsIMSModel() {
+        return recommendedTargetsIMSModel;
+    }
+
+    public void setRecommendedTargetsIMSModel(RecommendedTargetsIMSModel recommendedTargetsIMSModel) {
+        recommendedTargetsIMSModel.setReport(this);
+        this.recommendedTargetsIMSModel = recommendedTargetsIMSModel;
     }
 }
