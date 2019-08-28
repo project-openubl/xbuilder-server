@@ -1,6 +1,7 @@
 package org.jboss.xavier.analytics.pojo.output.workload.summary;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
@@ -53,6 +54,10 @@ public class WorkloadSummaryReportModel
     @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<SummaryModel> summaryModels;
 
+    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private ComplexityModel complexityModel;
+
     public WorkloadSummaryReportModel() {}
 
     public Long getId() {
@@ -78,5 +83,14 @@ public class WorkloadSummaryReportModel
     public void setSummaryModels(List<SummaryModel> summaryModels) {
         summaryModels.forEach(model -> model.setReport(this));
         this.summaryModels = summaryModels;
+    }
+
+    public ComplexityModel getComplexityModel() {
+        return complexityModel;
+    }
+
+    public void setComplexityModel(ComplexityModel complexityModel) {
+        complexityModel.setReport(this);
+        this.complexityModel = complexityModel;
     }
 }

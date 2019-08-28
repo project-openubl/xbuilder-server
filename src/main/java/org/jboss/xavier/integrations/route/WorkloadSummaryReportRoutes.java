@@ -3,9 +3,11 @@ package org.jboss.xavier.integrations.route;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.builder.RouteBuilder;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
+import org.jboss.xavier.analytics.pojo.output.workload.summary.ComplexityModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.SummaryModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadSummaryReportModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
+import org.jboss.xavier.integrations.jpa.service.ComplexityService;
 import org.jboss.xavier.integrations.jpa.service.SummaryService;
 import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,6 +26,9 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
 
     @Inject
     WorkloadInventoryReportService workloadInventoryReportService;
+
+    @Inject
+    ComplexityService complexityService;
 
     @Inject
     SummaryService summaryService;
@@ -70,6 +75,8 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
 
                 // TODO Calculate the other parts of the Workload Summary Report
                 // and set them into the workloadSummaryReportModel bean
+                ComplexityModel complexityModel = complexityService.calculateComplexityModels(analysisId);
+                workloadSummaryReportModel.setComplexityModel(complexityModel);
 
                 // Set the WorkloadSummaryReportModel into the AnalysisModel
                 analysisService.setWorkloadSummaryReportModel(workloadSummaryReportModel, analysisId);
