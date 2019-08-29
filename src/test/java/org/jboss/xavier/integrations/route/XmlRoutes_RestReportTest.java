@@ -6,10 +6,7 @@ import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
-import org.jboss.xavier.integrations.jpa.service.AnalysisService;
-import org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService;
-import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
-import org.jboss.xavier.integrations.jpa.service.WorkloadSummaryReportService;
+import org.jboss.xavier.integrations.jpa.service.*;
 import org.jboss.xavier.integrations.route.model.PageBean;
 import org.jboss.xavier.integrations.route.model.SortBean;
 import org.junit.Assert;
@@ -54,6 +51,9 @@ public class XmlRoutes_RestReportTest {
 
     @MockBean
     private WorkloadInventoryReportService workloadInventoryReportService;
+
+    @MockBean
+    private WorkloadService workloadService;
 
     @SpyBean
     private AnalysisService analysisService;
@@ -347,4 +347,83 @@ public class XmlRoutes_RestReportTest {
         camelContext.stop();
     }
 
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadSummaryWorkloads_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("to-paginationBean");
+        camelContext.startRoute("to-sortBean");
+        camelContext.startRoute("workload-summary-workloads-report-get");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/workloads", String.class, variables);
+
+        //Then
+        PageBean pageBean = new PageBean(0, 10);
+        SortBean sortBean = new SortBean("id", false);
+
+        verify(workloadService).findByReportAnalysisId(one, pageBean, sortBean);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadSummaryWorkloads_IdParamGiven_PaginationGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("to-paginationBean");
+        camelContext.startRoute("to-sortBean");
+        camelContext.startRoute("workload-summary-workloads-report-get");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        int page = 2;
+        variables.put("page", page);
+        int size = 3;
+        variables.put("size", size);
+        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/workloads?page={page}&size={size}", String.class, variables);
+
+        //Then
+        PageBean pageBean = new PageBean(page, size);
+        SortBean sortBean = new SortBean("id", false);
+
+        verify(workloadService).findByReportAnalysisId(one, pageBean, sortBean);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadSummaryWorkloads_IdParamGiven_SortGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("to-paginationBean");
+        camelContext.startRoute("to-sortBean");
+        camelContext.startRoute("workload-summary-workloads-report-get");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        String orderBy = "workload";
+        variables.put("orderBy", orderBy);
+        Boolean orderAsc = true;
+        variables.put("orderAsc", orderAsc);
+        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/workloads?orderBy={orderBy}&orderAsc={orderAsc}", String.class, variables);
+
+        //Then
+        PageBean pageBean = new PageBean(0, 10);
+        SortBean sortBean = new SortBean(orderBy, orderAsc);
+
+        verify(workloadService).findByReportAnalysisId(one, pageBean, sortBean);
+        camelContext.stop();
+    }
 }

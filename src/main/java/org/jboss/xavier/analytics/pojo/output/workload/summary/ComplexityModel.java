@@ -108,7 +108,7 @@ public class ComplexityModel
 
     @Override
     public String toString() {
-        return "SummaryModel{" +
+        return "ComplexityModel{" +
                 "id=" + id +
                 ", report=" + report +
                 ", easy='" + easy +

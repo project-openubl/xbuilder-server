@@ -36,6 +36,7 @@ public class ToBeanRouter extends RouteBuilder {
                         // store the reply from the bean on the OUT message
                         exchange.getOut().setHeaders(headers);
                         exchange.getOut().setBody(exchange.getIn().getBody());
+                        exchange.getOut().setAttachments(exchange.getIn().getAttachments());
                     }
                 });
 
@@ -57,6 +58,7 @@ public class ToBeanRouter extends RouteBuilder {
                         // store the reply from the bean on the OUT message
                         exchange.getOut().setHeaders(headers);
                         exchange.getOut().setBody(exchange.getIn().getBody());
+                        exchange.getOut().setAttachments(exchange.getIn().getAttachments());
                     }
                 });
     }

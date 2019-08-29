@@ -109,7 +109,7 @@ public class RecommendedTargetsIMSModel
 
     @Override
     public String toString() {
-        return "SummaryModel{" +
+        return "RecommendedTargetsIMSModel{" +
                 "id=" + id +
                 ", report=" + report +
                 ", rhv='" + rhv +

@@ -57,6 +57,9 @@ public class SummaryModel
     private Integer clusters;
     private Long sockets;
     private Integer vms;
+    private Integer hosts;
+    private String product;
+    private String version;
 
     public SummaryModel() {}
 
@@ -115,15 +118,42 @@ public class SummaryModel
         this.vms = vms;
     }
 
+    public Integer getHosts() {
+        return hosts;
+    }
+
+    public void setHosts(Integer hosts) {
+        this.hosts = hosts;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "SummaryModel{" +
                 "id=" + id +
                 ", report=" + report +
-                ", providers='" + provider + '\'' +
+                ", providers='" + provider +
                 ", clusters=" + clusters +
                 ", sockets=" + sockets +
                 ", vms=" + vms +
+                ", hosts=" + hosts +
+                ", product=" + product +
+                ", version=" + version +
                 '}';
     }
 }

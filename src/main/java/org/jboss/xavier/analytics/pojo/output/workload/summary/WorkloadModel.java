@@ -5,6 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @SqlResultSetMapping(
         name = "mappingWorkloadModels",
@@ -30,8 +33,34 @@ import javax.persistence.*;
 )
 
 @Entity
+@Table(
+        indexes = {
+                @Index(name = "WorkloadModel_" +
+                        WorkloadModel.REPORT_ID + "_index",
+                        columnList = WorkloadModel.REPORT_ID, unique = false),
+                @Index(name = "WorkloadModel_" +
+                        WorkloadModel.WORKLOAD + "_index",
+                        columnList = WorkloadModel.WORKLOAD, unique = false),
+                @Index(name = "WorkloadModel_" +
+                        WorkloadModel.OS_NAME + "_index",
+                        columnList = WorkloadModel.OS_NAME, unique = false),
+                @Index(name = "WorkloadModel_" +
+                        WorkloadModel.VMS + "_index",
+                        columnList = WorkloadModel.VMS, unique = false)
+        }
+)
 public class WorkloadModel
 {
+    public static final String DEFAULT_SORT_FIELD = "id";
+    public static final Set<String> SUPPORTED_SORT_FIELDS = new HashSet<>(
+            Arrays.asList(WorkloadModel.DEFAULT_SORT_FIELD, WorkloadModel.WORKLOAD, WorkloadModel.OS_NAME, WorkloadModel.VMS)
+    );
+
+    static final String REPORT_ID = "report_id";
+    static final String WORKLOAD = "workload";
+    static final String OS_NAME = "osName";
+    static final String VMS = "vms";
+
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO, generator = "WORKLOADMODEL_ID_GENERATOR")
     @GenericGenerator(
@@ -44,7 +73,7 @@ public class WorkloadModel
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "report_id")
+    @JoinColumn(name = REPORT_ID)
     @JsonBackReference
     private WorkloadSummaryReportModel report;
 
@@ -112,7 +141,7 @@ public class WorkloadModel
 
     @Override
     public String toString() {
-        return "WorkloadDetectedModel{" +
+        return "WorkloadModel{" +
                 "id=" + id +
                 ", report=" + report +
                 ", workload='" + workload +
