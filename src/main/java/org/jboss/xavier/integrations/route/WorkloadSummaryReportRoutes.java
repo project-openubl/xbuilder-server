@@ -5,12 +5,14 @@ import org.apache.camel.builder.RouteBuilder;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.ComplexityModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.RecommendedTargetsIMSModel;
+import org.jboss.xavier.analytics.pojo.output.workload.summary.FlagModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.SummaryModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadSummaryReportModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.jpa.service.ComplexityService;
 import org.jboss.xavier.integrations.jpa.service.RecommendedTargetsIMSService;
+import org.jboss.xavier.integrations.jpa.service.FlagService;
 import org.jboss.xavier.integrations.jpa.service.SummaryService;
 import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
 import org.jboss.xavier.integrations.jpa.service.WorkloadService;
@@ -39,6 +41,9 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
 
     @Inject
     WorkloadService workloadService;
+
+    @Inject
+    FlagService flagService;
 
     @Inject
     SummaryService summaryService;
@@ -93,6 +98,9 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
 
                 List<WorkloadModel> workloadModels = workloadService.calculateWorkloadsModels(analysisId);
                 workloadSummaryReportModel.setWorkloadModels(workloadModels);
+
+                List<FlagModel> flagModels = flagService.calculateFlagModels(analysisId);
+                workloadSummaryReportModel.setFlagModels(flagModels);
 
                 // Set the WorkloadSummaryReportModel into the AnalysisModel
                 analysisService.setWorkloadSummaryReportModel(workloadSummaryReportModel, analysisId);
