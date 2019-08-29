@@ -11,9 +11,11 @@ import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInvento
 import org.jboss.xavier.analytics.pojo.output.workload.summary.ComplexityModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.RecommendedTargetsIMSModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.SummaryModel;
+import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadSummaryReportModel;
 import org.jboss.xavier.integrations.jpa.repository.AnalysisRepository;
 import org.jboss.xavier.integrations.jpa.repository.WorkloadInventoryReportRepository;
+import org.jboss.xavier.integrations.jpa.repository.WorkloadRepository;
 import org.jboss.xavier.integrations.jpa.repository.WorkloadSummaryReportRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,6 +44,9 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
 
     @Autowired
     AnalysisRepository analysisRepository;
+
+    @Autowired
+    WorkloadRepository workloadRepository;
 
     @Autowired
     WorkloadSummaryReportRepository workloadSummaryReportRepository;
@@ -73,6 +78,9 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
             workloadInventoryReportModel.setCpuCores(value % 4);
             workloadInventoryReportModel.setComplexity(complexities[value]);
             workloadInventoryReportModel.setRecommendedTargetsIMS(recommendedTargetsIMS.get(value));
+            workloadInventoryReportModel.setOsName("OSName" + (value % 2));
+            workloadInventoryReportModel.setWorkloads(new HashSet<>(Arrays.asList("Workload" + (value % 2), "Workload" + (value % 3))));
+
             System.out.println("Saved WorkloadInventoryReportModel with ID #" + workloadInventoryReportRepository.save(workloadInventoryReportModel).getId());
         });
     }
@@ -195,6 +203,46 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         Assert.assertEquals(2, (int) recommendedTargetsIMS.getRhv());
         Assert.assertEquals(3, (int) recommendedTargetsIMS.getOsp());
         Assert.assertEquals(3, (int) recommendedTargetsIMS.getRhel());
+
+        camelContext.stop();
+    }
+
+    @Test
+    public void DirectCalculateVMWorkloadInventoryModel_ShouldPersistWorkloadReportModel() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("calculate-workloadsummaryreportmodel");
+
+        Collection<VMWorkloadInventoryModel> vmWorkloadInventoryModels = new ArrayList<>(collectionSize);
+        IntStream.range(0, collectionSize).forEach(value -> vmWorkloadInventoryModels.add(new VMWorkloadInventoryModel()));
+
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("MA_metadata", metadata);
+
+        Exchange message = camelContext.createProducerTemplate().request("direct:calculate-workloadsummaryreportmodel", exchange -> {
+            exchange.getIn().setBody(vmWorkloadInventoryModels);
+            exchange.getIn().setHeaders(headers);
+        });
+
+        //Then
+        AnalysisModel analysisModel = analysisRepository.findOne(analysisId);
+        Assert.assertNotNull(analysisModel);
+        WorkloadSummaryReportModel workloadSummaryReportModel = analysisModel.getWorkloadSummaryReportModels();
+        Assert.assertNotNull(workloadSummaryReportModel);
+
+        List<WorkloadModel> workloads = workloadRepository.findByReportAnalysisId(analysisId);
+        Assert.assertNotNull(workloads);
+        Assert.assertEquals(6, workloads.size());
+        Assert.assertEquals("Workload0", workloads.get(0).getWorkload());
+        Assert.assertEquals("OSName0", workloads.get(0).getOsName());
+        Assert.assertEquals(3, (int) workloads.get(0).getClusters());
+        Assert.assertEquals(3, (int) workloads.get(0).getVms());
 
         camelContext.stop();
     }

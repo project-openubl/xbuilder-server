@@ -6,12 +6,14 @@ import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInvento
 import org.jboss.xavier.analytics.pojo.output.workload.summary.ComplexityModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.RecommendedTargetsIMSModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.SummaryModel;
+import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadSummaryReportModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.jpa.service.ComplexityService;
 import org.jboss.xavier.integrations.jpa.service.RecommendedTargetsIMSService;
 import org.jboss.xavier.integrations.jpa.service.SummaryService;
 import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
+import org.jboss.xavier.integrations.jpa.service.WorkloadService;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.inject.Inject;
@@ -34,6 +36,9 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
 
     @Inject
     RecommendedTargetsIMSService recommendedTargetsIMSService;
+
+    @Inject
+    WorkloadService workloadService;
 
     @Inject
     SummaryService summaryService;
@@ -85,6 +90,9 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
 
                 RecommendedTargetsIMSModel recommendedTargetsIMSModel = recommendedTargetsIMSService.calculateRecommendedTargetsIMS(analysisId);
                 workloadSummaryReportModel.setRecommendedTargetsIMSModel(recommendedTargetsIMSModel);
+
+                List<WorkloadModel> workloadModels = workloadService.calculateWorkloadsModels(analysisId);
+                workloadSummaryReportModel.setWorkloadModels(workloadModels);
 
                 // Set the WorkloadSummaryReportModel into the AnalysisModel
                 analysisService.setWorkloadSummaryReportModel(workloadSummaryReportModel, analysisId);
