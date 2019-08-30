@@ -1,5 +1,7 @@
 package org.jboss.xavier.integrations.migrationanalytics.business;
 
+import com.jayway.jsonpath.JsonPath;
+
 import java.util.Map;
 
 public interface Calculator<T> {
@@ -15,6 +17,12 @@ public interface Calculator<T> {
 
     // It will try to extract the version of the payload from the JSON file, falling back to v1
     default String getManifestVersion(String cloudFormsJson) {
-        return "v1";
+        String versionJsonpath = "$.manifest.manifest.version";
+
+        try {
+            return "v" + JsonPath.parse(cloudFormsJson).read(versionJsonpath, String.class).replace(".", "_");
+        } catch (Exception e) {
+            return "v1";
+        }
     }
 }

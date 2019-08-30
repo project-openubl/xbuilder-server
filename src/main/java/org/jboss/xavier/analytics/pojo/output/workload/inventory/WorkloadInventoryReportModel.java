@@ -9,9 +9,18 @@ import org.hibernate.annotations.Parameter;
 import org.jboss.xavier.analytics.pojo.BindyStringSetFormatFactory;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 
-import javax.persistence.*;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -122,6 +131,15 @@ public class WorkloadInventoryReportModel
             }
     )
     private Set<String> flagsIMS;
+
+    @DataField(pos = 14, columnName = "Product")
+    private String product;
+
+    @DataField(pos = 15, columnName = "Version")
+    private String version;
+
+    @DataField(pos = 16, columnName = "HostName")
+    private String host_name;
 
     private Date creationDate;
 
@@ -275,5 +293,29 @@ public class WorkloadInventoryReportModel
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getHost_name() {
+        return host_name;
+    }
+
+    public void setHost_name(String host_name) {
+        this.host_name = host_name;
     }
 }
