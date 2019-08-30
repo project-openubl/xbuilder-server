@@ -55,6 +55,9 @@ public class XmlRoutes_RestReportTest {
     @MockBean
     private WorkloadService workloadService;
 
+    @MockBean
+    private FlagService flagService;
+
     @SpyBean
     private AnalysisService analysisService;
 
@@ -424,6 +427,86 @@ public class XmlRoutes_RestReportTest {
         SortBean sortBean = new SortBean(orderBy, orderAsc);
 
         verify(workloadService).findByReportAnalysisId(one, pageBean, sortBean);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadSummaryFlags_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("to-paginationBean");
+        camelContext.startRoute("to-sortBean");
+        camelContext.startRoute("workload-summary-flags-report-get");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/flags", String.class, variables);
+
+        //Then
+        PageBean pageBean = new PageBean(0, 10);
+        SortBean sortBean = new SortBean("id", false);
+
+        verify(flagService).findByReportAnalysisId(one, pageBean, sortBean);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadSummaryFlags_IdParamGiven_PaginationGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("to-paginationBean");
+        camelContext.startRoute("to-sortBean");
+        camelContext.startRoute("workload-summary-flags-report-get");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        int page = 2;
+        variables.put("page", page);
+        int size = 3;
+        variables.put("size", size);
+        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/flags?page={page}&size={size}", String.class, variables);
+
+        //Then
+        PageBean pageBean = new PageBean(page, size);
+        SortBean sortBean = new SortBean("id", false);
+
+        verify(flagService).findByReportAnalysisId(one, pageBean, sortBean);
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadSummaryFlags_IdParamGiven_SortGiven_ShouldCallFindByAnalysisId() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("to-paginationBean");
+        camelContext.startRoute("to-sortBean");
+        camelContext.startRoute("workload-summary-flags-report-get");
+        Map<String, Object> variables = new HashMap<>();
+        Long one = 1L;
+        variables.put("id", one);
+        String orderBy = "workload";
+        variables.put("orderBy", orderBy);
+        Boolean orderAsc = true;
+        variables.put("orderAsc", orderAsc);
+        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/flags?orderBy={orderBy}&orderAsc={orderAsc}", String.class, variables);
+
+        //Then
+        PageBean pageBean = new PageBean(0, 10);
+        SortBean sortBean = new SortBean(orderBy, orderAsc);
+
+        verify(flagService).findByReportAnalysisId(one, pageBean, sortBean);
         camelContext.stop();
     }
 }

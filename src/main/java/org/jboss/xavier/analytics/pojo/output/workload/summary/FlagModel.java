@@ -5,6 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @SqlResultSetMapping(
         name = "mappingFlagModels",
@@ -30,8 +33,34 @@ import javax.persistence.*;
 )
 
 @Entity
+@Table(
+        indexes = {
+                @Index(name = "FlagModel_" +
+                        FlagModel.REPORT_ID + "_index",
+                        columnList = FlagModel.REPORT_ID, unique = false),
+                @Index(name = "FlagModel_" +
+                        FlagModel.FLAG + "_index",
+                        columnList = FlagModel.FLAG, unique = false),
+                @Index(name = "FlagModel_" +
+                        FlagModel.OS_NAME + "_index",
+                        columnList = FlagModel.OS_NAME, unique = false),
+                @Index(name = "FlagModel_" +
+                        FlagModel.VMS + "_index",
+                        columnList = FlagModel.VMS, unique = false)
+        }
+)
 public class FlagModel
 {
+
+    public static final String DEFAULT_SORT_FIELD = "id";
+    public static final Set<String> SUPPORTED_SORT_FIELDS = new HashSet<>(
+            Arrays.asList(FlagModel.DEFAULT_SORT_FIELD, FlagModel.FLAG, FlagModel.OS_NAME, FlagModel.VMS)
+    );
+
+    static final String REPORT_ID = "report_id";
+    static final String FLAG = "flag";
+    static final String OS_NAME = "osName";
+    static final String VMS = "vms";
 
     @Id
     @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO, generator = "FLAGMODEL_ID_GENERATOR")
@@ -45,7 +74,7 @@ public class FlagModel
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "report_id")
+    @JoinColumn(name = REPORT_ID)
     @JsonBackReference
     private WorkloadSummaryReportModel report;
 
@@ -116,7 +145,7 @@ public class FlagModel
         return "SummaryModel{" +
                 "id=" + id +
                 ", report=" + report +
-                ", flag='" + flag + '\'' +
+                ", flag='" + flag +
                 ", osName=" + osName +
                 ", clusters=" + clusters +
                 ", vms=" + vms +

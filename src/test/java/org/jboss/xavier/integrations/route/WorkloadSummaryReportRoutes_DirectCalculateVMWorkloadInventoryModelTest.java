@@ -14,12 +14,15 @@ import org.jboss.xavier.integrations.jpa.repository.FlagRepository;
 import org.jboss.xavier.integrations.jpa.repository.WorkloadInventoryReportRepository;
 import org.jboss.xavier.integrations.jpa.repository.WorkloadRepository;
 import org.jboss.xavier.integrations.jpa.repository.WorkloadSummaryReportRepository;
+import org.jboss.xavier.integrations.route.model.PageBean;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -237,7 +240,7 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         WorkloadSummaryReportModel workloadSummaryReportModel = analysisModel.getWorkloadSummaryReportModels();
         Assert.assertNotNull(workloadSummaryReportModel);
 
-        List<WorkloadModel> workloads = workloadRepository.findByReportAnalysisId(analysisId);
+        List<WorkloadModel> workloads = workloadRepository.findByReportAnalysisId(analysisId, new PageRequest(0, 100)).getContent();
         Assert.assertNotNull(workloads);
         Assert.assertEquals(6, workloads.size());
         Assert.assertEquals("Workload0", workloads.get(0).getWorkload());
@@ -277,7 +280,7 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         WorkloadSummaryReportModel workloadSummaryReportModel = analysisModel.getWorkloadSummaryReportModels();
         Assert.assertNotNull(workloadSummaryReportModel);
 
-        List<FlagModel> flags = flagRepository.findByReportAnalysisId(analysisId);
+        List<FlagModel> flags = flagRepository.findByReportAnalysisId(analysisId, new PageRequest(0, 100)).getContent();
         Assert.assertNotNull(flags);
         Assert.assertEquals(6, flags.size());
         Assert.assertEquals("Flag0", flags.get(0).getFlag());
