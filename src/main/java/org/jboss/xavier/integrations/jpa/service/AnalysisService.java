@@ -64,6 +64,13 @@ public class AnalysisService
         AnalysisModel analysisModel = findById(id);
         analysisModel.setWorkloadSummaryReportModels(reportModel);
         reportModel.setAnalysis(analysisModel);
+        analysisRepository.save(analysisModel);
+    }
+
+    public void setWorkloadSummaryReportModelAndUpdateStatus(WorkloadSummaryReportModel reportModel, Long id) {
+        AnalysisModel analysisModel = findById(id);
+        analysisModel.setWorkloadSummaryReportModels(reportModel);
+        reportModel.setAnalysis(analysisModel);
         // TODO remove this since it's just a temporary workaround to change the status
         analysisModel.setStatus(STATUS.CREATED.toString());
         analysisRepository.save(analysisModel);

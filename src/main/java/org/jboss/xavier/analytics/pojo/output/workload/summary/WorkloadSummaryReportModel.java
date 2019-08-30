@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Transactional
@@ -44,13 +45,13 @@ public class WorkloadSummaryReportModel
     private AnalysisModel analysis;
 
     @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<SummaryModel> summaryModels;
+    private Set<SummaryModel> summaryModels;
 
-    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
     @JsonManagedReference
     private ComplexityModel complexityModel;
 
-    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "report", cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
     @JsonManagedReference
     private RecommendedTargetsIMSModel recommendedTargetsIMSModel;
 
@@ -61,6 +62,9 @@ public class WorkloadSummaryReportModel
     @JsonIgnore
     @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FlagModel> flagModels;
+
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<WorkloadsDetectedOSTypeModel> workloadsDetectedOSTypeModels;
 
     public WorkloadSummaryReportModel() {}
 
@@ -80,11 +84,11 @@ public class WorkloadSummaryReportModel
         this.analysis = analysis;
     }
 
-    public List<SummaryModel> getSummaryModels() {
+    public Set<SummaryModel> getSummaryModels() {
         return summaryModels;
     }
 
-    public void setSummaryModels(List<SummaryModel> summaryModels) {
+    public void setSummaryModels(Set<SummaryModel> summaryModels) {
         summaryModels.forEach(model -> model.setReport(this));
         this.summaryModels = summaryModels;
     }
@@ -124,4 +128,14 @@ public class WorkloadSummaryReportModel
         flagModels.forEach(model -> model.setReport(this));
         this.flagModels = flagModels;
     }
+
+    public Set<WorkloadsDetectedOSTypeModel> getWorkloadsDetectedOSTypeModels() {
+        return workloadsDetectedOSTypeModels;
+    }
+
+    public void setWorkloadsDetectedOSTypeModels(Set<WorkloadsDetectedOSTypeModel> workloadsDetectedOSTypeModels) {
+        workloadsDetectedOSTypeModels.forEach(model -> model.setReport(this));
+        this.workloadsDetectedOSTypeModels = workloadsDetectedOSTypeModels;
+    }
+
 }
