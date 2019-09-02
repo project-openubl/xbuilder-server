@@ -99,10 +99,20 @@
                 <param name="size" type="query" defaultValue="10" required="false" description="Define the size of the requested page" dataType="int" />
                 <param name="orderBy" type="query" defaultValue="id" required="false" description="Define sort field which will be use" />
                 <param name="orderAsc" type="query" defaultValue="false" required="false" description="Define if sort is ascending" dataType="boolean" />
+                <param name="provider" type="query" required="false" description="Define a filter" />
+                <param name="datacenter" type="query" required="false" description="Define a filter" />
+                <param name="cluster" type="query" required="false" description="Define a filter" />
+                <param name="vmName" type="query" required="false" description="Define a filter" />
+                <param name="osName" type="query" required="false" description="Define a filter" />
+                <param name="workload" type="query" required="false" description="Define a filter" />
+                <param name="complexity" type="query" required="false" description="Define a filter" />
+                <param name="recommendedTargetIMS" type="query" required="false" description="Define a filter" />
+                <param name="flagIMS" type="query" required="false" description="Define a filter" />
                 <route id="workload-inventory-report-get-details">
                     <to uri="direct:to-paginationBean"/>
                     <to uri="direct:to-sortBean"/>
-                    <bean ref="workloadInventoryReportService" method="findByAnalysisId(${header.id}, ${header.pageBean}, ${header.sortBean})" />
+                    <to uri="direct:to-workloadInventoryFilterBean"/>
+                    <bean ref="workloadInventoryReportService" method="findByAnalysisId(${header.id}, ${header.pageBean}, ${header.sortBean}, ${header.workloadInventoryFilterBean})" />
                 </route>
             </get>
             <get uri="/{id}/workload-inventory/csv" produces="text/csv">
@@ -113,6 +123,12 @@
                     <setHeader headerName="Content-Disposition">
                         <simple>attachment;filename=workloadInventory_${header.id}.csv</simple>
                     </setHeader>
+                </route>
+            </get>
+            <get uri="/{id}/workload-inventory/available-filters">
+                <description>Get available filters</description>
+                <route id="workload-inventory-report-available-filters">
+                    <bean ref="workloadInventoryReportService" method="findAvailableFiltersByAnalysisId(${header.id})" />
                 </route>
             </get>
             <get uri="/{id}/workload-summary">

@@ -102,6 +102,7 @@ public class WorkloadInventoryReportModel
     @DataField(pos = 10, columnName = "Workload")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
+            name = "workload_inventory_report_model_workloads",
             indexes = {
                     @Index(columnList = "workload_inventory_report_model_id", unique = false)
             }
@@ -117,6 +118,7 @@ public class WorkloadInventoryReportModel
     // their "AMM" counterparts
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
+            name = "workload_inventory_report_model_recommended_targetsims",
             indexes = {
                     @Index(columnList = "workload_inventory_report_model_id", unique = false)
             }
@@ -126,6 +128,7 @@ public class WorkloadInventoryReportModel
     @DataField(pos = 13, columnName = "Flags IMS")
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
+            name = "workload_inventory_report_model_flagsims",
             indexes = {
                     @Index(columnList = "workload_inventory_report_model_id", unique = false)
             }

@@ -1,5 +1,9 @@
 package org.jboss.xavier.utils;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class ConversionUtils {
 
     private ConversionUtils(){
@@ -30,6 +34,21 @@ public class ConversionUtils {
             result = (Boolean) value;
         } else {
             throw new IllegalStateException("Value can not convert to Boolean");
+        }
+        return result;
+    }
+
+    public static List<String> toList(Object value) {
+        List<String> result = new ArrayList<>();
+        if (value == null) {
+            result = null;
+        } else if (value instanceof String) {
+            result.add((String) value);
+        } else if (value instanceof Collection) {
+            Collection<String> a = (Collection<String>) value;
+            result.addAll(a);
+        } else {
+            throw new IllegalStateException("Value must be String or List");
         }
         return result;
     }
