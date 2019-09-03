@@ -103,7 +103,7 @@ public class WorkloadInventoryReportSpecs {
         }
 
         if (filterBean.getFlagsIMS() != null && !filterBean.getFlagsIMS().isEmpty()) {
-            specifications.add(getIsMemberSpecification("flagsIMS", filterBean.getRecommendedTargetsIMS()));
+            specifications.add(getIsMemberSpecification("flagsIMS", filterBean.getFlagsIMS()));
         }
 
         // union of specifications
