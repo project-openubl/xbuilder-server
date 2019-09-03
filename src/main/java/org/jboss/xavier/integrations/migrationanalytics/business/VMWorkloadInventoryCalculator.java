@@ -31,6 +31,7 @@ public class VMWorkloadInventoryCalculator implements Calculator<Collection<VMWo
     private static final String GUESTOSFULLNAME_FALLBACKPATH = "cloudforms.manifest.{version}.vmworkloadinventory.guestOSFallbackPath";
     private static final String VMNAMEPATH = "cloudforms.manifest.{version}.vmworkloadinventory.vmNamePath";
     private static final String NUMCPUPATH = "cloudforms.manifest.{version}.vmworkloadinventory.numCpuPath";
+    private static final String NUMCORESPERSOCKETPATH = "cloudforms.manifest.{version}.vmworkloadinventory.numCoresPerSocketPath";
     private static final String HASRDMDISKPATH = "cloudforms.manifest.{version}.vmworkloadinventory.hasRDMDiskPath";
     private static final String RAMSIZEINBYTES = "cloudforms.manifest.{version}.vmworkloadinventory.ramSizeInBytesPath";
     private static final String NICSPATH = "cloudforms.manifest.{version}.vmworkloadinventory.nicsPath";
@@ -75,7 +76,7 @@ public class VMWorkloadInventoryCalculator implements Calculator<Collection<VMWo
 
         model.setVmName(readValueFromExpandedEnvVarPath(VMNAMEPATH, vmStructMap ));
         model.setMemory(readValueFromExpandedEnvVarPath(RAMSIZEINBYTES, vmStructMap, Long.class));
-        model.setCpuCores(readValueFromExpandedEnvVarPath(NUMCPUPATH, vmStructMap, Integer.class));
+        model.setCpuCores(((Integer)readValueFromExpandedEnvVarPath(NUMCPUPATH, vmStructMap, Integer.class) / (Integer)readValueFromExpandedEnvVarPath(NUMCORESPERSOCKETPATH, vmStructMap, Integer.class)));
         model.setOsProductName(StringUtils.defaultIfEmpty(readValueFromExpandedEnvVarPath(PRODUCTNAMEPATH, vmStructMap), readValueFromExpandedEnvVarPath(PRODUCTNAME_FALLBACKPATH, vmStructMap )));
         model.setGuestOSFullName(StringUtils.defaultIfEmpty(readValueFromExpandedEnvVarPath(GUESTOSFULLNAMEPATH, vmStructMap ), readValueFromExpandedEnvVarPath(GUESTOSFULLNAME_FALLBACKPATH, vmStructMap )));
         model.setHasRdmDisk(readValueFromExpandedEnvVarPath(HASRDMDISKPATH, vmStructMap));

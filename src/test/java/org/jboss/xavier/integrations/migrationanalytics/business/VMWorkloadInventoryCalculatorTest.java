@@ -105,7 +105,7 @@ public class VMWorkloadInventoryCalculatorTest {
         expectedModel.setSystemServicesNames(Arrays.asList("NetworkManager-dispatcher","NetworkManager-wait-online","NetworkManager"));
         expectedModel.setVmDiskFilenames(Arrays.asList("[NFS-Storage] oracle_db_1/", "[NFS-Storage] oracle_db_1/oracle_db.vmdk", "[NFS-Storage] oracle_db_1/"));
         expectedModel.setAnalysisId(analysisId);
-        expectedModel.setHost_name("vcenter.example.com");
+        expectedModel.setHost_name("host-47");
         expectedModel.setVersion("6.7.2");
         expectedModel.setProduct("VMware vCenter");
         HashMap<String, String> files = new HashMap<>();
