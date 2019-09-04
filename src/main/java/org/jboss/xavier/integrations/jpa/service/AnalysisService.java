@@ -73,6 +73,7 @@ public class AnalysisService
         reportModel.setAnalysis(analysisModel);
         // TODO remove this since it's just a temporary workaround to change the status
         analysisModel.setStatus(STATUS.CREATED.toString());
+        analysisModel.setLastUpdate(new Date());
         analysisRepository.save(analysisModel);
     }
 
@@ -91,6 +92,7 @@ public class AnalysisService
     public void updateStatus(String status, Long id) {
         AnalysisModel analysisModel = findById(id);
         analysisModel.setStatus(status);
+        analysisModel.setLastUpdate(new Date());
         analysisRepository.save(analysisModel);
     }
 }
