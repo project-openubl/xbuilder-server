@@ -9,7 +9,6 @@ import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
-import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.junit.Before;
@@ -23,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -58,10 +56,6 @@ public class MainRouteBuilder_DirectWorkloadInventoryTest {
     @Test
     public void xmlroutes_directInputDataModel_InputDataModelGiven_ShouldReportDecisionServerHelperValues() throws Exception
     {
-        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
-        List<WorkloadInventoryReportModel> workloadInventoryReportModels = analysisService.findById(analysisModel.getId()).getWorkloadInventoryReportModels();
-        //assertThat(workloadInventoryReportModels.size()).isNull();
-
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
         camelContext.start();
@@ -77,12 +71,15 @@ public class MainRouteBuilder_DirectWorkloadInventoryTest {
         metadata.put("reportName", "report name");
         metadata.put("reportDescription", "report description");
         metadata.put("file", "fichero.zip");
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId().toString());
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, 1L);
         headers.put("MA_metadata", metadata);
 
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:vm-workload-inventory", getInputDataModelSample(analysisModel.getId()), headers);
+        Exchange testExchange = camelContext.createProducerTemplate().request("direct:vm-workload-inventory", exchange -> {
+            exchange.getIn().setBody(getInputDataModelSample(1L));
+            exchange.getIn().setHeaders(headers);
+        });
 
-        assertThat(analysisService.findById(analysisModel.getId()).getWorkloadInventoryReportModels().size()).isGreaterThan(0);
+        assertThat(testExchange.getIn().getBody(WorkloadInventoryReportModel.class)).isNotNull();
 
         camelContext.stop();
     }

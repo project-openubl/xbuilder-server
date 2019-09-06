@@ -59,12 +59,16 @@ public class MainRouteBuilder extends RouteBuilder {
     @Value("#{'${insights.properties}'.split(',')}")
     protected List<String> insightsProperties;
 
+    @Value("${camel.springboot.tracing}")
+    private boolean tracingEnabled;
+
     @Inject
     private AnalysisService analysisService;
 
     private List<Integer> httpSuccessCodes = Arrays.asList(HttpStatus.SC_OK, HttpStatus.SC_CREATED, HttpStatus.SC_ACCEPTED, HttpStatus.SC_NO_CONTENT);
 
     public void configure() {
+        getContext().setTracing(tracingEnabled);
 
         from("rest:post:/upload?consumes=multipart/form-data")
                 .id("rest-upload")

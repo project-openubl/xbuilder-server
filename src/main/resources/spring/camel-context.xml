@@ -46,7 +46,6 @@
                 <param name="size" type="query" defaultValue="10" required="false" description="Define the size of the requested page" />
                 <param name="filterText" type="query" required="false" description="Define the text which will be used to filter the results" />
                 <route id="reports-get-all">
-                    <log message="${headers} ${body}" />
                     <choice>
                         <when>
                             <simple>${header.filterText} == null</simple>
@@ -231,7 +230,7 @@
             <marshal id="route-marshal">
                 <xstream/>
             </marshal>
-            <to id="log-request" uri="log:INFO?showBody=true&amp;showHeaders=true" />
+            <log message="Body ${body}; Headers ${headers}" loggingLevel="DEBUG"/>
             <to id="route-to-decision-server-rest" uri="http://{{service:{{kieserver.service}}:{{kieserver.devel-service}}}}/{{kieserver.path}}?authMethod=Basic&amp;authUsername={{kieserver.username}}&amp;authPassword={{kieserver.password}}"/>
             <choice>
                 <when>

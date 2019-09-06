@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class AnalysisService
@@ -57,6 +58,12 @@ public class AnalysisService
     public void addWorkloadInventoryReportModel(WorkloadInventoryReportModel reportModel, Long id) {
         AnalysisModel analysisModel = findById(id);
         analysisModel.addWorkloadInventoryReportModel(reportModel);
+        analysisRepository.save(analysisModel);
+    }
+
+    public void addWorkloadInventoryReportModels(List<WorkloadInventoryReportModel> reportModels, Long id) {
+        AnalysisModel analysisModel = findById(id);
+        analysisModel.setWorkloadInventoryReportModels(reportModels);
         analysisRepository.save(analysisModel);
     }
 

@@ -10,6 +10,8 @@ import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.analytics.pojo.input.workload.inventory.VMWorkloadInventoryModel;
+import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
+import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(CamelSpringBootRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|jms:queue:vm-workload-inventory|direct:aggregate-vmworkloadinventory")
+@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|direct:vm-workload-inventory|direct:aggregate-vmworkloadinventory")
 @UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
@@ -36,13 +38,13 @@ public class MainRouteBuilder_DirectCalculateTest {
     CamelContext camelContext;
 
     @Inject
-    MainRouteBuilder mainRouteBuilder;
+    AnalysisService analysisService;
 
     @EndpointInject(uri = "mock:jms:queue:uploadFormInputDataModel")
     private MockEndpoint mockJmsQueueCostSavings;
 
-    @EndpointInject(uri = "mock:jms:queue:vm-workload-inventory")
-    private MockEndpoint mockJmsQueueWorkloadInventory;
+    @EndpointInject(uri = "mock:direct:vm-workload-inventory")
+    private MockEndpoint mockDirectWorkloadInventory;
 
     @Test
     public void mainRouteBuilder_DirectCalculate_PersistedNotificationGiven_ShouldCallFileWithGivenHeaders() throws Exception {
@@ -130,13 +132,14 @@ public class MainRouteBuilder_DirectCalculateTest {
         mockJmsQueueCostSavings.assertIsSatisfied();
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getTotalDiskSpace()).isEqualTo(563902124032L);
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getHypervisor()).isEqualTo(2);
-        assertThat(mockJmsQueueWorkloadInventory.getExchanges().get(0).getIn().getBody(VMWorkloadInventoryModel.class).getVmName()).isNotEmpty();
+        assertThat(mockDirectWorkloadInventory.getExchanges().get(0).getIn().getBody(VMWorkloadInventoryModel.class).getVmName()).isNotEmpty();
         camelContext.stop();
     }
 
     @Test
     public void mainRouteBuilder_DirectCalculateWithV1_0_0_FileGiven_ShouldSendMessageToJMS() throws Exception {
         //Given
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
         mockJmsQueueCostSavings.expectedMessageCount(1);
@@ -150,7 +153,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, 20D);
         metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, 30D);
         metadata.put(Calculator.GROWTHRATEPERCENTAGE, 7D);
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, 7L);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId());
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("MA_metadata", metadata);
@@ -174,9 +177,9 @@ public class MainRouteBuilder_DirectCalculateTest {
         mockJmsQueueCostSavings.assertIsSatisfied();
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getTotalDiskSpace()).isEqualTo(146028888064L);
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getHypervisor()).isEqualTo(4);
-        assertThat(mockJmsQueueWorkloadInventory.getExchanges().get(0).getIn().getBody(VMWorkloadInventoryModel.class).getVmName()).isNotEmpty();
-        assertThat(mockJmsQueueWorkloadInventory.getExchanges().get(0).getIn().getBody(VMWorkloadInventoryModel.class).getOsProductName()).isEqualTo("CentOS 7 (64-bit)");
-        assertThat(mockJmsQueueWorkloadInventory.getExchanges().get(1).getIn().getBody(VMWorkloadInventoryModel.class).getOsProductName()).isEqualTo("Linux");
+        assertThat(mockDirectWorkloadInventory.getExchanges().stream().noneMatch(exchange -> exchange.getIn().getBody(VMWorkloadInventoryModel.class).getVmName().isEmpty())).isTrue();
+        assertThat(mockDirectWorkloadInventory.getExchanges().stream().filter(exchange -> exchange.getIn().getBody(VMWorkloadInventoryModel.class).getOsProductName().equals("CentOS 7 (64-bit)")).count()).isEqualTo(1);
+        assertThat(mockDirectWorkloadInventory.getExchanges().stream().filter(exchange -> exchange.getIn().getBody(VMWorkloadInventoryModel.class).getOsProductName().equals("Linux")).count()).isEqualTo(7);
         camelContext.stop();
     }
 

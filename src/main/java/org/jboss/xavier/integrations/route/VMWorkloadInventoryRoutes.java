@@ -1,18 +1,26 @@
 package org.jboss.xavier.integrations.route;
 
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.migrationanalytics.business.VMWorkloadInventoryCalculator;
+import org.jboss.xavier.integrations.route.strategy.WorkloadInventoryReportModelAggregationStrategy;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.List;
+import java.util.Map;
 
 @Named
 public class VMWorkloadInventoryRoutes extends RouteBuilder {
 
     @Inject
     AnalysisService analysisService;
+
+    @Value("${parallel.wir}")
+    private boolean parallel;
 
     @Override
     public void configure() {
@@ -21,18 +29,19 @@ public class VMWorkloadInventoryRoutes extends RouteBuilder {
                     .to("direct:aggregate-vmworkloadinventory")
                 .end()
                 .transform().method(VMWorkloadInventoryCalculator.class, "calculate(${body}, ${header.MA_metadata})")
-                .split(body())
-                .to("jms:queue:vm-workload-inventory")
-                .end();
+                .split(body()).parallelProcessing(parallel).aggregationStrategy(new WorkloadInventoryReportModelAggregationStrategy())
+                .to("direct:vm-workload-inventory")
+                .end()
+                .process(exchange -> {
+                    analysisService.addWorkloadInventoryReportModels(exchange.getIn().getBody(List.class),
+                            Long.parseLong(exchange.getIn().getHeader("MA_metadata", Map.class).get(MainRouteBuilder.ANALYSIS_ID).toString()));
+                });
 
-        from ("jms:queue:vm-workload-inventory").id("extract-vmworkloadinventory")
-            .to("log:INFO?showBody=true&showHeaders=true")
+        from ("direct:vm-workload-inventory").id("extract-vmworkloadinventory")
             .doTry()
-                .setHeader(MainRouteBuilder.ANALYSIS_ID, simple("${body." + MainRouteBuilder.ANALYSIS_ID + "}", String.class))
                 .transform().method("decisionServerHelper", "generateCommands(${body}, \"GetWorkloadInventoryReports\", \"WorkloadInventoryKSession0\")")
                 .to("direct:decisionserver").id("workload-decisionserver")
                 .transform().method("decisionServerHelper", "extractWorkloadInventoryReportModel")
-                .process(e -> analysisService.addWorkloadInventoryReportModel(e.getIn().getBody(WorkloadInventoryReportModel.class), Long.parseLong(e.getIn().getHeader(MainRouteBuilder.ANALYSIS_ID, String.class))))
             .endDoTry()
             .doCatch(Exception.class)
                 .to("log:error?showCaughtException=true&showStackTrace=true")
