@@ -1285,7 +1285,7 @@
                                 "device_name": "Hard disk 1",
                                 "device_type": "disk",
                                 "disk_type": "thin",
-                                "filename": "[NFS-Storage] lb_1/lb.vmdk",
+                                "filename": "[NFS-Storage] tomcat/tomcat.vmdk",
                                 "free_space": null,
                                 "mode": "persistent",
                                 "size": 4294967296,

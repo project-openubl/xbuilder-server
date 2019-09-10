@@ -173,7 +173,7 @@ public class MainRouteBuilder extends RouteBuilder {
                 .id("calculate")
                 .convertBodyTo(String.class)
                 .multicast()
-                    .to("direct:calculate-costsavings", "direct:calculate-vmworkloadinventory")
+                    .to("direct:calculate-costsavings", "direct:calculate-vmworkloadinventory", "direct:flags-shared-disks")
                 .end();
 
 

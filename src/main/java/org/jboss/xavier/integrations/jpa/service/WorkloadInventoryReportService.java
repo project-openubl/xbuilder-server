@@ -98,4 +98,9 @@ public class WorkloadInventoryReportService
 
         return filters;
     }
+
+    public void saveAll(List<WorkloadInventoryReportModel> workloadInventoryReportModels)
+    {
+        reportRepository.save(workloadInventoryReportModels);
+    }
 }

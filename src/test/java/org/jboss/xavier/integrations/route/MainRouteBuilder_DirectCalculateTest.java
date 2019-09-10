@@ -23,13 +23,15 @@ import javax.inject.Inject;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(CamelSpringBootRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|direct:vm-workload-inventory|direct:aggregate-vmworkloadinventory")
+@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|direct:vm-workload-inventory|direct:calculate-workloadsummaryreportmodel")
 @UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
@@ -46,9 +48,13 @@ public class MainRouteBuilder_DirectCalculateTest {
     @EndpointInject(uri = "mock:direct:vm-workload-inventory")
     private MockEndpoint mockDirectWorkloadInventory;
 
+    @EndpointInject(uri = "mock:direct:calculate-workloadsummaryreportmodel")
+    private MockEndpoint mockCalculateWorkloadSummaryReportModel;
+
     @Test
     public void mainRouteBuilder_DirectCalculate_PersistedNotificationGiven_ShouldCallFileWithGivenHeaders() throws Exception {
         //Given
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
 
@@ -61,7 +67,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         Double year2hypervisorpercentage = 20D;
         Double year3hypervisorpercentage = 30D;
         Double growthratepercentage = 7D;
-        Long analysisId = 3L;
+        Long analysisId = analysisModel.getId();
 
         UploadFormInputDataModel expectedFormInputDataModelExpected = new UploadFormInputDataModel(customerId, fileName, hypervisor, totaldiskspace,
                 sourceproductindicator, year1hypervisorpercentage/100, year2hypervisorpercentage/100,
@@ -74,7 +80,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
         metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
         metadata.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, "3");
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("MA_metadata", metadata);
@@ -95,6 +101,8 @@ public class MainRouteBuilder_DirectCalculateTest {
     @Test
     public void mainRouteBuilder_DirectCalculate_FileGiven_ShouldSendMessageToJMS() throws Exception {
         //Given
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
+
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
         mockJmsQueueCostSavings.expectedMessageCount(1);
@@ -108,11 +116,17 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, 20D);
         metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, 30D);
         metadata.put(Calculator.GROWTHRATEPERCENTAGE, 7D);
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, "7");
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId());
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("MA_metadata", metadata);
         headers.put("Content-type", "application/zip");
+
+        Set<String> expectedVmNamesWithSharedDisk = new HashSet<>();
+        expectedVmNamesWithSharedDisk.add("dev-windows-server-2008-TEST");
+        expectedVmNamesWithSharedDisk.add("james-db-03-copy");
+        expectedVmNamesWithSharedDisk.add("dev-windows-server-2008");
+        expectedVmNamesWithSharedDisk.add("pemcg-rdm-test");
 
         //When
         camelContext.start();
@@ -120,6 +134,7 @@ public class MainRouteBuilder_DirectCalculateTest {
         camelContext.startRoute("calculate");
         camelContext.startRoute("calculate-costsavings");
         camelContext.startRoute("calculate-vmworkloadinventory");
+        camelContext.startRoute("flags-shared-disks");
         String body = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(fileName), Charset.forName("UTF-8"));
 
         camelContext.createProducerTemplate().request("direct:calculate", exchange -> {
@@ -133,6 +148,9 @@ public class MainRouteBuilder_DirectCalculateTest {
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getTotalDiskSpace()).isEqualTo(563902124032L);
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getHypervisor()).isEqualTo(2);
         assertThat(mockDirectWorkloadInventory.getExchanges().get(0).getIn().getBody(VMWorkloadInventoryModel.class).getVmName()).isNotEmpty();
+        Set<String> vmNamesWithSharedDisk = mockCalculateWorkloadSummaryReportModel.getExchanges().get(0).getIn().getBody(Set.class);
+        assertThat(vmNamesWithSharedDisk.size()).isEqualTo(4);
+        assertThat(vmNamesWithSharedDisk).isEqualTo(expectedVmNamesWithSharedDisk);
         camelContext.stop();
     }
 
@@ -159,12 +177,17 @@ public class MainRouteBuilder_DirectCalculateTest {
         headers.put("MA_metadata", metadata);
         headers.put("Content-type", "application/zip");
 
+        Set<String> expectedVmNamesWithSharedDisk = new HashSet<>();
+        expectedVmNamesWithSharedDisk.add("tomcat");
+        expectedVmNamesWithSharedDisk.add("lb");
+
         //When
         camelContext.start();
         camelContext.startRoute("unzip-file");
         camelContext.startRoute("calculate");
         camelContext.startRoute("calculate-costsavings");
         camelContext.startRoute("calculate-vmworkloadinventory");
+        camelContext.startRoute("flags-shared-disks");
         String body = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(fileName), Charset.forName("UTF-8"));
 
         camelContext.createProducerTemplate().request("direct:calculate", exchange -> {
@@ -180,6 +203,9 @@ public class MainRouteBuilder_DirectCalculateTest {
         assertThat(mockDirectWorkloadInventory.getExchanges().stream().noneMatch(exchange -> exchange.getIn().getBody(VMWorkloadInventoryModel.class).getVmName().isEmpty())).isTrue();
         assertThat(mockDirectWorkloadInventory.getExchanges().stream().filter(exchange -> exchange.getIn().getBody(VMWorkloadInventoryModel.class).getOsProductName().equals("CentOS 7 (64-bit)")).count()).isEqualTo(1);
         assertThat(mockDirectWorkloadInventory.getExchanges().stream().filter(exchange -> exchange.getIn().getBody(VMWorkloadInventoryModel.class).getOsProductName().equals("Linux")).count()).isEqualTo(7);
+        Set<String> vmNamesWithSharedDisk = mockCalculateWorkloadSummaryReportModel.getExchanges().get(0).getIn().getBody(Set.class);
+        assertThat(vmNamesWithSharedDisk.size()).isEqualTo(2);
+        assertThat(vmNamesWithSharedDisk).isEqualTo(expectedVmNamesWithSharedDisk);
         camelContext.stop();
     }
 

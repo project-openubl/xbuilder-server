@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(CamelSpringBootRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("direct:vm-workload-inventory|direct:aggregate-vmworkloadinventory")
+@MockEndpointsAndSkip("direct:vm-workload-inventory")
 @UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
@@ -41,9 +41,6 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
 
     @EndpointInject(uri = "mock:direct:vm-workload-inventory")
     private MockEndpoint mockVmWorkloadInventory;
-
-    @EndpointInject(uri = "mock:direct:aggregate-vmworkloadinventory")
-    private MockEndpoint mockAggregateVMWorkloadInventoryModel;
 
     @Test
     public void mainRouteBuilder_DirectCalculate_JSONGiven_ShouldReturnExpectedCalculatedValues() throws Exception {
@@ -101,8 +98,6 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         //Then
         assertThat(mockVmWorkloadInventory.getExchanges().stream().map(e -> e.getIn().getBody(VMWorkloadInventoryModel.class)).filter(e -> e.getVmName().equalsIgnoreCase("dev-windows-server-2008-TEST")).findFirst().get()).isEqualToComparingFieldByFieldRecursively(expectedModel);
         assertThat(mockVmWorkloadInventory.getExchanges().size()).isEqualTo(21);
-        assertThat(mockAggregateVMWorkloadInventoryModel.getExchanges().size()).isEqualTo(1);
-        assertThat(mockAggregateVMWorkloadInventoryModel.getExchanges().get(0).getIn().getBody()).isInstanceOf(Collection.class);
 
         camelContext.stop();
     }
@@ -163,8 +158,6 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         //Then
         assertThat(mockVmWorkloadInventory.getExchanges().stream().map(e -> e.getIn().getBody(VMWorkloadInventoryModel.class)).filter(e -> e.getVmName().equalsIgnoreCase("oracle_db")).findFirst().get()).isEqualToComparingFieldByFieldRecursively(expectedModel);
         assertThat(mockVmWorkloadInventory.getExchanges().size()).isEqualTo(8);
-        assertThat(mockAggregateVMWorkloadInventoryModel.getExchanges().size()).isEqualTo(1);
-        assertThat(mockAggregateVMWorkloadInventoryModel.getExchanges().get(0).getIn().getBody()).isInstanceOf(Collection.class);
 
         camelContext.stop();
     }

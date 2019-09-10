@@ -55,31 +55,8 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
     @Inject
     AnalysisService analysisService;
 
-    @Value("${report.workload.summary.polling.delay}")
-    private long delay;
-
-    @Value("${report.workload.summary.polling.max-attempts}")
-    private long maxAttempts;
-
     @Override
     public void configure() {
-
-        from("direct:aggregate-vmworkloadinventory")
-            .id("aggregate-vmworkloadinventory")
-            .process(exchange -> {
-                Integer expectedSize = ((Collection) exchange.getIn().getBody()).size();
-                String analysisId = ((Map<String, String>) exchange.getIn().getHeader("MA_metadata")).get(MainRouteBuilder.ANALYSIS_ID);
-                List<WorkloadInventoryReportModel> workloadInventoryReportModels  = workloadInventoryReportService.findByAnalysisId(Long.parseLong(analysisId));
-                int attempts = 0;
-                for (; workloadInventoryReportModels.size() < expectedSize && attempts < maxAttempts; attempts++)
-                {
-                    logger.warning("workloadInventoryReportModels.size() < expectedSize since " + workloadInventoryReportModels.size()  + " < " + expectedSize);
-                    Thread.sleep(delay);
-                    workloadInventoryReportModels  = workloadInventoryReportService.findByAnalysisId(Long.parseLong(analysisId));
-                }
-                if (maxAttempts == attempts) throw new CamelExecutionException("Unable to find the expected " + expectedSize + " WorkloadInventoryReportModels in the DB", exchange);
-            })
-            .to("direct:calculate-workloadsummaryreportmodel");
 
         from("direct:calculate-workloadsummaryreportmodel")
             .id("calculate-workloadsummaryreportmodel")
@@ -108,7 +85,6 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
 
                 // Set the WorkloadSummaryReportModel into the AnalysisModel
                 analysisService.setWorkloadSummaryReportModel(workloadSummaryReportModel, analysisId);
-
 
                 // Refresh the  workloadSummaryReportModel
                 AnalysisModel analysisModel = analysisService.findById(analysisId);
