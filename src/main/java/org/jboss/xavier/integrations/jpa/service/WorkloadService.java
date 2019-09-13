@@ -24,7 +24,7 @@ public class WorkloadService
         return workloadRepository.calculateWorkloadsModels(analysisId);
     }
 
-    public Page<WorkloadModel> findByReportAnalysisId(Long analysisId, PageBean pageBean, SortBean sortBean) {
+    public Page<WorkloadModel> findByReportAnalysisOwnerAndReportAnalysisId(String analysisOwner, Long analysisId, PageBean pageBean, SortBean sortBean) {
         // Sort
         Sort.Direction sortDirection = sortBean.isOrderAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
         String orderBy = WorkloadModel.SUPPORTED_SORT_FIELDS.contains(sortBean.getOrderBy()) ? sortBean.getOrderBy() : WorkloadModel.DEFAULT_SORT_FIELD;
@@ -35,7 +35,7 @@ public class WorkloadService
         int size = pageBean.getSize();
         Pageable pageable = new PageRequest(page, size, sort);
 
-        return workloadRepository.findByReportAnalysisId(analysisId, pageable);
+        return workloadRepository.findByReportAnalysisOwnerAndReportAnalysisId(analysisOwner, analysisId, pageable);
     }
 
 }

@@ -49,6 +49,7 @@ public class AnalysisModel
     private String status;
     private Date inserted;
     private Date lastUpdate;
+    private String owner;
 
     public Long getId() {
         return id;
@@ -137,5 +138,13 @@ public class AnalysisModel
 
     public void setWorkloadSummaryReportModels(WorkloadSummaryReportModel workloadSummaryReportModels) {
         this.workloadSummaryReportModels = workloadSummaryReportModels;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }

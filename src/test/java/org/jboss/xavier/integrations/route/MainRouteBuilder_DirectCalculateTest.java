@@ -54,7 +54,7 @@ public class MainRouteBuilder_DirectCalculateTest {
     @Test
     public void mainRouteBuilder_DirectCalculate_PersistedNotificationGiven_ShouldCallFileWithGivenHeaders() throws Exception {
         //Given
-        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
 
@@ -101,7 +101,7 @@ public class MainRouteBuilder_DirectCalculateTest {
     @Test
     public void mainRouteBuilder_DirectCalculate_FileGiven_ShouldSendMessageToJMS() throws Exception {
         //Given
-        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
 
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -157,7 +157,7 @@ public class MainRouteBuilder_DirectCalculateTest {
     @Test
     public void mainRouteBuilder_DirectCalculateWithV1_0_0_FileGiven_ShouldSendMessageToJMS() throws Exception {
         //Given
-        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
         mockJmsQueueCostSavings.expectedMessageCount(1);

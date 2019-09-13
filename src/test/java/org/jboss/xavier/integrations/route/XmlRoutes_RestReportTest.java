@@ -1,6 +1,7 @@
 package org.jboss.xavier.integrations.route;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.component.rest.RestEndpoint;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
@@ -9,9 +10,8 @@ import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.integrations.jpa.service.*;
 import org.jboss.xavier.integrations.route.model.PageBean;
 import org.jboss.xavier.integrations.route.model.SortBean;
-import org.jboss.xavier.integrations.route.model.PageBean;
-import org.jboss.xavier.integrations.route.model.SortBean;
 import org.jboss.xavier.integrations.route.model.WorkloadInventoryFilterBean;
+import org.jboss.xavier.integrations.util.TestUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +34,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 
@@ -85,11 +87,40 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("reports-get-all");
-        restTemplate.getForEntity(camel_context + "report", String.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/", HttpMethod.GET, entity, String.class);
 
         //Then
-        verify(analysisService).findReports(0, 10);
+        verify(analysisService).findAllByOwner("mrizzi@redhat.com", 0, 10);
+        assertThat(response).isNotNull();
+        assertThat(response.getBody()).contains("\"content\":[]");
+        assertThat(response.getBody()).contains("\"size\":10");
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReport_NoRHIdentityGiven_ShouldReturnForbidden() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
+        camelContext.startRoute("reports-get-all");
+        ResponseEntity<String> result = restTemplate.getForEntity(camel_context + "report", String.class);
+
+        //Then
+        assertThat(result).isNotNull();
+        assertThat(result.getStatusCodeValue()).isEqualByComparingTo(403);
+        assertThat(result.getBody()).isEqualTo("Forbidden");
+        verifyZeroInteractions(analysisService);
         camelContext.stop();
     }
 
@@ -101,16 +132,25 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("reports-get-all");
         Map<String, Object> variables = new HashMap<>();
         int page = 2;
         variables.put("page", page);
         int size = 3;
         variables.put("size", size);
-        restTemplate.getForEntity(camel_context + "report?page={page}&size={size}", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report?page={page}&size={size}", HttpMethod.GET, entity, String.class, variables);
 
         //Then
-        verify(analysisService).findReports(page, size);
+        verify(analysisService).findAllByOwner("mrizzi@redhat.com", page, size);
+        assertThat(response).isNotNull();
+        assertThat(response.getBody()).contains("\"content\":[]");
+        assertThat(response.getBody()).contains("\"size\":3");
         camelContext.stop();
     }
 
@@ -122,6 +162,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("reports-get-all");
         Map<String, Object> variables = new HashMap<>();
         int page = 2;
@@ -130,10 +171,18 @@ public class XmlRoutes_RestReportTest {
         variables.put("size", size);
         String filterText = "my report name which I'm searching";
         variables.put("filterText", filterText);
-        restTemplate.getForEntity(camel_context + "report?page={page}&size={size}&filterText={filterText}", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report?page={page}&size={size}&filterText={filterText}", HttpMethod.GET, entity, String.class, variables);
 
         //Then
-        verify(analysisService).findReports(filterText, page, size);
+        verify(analysisService).findByOwnerAndReportName("mrizzi@redhat.com", filterText, page, size);
+        assertThat(response).isNotNull();
+        assertThat(response.getBody()).contains("\"content\":[]");
+        assertThat(response.getBody()).contains("\"size\":3");
         camelContext.stop();
     }
 
@@ -145,33 +194,49 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("report-get-details");
+        camelContext.startRoute("add-username-header");
+
         Map<String, Long> variables = new HashMap<>();
         Long one = 1L;
         variables.put("id", one);
-        restTemplate.getForEntity(camel_context + "report/{id}", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}", HttpMethod.GET, entity, String.class, variables);
 
         //Then
-        verify(analysisService).findById(one);
+        verify(analysisService).findByOwnerAndId("mrizzi@redhat.com", one);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
     @Test
     public void xmlRouteBuilder_RestReportIdInitialSavingsEstimation_IdParamGiven_ShouldCallFindOneByAnalysisId() throws Exception {
-        //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("reports-get-details");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
         Map<String, Object> variables = new HashMap<>();
         Long one = 1L;
         variables.put("id", one);
-        restTemplate.getForEntity(camel_context + "report/{id}/initial-saving-estimation", String.class, variables);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/initial-saving-estimation", HttpMethod.GET, entity, String.class, variables);
 
         //Then
-        verify(initialSavingsEstimationReportService).findOneByAnalysisId(one);
+        verify(initialSavingsEstimationReportService).findByAnalysisOwnerAndAnalysisId("mrizzi@redhat.com", one);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -183,6 +248,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("to-workloadInventoryFilterBean");
@@ -194,14 +260,20 @@ public class XmlRoutes_RestReportTest {
         variables.put("page", page);
         int size = 3;
         variables.put("size", size);
-        restTemplate.getForEntity(camel_context + "report/{id}/workload-inventory?page={page}&size={size}", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-inventory?page={page}&size={size}", HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(page, size);
         SortBean sortBean = new SortBean("id", false);
         WorkloadInventoryFilterBean filterBean = new WorkloadInventoryFilterBean();
 
-        verify(workloadInventoryReportService).findByAnalysisId(one, pageBean, sortBean, filterBean);
+        verify(workloadInventoryReportService).findByAnalysisOwnerAndAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean, filterBean);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -213,6 +285,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("to-workloadInventoryFilterBean");
@@ -220,14 +293,20 @@ public class XmlRoutes_RestReportTest {
         Map<String, Object> variables = new HashMap<>();
         Long one = 1L;
         variables.put("id", one);
-        restTemplate.getForEntity(camel_context + "report/{id}/workload-inventory", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-inventory", HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(0, 10);
         SortBean sortBean = new SortBean("id", false);
         WorkloadInventoryFilterBean filterBean = new WorkloadInventoryFilterBean();
 
-        verify(workloadInventoryReportService).findByAnalysisId(one, pageBean, sortBean, filterBean);
+        verify(workloadInventoryReportService).findByAnalysisOwnerAndAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean, filterBean);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -239,6 +318,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("to-workloadInventoryFilterBean");
@@ -250,14 +330,20 @@ public class XmlRoutes_RestReportTest {
         variables.put("orderBy", orderBy);
         Boolean orderAsc = true;
         variables.put("orderAsc", orderAsc);
-        restTemplate.getForEntity(camel_context + "report/{id}/workload-inventory?orderBy={orderBy}&orderAsc={orderAsc}", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-inventory?orderBy={orderBy}&orderAsc={orderAsc}", HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(0, 10);
         SortBean sortBean = new SortBean(orderBy, orderAsc);
         WorkloadInventoryFilterBean filterBean = new WorkloadInventoryFilterBean();
 
-        verify(workloadInventoryReportService).findByAnalysisId(one, pageBean, sortBean, filterBean);
+        verify(workloadInventoryReportService).findByAnalysisOwnerAndAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean, filterBean);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -269,6 +355,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("to-workloadInventoryFilterBean");
@@ -344,7 +431,11 @@ public class XmlRoutes_RestReportTest {
                 .append("complexity={complexity1}&")
                 .append("complexity={complexity2}");
 
-        restTemplate.getForEntity(sb.toString(), String.class, variables);
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(sb.toString(), HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(0, 10);
@@ -360,31 +451,39 @@ public class XmlRoutes_RestReportTest {
         filterBean.setFlagsIMS(new HashSet<>(Arrays.asList(flag1, flag2)));
         filterBean.setComplexities(new HashSet<>(Arrays.asList(complexity1, complexity2)));
 
-        verify(workloadInventoryReportService).findByAnalysisId(one, pageBean, sortBean, filterBean);
+        verify(workloadInventoryReportService).findByAnalysisOwnerAndAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean, filterBean);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
     @Test
-    public void xmlRouteBuilder_RestReportId_IdParamGiven_AndIdNotExists_ShouldReturnNotFount404Status() throws Exception {
+    public void xmlRouteBuilder_RestReportId_IdParamGiven_AndIdNotExists_ShouldReturnNotFound404Status() throws Exception {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
 
         Long one = 1L;
-        when(analysisService.findById(one)).thenReturn(null);
+        when(analysisService.findByOwnerAndId("mrizzi@redhat.com", one)).thenReturn(null);
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("report-delete");
         Map<String, Object> variables = new HashMap<>();
         variables.put("id", one);
-        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}" , HttpMethod.DELETE, null, String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}", HttpMethod.DELETE, entity, String.class, variables);
 
         //Then
         Assert.assertEquals(response.getStatusCodeValue(), HttpServletResponse.SC_NOT_FOUND);
-        verify(analysisService).findById(one);
+        verify(analysisService).findByOwnerAndId("mrizzi@redhat.com", one);
         verify(analysisService, never()).deleteById(one);
-        camelContext.stop();
+        assertThat(response).isNotNull();
+        assertThat(response.getBody()).contains("Analysis not found");
         camelContext.stop();
     }
 
@@ -395,22 +494,29 @@ public class XmlRoutes_RestReportTest {
         camelContext.setAutoStartup(false);
 
         Long one = 1L;
-        when(analysisService.findById(one)).thenReturn(new AnalysisModel());
+        when(analysisService.findByOwnerAndId("mrizzi@redhat.com",one)).thenReturn(new AnalysisModel());
         doNothing().when(analysisService).deleteById(one);
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("report-delete");
         Map<String, Object> variables = new HashMap<>();
         variables.put("id", one);
-        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}" , HttpMethod.DELETE, null, String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}", HttpMethod.DELETE, entity, String.class, variables);
 
         //Then
         Assert.assertEquals(response.getStatusCodeValue(), HttpServletResponse.SC_NO_CONTENT);
         Assert.assertNull(response.getBody());
-        verify(analysisService).findById(one);
+        verify(analysisService).findByOwnerAndId("mrizzi@redhat.com",one);
         verify(analysisService).deleteById(one);
-        camelContext.stop();
+        assertThat(response).isNotNull();
+        assertThat(response.getBody()).isNull();
         camelContext.stop();
     }
 
@@ -422,6 +528,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("workload-inventory-report-get-details-as-csv");
         camelContext.startRoute("workload-inventory-report-model-to-csv");
         Map<String, Object> variables = new HashMap<>();
@@ -429,38 +536,70 @@ public class XmlRoutes_RestReportTest {
         variables.put("id", one);
         HttpHeaders headers = new HttpHeaders();
         headers.add("whatever", "this header should not be copied");
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
         ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-inventory/csv" , HttpMethod.GET, entity, String.class, variables);
 
         //Then
-        verify(workloadInventoryReportService).findByAnalysisId(one);
+        verify(workloadInventoryReportService).findByAnalysisOwnerAndAnalysisId("mrizzi@redhat.com", one);
         Assert.assertTrue(response.getHeaders().get("Content-Type").contains("text/csv"));
         Assert.assertTrue(response.getHeaders().get("Content-Disposition").contains("attachment;filename=workloadInventory_1.csv"));
         Assert.assertNull(response.getHeaders().get("whatever"));
-        Assert.assertNotNull(response.getBody());
+        assertThat(response).isNotNull();
+        assertThat(response.getBody()).contains("Provider,Datacenter,Cluster,VM name,OS type,Operating system description,Disk space,Memory,CPU cores,Workload,Effort,Recommended targets,Flags IMS,Product,Version,HostName");
         camelContext.stop();
     }
 
     @Test
-    public void xmlRouteBuilder_RestReportIdWorkloadSummary_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
+    public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_ShouldCallFindByAnalysisIdAndReturnAvailableFilters() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+        Long one = 1L;
+        when(analysisService.findByOwnerAndId("mrizzi@redhat.com", one)).thenReturn(new AnalysisModel());
+
+        //When
+        camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
+        camelContext.startRoute("workload-inventory-report-available-filters");
+        Map<String, Object> variables = new HashMap<>();
+        variables.put("id", one);
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("whatever", "this header should not be copied");
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-inventory/available-filters" , HttpMethod.GET, entity, String.class, variables);
+
+        //Then
+        verify(analysisService).findByOwnerAndId("mrizzi@redhat.com", one);
+        verify(workloadInventoryReportService).findAvailableFiltersByAnalysisId(one);
+        assertThat(response).isNotNull();
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestReportIdWorkloadSummary_IdParamGiven_ShouldCallFindByAnalysisOwnerAndAnalysisId() throws Exception {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("workload-summary-report-get");
         Map<String, Object> variables = new HashMap<>();
         Long analysisId = 11L;
         variables.put("id", analysisId);
         HttpHeaders headers = new HttpHeaders();
         headers.add("whatever", "this header should not be copied");
+        headers.add(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
         ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-summary" , HttpMethod.GET, entity, String.class, variables);
 
         //Then
-        verify(workloadSummaryReportService).findByAnalysisId(analysisId);
+        verify(workloadSummaryReportService).findByAnalysisOwnerAndAnalysisId("mrizzi@redhat.com", analysisId);
         Assert.assertNull(response.getHeaders().get("whatever"));
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -472,19 +611,26 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("workload-summary-workloads-report-get");
         Map<String, Object> variables = new HashMap<>();
         Long one = 1L;
         variables.put("id", one);
-        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/workloads", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-summary/workloads", HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(0, 10);
         SortBean sortBean = new SortBean("id", false);
 
-        verify(workloadService).findByReportAnalysisId(one, pageBean, sortBean);
+        verify(workloadService).findByReportAnalysisOwnerAndReportAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -496,6 +642,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("workload-summary-workloads-report-get");
@@ -506,13 +653,19 @@ public class XmlRoutes_RestReportTest {
         variables.put("page", page);
         int size = 3;
         variables.put("size", size);
-        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/workloads?page={page}&size={size}", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-summary/workloads?page={page}&size={size}", HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(page, size);
         SortBean sortBean = new SortBean("id", false);
 
-        verify(workloadService).findByReportAnalysisId(one, pageBean, sortBean);
+        verify(workloadService).findByReportAnalysisOwnerAndReportAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -524,6 +677,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("workload-summary-workloads-report-get");
@@ -534,13 +688,19 @@ public class XmlRoutes_RestReportTest {
         variables.put("orderBy", orderBy);
         Boolean orderAsc = true;
         variables.put("orderAsc", orderAsc);
-        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/workloads?orderBy={orderBy}&orderAsc={orderAsc}", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-summary/workloads?orderBy={orderBy}&orderAsc={orderAsc}", HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(0, 10);
         SortBean sortBean = new SortBean(orderBy, orderAsc);
 
-        verify(workloadService).findByReportAnalysisId(one, pageBean, sortBean);
+        verify(workloadService).findByReportAnalysisOwnerAndReportAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -552,19 +712,26 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("workload-summary-flags-report-get");
         Map<String, Object> variables = new HashMap<>();
         Long one = 1L;
         variables.put("id", one);
-        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/flags", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-summary/flags", HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(0, 10);
         SortBean sortBean = new SortBean("id", false);
 
-        verify(flagService).findByReportAnalysisId(one, pageBean, sortBean);
+        verify(flagService).findByReportAnalysisOwnerAndReportAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -576,6 +743,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("workload-summary-flags-report-get");
@@ -586,13 +754,19 @@ public class XmlRoutes_RestReportTest {
         variables.put("page", page);
         int size = 3;
         variables.put("size", size);
-        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/flags?page={page}&size={size}", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-summary/flags?page={page}&size={size}", HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(page, size);
         SortBean sortBean = new SortBean("id", false);
 
-        verify(flagService).findByReportAnalysisId(one, pageBean, sortBean);
+        verify(flagService).findByReportAnalysisOwnerAndReportAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean);
+        assertThat(response).isNotNull();
         camelContext.stop();
     }
 
@@ -604,6 +778,7 @@ public class XmlRoutes_RestReportTest {
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("to-paginationBean");
         camelContext.startRoute("to-sortBean");
         camelContext.startRoute("workload-summary-flags-report-get");
@@ -614,13 +789,70 @@ public class XmlRoutes_RestReportTest {
         variables.put("orderBy", orderBy);
         Boolean orderAsc = true;
         variables.put("orderAsc", orderAsc);
-        restTemplate.getForEntity(camel_context + "report/{id}/workload-summary/flags?orderBy={orderBy}&orderAsc={orderAsc}", String.class, variables);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(camel_context + "report/{id}/workload-summary/flags?orderBy={orderBy}&orderAsc={orderAsc}", HttpMethod.GET, entity, String.class, variables);
 
         //Then
         PageBean pageBean = new PageBean(0, 10);
         SortBean sortBean = new SortBean(orderBy, orderAsc);
 
-        verify(flagService).findByReportAnalysisId(one, pageBean, sortBean);
+        verify(flagService).findByReportAnalysisOwnerAndReportAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean);
+        assertThat(response).isNotNull();
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlRouteBuilder_RestEndpoints_NoRHIdentityGiven_ShouldReturnForbidden() throws Exception {
+        //Given
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+        int expectedRestEndpointsTested = 12;
+        final AtomicInteger restEndpointsTested = new AtomicInteger(0);
+
+        //When
+        camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
+        camelContext.getRoutes().stream()
+                .filter(route -> route.getEndpoint() instanceof RestEndpoint)
+                .forEach(route -> {
+                    try {
+                        camelContext.startRoute(route.getId());
+
+                        Map<String, Object> variables = new HashMap<>();
+                        Long one = 1L;
+                        variables.put("id", one);
+
+                        RestEndpoint restEndpoint = (RestEndpoint) route.getEndpoint();
+                        String url = camel_context + restEndpoint.getPath();
+                        if (restEndpoint.getUriTemplate() != null) url += restEndpoint.getUriTemplate();
+                        ResponseEntity<String> result = restTemplate.exchange(
+                                url,
+                                HttpMethod.resolve(restEndpoint.getMethod().toUpperCase()),
+                                new HttpEntity<>(null, null),
+                                String.class,
+                                variables);
+
+                        //Then
+                        assertThat(result).isNotNull();
+                        assertThat(result.getStatusCodeValue()).isEqualByComparingTo(403);
+                        assertThat(result.getBody()).isEqualTo("Forbidden");
+                        verifyZeroInteractions(analysisService);
+                        verifyZeroInteractions(initialSavingsEstimationReportService);
+                        verifyZeroInteractions(workloadInventoryReportService);
+                        verifyZeroInteractions(workloadSummaryReportService);
+                        verifyZeroInteractions(workloadService);
+                        verifyZeroInteractions(flagService);
+                        restEndpointsTested.incrementAndGet();
+                        camelContext.stopRoute(route.getId());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+        assertThat(restEndpointsTested.get()).isEqualTo(expectedRestEndpointsTested);
         camelContext.stop();
     }
 }

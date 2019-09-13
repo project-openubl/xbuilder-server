@@ -10,6 +10,7 @@ import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.integrations.jpa.repository.AnalysisRepository;
+import org.jboss.xavier.integrations.util.TestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.inject.Inject;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,19 +63,25 @@ public class MainRouteBuilder_DirectStoreAnalysisModelTest {
         Map<String,String> metadata = new HashMap<>();
         metadata.put("filename", "fichero.txt");
         metadata.put("dummy", "CID123");
-        metadata.put("reportName", "CID123");
-        metadata.put("reportDescription", "CID123");
+        metadata.put("reportName", "Name");
+        metadata.put("reportDescription", "Description");
         metadata.put("file", "fichero.txt");
         headers.put("MA_metadata", metadata);
+        headers.put("analysisUsername", "user name");
 
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:store", body, headers);
 
         //Then
         mockInsights.assertIsSatisfied();
 
-        List<AnalysisModel> list = analysisRepository.findAll();
-        assertThat(list.size()).isEqualTo(1);
-        assertThat((String) mockInsights.getExchanges().get(0).getIn().getHeader("MA_metadata", Map.class).get(MainRouteBuilder.ANALYSIS_ID)).isEqualTo(list.get(0).getId().toString());
+        List<AnalysisModel> analysisModels = analysisRepository.findAll();
+        assertThat(analysisModels.size()).isEqualTo(1);
+        AnalysisModel analysisModel = analysisModels.get(0);
+        assertThat(analysisModel.getReportName()).isEqualTo("Name");
+        assertThat(analysisModel.getReportDescription()).isEqualTo("Description");
+        assertThat(analysisModel.getPayloadName()).isEqualTo("fichero.txt");
+        assertThat(analysisModel.getOwner()).isEqualTo("user name");
+        assertThat((String) mockInsights.getExchanges().get(0).getIn().getHeader("MA_metadata", Map.class).get(MainRouteBuilder.ANALYSIS_ID)).isEqualTo(analysisModels.get(0).getId().toString());
         camelContext.stop();
     }
 

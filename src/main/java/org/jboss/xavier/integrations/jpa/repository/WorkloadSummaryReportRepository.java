@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkloadSummaryReportRepository extends JpaRepository<WorkloadSummaryReportModel, Long>
 {
-    WorkloadSummaryReportModel findByAnalysisId(Long analysisId);
+    WorkloadSummaryReportModel findByAnalysisOwnerAndAnalysisId(String analysisOwner, Long analysisId);
 }

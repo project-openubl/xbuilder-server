@@ -24,7 +24,7 @@ public class FlagService
         return flagRepository.calculateFlagModels(analysisId);
     }
 
-    public Page<FlagModel> findByReportAnalysisId(Long analysisId, PageBean pageBean, SortBean sortBean)
+    public Page<FlagModel> findByReportAnalysisOwnerAndReportAnalysisId(String analysisOwner, Long analysisId, PageBean pageBean, SortBean sortBean)
     {
         // Sort
         Sort.Direction sortDirection = sortBean.isOrderAsc() ? Sort.Direction.ASC : Sort.Direction.DESC;
@@ -36,6 +36,6 @@ public class FlagService
         int size = pageBean.getSize();
         Pageable pageable = new PageRequest(page, size, sort);
 
-        return flagRepository.findByReportAnalysisId(analysisId, pageable);
+        return flagRepository.findByReportAnalysisOwnerAndReportAnalysisId(analysisOwner, analysisId, pageable);
     }
 }

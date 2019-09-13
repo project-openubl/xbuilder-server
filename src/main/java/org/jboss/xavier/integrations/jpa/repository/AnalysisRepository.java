@@ -10,6 +10,12 @@ import org.springframework.stereotype.Repository;
 public interface AnalysisRepository extends JpaRepository<AnalysisModel, Long>
 {
 
-    Page<AnalysisModel> findByReportNameIgnoreCaseContaining(String filterText, Pageable pageable);
+    Page<AnalysisModel> findByOwnerAndReportNameIgnoreCaseContaining(String owner, String filterText, Pageable pageable);
+
+    Page<AnalysisModel> findAllByOwner(String owner, Pageable pageable);
+
+    AnalysisModel findByOwnerAndId(String owner, Long id);
+
+    Integer countByOwner(String owner);
 
 }

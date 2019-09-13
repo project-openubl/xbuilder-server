@@ -27,9 +27,18 @@ public class AnalysisService
     @Autowired
     AnalysisRepository analysisRepository;
 
-    public AnalysisModel findById(Long id)
+    // WARNING: BE CAREFUL
+    // think about changing this "private" modifier
+    // every time you "find" a report it should check that the
+    // analysis belongs to the right owner
+    private AnalysisModel findById(Long id)
     {
         return analysisRepository.findOne(id);
+    }
+
+    public AnalysisModel findByOwnerAndId(String owner, Long id)
+    {
+        return analysisRepository.findByOwnerAndId(owner, id);
     }
 
     public void deleteById(Long id)
@@ -37,7 +46,7 @@ public class AnalysisService
         analysisRepository.delete(id);
     }
 
-    public AnalysisModel buildAndSave(String reportName, String reportDescription, String payloadName) {
+    public AnalysisModel buildAndSave(String reportName, String reportDescription, String payloadName, String owner) {
         AnalysisModel analysisModel = new AnalysisModel();
         analysisModel.setPayloadName(payloadName);
         analysisModel.setReportDescription(reportDescription);
@@ -45,7 +54,7 @@ public class AnalysisService
         analysisModel.setInserted(new Date());
         analysisModel.setLastUpdate(new Date());
         analysisModel.setStatus(STATUS.IN_PROGRESS.toString());
-
+        analysisModel.setOwner(owner);
         return analysisRepository.save(analysisModel);
     }
 
@@ -55,6 +64,7 @@ public class AnalysisService
         analysisRepository.save(analysisModel);
     }
 
+    @Deprecated
     public void addWorkloadInventoryReportModel(WorkloadInventoryReportModel reportModel, Long id) {
         AnalysisModel analysisModel = findById(id);
         analysisModel.addWorkloadInventoryReportModel(reportModel);
@@ -84,16 +94,21 @@ public class AnalysisService
         analysisRepository.save(analysisModel);
     }
 
-    public Page<AnalysisModel> findReports(int page, int size)
+    public Page<AnalysisModel> findAllByOwner(String owner, int page, int size)
     {
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "id"));
-        return analysisRepository.findAll(pageable);
+        return analysisRepository.findAllByOwner(owner, pageable);
     }
 
-    public Page<AnalysisModel> findReports(String filterText, int page, int size)
+    public Integer countByOwner(String owner)
+    {
+        return analysisRepository.countByOwner(owner);
+    }
+
+    public Page<AnalysisModel> findByOwnerAndReportName(String owner, String filterText, int page, int size)
     {
         Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.DESC, "id"));
-        return analysisRepository.findByReportNameIgnoreCaseContaining(filterText.trim(), pageable);
+        return analysisRepository.findByOwnerAndReportNameIgnoreCaseContaining(owner, filterText.trim(), pageable);
     }
 
     public void updateStatus(String status, Long id) {

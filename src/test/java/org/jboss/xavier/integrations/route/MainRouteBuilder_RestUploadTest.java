@@ -6,6 +6,7 @@ import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.integrations.route.model.notification.FilePersistedNotification;
+import org.jboss.xavier.integrations.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -49,21 +53,47 @@ public class MainRouteBuilder_RestUploadTest {
     }
 
     @Test
-    public void mainRouteBuilder_routeRestUpload_ContentGiven_ShouldStoreinLocalFile() throws Exception {
+    public void mainRouteBuilder_routeRestUpload_ContentGiven_ShouldUpload() throws Exception {
         //Given
-
         String body = "{ \"body\" : \"this is a test body\" }";
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
         camelContext.startRoute("rest-upload");
-        ResponseEntity<String> answer = restTemplate.postForEntity(camel_context + "upload", body, String.class);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>(body, headers);
+        ResponseEntity<String> answer = restTemplate.exchange(camel_context + "upload", HttpMethod.POST, entity, String.class);
 
         //Then
         assertThat(answer).isNotNull();
         assertThat(answer.getBody()).isEqualToIgnoringCase(body);
+        camelContext.stop();
+    }
+
+    @Test
+    public void mainRouteBuilder_routeRestUpload_NoRHIdentityGiven_ShouldReturnForbidden() throws Exception {
+        //Given
+        String body = "{ \"body\" : \"this is a test body\" }";
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        //When
+        camelContext.start();
+        TestUtil.startUsernameRoutes(camelContext);
+        camelContext.startRoute("rest-upload");
+
+        HttpEntity<String> entity = new HttpEntity<>(body, null);
+        ResponseEntity<String> answer = restTemplate.exchange(camel_context + "upload", HttpMethod.POST, entity, String.class);
+
+        //Then
+        assertThat(answer).isNotNull();
+        assertThat(answer.getStatusCodeValue()).isEqualByComparingTo(403);
+        assertThat(answer.getBody()).isEqualTo("Forbidden");
         camelContext.stop();
     }
 

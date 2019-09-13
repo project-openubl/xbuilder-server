@@ -1,6 +1,5 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
@@ -59,9 +58,9 @@ public class VMWorkloadInventoryRoutes extends RouteBuilder {
                 .transform().method(FlagSharedDisksCalculator.class, "calculate(${body}, ${header.MA_metadata})")
                 .process(exchange -> {
                     Set<String> vmNamesWithSharedDisk = exchange.getIn().getBody(Set.class);
-                    List<WorkloadInventoryReportModel> workloadInventoryReportModels = workloadInventoryReportService.findByAnalysisId(
-                        Long.parseLong(exchange.getIn().getHeader("MA_metadata", Map.class).get(MainRouteBuilder.ANALYSIS_ID).toString())
-                    );
+                    List<WorkloadInventoryReportModel> workloadInventoryReportModels = workloadInventoryReportService.findByAnalysisOwnerAndAnalysisId(
+                            exchange.getIn().getHeader(MainRouteBuilder.USERNAME, String.class),
+                            Long.parseLong(exchange.getIn().getHeader("MA_metadata", Map.class).get(MainRouteBuilder.ANALYSIS_ID).toString()));
                     List<WorkloadInventoryReportModel> workloadInventoryReportModelsToUpdate = workloadInventoryReportModels.stream()
                         .filter(workloadInventoryReportModel -> vmNamesWithSharedDisk.contains(workloadInventoryReportModel.getVmName()))
                         .map(workloadInventoryReportModel -> {

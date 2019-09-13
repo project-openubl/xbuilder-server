@@ -27,11 +27,34 @@ public class AnalysisServiceTest {
 
     @Test
     public void analysisService_NewStatusGiven_ShouldChangeAndPersistTheEntity() {
-      AnalysisModel analysisModel = service.buildAndSave("reportName", "reportDescription", "payloadName");
-      assertThat(analysisModel).isNotNull();
-      assertThat(analysisModel.getStatus()).isEqualToIgnoringCase(AnalysisService.STATUS.IN_PROGRESS.toString());
-      service.updateStatus(AnalysisService.STATUS.FAILED.toString(), analysisModel.getId());
-      analysisModel = service.findById(analysisModel.getId());
-      assertThat(analysisModel.getStatus()).isEqualToIgnoringCase(AnalysisService.STATUS.FAILED.toString());
+        AnalysisModel analysisModel = service.buildAndSave("reportName", "reportDescription", "payloadName", "user name");
+        assertThat(analysisModel).isNotNull();
+        assertThat(analysisModel.getStatus()).isEqualToIgnoringCase(AnalysisService.STATUS.IN_PROGRESS.toString());
+        assertThat(analysisModel.getOwner()).isEqualToIgnoringCase("user name");
+        service.updateStatus(AnalysisService.STATUS.FAILED.toString(), analysisModel.getId());
+        analysisModel = service.findByOwnerAndId("user name", analysisModel.getId());
+        assertThat(analysisModel.getStatus()).isEqualToIgnoringCase(AnalysisService.STATUS.FAILED.toString());
+    }
+
+    @Test
+    public void analysisService_NewAnalysisGiven_ShouldFilterByOwner() {
+        AnalysisModel analysisModel = service.buildAndSave("reportName", "reportDescription", "payloadName", "user name");
+
+        analysisModel = service.findByOwnerAndId("user name", analysisModel.getId());
+        assertThat(analysisModel).isNotNull();
+
+        analysisModel = service.findByOwnerAndId("whatever", analysisModel.getId());
+        assertThat(analysisModel).isNull();
+    }
+
+    @Test
+    public void analysisService_NewAnalysisGiven_ShouldCountByOwner() {
+        service.buildAndSave("reportName", "reportDescription", "payloadName", "user name");
+        service.buildAndSave("reportName", "reportDescription", "payloadName", "mrizzi@redhat.com");
+        service.buildAndSave("reportName", "reportDescription", "payloadName", "mrizzi@redhat.com");
+
+        assertThat(service.countByOwner("user name")).isEqualTo(1);
+        assertThat(service.countByOwner("mrizzi@redhat.com")).isEqualTo(2);
+        assertThat(service.countByOwner("whatever")).isEqualTo(0);
     }
 }

@@ -15,5 +15,5 @@ public interface WorkloadRepository extends JpaRepository<WorkloadModel, Long>
     // this name has to match the value after the '.' in the @NamedNativeQuery annotation
     List<WorkloadModel> calculateWorkloadsModels(@Param("analysisId") Long analysisId);
 
-    Page<WorkloadModel> findByReportAnalysisId(@Param("analysisId") Long analysisId, Pageable pageable);
+    Page<WorkloadModel> findByReportAnalysisOwnerAndReportAnalysisId(String analysisOwner, Long analysisId, Pageable pageable);
 }

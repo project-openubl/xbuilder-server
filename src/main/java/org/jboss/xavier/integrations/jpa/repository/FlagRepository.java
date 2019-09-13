@@ -15,5 +15,5 @@ public interface FlagRepository extends JpaRepository<FlagModel, Long>
     // this name has to match the value after the '.' in the @NamedNativeQuery annotation
     List<FlagModel> calculateFlagModels(@Param("analysisId") Long analysisId);
 
-    Page<FlagModel> findByReportAnalysisId(@Param("analysisId") Long analysisId, Pageable pageable);
+    Page<FlagModel> findByReportAnalysisOwnerAndReportAnalysisId(String analysisOwner, Long analysisId, Pageable pageable);
 }

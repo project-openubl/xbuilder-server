@@ -60,7 +60,7 @@ public class XmlRoutes_RouteMaTest {
     @Test
     public void xmlroutes_directInputDataModel_InputDataModelGiven_ShouldReportDecisionServerHelperValues() throws Exception
     {
-        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
         assertThat(analysisModel.getInitialSavingsEstimationReportModel()).isNull();
 
         modifyFromAndWeaveDecisionServer();
@@ -76,14 +76,14 @@ public class XmlRoutes_RouteMaTest {
 
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:route-ma", getInputDataModelSample(analysisModel.getId()), headers);
 
-        assertThat(analysisService.findById(analysisModel.getId()).getInitialSavingsEstimationReportModel()).isNotNull();
+        assertThat(analysisService.findByOwnerAndId("user name", analysisModel.getId()).getInitialSavingsEstimationReportModel()).isNotNull();
 
         camelContext.stop();
     }
 
     @Test
     public void xmlroutes_directInputDataModel_ErrorInsideExtractReportGiven_ShouldMarkAnalysisAsFailed() throws Exception {
-        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
         assertThat(analysisModel.getInitialSavingsEstimationReportModel()).isNull();
 
         doThrow(new IllegalArgumentException("Dummy error")).when(decisionServerHelper).extractInitialSavingsEstimationReportModel(any());
@@ -101,14 +101,14 @@ public class XmlRoutes_RouteMaTest {
 
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:route-ma", getInputDataModelSample(analysisModel.getId()), headers);
 
-        assertThat(analysisService.findById(analysisModel.getId()).getStatus()).isEqualToIgnoringCase("FAILED");
+        assertThat(analysisService.findByOwnerAndId("user name", analysisModel.getId()).getStatus()).isEqualToIgnoringCase("FAILED");
 
         camelContext.stop();
     }
 
     @Test
     public void xmlroutes_directInputDataModel_BadHttpResponseReceivedGiven_ShouldMarkAnalysisAsFailed() throws Exception {
-        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name");
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
         assertThat(analysisModel.getInitialSavingsEstimationReportModel()).isNull();
 
         camelContext.getRouteDefinition("route-ma").adviceWith(camelContext, new AdviceWithRouteBuilder() {
@@ -139,7 +139,7 @@ public class XmlRoutes_RouteMaTest {
 
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:route-ma", getInputDataModelSample(analysisModel.getId()), headers);
 
-        assertThat(analysisService.findById(analysisModel.getId()).getStatus()).isEqualToIgnoringCase("FAILED");
+        assertThat(analysisService.findByOwnerAndId("user name", analysisModel.getId()).getStatus()).isEqualToIgnoringCase("FAILED");
 
         camelContext.stop();
     }

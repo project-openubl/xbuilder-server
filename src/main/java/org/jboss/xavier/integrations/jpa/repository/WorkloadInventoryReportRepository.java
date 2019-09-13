@@ -17,7 +17,7 @@ import java.util.Set;
 @Repository
 public interface WorkloadInventoryReportRepository extends JpaRepository<WorkloadInventoryReportModel, Long>, JpaSpecificationExecutor<WorkloadInventoryReportModel>
 {
-    List<WorkloadInventoryReportModel> findByAnalysisId(Long analysisId);
+    List<WorkloadInventoryReportModel> findByAnalysisOwnerAndAnalysisId(String analysisOwner, Long analysisId);
 
     Page<WorkloadInventoryReportModel> findByAnalysisId(Long analysisId, Pageable pageable);
 

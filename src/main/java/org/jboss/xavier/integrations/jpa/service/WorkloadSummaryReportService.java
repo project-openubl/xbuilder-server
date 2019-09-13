@@ -11,8 +11,8 @@ public class WorkloadSummaryReportService
     @Autowired
     WorkloadSummaryReportRepository reportRepository;
 
-    public WorkloadSummaryReportModel findByAnalysisId(Long analysisId)
+    public WorkloadSummaryReportModel findByAnalysisOwnerAndAnalysisId(String analysisOwner, Long analysisId)
     {
-        return reportRepository.findByAnalysisId(analysisId);
+        return reportRepository.findByAnalysisOwnerAndAnalysisId(analysisOwner, analysisId);
     }
 }
