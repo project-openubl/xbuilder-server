@@ -146,6 +146,8 @@ public class WorkloadInventoryReportModel
 
     private Date creationDate;
 
+    private Boolean ssaEnabled;
+
     public WorkloadInventoryReportModel() {}
 
     public static long getSerialVersionUID() {
@@ -320,5 +322,13 @@ public class WorkloadInventoryReportModel
 
     public void setHost_name(String host_name) {
         this.host_name = host_name;
+    }
+
+    public Boolean getSsaEnabled() {
+        return ssaEnabled;
+    }
+
+    public void setSsaEnabled(Boolean ssaEnabled) {
+        this.ssaEnabled = ssaEnabled;
     }
 }

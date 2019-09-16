@@ -1,9 +1,7 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelExecutionException;
 import org.apache.camel.builder.RouteBuilder;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
-import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.ComplexityModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.RecommendedTargetsIMSModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.FlagModel;
@@ -19,7 +17,6 @@ import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
 import org.jboss.xavier.integrations.jpa.service.WorkloadService;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.*;
 import org.jboss.xavier.integrations.jpa.service.*;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -48,6 +45,9 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
 
     @Inject
     FlagService flagService;
+
+    @Inject
+    ScanRunService scanRunService;
 
     @Inject
     SummaryService summaryService;
@@ -82,6 +82,9 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
 
                 List<FlagModel> flagModels = flagService.calculateFlagModels(analysisId);
                 workloadSummaryReportModel.setFlagModels(flagModels);
+
+                Set<ScanRunModel> scanRunModels = scanRunService.calculateScanRunModels(analysisId);
+                workloadSummaryReportModel.setScanRunModels(scanRunModels);
 
                 // Set the WorkloadSummaryReportModel into the AnalysisModel
                 analysisService.setWorkloadSummaryReportModel(workloadSummaryReportModel, analysisId);

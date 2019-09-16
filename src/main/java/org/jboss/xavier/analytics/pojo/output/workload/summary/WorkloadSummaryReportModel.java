@@ -66,6 +66,9 @@ public class WorkloadSummaryReportModel
     @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<WorkloadsDetectedOSTypeModel> workloadsDetectedOSTypeModels;
 
+    @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Set<ScanRunModel> scanRunModels;
+
     public WorkloadSummaryReportModel() {}
 
     public Long getId() {
@@ -138,4 +141,12 @@ public class WorkloadSummaryReportModel
         this.workloadsDetectedOSTypeModels = workloadsDetectedOSTypeModels;
     }
 
+    public Set<ScanRunModel> getScanRunModels() {
+        return scanRunModels;
+    }
+
+    public void setScanRunModels(Set<ScanRunModel> scanRunModels) {
+        scanRunModels.forEach(model -> model.setReport(this));
+        this.scanRunModels = scanRunModels;
+    }
 }
