@@ -1,6 +1,7 @@
 package org.jboss.xavier.integrations.route;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.Route;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
@@ -35,6 +36,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -810,14 +813,18 @@ public class XmlRoutes_RestReportTest {
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
-        int expectedRestEndpointsTested = 12;
+
         final AtomicInteger restEndpointsTested = new AtomicInteger(0);
 
         //When
         camelContext.start();
         TestUtil.startUsernameRoutes(camelContext);
-        camelContext.getRoutes().stream()
-                .filter(route -> route.getEndpoint() instanceof RestEndpoint)
+
+        Supplier<Stream<Route>> streamRestRouteSupplier = () -> camelContext.getRoutes().stream()
+                .filter(route -> route.getEndpoint() instanceof RestEndpoint);
+
+        long expectedRestEndpointsTested = streamRestRouteSupplier.get().count();
+        streamRestRouteSupplier.get()
                 .forEach(route -> {
                     try {
                         camelContext.startRoute(route.getId());
