@@ -70,6 +70,44 @@ public class ParamsCalculatorTest {
     }
 
     @Test
+    public void analyticsCalculator_calculate_CloudFormsModelWithNotIntDivisionGiven_ShouldReturn2HostAndTotalDiskSpace() throws IOException {
+        // Given
+        String filename = "cloudforms-export-v1.json";
+        String customerid = "CIDE9988";
+
+        String cloudFormJSON = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(filename), "UTF-8");
+        cloudFormJSON = cloudFormJSON.replace("\"cpu_cores_per_socket\": 8", "\"cpu_cores_per_socket\": 16");
+        Integer hypervisor = 2;
+        Long totaldiskspace = 563902124032L;
+        Integer sourceproductindicator = null;
+        Double year1hypervisorpercentage = 10D;
+        Double year2hypervisorpercentage = 20D;
+        Double year3hypervisorpercentage = 30D;
+        Double growthratepercentage = 7D;
+        Long analysisId = 3L;
+
+        UploadFormInputDataModel expectedFormInputDataModel = new UploadFormInputDataModel(customerid, filename, hypervisor,
+                totaldiskspace, sourceproductindicator,
+                year1hypervisorpercentage/100, year2hypervisorpercentage/100,
+                year3hypervisorpercentage/100, growthratepercentage/100, analysisId);
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("filename", filename);
+        headers.put("org_id", customerid);
+        headers.put(Calculator.YEAR_1_HYPERVISORPERCENTAGE, year1hypervisorpercentage);
+        headers.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
+        headers.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
+        headers.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
+        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+
+        // When
+        UploadFormInputDataModel inputDataModelCalculated = reportCalculator.calculate(cloudFormJSON, headers);
+
+        // Then
+        assertThat(inputDataModelCalculated).isEqualToComparingFieldByFieldRecursively(expectedFormInputDataModel);
+    }
+
+    @Test
     public void analyticsCalculator_calculate_CloudFormsModelWithNotExistingVersionGiven_ShouldFallbackToV1AndReturn2HostAndTotalDiskSpace() throws IOException {
         // Given
         doReturn("v2").when(reportCalculator).getManifestVersion(any());

@@ -20,7 +20,6 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -84,7 +83,7 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put("MA_metadata", metadata);
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
 
         //When
         camelContext.start();
@@ -144,7 +143,7 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
         metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put("MA_metadata", metadata);
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
 
         //When
         camelContext.start();

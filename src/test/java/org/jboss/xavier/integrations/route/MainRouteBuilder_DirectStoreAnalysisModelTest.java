@@ -10,7 +10,6 @@ import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.integrations.jpa.repository.AnalysisRepository;
-import org.jboss.xavier.integrations.util.TestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.inject.Inject;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,8 +64,8 @@ public class MainRouteBuilder_DirectStoreAnalysisModelTest {
         metadata.put("reportName", "Name");
         metadata.put("reportDescription", "Description");
         metadata.put("file", "fichero.txt");
-        headers.put("MA_metadata", metadata);
-        headers.put("analysisUsername", "user name");
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
+        headers.put(MainRouteBuilder.USERNAME, "user name");
 
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:store", body, headers);
 
@@ -81,7 +79,7 @@ public class MainRouteBuilder_DirectStoreAnalysisModelTest {
         assertThat(analysisModel.getReportDescription()).isEqualTo("Description");
         assertThat(analysisModel.getPayloadName()).isEqualTo("fichero.txt");
         assertThat(analysisModel.getOwner()).isEqualTo("user name");
-        assertThat((String) mockInsights.getExchanges().get(0).getIn().getHeader("MA_metadata", Map.class).get(MainRouteBuilder.ANALYSIS_ID)).isEqualTo(analysisModels.get(0).getId().toString());
+        assertThat((String) mockInsights.getExchanges().get(0).getIn().getHeader(MainRouteBuilder.MA_METADATA, Map.class).get(MainRouteBuilder.ANALYSIS_ID)).isEqualTo(analysisModels.get(0).getId().toString());
         camelContext.stop();
     }
 

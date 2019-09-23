@@ -8,6 +8,9 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
+import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
+import org.jboss.xavier.integrations.jpa.service.AnalysisService;
+import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +27,7 @@ import java.util.Map;
 
 @RunWith(CamelSpringBootRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("direct:store|direct:calculate")
+@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|direct:send-costsavings|direct:calculate-vmworkloadinventory|direct:vm-workload-inventory|direct:calculate-workloadsummaryreportmodel|direct:flags-shared-disks")
 @UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
@@ -35,8 +38,13 @@ public class MainRouteBuilder_DirectUnzipFileTest {
     @EndpointInject(uri = "mock:direct:store")
     private MockEndpoint mockStore;
 
-    @EndpointInject(uri = "mock:direct:calculate")
-    private MockEndpoint mockCalculate;
+
+    @EndpointInject(uri = "mock:direct:send-costsavings")
+    private MockEndpoint mockSendCostsavings;
+
+    @EndpointInject(uri = "mock:direct:calculate-vmworkloadinventory")
+    private MockEndpoint mockCalculateVMWorkload;
+
 
     @Value("#{'${insights.properties}'.split(',')}")
     List<String> properties;
@@ -44,82 +52,59 @@ public class MainRouteBuilder_DirectUnzipFileTest {
     @Inject
     MainRouteBuilder mainRouteBuilder;
 
-    @Test
-    public void mainRouteBuilder_routeDirectUnzip_ZipFileWith3FilesGiven_ShouldReturn3Messages() throws Exception {
-        //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
-        mockCalculate.expectedMessageCount(3);
+    @Inject
+    AnalysisService analysisService;
 
-        //When
-        camelContext.start();
-        camelContext.startRoute("unzip-file");
-
-        String nameOfFile = "txt-files-samples.zip";
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(nameOfFile);
-
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("Content-Type", "application/zip");
-        headers.put(Exchange.FILE_NAME, nameOfFile);
-
-        Map<String,Object> metadata = new HashMap<>();
-        metadata.put("filename", nameOfFile);
-        metadata.put("dummy", "CID123");
-        headers.put("MA_metadata", metadata);
-
-
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
-
-        //Then
-        mockCalculate.assertIsSatisfied();
-
-        camelContext.stop();
-    }
-
-    @Test
+        @Test
     public void mainRouteBuilder_routeDirectUnzip_TarGzFileWith2FilesGiven_ShouldReturn2Messages() throws Exception {
         //Given
-        camelContext.setTracing(true);
+            AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
+
+            camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
-        mockCalculate.expectedMessageCount(2);
+        mockSendCostsavings.expectedMessageCount(1);
+            mockCalculateVMWorkload.expectedMessageCount(2);
 
-        //When
-        camelContext.start();
-        camelContext.startRoute("unzip-file");
+            String nameOfFile = "cloudforms-export-v1-multiple-files.tar.gz";
+            InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(nameOfFile);
 
-        String nameOfFile = "cloudforms-export-v1-multiple-files.tar.gz";
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(nameOfFile);
+            Map<String, Object> headers = new HashMap<>();
+            headers.put("Content-Type", "application/gzip");
+            headers.put(Exchange.FILE_NAME, nameOfFile);
 
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("Content-Type", "application/gzip");
-        headers.put(Exchange.FILE_NAME, nameOfFile);
+            Map<String,Object> metadata = new HashMap<>();
+            metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId());
+            metadata.put("filename", nameOfFile);
+            metadata.put("dummy", "CID123");
+            headers.put(MainRouteBuilder.MA_METADATA, metadata);
 
-        Map<String,Object> metadata = new HashMap<>();
-        metadata.put("filename", nameOfFile);
-        metadata.put("dummy", "CID123");
-        headers.put("MA_metadata", metadata);        
-        
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
+            //When
+            camelContext.start();
+            camelContext.startRoute("unzip-file");
+            camelContext.startRoute("calculate");
+            camelContext.startRoute("calculate-costsavings");
+
+
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers);
 
         //Then
-        mockCalculate.assertIsSatisfied();
+        mockSendCostsavings.assertIsSatisfied();
+            mockCalculateVMWorkload.assertIsSatisfied();
 
         camelContext.stop();
     }
-    
+
     @Test
     public void mainRouteBuilder_routeDirectUnzip_TarGzFileWith2FilesGivenAndTarGzContentType_ShouldReturn2Messages() throws Exception {
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
+
         //Given
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
-        mockCalculate.expectedMessageCount(2);
-
-        //When
-        camelContext.start();
-        camelContext.startRoute("unzip-file");
+        mockSendCostsavings.expectedMessageCount(1);
+        mockCalculateVMWorkload.expectedMessageCount(2);
 
         String nameOfFile = "cloudforms-export-v1-multiple-files.tar.gz";
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(nameOfFile);
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "application/tar+gz");
@@ -128,12 +113,28 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         Map<String,Object> metadata = new HashMap<>();
         metadata.put("filename", nameOfFile);
         metadata.put("dummy", "CID123");
-        headers.put("MA_metadata", metadata);        
-        
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
+        metadata.put(Calculator.YEAR_1_HYPERVISORPERCENTAGE, 10D);
+        metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, 20D);
+        metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, 30D);
+        metadata.put(Calculator.GROWTHRATEPERCENTAGE, 7D);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId());
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
 
+        //When
+        camelContext.start();
+        camelContext.startRoute("unzip-file");
+        camelContext.startRoute("calculate");
+        camelContext.startRoute("calculate-costsavings");
+
+        camelContext.createProducerTemplate().request("direct:unzip-file", exchange -> {
+            exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(nameOfFile));
+            exchange.getIn().setHeaders(headers);
+        });
+
+        Thread.sleep(5000);
         //Then
-        mockCalculate.assertIsSatisfied();
+        mockSendCostsavings.assertIsSatisfied();
+        mockCalculateVMWorkload.assertIsSatisfied();
 
         camelContext.stop();
     }
@@ -141,30 +142,40 @@ public class MainRouteBuilder_DirectUnzipFileTest {
     @Test
     public void mainRouteBuilder_routeDirectUnzip_JsonFileGiven_ShouldReturn1Messages() throws Exception {
         //Given
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
+
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
-        mockCalculate.expectedMessageCount(1);
-
-        //When
-        camelContext.start();
-        camelContext.startRoute("unzip-file");
-
-        String nameOfFile = "cloudforms-export-v1-json";
-        InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(nameOfFile);
+        mockSendCostsavings.expectedMessageCount(1);
+        mockCalculateVMWorkload.expectedMessageCount(1);
+        String nameOfFile = "cloudforms-export-v1.json";
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "text/plain");
         headers.put(Exchange.FILE_NAME, nameOfFile);
 
         Map<String,Object> metadata = new HashMap<>();
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId());
         metadata.put("filename", nameOfFile);
         metadata.put("dummy", "CID123");
-        headers.put("MA_metadata", metadata);
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
 
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", resourceAsStream, headers); 
+        //When
+        camelContext.start();
+        camelContext.startRoute("unzip-file");
+        camelContext.startRoute("calculate");
+        camelContext.startRoute("calculate-costsavings");
+
+        camelContext.createProducerTemplate().request("direct:unzip-file", exchange -> {
+            exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(nameOfFile));
+            exchange.getIn().setHeaders(headers);
+        });
+
+        Thread.sleep(5000);
 
         //Then
-        mockCalculate.assertIsSatisfied();
+        mockSendCostsavings.assertIsSatisfied();
+        mockCalculateVMWorkload.assertIsSatisfied();
 
         camelContext.stop();
     }

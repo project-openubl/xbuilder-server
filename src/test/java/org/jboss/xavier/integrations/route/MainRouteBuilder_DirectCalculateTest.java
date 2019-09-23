@@ -23,15 +23,13 @@ import javax.inject.Inject;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(CamelSpringBootRunner.class)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|direct:vm-workload-inventory|direct:calculate-workloadsummaryreportmodel")
+@MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|direct:vm-workload-inventory|direct:calculate-workloadsummaryreportmodel|direct:flags-shared-disks")
 @UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class})
 @ActiveProfiles("test")
@@ -83,15 +81,21 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId);
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put("MA_metadata", metadata);
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
 
         //When
         camelContext.start();
+        camelContext.startRoute("unzip-file");
+        camelContext.startRoute("calculate");
         camelContext.startRoute("calculate-costsavings");
+        camelContext.startRoute("send-costsavings");
+        camelContext.startRoute("calculate-vmworkloadinventory");
+        camelContext.startRoute("flags-shared-disks");
         String body = IOUtils.resourceToString(fileName, StandardCharsets.UTF_8, MainRouteBuilder_DirectCalculateTest.class.getClassLoader());
 
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:calculate-costsavings", body, headers);
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:unzip-file", body, headers);
 
+        Thread.sleep(11000L);
         //Then
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody()).isEqualToComparingFieldByFieldRecursively(expectedFormInputDataModelExpected);
 
@@ -119,25 +123,20 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId());
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put("MA_metadata", metadata);
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
         headers.put("Content-type", "application/zip");
-
-        Set<String> expectedVmNamesWithSharedDisk = new HashSet<>();
-        expectedVmNamesWithSharedDisk.add("dev-windows-server-2008-TEST");
-        expectedVmNamesWithSharedDisk.add("james-db-03-copy");
-        expectedVmNamesWithSharedDisk.add("dev-windows-server-2008");
-        expectedVmNamesWithSharedDisk.add("pemcg-rdm-test");
 
         //When
         camelContext.start();
         camelContext.startRoute("unzip-file");
         camelContext.startRoute("calculate");
         camelContext.startRoute("calculate-costsavings");
+        camelContext.startRoute("send-costsavings");
         camelContext.startRoute("calculate-vmworkloadinventory");
         camelContext.startRoute("flags-shared-disks");
         String body = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(fileName), Charset.forName("UTF-8"));
 
-        camelContext.createProducerTemplate().request("direct:calculate", exchange -> {
+        camelContext.createProducerTemplate().request("direct:unzip-file", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
             exchange.getIn().setHeaders(headers);
         });
@@ -148,9 +147,6 @@ public class MainRouteBuilder_DirectCalculateTest {
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getTotalDiskSpace()).isEqualTo(563902124032L);
         assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getHypervisor()).isEqualTo(2);
         assertThat(mockDirectWorkloadInventory.getExchanges().get(0).getIn().getBody(VMWorkloadInventoryModel.class).getVmName()).isNotEmpty();
-        Set<String> vmNamesWithSharedDisk = mockCalculateWorkloadSummaryReportModel.getExchanges().get(0).getIn().getBody(Set.class);
-        assertThat(vmNamesWithSharedDisk.size()).isEqualTo(4);
-        assertThat(vmNamesWithSharedDisk).isEqualTo(expectedVmNamesWithSharedDisk);
         camelContext.stop();
     }
 
@@ -174,23 +170,20 @@ public class MainRouteBuilder_DirectCalculateTest {
         metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId());
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put("MA_metadata", metadata);
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
         headers.put("Content-type", "application/zip");
-
-        Set<String> expectedVmNamesWithSharedDisk = new HashSet<>();
-        expectedVmNamesWithSharedDisk.add("tomcat");
-        expectedVmNamesWithSharedDisk.add("lb");
 
         //When
         camelContext.start();
         camelContext.startRoute("unzip-file");
         camelContext.startRoute("calculate");
         camelContext.startRoute("calculate-costsavings");
+        camelContext.startRoute("send-costsavings");
         camelContext.startRoute("calculate-vmworkloadinventory");
         camelContext.startRoute("flags-shared-disks");
         String body = IOUtils.toString(getClass().getClassLoader().getResourceAsStream(fileName), Charset.forName("UTF-8"));
 
-        camelContext.createProducerTemplate().request("direct:calculate", exchange -> {
+        camelContext.createProducerTemplate().request("direct:unzip-file", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
             exchange.getIn().setHeaders(headers);
         });
@@ -203,10 +196,81 @@ public class MainRouteBuilder_DirectCalculateTest {
         assertThat(mockDirectWorkloadInventory.getExchanges().stream().noneMatch(exchange -> exchange.getIn().getBody(VMWorkloadInventoryModel.class).getVmName().isEmpty())).isTrue();
         assertThat(mockDirectWorkloadInventory.getExchanges().stream().filter(exchange -> exchange.getIn().getBody(VMWorkloadInventoryModel.class).getOsProductName().equals("CentOS 7 (64-bit)")).count()).isEqualTo(1);
         assertThat(mockDirectWorkloadInventory.getExchanges().stream().filter(exchange -> exchange.getIn().getBody(VMWorkloadInventoryModel.class).getOsProductName().equals("Linux")).count()).isEqualTo(7);
-        Set<String> vmNamesWithSharedDisk = mockCalculateWorkloadSummaryReportModel.getExchanges().get(0).getIn().getBody(Set.class);
-        assertThat(vmNamesWithSharedDisk.size()).isEqualTo(2);
-        assertThat(vmNamesWithSharedDisk).isEqualTo(expectedVmNamesWithSharedDisk);
         camelContext.stop();
     }
 
+    @Test
+    public void mainRouteBuilder_DirectCalculateWithMultipleJSONFilesGiven_ShouldSendOneMessageToICSAnd2ToWILQueue() throws Exception {
+        //Given
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+
+        mockJmsQueueCostSavings.expectedMessageCount(1);
+        mockDirectWorkloadInventory.expectedMessageCount(2);
+        mockCalculateWorkloadSummaryReportModel.expectedMessageCount(1);
+
+        String fileName = "cloudforms-export-v1-multiple-files.tar.gz";
+
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("filename", fileName);
+        metadata.put("dummy", "dummy");
+        metadata.put(Calculator.YEAR_1_HYPERVISORPERCENTAGE, 10D);
+        metadata.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, 20D);
+        metadata.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, 30D);
+        metadata.put(Calculator.GROWTHRATEPERCENTAGE, 7D);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisModel.getId());
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
+        headers.put("Content-type", "application/zip");
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("unzip-file");
+        camelContext.startRoute("calculate");
+        camelContext.startRoute("calculate-costsavings");
+        camelContext.startRoute("send-costsavings");
+        camelContext.startRoute("calculate-vmworkloadinventory");
+        camelContext.startRoute("flags-shared-disks");
+
+        camelContext.createProducerTemplate().request("direct:unzip-file", exchange -> {
+            exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
+            exchange.getIn().setHeaders(headers);
+        });
+
+        Thread.sleep(5000);
+        //Then
+        mockJmsQueueCostSavings.assertIsSatisfied();
+        mockDirectWorkloadInventory.assertIsSatisfied();
+        mockCalculateWorkloadSummaryReportModel.assertIsSatisfied();
+
+        assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getTotalDiskSpace()).isEqualTo(34359738368L);
+        assertThat(mockJmsQueueCostSavings.getExchanges().get(0).getIn().getBody(UploadFormInputDataModel.class).getHypervisor()).isEqualTo(2);
+
+        assertThat(mockDirectWorkloadInventory.getExchanges()
+                .stream()
+                .map(e -> e.getIn().getBody(VMWorkloadInventoryModel.class))
+                .filter(e -> e.getVmName().equalsIgnoreCase("james-db-04-copy"))
+                .findFirst().get().getCpuCores()).isEqualTo(1);
+        assertThat(mockDirectWorkloadInventory.getExchanges()
+                .stream()
+                .map(e -> e.getIn().getBody(VMWorkloadInventoryModel.class))
+                .filter(e -> e.getVmName().equalsIgnoreCase("james-db-04-copy"))
+                .findFirst().get().getDiskSpace()).isEqualTo(99123456789L);
+
+        assertThat(mockDirectWorkloadInventory.getExchanges()
+                .stream()
+                .map(e -> e.getIn().getBody(VMWorkloadInventoryModel.class))
+                .filter(e -> e.getVmName().equalsIgnoreCase("james-db-03-copy"))
+                .findFirst().get().getCpuCores()).isEqualTo(1);
+
+        assertThat(mockDirectWorkloadInventory.getExchanges()
+                .stream()
+                .map(e -> e.getIn().getBody(VMWorkloadInventoryModel.class))
+                .filter(e -> e.getVmName().equalsIgnoreCase("james-db-03-copy"))
+                .findFirst().get().getDiskSpace()).isEqualTo(5000000000L);
+
+        camelContext.stop();
+    }
 }

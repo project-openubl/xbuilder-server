@@ -70,8 +70,8 @@ public class MainRouteBuilder_DirectDownloadTest {
         Map<String, Object> headers = new HashMap<>();
         Map<String,Object> metadata = new HashMap<>();
         metadata.put("dummy", "CID1234");
-        metadata.put("analysisId","3");
-        headers.put("MA_metadata", metadata);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID,"3");
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
 
         String rhidentityFrom3Scale = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";
         String x_rh_identity_base64 = Base64.encodeBase64String(rhidentityFrom3Scale.getBytes(StandardCharsets.UTF_8));
@@ -82,8 +82,8 @@ public class MainRouteBuilder_DirectDownloadTest {
 
         //Then
         mockOldHost.assertIsSatisfied();
-        assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader("MA_metadata", Map.class).get("dummy")).isEqualTo("CID1234");
-        assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader("MA_metadata", Map.class).get("auth_time")).isEqualTo("0");
+        assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader(MainRouteBuilder.MA_METADATA, Map.class).get("dummy")).isEqualTo("CID1234");
+        assertThat(mockOldHost.getExchanges().get(0).getIn().getHeader(MainRouteBuilder.MA_METADATA, Map.class).get("auth_time")).isEqualTo("0");
         mockUnzipFile.assertIsSatisfied();
         camelContext.stop();
     }
@@ -109,8 +109,8 @@ public class MainRouteBuilder_DirectDownloadTest {
         Map<String, Object> headers = new HashMap<>();
         Map<String,Object> metadata = new HashMap<>();
         metadata.put("dummy", "CID1234");
-        metadata.put("analysisId","3");
-        headers.put("MA_metadata", metadata);
+        metadata.put(MainRouteBuilder.ANALYSIS_ID,"3");
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
 
         String rhidentityFrom3Scale = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";
         String x_rh_identity_base64 = Base64.encodeBase64String(rhidentityFrom3Scale.getBytes(StandardCharsets.UTF_8));

@@ -61,7 +61,7 @@ public class MainRouteBuilder_DirectUploadTest {
 
         String rhidentity = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";
         headers.put("x-rh-identity", rhidentity);
-        headers.put("MA_metadata", metadata);
+        headers.put(MainRouteBuilder.MA_METADATA, metadata);
 
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -77,7 +77,7 @@ public class MainRouteBuilder_DirectUploadTest {
 
         //Then
         mockStore.assertIsSatisfied();
-        assertThat(mockStore.getExchanges().stream().filter(e -> "CID12345".equalsIgnoreCase(e.getIn().getHeader("MA_metadata", Map.class).get("customerid").toString())).count()).isEqualTo(4);
+        assertThat(mockStore.getExchanges().stream().filter(e -> "CID12345".equalsIgnoreCase(e.getIn().getHeader(MainRouteBuilder.MA_METADATA, Map.class).get("customerid").toString())).count()).isEqualTo(4);
 
         camelContext.stop();
     }

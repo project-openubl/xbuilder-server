@@ -31,13 +31,13 @@ public class VMWorkloadInventoryRoutes extends RouteBuilder {
     @Override
     public void configure() {
         from("direct:calculate-vmworkloadinventory").id("calculate-vmworkloadinventory")
-            .transform().method(VMWorkloadInventoryCalculator.class, "calculate(${body}, ${header.MA_metadata})")
+            .transform().method(VMWorkloadInventoryCalculator.class, "calculate(${body}, ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.MA_METADATA}})")
             .split(body()).parallelProcessing(parallel).aggregationStrategy(new WorkloadInventoryReportModelAggregationStrategy())
             .to("direct:vm-workload-inventory")
             .end()
             .process(exchange -> {
                 analysisService.addWorkloadInventoryReportModels(exchange.getIn().getBody(List.class),
-                        Long.parseLong(exchange.getIn().getHeader("MA_metadata", Map.class).get(MainRouteBuilder.ANALYSIS_ID).toString()));
+                        Long.parseLong(exchange.getIn().getHeader(MainRouteBuilder.MA_METADATA, Map.class).get(MainRouteBuilder.ANALYSIS_ID).toString()));
             });
 
         from ("direct:vm-workload-inventory").id("extract-vmworkloadinventory")
@@ -49,18 +49,18 @@ public class VMWorkloadInventoryRoutes extends RouteBuilder {
             .endDoTry()
             .doCatch(Exception.class)
                 .to("log:error?showCaughtException=true&showStackTrace=true")
-                .transform().method("analysisService", "updateStatus(\"FAILED\", ${header.analysisId})")
+                .transform().method("analysisService", "updateStatus(\"FAILED\", ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.ANALYSIS_ID}})")
                 .stop()
             .end();
 
         from("direct:flags-shared-disks").id("flags-shared-disks")
             .doTry()
-                .transform().method(FlagSharedDisksCalculator.class, "calculate(${body}, ${header.MA_metadata})")
+                .transform().method(FlagSharedDisksCalculator.class, "calculate(${body}, ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.MA_METADATA}})")
                 .process(exchange -> {
                     Set<String> vmNamesWithSharedDisk = exchange.getIn().getBody(Set.class);
                     List<WorkloadInventoryReportModel> workloadInventoryReportModels = workloadInventoryReportService.findByAnalysisOwnerAndAnalysisId(
                             exchange.getIn().getHeader(MainRouteBuilder.USERNAME, String.class),
-                            Long.parseLong(exchange.getIn().getHeader("MA_metadata", Map.class).get(MainRouteBuilder.ANALYSIS_ID).toString()));
+                            Long.parseLong(exchange.getIn().getHeader(MainRouteBuilder.MA_METADATA, Map.class).get(MainRouteBuilder.ANALYSIS_ID).toString()));
                     List<WorkloadInventoryReportModel> workloadInventoryReportModelsToUpdate = workloadInventoryReportModels.stream()
                         .filter(workloadInventoryReportModel -> vmNamesWithSharedDisk.contains(workloadInventoryReportModel.getVmName()))
                         .map(workloadInventoryReportModel -> {
@@ -69,12 +69,10 @@ public class VMWorkloadInventoryRoutes extends RouteBuilder {
                         }).collect(Collectors.toList());
                     workloadInventoryReportService.saveAll(workloadInventoryReportModelsToUpdate);
                 })
-                // at this time all the flags have been persisted so it's safe to generate the WSR
-                .to("direct:calculate-workloadsummaryreportmodel")
             .endDoTry()
             .doCatch(Exception.class)
                 .to("log:error?showCaughtException=true&showStackTrace=true")
-                .transform().method("analysisService", "updateStatus(\"FAILED\", ${header.MA_metadata[" + MainRouteBuilder.ANALYSIS_ID + "]}")
+                .transform().method("analysisService", "updateStatus(\"FAILED\", ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.MA_METADATA}[" + MainRouteBuilder.ANALYSIS_ID + "]}")
                 .stop()
             .end();
     }

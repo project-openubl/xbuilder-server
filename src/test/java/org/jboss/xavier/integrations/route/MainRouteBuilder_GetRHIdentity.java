@@ -43,7 +43,7 @@ public class MainRouteBuilder_GetRHIdentity
         Map<String, String> ma_metadata = new HashMap<>();
         ma_metadata.put("dummy", "8899");
         ma_metadata.put(MainRouteBuilder.ANALYSIS_ID, "3");
-        headers.put("MA_metadata", ma_metadata);
+        headers.put(MainRouteBuilder.MA_METADATA, ma_metadata);
         String rhIdentity = mainRouteBuilder.getRHIdentity(x_rh_identity, filename, headers);
 
         String rhIdentityExpected = "{\"entitlements\":{\"insights\":{\"is_entitled\":true},\"openshift\":{\"is_entitled\":true},\"smart_management\":{\"is_entitled\":false},\"hybrid_cloud\":{\"is_entitled\":true}},\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\",\"filename\":\"mificherito.txt\",\"dummy\":\"8899\",\"analysisId\":\"3\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";
@@ -59,7 +59,7 @@ public class MainRouteBuilder_GetRHIdentity
         Map<String, Object> headers = new HashMap<>();
         Map<String, String> ma_metadata = new HashMap<>();
         ma_metadata.put("dummy", "8899");
-        headers.put("MA_metadata", ma_metadata);
+        headers.put(MainRouteBuilder.MA_METADATA, ma_metadata);
 
         //When
         mainRouteBuilder.getRHIdentity(x_rh_identity, filename, headers);

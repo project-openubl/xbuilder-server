@@ -231,11 +231,11 @@
                 <to uri="direct:decisionserver" id="route-ma-decisionserver"/>
                 <bean id="route-extract-ics-reports" method="extractInitialSavingsEstimationReportModel" ref="decisionServerHelper"/>
                 <log id="route-log-sourceLicenseValue" message="totalPrice = ${body.sourceCostsModel.sourceLicenseValue}"/>
-                <bean ref="analysisService" method="setInitialSavingsEstimationReportModel(${body}, ${header.analysisId})" />
+                <bean ref="analysisService" method="setInitialSavingsEstimationReportModel(${body}, ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.ANALYSIS_ID}})" />
 
                 <doCatch>
                     <exception>java.lang.Exception</exception>
-                    <bean ref="analysisService" method='updateStatus("FAILED", ${header.analysisId})'/>
+                    <bean ref="analysisService" method='updateStatus("FAILED", ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.ANALYSIS_ID}})'/>
                 </doCatch>
             </doTry>
         </route>

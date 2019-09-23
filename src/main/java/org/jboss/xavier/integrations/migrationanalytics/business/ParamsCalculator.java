@@ -4,6 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
+import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.route.MainRouteBuilder;
 import org.springframework.core.env.Environment;
 
@@ -17,11 +18,14 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
     @Inject
     private Environment env;
 
+    @Inject
+    private AnalysisService analysisService;
+
     private static Integer calculateHypervisors(Object e, String cpuTotalCoresPath, String cpuCoresPerSocketPath) {
         Map mapa = (Map) e;
         Integer cputotalcores = (Integer) mapa.get(cpuTotalCoresPath);
         Integer cpucorespersocket = (Integer) mapa.get(cpuCoresPerSocketPath);
-        return cputotalcores / (cpucorespersocket * 2);
+        return (int) Math.ceil(cputotalcores / (cpucorespersocket * 2.0));
     }
 
     @Override
@@ -48,10 +52,10 @@ public class ParamsCalculator implements Calculator<UploadFormInputDataModel> {
         double growthratepercentage = Double.parseDouble(headers.get(Calculator.GROWTHRATEPERCENTAGE) != null ? headers.get(Calculator.GROWTHRATEPERCENTAGE).toString() : "0") / 100;
 
         // Calculated and enriched model
-        return new UploadFormInputDataModel(customerid, filename, numberofhypervisors.intValue(), totalspace,
-                null, year1hypervisorpercentage,
-                year2hypervisorpercentage,
-                year3hypervisorpercentage, growthratepercentage,
-                Long.parseLong(headers.get(MainRouteBuilder.ANALYSIS_ID).toString()));
+        return new UploadFormInputDataModel(customerid, filename, numberofhypervisors, totalspace,
+                  null, year1hypervisorpercentage,
+                  year2hypervisorpercentage,
+                  year3hypervisorpercentage, growthratepercentage,
+                  Long.parseLong(headers.get(MainRouteBuilder.ANALYSIS_ID).toString()));
     }
 }
