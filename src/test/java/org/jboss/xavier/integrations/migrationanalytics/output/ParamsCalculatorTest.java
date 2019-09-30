@@ -108,9 +108,9 @@ public class ParamsCalculatorTest {
     }
 
     @Test
-    public void analyticsCalculator_calculate_CloudFormsModelWithNotExistingVersionGiven_ShouldFallbackToV1AndReturn2HostAndTotalDiskSpace() throws IOException {
+    public void analyticsCalculator_calculate_CloudFormsModelWithNotExistingVersionGiven_ShouldFallbackToV0AndReturn2HostAndTotalDiskSpace() throws IOException {
         // Given
-        doReturn("v2").when(reportCalculator).getManifestVersion(any());
+        doReturn("0_0_9").when(reportCalculator).getManifestVersion(any());
         analyticsCalculator_calculate_CloudFormsModelGiven_ShouldReturn2HostAndTotalDiskSpace();
     }
 }

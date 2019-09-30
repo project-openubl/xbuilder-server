@@ -1,10 +1,12 @@
 package org.jboss.xavier.integrations.migrationanalytics.business;
 
 import com.jayway.jsonpath.JsonPath;
+import org.jboss.xavier.integrations.migrationanalytics.business.versioning.ManifestVersionService;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +16,8 @@ import java.util.Set;
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class FlagSharedDisksCalculator extends AbstractVMWorkloadInventoryCalculator implements Calculator<Set<String>> {
+    @Inject
+    ManifestVersionService manifestVersionService;
 
     @Override
     public Set<String> calculate(String cloudFormsJson, Map<String, Object> headers) {
@@ -25,8 +29,8 @@ public class FlagSharedDisksCalculator extends AbstractVMWorkloadInventoryCalcul
         // The filename with an associate Set with more than 1 VM name, will be a shared disk and
         // all the VM in the Set will have the "Shared Disk" flag.
         final Map<String, Set<String>> fileNamesInVms = new HashMap<>();
-        String deviceTypeProperty = env.getProperty("cloudforms.manifest." + manifestVersion + ".vmworkloadinventory.vmDisksDeviceTypeProperty");
-        String fileNameProperty = env.getProperty("cloudforms.manifest." + manifestVersion + ".vmworkloadinventory.vmDisksFileNameProperty");
+        String deviceTypeProperty = manifestVersionService.getPropertyWithFallbackVersion(manifestVersion,"vmworkloadinventory.vmDisksDeviceTypeProperty");
+        String fileNameProperty = manifestVersionService.getPropertyWithFallbackVersion(manifestVersion, "vmworkloadinventory.vmDisksFileNameProperty");
         vms.stream().forEach(vm -> {
             String vmName = readValueFromExpandedEnvVarPath(VMNAMEPATH, vm);
             List<Map<String, String>> disks = readListValuesFromExpandedEnvVarPath(VMDISKSPATH, vm);

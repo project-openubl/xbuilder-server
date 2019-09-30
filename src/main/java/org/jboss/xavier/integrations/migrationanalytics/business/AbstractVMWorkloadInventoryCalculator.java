@@ -1,9 +1,11 @@
 package org.jboss.xavier.integrations.migrationanalytics.business;
 
 import com.jayway.jsonpath.DocumentContext;
+import org.jboss.xavier.integrations.migrationanalytics.business.versioning.ManifestVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -15,35 +17,38 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class AbstractVMWorkloadInventoryCalculator {
-    public static final String VMPATH = "cloudforms.manifest.{version}.vmworkloadinventory.vmPath";
-    public static final String CLUSTERPATH = "cloudforms.manifest.{version}.vmworkloadinventory.clusterPath";
-    public static final String DATACENTERPATH = "cloudforms.manifest.{version}.vmworkloadinventory.datacenterPath";
-    public static final String PROVIDERPATH = "cloudforms.manifest.{version}.vmworkloadinventory.providerPath";
-    public static final String GUESTOSFULLNAMEPATH = "cloudforms.manifest.{version}.vmworkloadinventory.guestOSPath";
-    public static final String GUESTOSFULLNAME_FALLBACKPATH = "cloudforms.manifest.{version}.vmworkloadinventory.guestOSFallbackPath";
-    public static final String VMNAMEPATH = "cloudforms.manifest.{version}.vmworkloadinventory.vmNamePath";
-    public static final String NUMCPUPATH = "cloudforms.manifest.{version}.vmworkloadinventory.numCpuPath";
-    public static final String NUMCORESPERSOCKETPATH = "cloudforms.manifest.{version}.vmworkloadinventory.numCoresPerSocketPath";
-    public static final String HASRDMDISKPATH = "cloudforms.manifest.{version}.vmworkloadinventory.hasRDMDiskPath";
-    public static final String RAMSIZEINBYTES = "cloudforms.manifest.{version}.vmworkloadinventory.ramSizeInBytesPath";
-    public static final String NICSPATH = "cloudforms.manifest.{version}.vmworkloadinventory.nicsPath";
-    public static final String PRODUCTNAMEPATH = "cloudforms.manifest.{version}.vmworkloadinventory.productNamePath";
-    public static final String PRODUCTNAME_FALLBACKPATH = "cloudforms.manifest.{version}.vmworkloadinventory.productNameFallbackPath";
-    public static final String DISKSIZEPATH = "cloudforms.manifest.{version}.vmworkloadinventory.diskSizePath";
-    public static final String EMSCLUSTERIDPATH = "cloudforms.manifest.{version}.vmworkloadinventory.emsClusterIdPath";
-    public static final String VMEMSCLUSTERPATH = "cloudforms.manifest.{version}.vmworkloadinventory.vmEmsClusterPath";
-    public static final String VMDISKSFILENAMESPATH = "cloudforms.manifest.{version}.vmworkloadinventory.vmDiskFileNamesPath";
-    public static final String SYSTEMSERVICESNAMESPATH = "cloudforms.manifest.{version}.vmworkloadinventory.systemServicesNamesPath";
-    public static final String FILESCONTENTPATH = "cloudforms.manifest.{version}.vmworkloadinventory.filesContentPath";
-    public static final String FILESCONTENTPATH_FILENAME = "cloudforms.manifest.{version}.vmworkloadinventory.filesContentPathName";
-    public static final String FILESCONTENTPATH_CONTENTS = "cloudforms.manifest.{version}.vmworkloadinventory.filesContentPathContents";
-    public static final String PRODUCTPATH = "cloudforms.manifest.{version}.vmworkloadinventory.productPath";
-    public static final String VERSIONPATH = "cloudforms.manifest.{version}.vmworkloadinventory.versionPath";
-    public static final String HOSTNAMEPATH = "cloudforms.manifest.{version}.vmworkloadinventory.hostNamePath";
-    public static final String VMDISKSPATH = "cloudforms.manifest.{version}.vmworkloadinventory.vmDisksPath";
+    public static final String VMPATH = "vmworkloadinventory.vmPath";
+    public static final String CLUSTERPATH = "vmworkloadinventory.clusterPath";
+    public static final String DATACENTERPATH = "vmworkloadinventory.datacenterPath";
+    public static final String PROVIDERPATH = "vmworkloadinventory.providerPath";
+    public static final String GUESTOSFULLNAMEPATH = "vmworkloadinventory.guestOSPath";
+    public static final String GUESTOSFULLNAME_FALLBACKPATH = "vmworkloadinventory.guestOSFallbackPath";
+    public static final String VMNAMEPATH = "vmworkloadinventory.vmNamePath";
+    public static final String NUMCPUPATH = "vmworkloadinventory.numCpuPath";
+    public static final String NUMCORESPERSOCKETPATH = "vmworkloadinventory.numCoresPerSocketPath";
+    public static final String HASRDMDISKPATH = "vmworkloadinventory.hasRDMDiskPath";
+    public static final String RAMSIZEINBYTES = "vmworkloadinventory.ramSizeInBytesPath";
+    public static final String NICSPATH = "vmworkloadinventory.nicsPath";
+    public static final String PRODUCTNAMEPATH = "vmworkloadinventory.productNamePath";
+    public static final String PRODUCTNAME_FALLBACKPATH = "vmworkloadinventory.productNameFallbackPath";
+    public static final String DISKSIZEPATH = "vmworkloadinventory.diskSizePath";
+    public static final String EMSCLUSTERIDPATH = "vmworkloadinventory.emsClusterIdPath";
+    public static final String VMEMSCLUSTERPATH = "vmworkloadinventory.vmEmsClusterPath";
+    public static final String VMDISKSFILENAMESPATH = "vmworkloadinventory.vmDiskFileNamesPath";
+    public static final String SYSTEMSERVICESNAMESPATH = "vmworkloadinventory.systemServicesNamesPath";
+    public static final String FILESCONTENTPATH = "vmworkloadinventory.filesContentPath";
+    public static final String FILESCONTENTPATH_FILENAME = "vmworkloadinventory.filesContentPathName";
+    public static final String FILESCONTENTPATH_CONTENTS = "vmworkloadinventory.filesContentPathContents";
+    public static final String PRODUCTPATH = "vmworkloadinventory.productPath";
+    public static final String VERSIONPATH = "vmworkloadinventory.versionPath";
+    public static final String HOSTNAMEPATH = "vmworkloadinventory.hostNamePath";
+    public static final String VMDISKSPATH = "vmworkloadinventory.vmDisksPath";
 
     @Autowired
     protected Environment env;
+
+    @Inject
+    protected ManifestVersionService manifestVersionService;
 
     protected DocumentContext jsonParsed;
     protected String manifestVersion;
@@ -91,14 +96,8 @@ public class AbstractVMWorkloadInventoryCalculator {
     }
 
     protected String getExpandedPath(String envVarPath, Map vmStructMap) {
-        String envVarPathWithExpandedVersion = expandVersionInExpression(envVarPath);
-        String path = env.getProperty(envVarPathWithExpandedVersion);
+        String path = manifestVersionService.getPropertyWithFallbackVersion(manifestVersion, envVarPath);
         return expandParamsInPath(path, vmStructMap);
-    }
-
-    protected String expandVersionInExpression(String path) {
-        String replace = path.replace("{version}", manifestVersion);
-        return replace;
     }
 
     protected String expandParamsInPath(String path, Map vmStructMap) {
