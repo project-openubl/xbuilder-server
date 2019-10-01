@@ -731,7 +731,7 @@ public class XmlRoutes_RestReportTest {
 
         //Then
         PageBean pageBean = new PageBean(0, 10);
-        SortBean sortBean = new SortBean("id", false);
+        SortBean sortBean = new SortBean("id", true);
 
         verify(flagService).findByReportAnalysisOwnerAndReportAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean);
         assertThat(response).isNotNull();
@@ -766,7 +766,7 @@ public class XmlRoutes_RestReportTest {
 
         //Then
         PageBean pageBean = new PageBean(page, size);
-        SortBean sortBean = new SortBean("id", false);
+        SortBean sortBean = new SortBean("id", true);
 
         verify(flagService).findByReportAnalysisOwnerAndReportAnalysisId("mrizzi@redhat.com", one, pageBean, sortBean);
         assertThat(response).isNotNull();
