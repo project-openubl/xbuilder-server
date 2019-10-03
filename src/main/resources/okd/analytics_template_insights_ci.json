@@ -65,13 +65,9 @@
                     "deploymentConfig": "broker-amq"
                 },
                 "strategy": {
-                    "type": "Rolling",
-                    "rollingParams": {
-                        "updatePeriodSeconds": 1,
-                        "intervalSeconds": 1,
-                        "timeoutSeconds": 600,
-                        "maxUnavailable": "25%",
-                        "maxSurge": 0
+                    "type": "Recreate",
+                    "recreateParams": {
+                        "timeoutSeconds": 600
                     },
                     "resources": {},
                     "activeDeadlineSeconds": 21600
@@ -1050,7 +1046,8 @@
                                 ],
                                 "resources": {
                                     "limits": {
-                                        "memory": "${POSTGRESQL_MEMORY_LIMIT}"
+                                        "memory": "${POSTGRESQL_MEMORY_LIMIT}",
+                                        "cpu": "${POSTGRESQL_CPU_LIMIT}"
                                     }
                                 },
                                 "volumeMounts": [
@@ -1192,7 +1189,7 @@
                                     },
                                     {
                                         "name": "KIESERVER_CONTAINER",
-                                        "value": "sample-analytics_1.0.0-SNAPSHOT"
+                                        "value": "xavier-analytics_0.0.1-SNAPSHOT"
                                     },
                                     {
                                         "name": "POSTGRESQL_USER",
@@ -1234,6 +1231,10 @@
                                         "value": "${INSIGHTS_UPLOAD_HOST}"
                                     },
                                     {
+                                        "name": "INSIGHTS_UPLOAD_MIMETYPE",
+                                        "value": "${INSIGHTS_UPLOAD_MIMETYPE}"
+                                    },
+                                    {
                                         "name": "INSIGHTS_KAFKA_VALIDATION_TOPIC",
                                         "value": "${INSIGHTS_KAFKA_VALIDATION_TOPIC}"
                                     },
@@ -1245,11 +1246,11 @@
                                 "resources": {
                                     "limits": {
                                         "cpu": "1",
-                                        "memory": "512Mi"
+                                        "memory": "2Gi"
                                     },
                                     "requests": {
                                         "cpu": "400m",
-                                        "memory": "512Mi"
+                                        "memory": "2Gi"
                                     }
                                 },
                                 "livenessProbe": {
@@ -1923,6 +1924,7 @@
                         }
                     }
                 ],
+                "completionDeadlineSeconds": 1800,
                 "runPolicy": "Serial",
                 "source": {
                     "type": "Git",
@@ -1967,10 +1969,12 @@
                 },
                 "resources": {
                     "limits": {
-                        "memory": "800M"
+                        "memory": "800M",
+                        "cpu": "1"
                     },
                     "requests": {
-                        "memory": "700M"
+                        "memory": "700M",
+                        "cpu": "500m"
                     }
                 },
                 "postCommit": {},
@@ -1989,6 +1993,13 @@
             "displayName": "Database Memory Limit",
             "description": "Database maximum amount of memory the container can use.",
             "value": "512Mi",
+            "required": true
+        },
+        {
+            "name": "POSTGRESQL_CPU_LIMIT",
+            "displayName": "Database CPU Limit",
+            "description": "Database maximum amount of CPU the container can use.",
+            "value": "500m",
             "required": true
         },
         {
@@ -2052,7 +2063,14 @@
             "name": "INSIGHTS_UPLOAD_HOST",
             "displayName": "Insights Upload Service Endpoint",
             "description": "Insights Upload Service Endpoint",
-            "value": "upload-service.platform-ci:8080",
+            "value": "upload-service.platform-ci.svc:8080",
+            "required": false
+        },
+        {
+            "name": "INSIGHTS_UPLOAD_MIMETYPE",
+            "displayName": "Insights Upload Service Mimetype",
+            "description": "Insights Upload Service Mimetype",
+            "value": "application/vnd.redhat.xavier.ma-xavier+json",
             "required": false
         },
         {
@@ -2066,7 +2084,7 @@
             "name": "INSIGHTS_KAFKA_UPLOAD_TOPIC",
             "displayName": "Kafka topic for upload payload available",
             "description": "Kafka topic for upload payload available",
-            "value": "platform.upload.testareno",
+            "value": "platform.upload.xavier",
             "required": false
         }
     ]
