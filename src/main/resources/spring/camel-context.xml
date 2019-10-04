@@ -29,10 +29,22 @@
         </property>
     </bean>
 
+    <bean id="zipAggregationStrategy" class="org.apache.camel.processor.aggregate.zipfile.ZipAggregationStrategy">
+        <constructor-arg index="0" value="false"/>
+        <constructor-arg index="1" value="true"/>
+    </bean>
+
+    <bean id="dateUtils" class="org.jboss.xavier.utils.DateUtils"/>
+    <bean id="utils" class="org.jboss.xavier.utils.Utils"/>
+
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
 
         <interceptFrom id="interceptor-username" uri="rest:*">
             <to uri="direct:check-authenticated-request" />
+            <when>
+                <simple>${header.CamelServletContextPath} contains '/administration/'</simple>
+                <to uri="direct:check-authorized-request" />
+            </when>
         </interceptFrom>
 
         <restConfiguration apiContextPath="/api-doc" apiContextRouteId="doc-api" component="servlet" bindingMode="json">
@@ -47,6 +59,51 @@
             <get uri="/flag-assessment">
                 <route id="mappings-flag-assessment-findAll">
                     <bean ref="flagAssessmentService" method="findAll()" />
+                </route>
+            </get>
+        </rest>
+
+        <rest path="/administration">
+            <get uri="/report/csv" produces="application/octet-stream">
+                <route id="administration-report-csv">
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.CORRELATION_ID}">
+                        <method ref="utils" method="generateUUID"/>
+                    </setHeader>
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_DIR}">
+                        <constant>tmpFolder</constant>
+                    </setHeader>
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_FILE}">
+                        <simple>${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.CORRELATION_ID}}</simple>
+                    </setHeader>
+
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}">
+                        <method ref="dateUtils" method="getUnixEpochDate"/>
+                    </setHeader>
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}">
+                        <simple>${date:now}</simple>
+                    </setHeader>
+                    <setHeader headerName="Exchange.FILE_NAME">
+                        <simple>all.csv</simple>
+                    </setHeader>
+                    <to uri="direct:administrationReportCsvGenerator"/>
+
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}">
+                        <method ref="dateUtils" method="getLastMondayMinus7days"/>
+                    </setHeader>
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}">
+                        <method ref="dateUtils" method="getLastMonday"/>
+                    </setHeader>
+                    <setHeader headerName="Exchange.FILE_NAME">
+                        <simple>${date:header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}:yyyyMMddHHmmssz}-to-${date:header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}:yyyyMMddHHmmssz}.csv</simple>
+                    </setHeader>
+                    <to uri="direct:administrationReportCsvGenerator"/>
+
+                    <pollEnrich>
+                        <simple>file:${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_DIR}}?fileName=${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_FILE}}.zip&amp;delete=true</simple>
+                    </pollEnrich>
+                    <setHeader headerName="$simple{type:org.jboss.xavier.integrations.route.dataformat.CustomizedMultipartDataFormat.CONTENT_DISPOSITION}">
+                        <simple>attachment;filename=${date:now:yyyyMMddHHmmssz}.zip</simple>
+                    </setHeader>
                 </route>
             </get>
         </rest>
@@ -206,6 +263,35 @@
             <marshal>
                 <bindy id="workloadInventoryReportModelBindyDataformat" type="Csv" classType="org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel"/>
             </marshal>
+        </route>
+
+        <route id="administration-report-csv-generator">
+            <from uri="direct:administrationReportCsvGenerator"/>
+            <log message="Creating csv file using fromDate: ${date:header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}}, toDate ${date:header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}}" />
+            <bean ref="analysisService" method="getAdministrationMetrics(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}}, ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}})"/>
+            <bean ref="administrationMetricsMapper" method="toAdministrationMetricsModels"/>
+            <to uri="direct:administrationMetricsModelToCsv"/>
+            <to uri="direct:administration-report-csv-aggregator" />
+        </route>
+
+        <route id="administration-metrics-model-to-csv">
+            <from uri="direct:administrationMetricsModelToCsv" />
+            <marshal>
+                <bindy id="administrationMetricsModelBindyDataformat" type="Csv" classType="org.jboss.xavier.analytics.pojo.AdministrationMetricsModel"/>
+            </marshal>
+        </route>
+
+        <route id="administration-report-csv-aggregator">
+            <from uri="direct:administration-report-csv-aggregator"/>
+            <aggregate strategyRef="zipAggregationStrategy" completionSize="2">
+                <correlationExpression>
+                    <header>${type:org.jboss.xavier.integrations.route.MainRouteBuilder.CORRELATION_ID}</header>
+                </correlationExpression>
+                <setHeader headerName="Exchange.FILE_NAME">
+                    <simple>${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_FILE}}.zip</simple>
+                </setHeader>
+                <toD uri="file:${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_DIR}}"/>
+            </aggregate>
         </route>
 
         <route id="call-kie-extract-reports" trace="true">

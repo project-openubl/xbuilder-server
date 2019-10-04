@@ -1,5 +1,6 @@
 package org.jboss.xavier.integrations.jpa.service;
 
+import org.jboss.xavier.analytics.pojo.AdministrationMetricsProjection;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.analytics.pojo.output.InitialSavingsEstimationReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
@@ -116,5 +117,10 @@ public class AnalysisService
         analysisModel.setStatus(status);
         analysisModel.setLastUpdate(new Date());
         analysisRepository.save(analysisModel);
+    }
+
+    public List<AdministrationMetricsProjection> getAdministrationMetrics(Date fromDate, Date toDate)
+    {
+        return analysisRepository.getAdministrationMetrics(fromDate, toDate);
     }
 }

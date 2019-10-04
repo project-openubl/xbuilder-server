@@ -12,7 +12,7 @@
 
     <logger name="org.apache.commons.httpclient" level="warn" />
 
-    <root level="info">
+    <root level="${testLogRootLevel}">
         <appender-ref ref="STDOUT" />
     </root>
 

@@ -3,12 +3,12 @@ package org.jboss.xavier.integrations.jpa.service;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
-import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.inject.Inject;
 
@@ -37,5 +37,18 @@ public class UserServiceTest {
         assertThat(userService.findUser("user name").isFirstTimeCreatingReports()).isEqualTo(false);
         assertThat(userService.findUser("mrizzi@redhat.com").isFirstTimeCreatingReports()).isEqualTo(false);
         assertThat(userService.findUser("whatever").isFirstTimeCreatingReports()).isEqualTo(true);
+    }
+
+    @Test
+    public void userService_AuthorizedUsersEmpty_ShouldReturnNotAllowed() {
+        ReflectionTestUtils.setField(userService, "authorizedAdminUsers", new String[0]);
+        assertThat(userService.isUserAllowedToAdministratorResources("myUsername")).isEqualTo(false);
+    }
+    
+    @Test
+    public void userService_AuthorizedUsersGiven_ShouldReturnAllowedOrNot() {
+        assertThat(userService.isUserAllowedToAdministratorResources("admin1")).isEqualTo(true);
+        assertThat(userService.isUserAllowedToAdministratorResources("admin1@redhat.com")).isEqualTo(false);
+        assertThat(userService.isUserAllowedToAdministratorResources("admin2@redhat.com")).isEqualTo(true);
     }
 }
