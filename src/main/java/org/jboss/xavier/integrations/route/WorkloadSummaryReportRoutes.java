@@ -26,12 +26,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 @Named
 public class WorkloadSummaryReportRoutes extends RouteBuilder {
-
-    private final Logger logger = Logger.getLogger(WorkloadSummaryReportRoutes.class.getName());
 
     @Inject
     WorkloadInventoryReportService workloadInventoryReportService;

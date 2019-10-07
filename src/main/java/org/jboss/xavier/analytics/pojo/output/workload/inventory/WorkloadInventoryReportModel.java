@@ -144,7 +144,7 @@ public class WorkloadInventoryReportModel
     @DataField(pos = 16, columnName = "HostName")
     private String host_name;
 
-    private Date creationDate;
+    private Date creationDate; //TODO to be consistent with input bean, refactor to scanRunDate
 
     private Boolean ssaEnabled;
 
@@ -331,4 +331,5 @@ public class WorkloadInventoryReportModel
     public void setSsaEnabled(Boolean ssaEnabled) {
         this.ssaEnabled = ssaEnabled;
     }
+
 }

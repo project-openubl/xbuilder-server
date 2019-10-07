@@ -1,6 +1,7 @@
 package org.jboss.xavier.integrations.migrationanalytics.business;
 
 import com.jayway.jsonpath.DocumentContext;
+import lombok.extern.slf4j.Slf4j;
 import org.jboss.xavier.integrations.migrationanalytics.business.versioning.ManifestVersionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -9,6 +10,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +18,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class AbstractVMWorkloadInventoryCalculator {
+
     public static final String VMPATH = "vmworkloadinventory.vmPath";
     public static final String CLUSTERPATH = "vmworkloadinventory.clusterPath";
     public static final String DATACENTERPATH = "vmworkloadinventory.datacenterPath";
@@ -43,6 +47,7 @@ public class AbstractVMWorkloadInventoryCalculator {
     public static final String VERSIONPATH = "vmworkloadinventory.versionPath";
     public static final String HOSTNAMEPATH = "vmworkloadinventory.hostNamePath";
     public static final String VMDISKSPATH = "vmworkloadinventory.vmDisksPath";
+    public static final String DATACOLLECTEDON = "datacollectedon" ;
 
     @Autowired
     protected Environment env;
@@ -52,6 +57,7 @@ public class AbstractVMWorkloadInventoryCalculator {
 
     protected DocumentContext jsonParsed;
     protected String manifestVersion;
+    protected Date scanRunDate;
 
     protected Map<String, String> readMapValuesFromExpandedEnvVarPath(String envVarPath, Map vmStructMap, String keyfield, String valuefield) {
         String expandParamsInPath = getExpandedPath(envVarPath, vmStructMap);
@@ -68,14 +74,21 @@ public class AbstractVMWorkloadInventoryCalculator {
     protected <T> T readValueFromExpandedEnvVarPath(String envVarPath, Map vmStructMap, Class type) {
         String expandParamsInPath = getExpandedPath(envVarPath, vmStructMap);
 
-        Object value = jsonParsed.read(expandParamsInPath);
-        if (value instanceof Collection) {
-            value = ((List<T>) value).get(0);
-        }
-        if (Long.class.isAssignableFrom(type)) {
-            value = Long.valueOf(((Number) value).longValue());
-        } else if (Integer.class.isAssignableFrom(type)) {
-            value = Integer.valueOf(((Number) value).intValue());
+        Object value;
+
+        try {
+            value = jsonParsed.read(expandParamsInPath);
+            if (value instanceof Collection) {
+                value = ((List<T>) value).get(0);
+            }
+            if (Long.class.isAssignableFrom(type)) {
+                value = ((Number) value).longValue();
+            } else if (Integer.class.isAssignableFrom(type)) {
+                value = ((Number) value).intValue();
+            }
+        } catch (Exception e) {
+            value = null;
+            log.warn("Exception reading value from JSON", e);
         }
         return (T) value;
     }

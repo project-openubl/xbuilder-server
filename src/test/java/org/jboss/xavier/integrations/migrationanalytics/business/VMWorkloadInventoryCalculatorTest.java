@@ -15,8 +15,11 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -59,7 +62,7 @@ public class VMWorkloadInventoryCalculatorTest {
         expectedModel.setCpuCores(1);
         expectedModel.setCluster("V2V_Cluster");
         expectedModel.setSystemServicesNames(Arrays.asList("{02B0078E-2148-45DD-B7D3-7E37AAB3B31D}","xmlprov","wudfsvc"));
-        expectedModel.setVmDiskFilenames(Arrays.asList("[NFS_Datastore] dev-windows-server-2008/dev-windows-server-2008.vmdk"));
+        expectedModel.setVmDiskFilenames(Collections.singletonList("[NFS_Datastore] dev-windows-server-2008/dev-windows-server-2008.vmdk"));
         expectedModel.setAnalysisId(analysisId);
         expectedModel.setHost_name("esx13.v2v.bos.redhat.com");
         expectedModel.setVersion("6.5");
@@ -69,11 +72,12 @@ public class VMWorkloadInventoryCalculatorTest {
         files.put("/opt/IBM", null);
         expectedModel.setFiles(files);
 
-        assertThat(modelList.stream().filter(e -> e.getVmName().equalsIgnoreCase("dev-windows-server-2008-TEST")).findFirst().get()).isEqualToComparingFieldByField(expectedModel);
+        assertThat(modelList.stream().filter(e -> e.getVmName().equalsIgnoreCase("dev-windows-server-2008-TEST"))
+                .findFirst().get()).isEqualToIgnoringNullFields(expectedModel);
     }
 
     @Test
-    public void calculate_jsonV1_0_0_Given_ShouldReturnCalculatedValues() throws IOException {
+    public void calculate_jsonV1_0_0_Given_ShouldReturnCalculatedValues() throws IOException, ParseException {
         String cloudFormsJson = IOUtils.resourceToString("cloudforms-export-v1_0_0.json", StandardCharsets.UTF_8, VMWorkloadInventoryCalculatorTest.class.getClassLoader());
         Map<String, Object> headers = new HashMap<>();
         Long analysisId = 30L;
@@ -108,12 +112,16 @@ public class VMWorkloadInventoryCalculatorTest {
         expectedModel.setHost_name("host-47");
         expectedModel.setVersion("6.7.2");
         expectedModel.setProduct("VMware vCenter");
+        expectedModel.setScanRunDate(new SimpleDateFormat("yyyy-M-dd'T'hh:mm:ss.S").parse("2019-09-18T14:52:45.871Z"));
+
         HashMap<String, String> files = new HashMap<>();
         files.put("/etc/GeoIP.conf","dummy content");
         files.put("/etc/asound.conf", null);
         files.put("/etc/autofs.conf", null);
         expectedModel.setFiles(files);
 
-        assertThat(modelList.stream().filter(e -> e.getVmName().equalsIgnoreCase("oracle_db")).findFirst().get()).isEqualToComparingFieldByField(expectedModel);
+        assertThat(modelList.stream().filter(e -> e.getVmName().equalsIgnoreCase("oracle_db"))
+                .findFirst().get())
+                .isEqualToIgnoringNullFields(expectedModel);
     }
 }

@@ -1,5 +1,6 @@
 {
     "cfme_version": "5.11.0.17",
+    "data_collected_on": "2019-09-18T14:52:45.871Z",
     "schema": {
         "name": "Cfme"
     },

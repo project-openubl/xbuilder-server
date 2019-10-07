@@ -5,6 +5,7 @@ import org.jboss.xavier.analytics.pojo.input.AbstractInputModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,8 @@ public class VMWorkloadInventoryModel extends AbstractInputModel implements Seri
     private String product;
     private String version;
     private String host_name;
+
+    private Date scanRunDate;
 
     //hardware/disks/filename
     private Collection<String> vmDiskFilenames;
@@ -205,5 +208,13 @@ public class VMWorkloadInventoryModel extends AbstractInputModel implements Seri
 
     public void setHost_name(String host_name) {
         this.host_name = host_name;
+    }
+
+    public Date getScanRunDate() {
+        return scanRunDate;
+    }
+
+    public void setScanRunDate(Date scanRunDate) {
+        this.scanRunDate = scanRunDate;
     }
 }
