@@ -39,6 +39,16 @@
 
     <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
 
+        <onException>
+            <exception>java.lang.Exception</exception>
+            <handled><constant>true</constant></handled>
+            <setHeader headerName="exception">
+                <simple>${exception.stacktrace}</simple>
+            </setHeader>
+            <bean ref="mainRouteBuilder" method="markAnalysisAsFailed(${exchange})"/>
+            <stop/>
+        </onException>
+
         <interceptFrom id="interceptor-username" uri="rest:*">
             <to uri="direct:check-authenticated-request" />
             <when>
@@ -66,20 +76,20 @@
         <rest path="/administration">
             <get uri="/report/csv" produces="application/octet-stream">
                 <route id="administration-report-csv">
-                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.CORRELATION_ID}">
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.CORRELATION_ID}">
                         <method ref="utils" method="generateUUID"/>
                     </setHeader>
-                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_DIR}">
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.WORKING_DIR}">
                         <constant>tmpFolder</constant>
                     </setHeader>
-                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_FILE}">
-                        <simple>${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.CORRELATION_ID}}</simple>
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.WORKING_FILE}">
+                        <simple>${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.CORRELATION_ID}}</simple>
                     </setHeader>
 
-                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}">
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.FROM_DATE}">
                         <method ref="dateUtils" method="getUnixEpochDate"/>
                     </setHeader>
-                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}">
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.TO_DATE}">
                         <simple>${date:now}</simple>
                     </setHeader>
                     <setHeader headerName="Exchange.FILE_NAME">
@@ -87,19 +97,19 @@
                     </setHeader>
                     <to uri="direct:administrationReportCsvGenerator"/>
 
-                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}">
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.FROM_DATE}">
                         <method ref="dateUtils" method="getLastMondayMinus7days"/>
                     </setHeader>
-                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}">
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.TO_DATE}">
                         <method ref="dateUtils" method="getLastMonday"/>
                     </setHeader>
                     <setHeader headerName="Exchange.FILE_NAME">
-                        <simple>${date:header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}:yyyyMMddHHmmssz}-to-${date:header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}:yyyyMMddHHmmssz}.csv</simple>
+                        <simple>${date:header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.FROM_DATE}:yyyyMMddHHmmssz}-to-${date:header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.TO_DATE}:yyyyMMddHHmmssz}.csv</simple>
                     </setHeader>
                     <to uri="direct:administrationReportCsvGenerator"/>
 
                     <pollEnrich>
-                        <simple>file:${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_DIR}}?fileName=${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_FILE}}.zip&amp;delete=true</simple>
+                        <simple>file:${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.WORKING_DIR}}?fileName=${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.WORKING_FILE}}.zip&amp;delete=true</simple>
                     </pollEnrich>
                     <setHeader headerName="$simple{type:org.jboss.xavier.integrations.route.dataformat.CustomizedMultipartDataFormat.CONTENT_DISPOSITION}">
                         <simple>attachment;filename=${date:now:yyyyMMddHHmmssz}.zip</simple>
@@ -119,10 +129,10 @@
                     <choice>
                         <when>
                             <simple>${header.filterText} == null</simple>
-                            <bean ref="analysisService" method="findAllByOwner(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.page}, ${header.size})" />
+                            <bean ref="analysisService" method="findAllByOwner(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.page}, ${header.size})" />
                         </when>
                         <otherwise>
-                            <bean ref="analysisService" method="findByOwnerAndReportName(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.filterText}, ${header.page}, ${header.size})" />
+                            <bean ref="analysisService" method="findByOwnerAndReportName(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.filterText}, ${header.page}, ${header.size})" />
                         </otherwise>
                     </choice>
                 </route>
@@ -130,13 +140,13 @@
             <get uri="/{id}">
                 <description>Get the details of a report</description>
                 <route id="report-get-details">
-                    <bean ref="analysisService" method="findByOwnerAndId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id})" />
+                    <bean ref="analysisService" method="findByOwnerAndId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id})" />
                 </route>
             </get>
             <delete uri="/{id}">
                 <description>Delete a report</description>
                 <route id="report-delete">
-                    <bean ref="analysisService" method="findByOwnerAndId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id})"/>
+                    <bean ref="analysisService" method="findByOwnerAndId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id})"/>
                     <choice>
                         <when>
                             <simple>${body} != null</simple>
@@ -159,7 +169,7 @@
             <get uri="/{id}/initial-saving-estimation">
                 <description>Get the Initial Cost Saving report</description>
                 <route id="reports-get-details">
-                    <bean ref="initialSavingsEstimationReportService" method="findByAnalysisOwnerAndAnalysisId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id})" />
+                    <bean ref="initialSavingsEstimationReportService" method="findByAnalysisOwnerAndAnalysisId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id})" />
                 </route>
             </get>
             <get uri="/{id}/workload-inventory">
@@ -181,13 +191,13 @@
                     <to uri="direct:to-paginationBean"/>
                     <to uri="direct:to-sortBean"/>
                     <to uri="direct:to-workloadInventoryFilterBean"/>
-                    <bean ref="workloadInventoryReportService" method="findByAnalysisOwnerAndAnalysisId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id}, ${header.pageBean}, ${header.sortBean}, ${header.workloadInventoryFilterBean})" />
+                    <bean ref="workloadInventoryReportService" method="findByAnalysisOwnerAndAnalysisId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id}, ${header.pageBean}, ${header.sortBean}, ${header.workloadInventoryFilterBean})" />
                 </route>
             </get>
             <get uri="/{id}/workload-inventory/csv" produces="text/csv">
                 <description>Get the Workload Inventory Reports in CSV format</description>
                 <route id="workload-inventory-report-get-details-as-csv">
-                    <bean ref="workloadInventoryReportService" method="findByAnalysisOwnerAndAnalysisId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id})" />
+                    <bean ref="workloadInventoryReportService" method="findByAnalysisOwnerAndAnalysisId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id})" />
                     <to uri="direct:toWorkloadInventoryReportCsv" />
                     <setHeader headerName="Content-Disposition">
                         <simple>attachment;filename=workloadInventory_${header.id}.csv</simple>
@@ -198,7 +208,7 @@
                 <description>Get available filters</description>
                 <route id="workload-inventory-report-available-filters">
                     <!-- if the user is the owner of the analysis then it's fine to get the filters -->
-                    <bean ref="analysisService" method="findByOwnerAndId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id})"/>
+                    <bean ref="analysisService" method="findByOwnerAndId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id})"/>
                     <choice>
                         <when>
                             <simple>${body} != null</simple>
@@ -219,7 +229,7 @@
             <get uri="/{id}/workload-summary">
                 <description>Get the Workload Summary Report</description>
                 <route id="workload-summary-report-get">
-                    <bean ref="workloadSummaryReportService" method="findByAnalysisOwnerAndAnalysisId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id})" />
+                    <bean ref="workloadSummaryReportService" method="findByAnalysisOwnerAndAnalysisId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id})" />
                 </route>
             </get>
             <get uri="/{id}/workload-summary/workloads">
@@ -231,7 +241,7 @@
                 <route id="workload-summary-workloads-report-get">
                     <to uri="direct:to-paginationBean"/>
                     <to uri="direct:to-sortBean"/>
-                    <bean ref="workloadService" method="findByReportAnalysisOwnerAndReportAnalysisId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id}, ${header.pageBean}, ${header.sortBean})" />
+                    <bean ref="workloadService" method="findByReportAnalysisOwnerAndReportAnalysisId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id}, ${header.pageBean}, ${header.sortBean})" />
                 </route>
             </get>
             <get uri="/{id}/workload-summary/flags">
@@ -243,7 +253,7 @@
                 <route id="workload-summary-flags-report-get">
                     <to uri="direct:to-paginationBean"/>
                     <to uri="direct:to-sortBean"/>
-                    <bean ref="flagService" method="findByReportAnalysisOwnerAndReportAnalysisId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id}, ${header.pageBean}, ${header.sortBean})" />
+                    <bean ref="flagService" method="findByReportAnalysisOwnerAndReportAnalysisId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id}, ${header.pageBean}, ${header.sortBean})" />
                 </route>
             </get>
         </rest>
@@ -253,7 +263,7 @@
             <get uri="/" outType="org.jboss.xavier.integrations.route.model.user.User">
                 <description>Get session user info</description>
                 <route id="get-user-info">
-                    <bean ref="userService" method="findUser(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}})" />
+                    <bean ref="userService" method="findUser(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}})" />
                 </route>
             </get>
         </rest>
@@ -267,8 +277,8 @@
 
         <route id="administration-report-csv-generator">
             <from uri="direct:administrationReportCsvGenerator"/>
-            <log message="Creating csv file using fromDate: ${date:header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}}, toDate ${date:header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}}" />
-            <bean ref="analysisService" method="getAdministrationMetrics(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.FROM_DATE}}, ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.TO_DATE}})"/>
+            <log message="Creating csv file using fromDate: ${date:header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.FROM_DATE}}, toDate ${date:header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.TO_DATE}}" />
+            <bean ref="analysisService" method="getAdministrationMetrics(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.FROM_DATE}}, ${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.TO_DATE}})"/>
             <bean ref="administrationMetricsMapper" method="toAdministrationMetricsModels"/>
             <to uri="direct:administrationMetricsModelToCsv"/>
             <to uri="direct:administration-report-csv-aggregator" />
@@ -285,12 +295,12 @@
             <from uri="direct:administration-report-csv-aggregator"/>
             <aggregate strategyRef="zipAggregationStrategy" completionSize="2">
                 <correlationExpression>
-                    <header>${type:org.jboss.xavier.integrations.route.MainRouteBuilder.CORRELATION_ID}</header>
+                    <header>${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.CORRELATION_ID}</header>
                 </correlationExpression>
                 <setHeader headerName="Exchange.FILE_NAME">
-                    <simple>${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_FILE}}.zip</simple>
+                    <simple>${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.WORKING_FILE}}.zip</simple>
                 </setHeader>
-                <toD uri="file:${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.WORKING_DIR}}"/>
+                <toD uri="file:${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.WORKING_DIR}}"/>
             </aggregate>
         </route>
 
@@ -307,23 +317,16 @@
 
         <route id="route-ma">
             <from uri="jms:queue:uploadFormInputDataModel" />
-            <doTry>
                 <log message="Message received" />
                 <to uri="log:INFO?showBody=true&amp;showHeaders=true" />
                 <setHeader headerName="analysisId">
-                    <simple>${body.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.ANALYSIS_ID}}</simple>
+                    <simple>${body.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.ANALYSIS_ID}}</simple>
                 </setHeader>
                 <bean method="createMigrationAnalyticsCommand(${body})" ref="decisionServerHelper"/>
                 <to uri="direct:decisionserver" id="route-ma-decisionserver"/>
                 <bean id="route-extract-ics-reports" method="extractInitialSavingsEstimationReportModel" ref="decisionServerHelper"/>
                 <log id="route-log-sourceLicenseValue" message="totalPrice = ${body.sourceCostsModel.sourceLicenseValue}"/>
-                <bean ref="analysisService" method="setInitialSavingsEstimationReportModel(${body}, ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.ANALYSIS_ID}})" />
-
-                <doCatch>
-                    <exception>java.lang.Exception</exception>
-                    <bean ref="analysisService" method='updateStatus("FAILED", ${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.ANALYSIS_ID}})'/>
-                </doCatch>
-            </doTry>
+                <bean ref="analysisService" method="setInitialSavingsEstimationReportModel(${body}, ${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.ANALYSIS_ID}})" />
         </route>
 
         <!--

@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,7 +61,7 @@ public class MainRouteBuilder_DirectUploadTest {
 
         String rhidentity = "{\"identity\":{\"internal\":{\"auth_time\":0,\"auth_type\":\"jwt-auth\",\"org_id\":\"6340056\"},\"account_number\":\"1460290\",\"user\":{\"first_name\":\"Marco\",\"is_active\":true,\"is_internal\":true,\"last_name\":\"Rizzi\",\"locale\":\"en_US\",\"is_org_admin\":false,\"username\":\"mrizzi@redhat.com\",\"email\":\"mrizzi+qa@redhat.com\"},\"type\":\"User\"}}";
         headers.put("x-rh-identity", rhidentity);
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
 
         camelContext.setTracing(true);
         camelContext.setAutoStartup(false);
@@ -73,11 +73,11 @@ public class MainRouteBuilder_DirectUploadTest {
 
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("mime-message-several-files-sample.txt");
 
-        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:upload", IOUtils.toString(resourceAsStream, Charset.forName("UTF-8")), headers);
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:upload", IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8), headers);
 
         //Then
         mockStore.assertIsSatisfied();
-        assertThat(mockStore.getExchanges().stream().filter(e -> "CID12345".equalsIgnoreCase(e.getIn().getHeader(MainRouteBuilder.MA_METADATA, Map.class).get("customerid").toString())).count()).isEqualTo(4);
+        assertThat(mockStore.getExchanges().stream().filter(e -> "CID12345".equalsIgnoreCase(e.getIn().getHeader(RouteBuilderExceptionHandler.MA_METADATA, Map.class).get("customerid").toString())).count()).isEqualTo(4);
 
         camelContext.stop();
     }
@@ -95,7 +95,7 @@ public class MainRouteBuilder_DirectUploadTest {
 
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("mime-message-several-files-sample.txt");
 
-        String body = IOUtils.toString(resourceAsStream, Charset.forName("UTF-8"));
+        String body = IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
         String bodyWithoutCustomerId = body.replaceAll("customerid", "dummyid");
 
         Exchange message = camelContext.createProducerTemplate().request("direct:upload", exchange -> {
@@ -124,7 +124,7 @@ public class MainRouteBuilder_DirectUploadTest {
 
         InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream("mime-message-several-files-sample.txt");
 
-        String body = IOUtils.toString(resourceAsStream, Charset.forName("UTF-8"));
+        String body = IOUtils.toString(resourceAsStream, StandardCharsets.UTF_8);
         properties.add("userid");
         mainRouteBuilder.insightsProperties = properties;
 

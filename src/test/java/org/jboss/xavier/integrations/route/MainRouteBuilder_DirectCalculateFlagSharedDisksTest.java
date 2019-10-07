@@ -69,11 +69,11 @@ public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("filename", fileName);
         metadata.put("org_id", customerId);
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        metadata.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user name");
 
         //When
         camelContext.start();
@@ -112,11 +112,11 @@ public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("filename", fileName);
         metadata.put("org_id", customerId);
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        metadata.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
 
         Map<String, Object> headers = new HashMap<>();
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user name");
 
         //When
         camelContext.start();

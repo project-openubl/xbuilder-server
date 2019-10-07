@@ -57,4 +57,27 @@ public class AnalysisServiceTest {
         assertThat(service.countByOwner("mrizzi@redhat.com")).isEqualTo(2);
         assertThat(service.countByOwner("whatever")).isEqualTo(0);
     }
+
+    @Test
+    public void analysisService_FailedAnalysisGiven_ShouldMarkAsFailedWhenNotInCreatedStatus() {
+        AnalysisModel analysisModel = service.buildAndSave("reportName", "reportDescription", "payloadName", "user name");
+        service.markAsFailedIfNotCreated(analysisModel.getId());
+        assertThat(service.findByOwnerAndId("user name", analysisModel.getId()).getStatus()).isEqualToIgnoringCase(AnalysisService.STATUS.FAILED.toString());
+    }
+
+    @Test
+    public void analysisService_FailedAnalysisGiven_ShouldNOTMarkAsFailedWhenInCreatedStatus() {
+        AnalysisModel analysisModel = service.buildAndSave("reportName", "reportDescription", "payloadName", "user name");
+        service.updateStatus(AnalysisService.STATUS.CREATED.toString(), analysisModel.getId());
+        service.markAsFailedIfNotCreated(analysisModel.getId());
+        assertThat(service.findByOwnerAndId("user name", analysisModel.getId()).getStatus()).isEqualToIgnoringCase(AnalysisService.STATUS.CREATED.toString());
+    }
+
+    @Test
+    public void analysisService_ConcreteStatusGiven_ShouldReturnOnlyIfStutusIsNotEqualAsProvided() {
+        AnalysisModel analysisModel = service.buildAndSave("reportName", "reportDescription", "payloadName", "user name");
+        service.updateStatus(AnalysisService.STATUS.IN_PROGRESS.toString(), analysisModel.getId());
+        assertThat(service.findByIdAndStatusIgnoreCaseNot(analysisModel.getId(), AnalysisService.STATUS.IN_PROGRESS.toString())).isNull();
+        assertThat(service.findByIdAndStatusIgnoreCaseNot(analysisModel.getId(), AnalysisService.STATUS.FAILED.toString())).isNotNull();
+    }
 }

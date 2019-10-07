@@ -7,7 +7,7 @@ import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
 import org.jboss.xavier.integrations.migrationanalytics.business.ParamsCalculator;
-import org.jboss.xavier.integrations.route.MainRouteBuilder;
+import org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +16,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class ParamsCalculatorTest {
         String filename = "cloudforms-export-v1.json";
         String customerid = "CIDE9988";
 
-        String cloudFormJSON = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(filename), "UTF-8");
+        String cloudFormJSON = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(filename), StandardCharsets.UTF_8);
         Integer hypervisor = 2;
         Long totaldiskspace = 563902124032L;
         Integer sourceproductindicator = null;
@@ -60,7 +61,7 @@ public class ParamsCalculatorTest {
         headers.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
         headers.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
         headers.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
-        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        headers.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
 
         // When
         UploadFormInputDataModel inputDataModelCalculated = reportCalculator.calculate(cloudFormJSON, headers);
@@ -75,7 +76,7 @@ public class ParamsCalculatorTest {
         String filename = "cloudforms-export-v1.json";
         String customerid = "CIDE9988";
 
-        String cloudFormJSON = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(filename), "UTF-8");
+        String cloudFormJSON = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream(filename), StandardCharsets.UTF_8);
         cloudFormJSON = cloudFormJSON.replace("\"cpu_cores_per_socket\": 8", "\"cpu_cores_per_socket\": 16");
         Integer hypervisor = 2;
         Long totaldiskspace = 563902124032L;
@@ -98,7 +99,7 @@ public class ParamsCalculatorTest {
         headers.put(Calculator.YEAR_2_HYPERVISORPERCENTAGE, year2hypervisorpercentage);
         headers.put(Calculator.YEAR_3_HYPERVISORPERCENTAGE, year3hypervisorpercentage);
         headers.put(Calculator.GROWTHRATEPERCENTAGE, growthratepercentage);
-        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        headers.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
 
         // When
         UploadFormInputDataModel inputDataModelCalculated = reportCalculator.calculate(cloudFormJSON, headers);

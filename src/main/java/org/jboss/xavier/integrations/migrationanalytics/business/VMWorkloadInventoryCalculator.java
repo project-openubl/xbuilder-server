@@ -4,7 +4,7 @@ import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.xavier.analytics.pojo.input.workload.inventory.VMWorkloadInventoryModel;
-import org.jboss.xavier.integrations.route.MainRouteBuilder;
+import org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -29,7 +29,7 @@ public class VMWorkloadInventoryCalculator extends AbstractVMWorkloadInventoryCa
         scanRunDate = getScanRunDate();
 
         List<Map> vmList = readListValuesFromExpandedEnvVarPath(VMPATH, null);
-        return vmList.stream().map(e -> createVMWorkloadInventoryModel(e, Long.parseLong(headers.get(MainRouteBuilder.ANALYSIS_ID).toString()))).collect(Collectors.toList());
+        return vmList.stream().map(e -> createVMWorkloadInventoryModel(e, Long.parseLong(headers.get(RouteBuilderExceptionHandler.ANALYSIS_ID).toString()))).collect(Collectors.toList());
     }
 
     private Date getScanRunDate() {
@@ -79,5 +79,4 @@ public class VMWorkloadInventoryCalculator extends AbstractVMWorkloadInventoryCa
 
         return model;
     }
-
 }

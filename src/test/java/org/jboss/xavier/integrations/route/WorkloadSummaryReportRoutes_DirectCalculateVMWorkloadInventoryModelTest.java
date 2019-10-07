@@ -123,10 +123,10 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         camelContext.startRoute("calculate-workloadsummaryreportmodel");
 
         Map<String, String> metadata = new HashMap<>();
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        metadata.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
         Map<String, Object> headers = new HashMap<>();
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user@name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user@name");
 
         Exchange message = camelContext.createProducerTemplate().request("direct:calculate-workloadsummaryreportmodel", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
@@ -175,10 +175,10 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         camelContext.startRoute("calculate-workloadsummaryreportmodel");
 
         Map<String, String> metadata = new HashMap<>();
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        metadata.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
         Map<String, Object> headers = new HashMap<>();
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user@name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user@name");
 
         Exchange message = camelContext.createProducerTemplate().request("direct:calculate-workloadsummaryreportmodel", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
@@ -214,10 +214,10 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         camelContext.startRoute("calculate-workloadsummaryreportmodel");
 
         Map<String, String> metadata = new HashMap<>();
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        metadata.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
         Map<String, Object> headers = new HashMap<>();
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user@name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user@name");
 
         Exchange message = camelContext.createProducerTemplate().request("direct:calculate-workloadsummaryreportmodel", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
@@ -252,10 +252,10 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         camelContext.startRoute("calculate-workloadsummaryreportmodel");
 
         Map<String, String> metadata = new HashMap<>();
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        metadata.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
         Map<String, Object> headers = new HashMap<>();
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user@name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user@name");
 
         Exchange message = camelContext.createProducerTemplate().request("direct:calculate-workloadsummaryreportmodel", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
@@ -294,10 +294,10 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         camelContext.startRoute("calculate-workloadsummaryreportmodel");
 
         Map<String, String> metadata = new HashMap<>();
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        metadata.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
         Map<String, Object> headers = new HashMap<>();
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user@name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user@name");
 
         Exchange message = camelContext.createProducerTemplate().request("direct:calculate-workloadsummaryreportmodel", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
@@ -337,10 +337,10 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         camelContext.startRoute("calculate-workloadsummaryreportmodel");
 
         Map<String, String> metadata = new HashMap<>();
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        metadata.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
         Map<String, Object> headers = new HashMap<>();
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user@name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user@name");
 
         Exchange message = camelContext.createProducerTemplate().request("direct:calculate-workloadsummaryreportmodel", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
@@ -358,7 +358,7 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         Assert.assertNotNull(workloadsDetectedOSTypeModels);
         Assert.assertEquals(2, workloadsDetectedOSTypeModels.size());
 
-        Integer totalSum = workloadsDetectedOSTypeModels.stream().map(WorkloadsDetectedOSTypeModel::getTotal).reduce(0, (a, b) -> a + b);
+        Integer totalSum = workloadsDetectedOSTypeModels.stream().map(WorkloadsDetectedOSTypeModel::getTotal).reduce(0, Integer::sum);
         Assert.assertEquals(Integer.valueOf(10), totalSum);
 
         Map<Long, WorkloadsDetectedOSTypeModel> workloadsDetectedOSTypeMap = workloadsDetectedOSTypeModels.stream().collect(Collectors.toMap(WorkloadsDetectedOSTypeModel::getId, s -> s));
@@ -382,10 +382,10 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         camelContext.startRoute("calculate-workloadsummaryreportmodel");
 
         Map<String, String> metadata = new HashMap<>();
-        metadata.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        metadata.put(RouteBuilderExceptionHandler.ANALYSIS_ID, analysisId.toString());
         Map<String, Object> headers = new HashMap<>();
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user@name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user@name");
 
         Exchange message = camelContext.createProducerTemplate().request("direct:calculate-workloadsummaryreportmodel", exchange -> {
             exchange.getIn().setBody(getClass().getClassLoader().getResourceAsStream(fileName));
@@ -404,14 +404,10 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
         Assert.assertEquals(2, scanRunModels.size());
 
         scanRunModels.stream().filter(model -> model.getId() % 2 == 0).forEach(srm ->
-                {
-                    Assert.assertEquals("Virt Platform", srm.getType());
-                });
+                Assert.assertEquals("Virt Platform", srm.getType()));
 
         scanRunModels.stream().filter(model -> model.getId() % 2 != 0).forEach(srm ->
-        {
-            Assert.assertEquals("Virt Platform + SmartState", srm.getType());
-        });
+                Assert.assertEquals("Virt Platform + SmartState", srm.getType()));
 
         camelContext.stop();
     }

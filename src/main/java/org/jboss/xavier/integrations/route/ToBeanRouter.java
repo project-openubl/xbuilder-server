@@ -2,7 +2,6 @@ package org.jboss.xavier.integrations.route;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
-import org.apache.camel.builder.RouteBuilder;
 import org.jboss.xavier.integrations.route.model.PageBean;
 import org.jboss.xavier.integrations.route.model.SortBean;
 import org.jboss.xavier.integrations.route.model.WorkloadInventoryFilterBean;
@@ -13,13 +12,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.jboss.xavier.utils.ConversionUtils;
-import org.springframework.stereotype.Component;
-
-import java.util.Map;
 
 @Component
-public class ToBeanRouter extends RouteBuilder {
+public class ToBeanRouter extends RouteBuilderExceptionHandler {
 
     public static final String PAGE_HEADER_NAME = "pageBean";
     public static final String SORT_HEADER_NAME = "sortBean";
@@ -27,8 +22,10 @@ public class ToBeanRouter extends RouteBuilder {
 
     @Override
     public void configure() throws Exception {
+        super.configure();
+
         from("direct:to-paginationBean")
-                .id("to-paginationBean")
+                .routeId("to-paginationBean")
                 .process(new Processor() {
                     public void process(Exchange exchange) throws Exception {
                         // extract the name parameter from the Camel message which we want to use
@@ -50,7 +47,7 @@ public class ToBeanRouter extends RouteBuilder {
                 });
 
         from("direct:to-sortBean")
-                .id("to-sortBean")
+                .routeId("to-sortBean")
                 .process(new Processor() {
                     public void process(Exchange exchange) throws Exception {
                         // extract the name parameter from the Camel message which we want to use
@@ -72,7 +69,7 @@ public class ToBeanRouter extends RouteBuilder {
                 });
 
         from("direct:to-workloadInventoryFilterBean")
-                .id("to-workloadInventoryFilterBean")
+                .routeId("to-workloadInventoryFilterBean")
                 .process(new Processor() {
                     public void process(Exchange exchange) throws Exception {
                         // extract the name parameter from the Camel message which we want to use

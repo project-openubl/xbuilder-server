@@ -6,6 +6,7 @@ import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
+import org.hibernate.HibernateException;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
@@ -19,7 +20,6 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +37,7 @@ public class XmlRoutes_RouteMaTest {
     @Autowired
     CamelContext camelContext;
 
-    @Inject
+    @SpyBean
     AnalysisService analysisService;
 
     @SpyBean
@@ -94,6 +94,7 @@ public class XmlRoutes_RouteMaTest {
         camelContext.setAutoStartup(false);
         camelContext.start();
         camelContext.startRoute("route-ma");
+        camelContext.startRoute("markAnalysisFail");
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "application/zip");
@@ -101,7 +102,9 @@ public class XmlRoutes_RouteMaTest {
 
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:route-ma", getInputDataModelSample(analysisModel.getId()), headers);
 
-        assertThat(analysisService.findByOwnerAndId("user name", analysisModel.getId()).getStatus()).isEqualToIgnoringCase("FAILED");
+        AnalysisModel analysisModelRetrieved = analysisService.findByOwnerAndId("user name", analysisModel.getId());
+        assertThat(analysisModelRetrieved.getInitialSavingsEstimationReportModel()).isNull();
+        assertThat(analysisModelRetrieved.getStatus()).isEqualToIgnoringCase("FAILED");
 
         camelContext.stop();
     }
@@ -132,6 +135,32 @@ public class XmlRoutes_RouteMaTest {
         camelContext.start();
         camelContext.startRoute("route-ma");
         camelContext.startRoute("decision-server-rest");
+        camelContext.startRoute("markAnalysisFail");
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("Content-Type", "application/zip");
+        headers.put(Exchange.FILE_NAME, "fichero.txt");
+
+        camelContext.createProducerTemplate().sendBodyAndHeaders("direct:route-ma", getInputDataModelSample(analysisModel.getId()), headers);
+
+        assertThat(analysisService.findByOwnerAndId("user name", analysisModel.getId()).getStatus()).isEqualToIgnoringCase("FAILED");
+
+        camelContext.stop();
+    }
+
+    @Test
+    public void xmlroutes_directInputDataModel_JPAErrorReceivedGiven_ShouldMarkAnalysisAsFailed() throws Exception {
+        AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
+        assertThat(analysisModel.getInitialSavingsEstimationReportModel()).isNull();
+        doThrow(HibernateException.class).when(analysisService).setInitialSavingsEstimationReportModel(any(), any());
+        modifyFromAndWeaveDecisionServer();
+
+        camelContext.setTracing(true);
+        camelContext.setAutoStartup(false);
+        camelContext.start();
+        camelContext.startRoute("route-ma");
+        camelContext.startRoute("decision-server-rest");
+        camelContext.startRoute("markAnalysisFail");
 
         Map<String, Object> headers = new HashMap<>();
         headers.put("Content-Type", "application/zip");

@@ -7,7 +7,7 @@ import org.apache.camel.dataformat.mime.multipart.MimeMultipartDataFormat;
 import org.apache.camel.impl.DefaultAttachment;
 import org.apache.camel.util.IOHelper;
 import org.apache.camel.util.MessageHelper;
-import org.jboss.xavier.integrations.route.MainRouteBuilder;
+import org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler;
 
 import javax.mail.BodyPart;
 import javax.mail.Header;
@@ -80,9 +80,9 @@ public class CustomizedMultipartDataFormat extends MimeMultipartDataFormat {
                 }
                 // All non file parts are considered parameters and set as headers of the whole message
                 if (!camelAttachment.getHeader(CONTENT_DISPOSITION).contains("filename")) {
-                    Map ma_metadata = camelMessage.getHeader(MainRouteBuilder.MA_METADATA, new HashMap<String,String>(), java.util.Map.class);
+                    Map ma_metadata = camelMessage.getHeader(RouteBuilderExceptionHandler.MA_METADATA, new HashMap<String,String>(), java.util.Map.class);
                     ma_metadata.put(getFieldNameFromMultipart(camelAttachment), camelAttachment.getDataHandler().getContent());
-                    camelMessage.setHeader(MainRouteBuilder.MA_METADATA, ma_metadata);
+                    camelMessage.setHeader(RouteBuilderExceptionHandler.MA_METADATA, ma_metadata);
                 }
 
                 camelMessage.addAttachmentObject(getAttachmentKey(bp), camelAttachment);

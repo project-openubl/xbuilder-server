@@ -24,6 +24,8 @@ public interface AnalysisRepository extends JpaRepository<AnalysisModel, Long>
 
     Integer countByOwner(String owner);
 
+    AnalysisModel findByIdAndStatusIgnoreCaseNot(Long id, String status);
+
     @Query(nativeQuery = true, value = "\n" +
             "select am.id, am.owner, am.payload_name as payloadName, am.status as analysisStatus, am.inserted as analysisInserted, count(wirm.id) as totalVms \n" +
             "from analysis_model am \n" +

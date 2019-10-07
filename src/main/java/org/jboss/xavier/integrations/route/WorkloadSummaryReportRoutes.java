@@ -1,6 +1,5 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.builder.RouteBuilder;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.ComplexityModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.FlagModel;
@@ -10,7 +9,6 @@ import org.jboss.xavier.analytics.pojo.output.workload.summary.SummaryModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadSummaryReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.WorkloadsDetectedOSTypeModel;
-import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.jpa.service.ComplexityService;
 import org.jboss.xavier.integrations.jpa.service.FlagService;
 import org.jboss.xavier.integrations.jpa.service.RecommendedTargetsIMSService;
@@ -28,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Named
-public class WorkloadSummaryReportRoutes extends RouteBuilder {
+public class WorkloadSummaryReportRoutes extends RouteBuilderExceptionHandler {
 
     @Inject
     WorkloadInventoryReportService workloadInventoryReportService;
@@ -54,16 +52,13 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
     @Inject
     SummaryService summaryService;
 
-    @Inject
-    AnalysisService analysisService;
-
     @Override
-    public void configure() {
-
+    public void configure() throws Exception {
+        super.configure();
         from("direct:calculate-workloadsummaryreportmodel")
-            .id("calculate-workloadsummaryreportmodel")
+            .routeId("calculate-workloadsummaryreportmodel")
             .process(exchange -> {
-                Long analysisId = Long.parseLong(((Map<String, String>) exchange.getIn().getHeader(MainRouteBuilder.MA_METADATA)).get(MainRouteBuilder.ANALYSIS_ID));
+                Long analysisId = Long.parseLong(((Map<String, String>) exchange.getIn().getHeader(MA_METADATA)).get(ANALYSIS_ID));
                 WorkloadSummaryReportModel workloadSummaryReportModel = new WorkloadSummaryReportModel();
 
                 //retrieve each model one after the other
@@ -92,7 +87,7 @@ public class WorkloadSummaryReportRoutes extends RouteBuilder {
                 analysisService.setWorkloadSummaryReportModel(workloadSummaryReportModel, analysisId);
 
                 // Refresh the workloadSummaryReportModel
-                AnalysisModel analysisModel = analysisService.findByOwnerAndId(exchange.getIn().getHeader(MainRouteBuilder.USERNAME, String.class), analysisId);
+                AnalysisModel analysisModel = analysisService.findByOwnerAndId(exchange.getIn().getHeader(USERNAME, String.class), analysisId);
                 workloadSummaryReportModel = analysisModel.getWorkloadSummaryReportModels();
 
                 // Calculate parts of the Workload Summary Report which depends of previous data

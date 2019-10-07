@@ -64,8 +64,8 @@ public class MainRouteBuilder_DirectStoreAnalysisModelTest {
         metadata.put("reportName", "Name");
         metadata.put("reportDescription", "Description");
         metadata.put("file", "fichero.txt");
-        headers.put(MainRouteBuilder.MA_METADATA, metadata);
-        headers.put(MainRouteBuilder.USERNAME, "user name");
+        headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
+        headers.put(RouteBuilderExceptionHandler.USERNAME, "user name");
 
         camelContext.createProducerTemplate().sendBodyAndHeaders("direct:store", body, headers);
 
@@ -79,7 +79,7 @@ public class MainRouteBuilder_DirectStoreAnalysisModelTest {
         assertThat(analysisModel.getReportDescription()).isEqualTo("Description");
         assertThat(analysisModel.getPayloadName()).isEqualTo("fichero.txt");
         assertThat(analysisModel.getOwner()).isEqualTo("user name");
-        assertThat((String) mockInsights.getExchanges().get(0).getIn().getHeader(MainRouteBuilder.MA_METADATA, Map.class).get(MainRouteBuilder.ANALYSIS_ID)).isEqualTo(analysisModels.get(0).getId().toString());
+        assertThat((String) mockInsights.getExchanges().get(0).getIn().getHeader(RouteBuilderExceptionHandler.MA_METADATA, Map.class).get(RouteBuilderExceptionHandler.ANALYSIS_ID)).isEqualTo(analysisModels.get(0).getId().toString());
         camelContext.stop();
     }
 

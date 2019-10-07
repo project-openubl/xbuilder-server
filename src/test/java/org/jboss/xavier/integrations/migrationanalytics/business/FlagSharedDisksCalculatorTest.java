@@ -4,7 +4,7 @@ import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.Application;
-import org.jboss.xavier.integrations.route.MainRouteBuilder;
+import org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,8 +40,7 @@ public class FlagSharedDisksCalculatorTest {
 
         String cloudFormsJson = IOUtils.resourceToString("cloudforms-export-v1.json", StandardCharsets.UTF_8, FlagSharedDisksCalculatorTest.class.getClassLoader());
         Map<String, Object> headers = new HashMap<>();
-        Long analysisId = 30L;
-        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId.toString());
+        headers.put(RouteBuilderExceptionHandler.ANALYSIS_ID, "30");
 
         Set<String> vmNamesWithSharedDisk = calculator.calculate(cloudFormsJson, headers);
         assertThat(Integer.valueOf(vmNamesWithSharedDisk.size())).isEqualTo(4);
@@ -56,8 +55,7 @@ public class FlagSharedDisksCalculatorTest {
 
         String cloudFormsJson = IOUtils.resourceToString("cloudforms-export-v1_0_0.json", StandardCharsets.UTF_8, FlagSharedDisksCalculatorTest.class.getClassLoader());
         Map<String, Object> headers = new HashMap<>();
-        Long analysisId = 30L;
-        headers.put(MainRouteBuilder.ANALYSIS_ID, analysisId);
+        headers.put(RouteBuilderExceptionHandler.ANALYSIS_ID, "30");
 
         Set<String> vmNamesWithSharedDisk = calculator.calculate(cloudFormsJson, headers);
         assertThat(Integer.valueOf(vmNamesWithSharedDisk.size())).isEqualTo(2);
