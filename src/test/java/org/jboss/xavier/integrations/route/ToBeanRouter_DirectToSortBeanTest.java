@@ -1,41 +1,19 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
-import org.apache.camel.test.spring.MockEndpointsAndSkip;
-import org.apache.camel.test.spring.UseAdviceWith;
-import org.jboss.xavier.Application;
 import org.jboss.xavier.integrations.route.model.SortBean;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("")
-@UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class})
-@ActiveProfiles("test")
-public class ToBeanRouter_DirectToSortBeanTest {
-
-    @Autowired
-    CamelContext camelContext;
+public class ToBeanRouter_DirectToSortBeanTest extends XavierCamelTest {
 
     @Test
     public void ToBeanRouterBuilder_routeToPaginationBean_GivenNoHeaders_ShouldAddPaginationHeader() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
-
         Map<String, Object> headers = new HashMap<>();
         headers.put("anotherHeader", "my custom header value");
 
@@ -64,9 +42,6 @@ public class ToBeanRouter_DirectToSortBeanTest {
     @Test
     public void ToBeanRouterBuilder_routeToPaginationBean_GivenHeaders_ShouldAddPaginationHeader() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
-
         Map<String, Object> headers = new HashMap<>();
         headers.put("orderBy", "myColumnName");
         headers.put("orderAsc", true);
@@ -97,9 +72,6 @@ public class ToBeanRouter_DirectToSortBeanTest {
     @Test
     public void ToBeanRouterBuilder_routeToPaginationBean_GivenNullHeaders_ShouldAddPaginationHeader() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
-
         Map<String, Object> headers = new HashMap<>();
         headers.put("orderBy", null);
         headers.put("orderAsc", null);
@@ -130,9 +102,6 @@ public class ToBeanRouter_DirectToSortBeanTest {
     @Test
     public void ToBeanRouterBuilder_routeToPaginationBean_GivenStringHeaders_ShouldAddPaginationHeader() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
-
         Map<String, Object> headers = new HashMap<>();
         headers.put("orderBy", "myColumnName");
         headers.put("orderAsc", "true");

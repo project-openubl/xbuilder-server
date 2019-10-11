@@ -1,14 +1,16 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.Route;
-import org.apache.camel.component.rest.RestEndpoint;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
-import org.apache.camel.test.spring.MockEndpointsAndSkip;
-import org.apache.camel.test.spring.UseAdviceWith;
+import org.apache.camel.Exchange;
+import org.apache.camel.builder.AdviceWithRouteBuilder;
+import org.apache.commons.io.IOUtils;
 import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
-import org.jboss.xavier.integrations.jpa.service.*;
+import org.jboss.xavier.integrations.jpa.service.AnalysisService;
+import org.jboss.xavier.integrations.jpa.service.FlagService;
+import org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService;
+import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
+import org.jboss.xavier.integrations.jpa.service.WorkloadService;
+import org.jboss.xavier.integrations.jpa.service.WorkloadSummaryReportService;
 import org.jboss.xavier.integrations.route.dataformat.CustomizedMultipartDataFormat;
 import org.jboss.xavier.integrations.route.model.PageBean;
 import org.jboss.xavier.integrations.route.model.SortBean;
@@ -17,40 +19,30 @@ import org.jboss.xavier.integrations.util.TestUtil;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.*;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("")
-@UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public class XmlRoutes_RestReportTest {
-    @Autowired
-    CamelContext camelContext;
-
+public class XmlRoutes_RestReportTest extends XavierCamelTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -83,8 +75,7 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReport_NoParamGiven_ShouldCallFindReports() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
+
 
         //When
         camelContext.start();
@@ -108,8 +99,7 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReport_NoRHIdentityGiven_ShouldReturnForbidden() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
+
 
         //When
         camelContext.start();
@@ -128,8 +118,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReport_PageAndSizeParamGiven_ShouldCallFindReports() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -158,8 +146,7 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReport_FilterTextPageAndSizeParamGiven_ShouldCallFindReports() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
+
 
         //When
         camelContext.start();
@@ -190,8 +177,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportId_IdParamGiven_ShouldCallFindById() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -217,8 +202,6 @@ public class XmlRoutes_RestReportTest {
 
     @Test
     public void xmlRouteBuilder_RestReportIdInitialSavingsEstimation_IdParamGiven_ShouldCallFindOneByAnalysisId() throws Exception {
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -244,8 +227,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_PageParamGiven_SizeParamGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -281,8 +262,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -314,8 +293,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_SortParamGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -351,8 +328,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_FiltersGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -460,8 +435,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportId_IdParamGiven_AndIdNotExists_ShouldReturnNotFound404Status() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         Long one = 1L;
         when(analysisService.findByOwnerAndId("mrizzi@redhat.com", one)).thenReturn(null);
@@ -491,8 +464,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportId_IdParamGiven_AndIdExists_ShouldCallDeleteById() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         Long one = 1L;
         when(analysisService.findByOwnerAndId("mrizzi@redhat.com",one)).thenReturn(new AnalysisModel());
@@ -524,8 +495,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_ShouldCallFindByAnalysisIdAndReturnCsv() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -554,8 +523,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadInventory_IdParamGiven_ShouldCallFindByAnalysisIdAndReturnAvailableFilters() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         Long one = 1L;
         when(analysisService.findByOwnerAndId("mrizzi@redhat.com", one)).thenReturn(new AnalysisModel());
 
@@ -581,8 +548,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadSummary_IdParamGiven_ShouldCallFindByAnalysisOwnerAndAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -607,8 +572,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadSummaryWorkloads_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -638,8 +601,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadSummaryWorkloads_IdParamGiven_PaginationGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -673,8 +634,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadSummaryWorkloads_IdParamGiven_SortGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -708,8 +667,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadSummaryFlags_IdParamGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -739,8 +696,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadSummaryFlags_IdParamGiven_PaginationGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -774,8 +729,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestReportIdWorkloadSummaryFlags_IdParamGiven_SortGiven_ShouldCallFindByAnalysisId() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -809,8 +762,6 @@ public class XmlRoutes_RestReportTest {
     @Test
     public void xmlRouteBuilder_RestAdministrationCsv_ShouldCallGetMetrics() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         //When
         camelContext.start();
@@ -833,4 +784,45 @@ public class XmlRoutes_RestReportTest {
         assertThat(response.getHeaders().get(CustomizedMultipartDataFormat.CONTENT_DISPOSITION)).isNotNull();
         camelContext.stop();
     }
-}
+
+    @Test
+    public void xmlRouteBuilder_RestPayload_AnalysisIdGiven_ShouldReturnAPayload() throws Exception {
+        //Given
+
+        camelContext.getRouteDefinition("report-payload-download").adviceWith(camelContext, new AdviceWithRouteBuilder() {
+                @Override
+                public void configure() throws Exception {
+                    weaveById("pollEnrich").replace()
+                            .setHeader(Exchange.HTTP_RESPONSE_CODE, simple("200"))
+                            .setHeader("CamelAwsS3ContentDisposition", constant("attachment; filename=\"cloudforms-export-v1_0_0.json\""))
+                            .setHeader("CamelAwsS3ContentType", constant("application/octet-stream"))
+                            .setBody(exchange -> this.getClass().getClassLoader().getResourceAsStream("cloudforms-export-v1_0_0.json"));
+                }
+            });
+
+        //When
+        camelContext.start();
+        camelContext.startRoute("report-payload-download");
+        camelContext.startRoute("check-authenticated-request");
+        camelContext.startRoute("add-username-header");
+
+        AnalysisModel analysisModel = new AnalysisModel();
+        analysisModel.setId(9L);
+        analysisModel.setPayloadName("cloudforms-export-v1_0_0.json");
+        analysisModel.setPayloadStorageId("http://www.google.com");
+        doReturn(analysisModel).when(analysisService).findByOwnerAndId(any(), any());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("username", "testuser");
+        headers.set(TestUtil.HEADER_RH_IDENTITY, TestUtil.getBase64RHIdentity());
+        HttpEntity<String> entity = new HttpEntity<>("", headers);
+        ResponseEntity<String> answer = restTemplate.exchange(camel_context + "report/15/payload", HttpMethod.GET, entity, String.class);
+
+        //Then
+        assertThat(answer.getBody()).isEqualToIgnoringCase(IOUtils.resourceToString("cloudforms-export-v1_0_0.json", StandardCharsets.UTF_8, this.getClass().getClassLoader()));
+        assertThat(answer.getHeaders().get("Content-Disposition").get(0)).isEqualToIgnoringCase("attachment; filename=\"cloudforms-export-v1_0_0.json\"");
+
+        camelContext.stop();
+        }
+
+    }

@@ -7,6 +7,7 @@ import org.apache.camel.Attachment;
 import org.apache.camel.Exchange;
 import org.apache.camel.Predicate;
 import org.apache.camel.Processor;
+import org.apache.camel.component.aws.s3.S3Constants;
 import org.apache.camel.dataformat.tarfile.TarSplitter;
 import org.apache.camel.dataformat.zipfile.ZipSplitter;
 import org.apache.camel.model.dataformat.JsonLibrary;
@@ -35,6 +36,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 import static org.apache.camel.builder.PredicateBuilder.not;
@@ -136,11 +138,24 @@ public class MainRouteBuilder extends RouteBuilderExceptionHandler {
                 .choice()
                     .when(isResponseSuccess())
                         .removeHeader("Exchange.HTTP_URI")
-                        .to("direct:unzip-file")
-                        .log("File ${header.CamelFileName} success")
+                        .to("direct:process-file")
+                        .log("File ${header.MA_metadata[filename]} success")
                     .otherwise()
                         .throwException(org.apache.commons.httpclient.HttpException.class, "Unsuccessful response from Insights Download Service")
                 .end();
+
+        from("direct:process-file").routeId("process-file")
+                .convertBodyTo(byte[].class)
+                .multicast()
+                .to("direct:store-in-s3", "direct:unzip-file");
+
+        from("direct:store-in-s3").routeId("store-in-s3")
+                .setHeader(S3Constants.CONTENT_LENGTH, simple("${header.${type:org.apache.camel.Exchange.CONTENT_LENGTH}}"))
+                .process(e-> e.getIn().setHeader(S3Constants.KEY, UUID.randomUUID().toString())).id("set-s3-key")
+                .setHeader(S3Constants.CONTENT_DISPOSITION, simple("attachment;filename=\"${header.MA_metadata[filename]}\""))
+                .to("aws-s3:{{S3_BUCKET}}?region={{S3_REGION}}&accessKey={{S3_ACCESS_KEY_ID}}&secretKey=RAW({{S3_SECRET_ACCESS_KEY}})&deleteAfterWrite=false").id("s3-call")
+                .process(exchange -> analysisService.updatePayloadStorageId(exchange.getIn().getHeader(S3Constants.KEY, String.class),
+                        Long.parseLong((String) exchange.getIn().getHeader(MA_METADATA, Map.class).get(ANALYSIS_ID))));
 
         from("direct:unzip-file")
                 .routeId("unzip-file")
@@ -166,8 +181,7 @@ public class MainRouteBuilder extends RouteBuilderExceptionHandler {
                 .to("direct:send-costsavings")
                 .to("direct:calculate-workloadsummaryreportmodel");
 
-        from("direct:calculate")
-                .routeId("calculate")
+        from("direct:calculate").routeId("calculate")
                 .convertBodyTo(String.class)
                 .multicast().aggregationStrategy(new GroupedBodyAggregationStrategy())
                     .to("direct:calculate-costsavings", "direct:calculate-vmworkloadinventory", "direct:flags-shared-disks")
@@ -322,5 +336,4 @@ public class MainRouteBuilder extends RouteBuilderExceptionHandler {
             exchange.getIn().setBody(dataHandler.getInputStream());
         };
     }
-
 }

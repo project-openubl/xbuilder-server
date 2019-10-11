@@ -85,4 +85,27 @@ To enable the `DEBUG` level for logging, please add the environment variable `lo
 # Sonar
 1.  https://sonarcloud.io/dashboard?id=project-xavier_xavier-integration
 2. mvn clean verify -Psonar -Dsonar.login={{token generated for the user on SonarCloud}}
+
+# AWS S3
+In order to test AWS S3, we can download and install [aws-cli command](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html#install-tool-pip)  
+In order to interact as admin with the S3 bucket we can use the [S3Api](https://docs.aws.amazon.com/cli/latest/reference/s3api/)  
+The documentation for interacting as users is [S3](https://docs.aws.amazon.com/cli/latest/userguide/cli-services-s3-commands.html)  
+From the Camel perspective we have the test class `MainRouteBuilder_S3Test` that we can use to test locally against AWS S3 servers , replacing the credentials headers.  
+Few mentions :
+ * we need to add the HTTP headers in order to download the file from the API call
+ * we need to stub (disable) the aws-s3 component as it has eager start and then it will crash as we are not having the credentials in the Tests . This is fixed on Camel 3 on the DefaultEndpoint class with its `lazyProducerStart` ( but this will be available on Fuse 8)
+ * we need to specify `deleteAfterRead=false` in the call , if not the resource will be deleted after being read
+ * same concept but different names for Camel consistency : KEY (upload) / FILENAME (download)  
+ 
+Snippets of calls :
+* Configure aws : `aws configure` with your credentials and region=`us-east-1` and bucket=`xavier-dev`  
+* List files in a bucket : `aws s3 ls s3://xavier-dev --human`
+* List buckets : `aws s3 ls`
+* Upload a file : `aws s3 cp cfme_inventory_0.json s3://xavier-dev`
+* Download a file : `aws s3 cp s3://xavier-dev/cfme_inventory_0.json cfme_inventory_0.json`
+* Remove files in a bucket : `aws s3 rm s3://xavier-dev/ --recursive`
+* See status of encription on a bucket : `aws s3api get-bucket-encryption --bucket xavier-dev`
+* Enable encription on a bucket : `aws s3api put-bucket-encryption --bucket xavier-dev --server-side-encryption-configuration '{"Rules": [{"ApplyServerSideEncryptionByDefault": {"SSEAlgorithm": "AES256"}}]}' `  
+
 # References
+

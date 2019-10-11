@@ -1,33 +1,17 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
-import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
-import org.jboss.xavier.Application;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.nio.charset.Charset;
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("kafka:*|direct:download-file")
-@UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class})
-@ActiveProfiles("test")
-public class MainRouteBuilder_KafkaTest {
-    @Autowired
-    CamelContext camelContext;
+public class MainRouteBuilder_KafkaTest extends XavierCamelTest {
 
     @EndpointInject(uri = "mock:direct:download-file")
     private MockEndpoint mockUploadFile;
@@ -45,8 +29,6 @@ public class MainRouteBuilder_KafkaTest {
     @Test
     public void mainRouteBuilder_Kafka_ContentWithSeveralFilesGiven_ShouldReturnSameNumberOfMessages() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         mockUploadFile.expectedMessageCount(2);
 
         //When

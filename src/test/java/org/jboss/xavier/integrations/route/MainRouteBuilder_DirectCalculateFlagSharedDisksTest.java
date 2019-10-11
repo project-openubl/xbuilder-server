@@ -1,20 +1,12 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
-import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
-import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
@@ -28,15 +20,7 @@ import java.util.Set;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class})
-@ActiveProfiles("test")
-public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest {
-    @Inject
-    CamelContext camelContext;
-
+public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest extends XavierCamelTest {
     @Inject
     AnalysisService analysisService;
 
@@ -47,8 +31,6 @@ public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest {
     public void mainRouteBuilder_DirectCalculate_JSONGiven_ShouldReturnExpectedCalculatedValues() throws Exception {
         //Given
         AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         Set<String> expectedVmNamesWithSharedDisk = new HashSet<>();
         expectedVmNamesWithSharedDisk.add("dev-windows-server-2008-TEST");
         expectedVmNamesWithSharedDisk.add("james-db-03-copy");
@@ -91,8 +73,6 @@ public class MainRouteBuilder_DirectCalculateFlagSharedDisksTest {
     public void mainRouteBuilder_DirectCalculate_JSONOnVersion1_0_0Given_ShouldReturnExpectedCalculatedValues() throws Exception {
         //Given
         AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         Set<String> expectedVmNamesWithSharedDisk = new HashSet<>();
         expectedVmNamesWithSharedDisk.add("tomcat");
         expectedVmNamesWithSharedDisk.add("lb");

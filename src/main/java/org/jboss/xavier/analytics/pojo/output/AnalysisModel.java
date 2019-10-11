@@ -10,6 +10,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -21,7 +22,7 @@ import java.util.List;
 public class AnalysisModel
 {
     @Id
-    @GeneratedValue(strategy = javax.persistence.GenerationType.AUTO, generator = "AnalysisModel_ID_GENERATOR")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "AnalysisModel_ID_GENERATOR")
     @GenericGenerator(
         name = "AnalysisModel_ID_GENERATOR",
         strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
@@ -50,6 +51,7 @@ public class AnalysisModel
     private Date inserted;
     private Date lastUpdate;
     private String owner;
+    private String payloadStorageId;
 
     public Long getId() {
         return id;
@@ -146,5 +148,13 @@ public class AnalysisModel
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public void setPayloadStorageId(String payloadStorageId) {
+        this.payloadStorageId = payloadStorageId;
+    }
+
+    public String getPayloadStorageId() {
+        return payloadStorageId;
     }
 }

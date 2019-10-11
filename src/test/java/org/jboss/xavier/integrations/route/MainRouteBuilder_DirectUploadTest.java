@@ -1,21 +1,12 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
-import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
-import org.jboss.xavier.Application;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
@@ -28,16 +19,8 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("direct:store")
-@UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class})
-@ActiveProfiles("test")
-public class MainRouteBuilder_DirectUploadTest {
-    @Autowired
-    CamelContext camelContext;
-
+public class MainRouteBuilder_DirectUploadTest extends XavierCamelTest {
     @EndpointInject(uri = "mock:direct:store")
     private MockEndpoint mockStore;
 
@@ -63,8 +46,6 @@ public class MainRouteBuilder_DirectUploadTest {
         headers.put("x-rh-identity", rhidentity);
         headers.put(RouteBuilderExceptionHandler.MA_METADATA, metadata);
 
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         mockStore.expectedMessageCount(4);
 
         //When
@@ -85,8 +66,6 @@ public class MainRouteBuilder_DirectUploadTest {
     @Test
     public void mainRouteBuilder_routeDirectUpload_ContentWithSeveralFilesButNotCustomerIdFieldGiven_ShouldReturnError() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         mockStore.expectedMessageCount(0);
 
         //When
@@ -114,8 +93,6 @@ public class MainRouteBuilder_DirectUploadTest {
     @Test
     public void mainRouteBuilder_routeDirectUpload_ContentWithSeveralFilesButMissingMetadataFieldGiven_ShouldReturnError() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         mockStore.expectedMessageCount(0);
 
         //When
@@ -144,8 +121,6 @@ public class MainRouteBuilder_DirectUploadTest {
     @Test
     public void mainRouteBuilder_routeDirectUpload_ContentWithZipFilesGiven_ShouldReturn1Message() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         mockStore.expectedMessageCount(1);
 
         //When
@@ -178,8 +153,6 @@ public class MainRouteBuilder_DirectUploadTest {
     @Test
     public void mainRouteBuilder_routeDirectUpload_ContentWithTarGZFileGiven_ShouldReturn1Message() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         mockStore.expectedMessageCount(1);
 
         //When

@@ -1,19 +1,20 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Route;
 import org.apache.camel.component.rest.RestEndpoint;
 import org.apache.camel.impl.InterceptSendToEndpoint;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
-import org.apache.camel.test.spring.MockEndpointsAndSkip;
-import org.apache.camel.test.spring.UseAdviceWith;
 import org.jboss.xavier.Application;
-import org.jboss.xavier.integrations.jpa.service.*;
+import org.jboss.xavier.integrations.jpa.service.AnalysisService;
+import org.jboss.xavier.integrations.jpa.service.FlagService;
+import org.jboss.xavier.integrations.jpa.service.InitialSavingsEstimationReportService;
+import org.jboss.xavier.integrations.jpa.service.UserService;
+import org.jboss.xavier.integrations.jpa.service.WorkloadInventoryReportService;
+import org.jboss.xavier.integrations.jpa.service.WorkloadService;
+import org.jboss.xavier.integrations.jpa.service.WorkloadSummaryReportService;
 import org.jboss.xavier.integrations.util.TestUtil;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,8 +25,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,17 +36,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("")
-@UseAdviceWith // Disables automatic start of Camel context
 @SpringBootTest(classes = {Application.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public class XmlRoutes_InterceptorTest {
-
-    @Autowired
-    CamelContext camelContext;
-
+public class XmlRoutes_InterceptorTest extends XavierCamelTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -83,9 +73,6 @@ public class XmlRoutes_InterceptorTest {
     @Test
     public void xmlRouteBuilder_RestEndpoints_NoRHIdentityGiven_ShouldReturnForbidden() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
-
         final AtomicInteger restEndpointsTested = new AtomicInteger(0);
 
         //When
@@ -141,9 +128,6 @@ public class XmlRoutes_InterceptorTest {
     @Test
     public void xmlRouteBuilder_AuthorizedInterceptor_AdministrationEndpoints_GivenRHIdentity_and_UnauthorizedUser_ShouldReturnForbidden() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
-
         final AtomicInteger restEndpointsTested = new AtomicInteger(0);
 
         //When

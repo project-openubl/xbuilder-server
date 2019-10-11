@@ -1,23 +1,14 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
-import org.apache.camel.test.spring.UseAdviceWith;
-import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.jboss.xavier.integrations.migrationanalytics.business.Calculator;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 import javax.inject.Inject;
 import java.io.InputStream;
@@ -25,15 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("jms:queue:uploadFormInputDataModel|direct:send-costsavings|direct:calculate-vmworkloadinventory|direct:vm-workload-inventory|direct:calculate-workloadsummaryreportmodel|direct:flags-shared-disks")
-@UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class})
-@ActiveProfiles("test")
-public class MainRouteBuilder_DirectUnzipFileTest {
-    @Autowired
-    CamelContext camelContext;
+public class MainRouteBuilder_DirectUnzipFileTest extends XavierCamelTest {
 
     @EndpointInject(uri = "mock:direct:store")
     private MockEndpoint mockStore;
@@ -60,8 +44,6 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         //Given
             AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
 
-            camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         mockSendCostsavings.expectedMessageCount(1);
             mockCalculateVMWorkload.expectedMessageCount(2);
 
@@ -99,8 +81,6 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
 
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         mockSendCostsavings.expectedMessageCount(1);
         mockCalculateVMWorkload.expectedMessageCount(2);
 
@@ -144,8 +124,6 @@ public class MainRouteBuilder_DirectUnzipFileTest {
         //Given
         AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
 
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         mockSendCostsavings.expectedMessageCount(1);
         mockCalculateVMWorkload.expectedMessageCount(1);
         String nameOfFile = "cloudforms-export-v1.json";

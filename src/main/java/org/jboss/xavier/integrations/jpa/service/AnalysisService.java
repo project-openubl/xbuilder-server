@@ -126,6 +126,13 @@ public class AnalysisService
         return analysisRepository.getAdministrationMetrics(fromDate, toDate);
     }
 
+    public void updatePayloadStorageId(String payloadStorageId, Long id) {
+        AnalysisModel analysisModel = findById(id);
+        analysisModel.setPayloadStorageId(payloadStorageId);
+        analysisModel.setLastUpdate(new Date());
+        analysisRepository.save(analysisModel);
+    }
+
     public void markAsFailedIfNotCreated(Long id) {
         AnalysisModel analysisModel = findByIdAndStatusIgnoreCaseNot(id, STATUS.CREATED.toString());
         if (analysisModel != null) {

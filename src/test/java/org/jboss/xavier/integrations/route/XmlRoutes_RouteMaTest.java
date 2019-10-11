@@ -1,24 +1,15 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
-import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
 import org.hibernate.HibernateException;
-import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.integrations.DecisionServerHelper;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -28,14 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doThrow;
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class})
-@ActiveProfiles("test")
-public class XmlRoutes_RouteMaTest {
-    @Autowired
-    CamelContext camelContext;
+public class XmlRoutes_RouteMaTest extends XavierCamelTest {
 
     @SpyBean
     AnalysisService analysisService;
@@ -65,8 +49,6 @@ public class XmlRoutes_RouteMaTest {
 
         modifyFromAndWeaveDecisionServer();
 
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         camelContext.start();
         camelContext.startRoute("route-ma");
 
@@ -90,8 +72,6 @@ public class XmlRoutes_RouteMaTest {
 
         modifyFromAndWeaveDecisionServer();
 
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         camelContext.start();
         camelContext.startRoute("route-ma");
         camelContext.startRoute("markAnalysisFail");
@@ -130,8 +110,6 @@ public class XmlRoutes_RouteMaTest {
             }
         });
 
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         camelContext.start();
         camelContext.startRoute("route-ma");
         camelContext.startRoute("decision-server-rest");
@@ -155,8 +133,6 @@ public class XmlRoutes_RouteMaTest {
         doThrow(HibernateException.class).when(analysisService).setInitialSavingsEstimationReportModel(any(), any());
         modifyFromAndWeaveDecisionServer();
 
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         camelContext.start();
         camelContext.startRoute("route-ma");
         camelContext.startRoute("decision-server-rest");

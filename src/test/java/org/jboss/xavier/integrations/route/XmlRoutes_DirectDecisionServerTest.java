@@ -1,33 +1,18 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.AdviceWithRouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
-import org.apache.camel.test.spring.UseAdviceWith;
-import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel;
 import org.jboss.xavier.integrations.DecisionServerHelper;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.kie.api.command.BatchExecutionCommand;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @MockEndpointsAndSkip("http:*")
-@UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class})
-@ActiveProfiles("test")
-public class XmlRoutes_DirectDecisionServerTest {
-    @Autowired
-    CamelContext camelContext;
+public class XmlRoutes_DirectDecisionServerTest extends XavierCamelTest {
 
     @EndpointInject(uri="mock:http:{{kieserver.devel-service}}/{{kieserver.path}}")
     MockEndpoint kieServer;
@@ -47,8 +32,6 @@ public class XmlRoutes_DirectDecisionServerTest {
             }
         });
 
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         String expectedBody = "<?xml version='1.0' encoding='UTF-8'?><batch-execution lookup=\"kiesession0\"><insert><org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel><customerId>CID123</customerId><fileName>cloudforms-export-v1.json</fileName><hypervisor>1</hypervisor><totalDiskSpace>1000</totalDiskSpace><sourceProductIndicator>1</sourceProductIndicator><year1HypervisorPercentage>10.0</year1HypervisorPercentage><year2HypervisorPercentage>20.0</year2HypervisorPercentage><year3HypervisorPercentage>30.0</year3HypervisorPercentage><growthRatePercentage>7.0</growthRatePercentage><dealIndicator>1</dealIndicator><openStackIndicator>1</openStackIndicator></org.jboss.xavier.analytics.pojo.input.UploadFormInputDataModel></insert><fire-all-rules/><query out-identifier=\"output\" name=\"get InitialSavingsEstimationReports\"/></batch-execution>";
         kieServer.expectedBodiesReceived(expectedBody);
 

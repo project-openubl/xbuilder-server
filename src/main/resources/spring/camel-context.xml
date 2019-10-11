@@ -199,7 +199,7 @@
                 <route id="workload-inventory-report-get-details-as-csv">
                     <bean ref="workloadInventoryReportService" method="findByAnalysisOwnerAndAnalysisId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id})" />
                     <to uri="direct:toWorkloadInventoryReportCsv" />
-                    <setHeader headerName="Content-Disposition">
+                    <setHeader headerName="${type:org.jboss.xavier.integrations.route.dataformat.CustomizedMultipartDataFormat.CONTENT_DISPOSITION}">
                         <simple>attachment;filename=workloadInventory_${header.id}.csv</simple>
                     </setHeader>
                 </route>
@@ -254,6 +254,34 @@
                     <to uri="direct:to-paginationBean"/>
                     <to uri="direct:to-sortBean"/>
                     <bean ref="flagService" method="findByReportAnalysisOwnerAndReportAnalysisId(${header.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.USERNAME}}, ${header.id}, ${header.pageBean}, ${header.sortBean})" />
+                </route>
+            </get>
+            <get uri="/{id}/payload">
+                <route id="report-payload-download">
+                    <bean ref="analysisService" method="findByOwnerAndId(${header.${type:org.jboss.xavier.integrations.route.MainRouteBuilder.USERNAME}}, ${header.id})"/>
+                    <choice>
+                        <when>
+                            <simple>${body} != null &amp;&amp; ${body.payloadStorageId} != null</simple>
+                            <pollEnrich id="pollEnrich">
+                                <simple>aws-s3:xavier-dev?region={{S3_REGION}}&amp;accessKey={{S3_ACCESS_KEY_ID}}&amp;secretKey=RAW({{S3_SECRET_ACCESS_KEY}})&amp;deleteAfterRead=false&amp;fileName=${body.payloadStorageId}</simple>
+                            </pollEnrich>
+                            <setHeader headerName="${type:org.jboss.xavier.integrations.route.dataformat.CustomizedMultipartDataFormat.CONTENT_DISPOSITION}">
+                                <simple>${header.CamelAwsS3ContentDisposition}</simple>
+                            </setHeader>
+                            <setHeader headerName="Exchange.CONTENT_TYPE">
+                                <simple>${header.CamelAwsS3ContentType}</simple>
+                            </setHeader>
+                            <convertBodyTo type="byte[]"/>
+                        </when>
+                        <otherwise>
+                            <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
+                                <simple resultType="String">${type:javax.servlet.http.HttpServletResponse.SC_NOT_FOUND}</simple>
+                            </setHeader>
+                            <setBody>
+                                <constant>Not Found</constant>
+                            </setBody>
+                        </otherwise>
+                    </choice>
                 </route>
             </get>
         </rest>
@@ -319,7 +347,7 @@
             <from uri="jms:queue:uploadFormInputDataModel" />
                 <log message="Message received" />
                 <to uri="log:INFO?showBody=true&amp;showHeaders=true" />
-                <setHeader headerName="analysisId">
+                <setHeader headerName="${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.ANALYSIS_ID}">
                     <simple>${body.${type:org.jboss.xavier.integrations.route.RouteBuilderExceptionHandler.ANALYSIS_ID}}</simple>
                 </setHeader>
                 <bean method="createMigrationAnalyticsCommand(${body})" ref="decisionServerHelper"/>
@@ -335,11 +363,11 @@
         <route id="decision-server-rest" trace="true">
             <!-- Using the xstream marshalling -->
             <from id="route-from-decision-server-rest" uri="direct:decisionserver"/>
-            <setHeader headerName="CamelHttpMethod" id="header-post">
+            <setHeader headerName="Exchange.HTTP_METHOD" id="header-post">
                 <constant>POST</constant>
             </setHeader>
             <!-- Using the xstream marshalling -->
-            <setHeader headerName="Content-Type" id="route-header-content-type">
+            <setHeader headerName="Exchange.CONTENT_TYPE" id="route-header-content-type">
                 <constant>application/xml</constant>
             </setHeader>
             <setHeader headerName="X-KIE-ContentType" id="route-header-kie-content-type">

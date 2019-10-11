@@ -1,10 +1,6 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
-import org.apache.camel.test.spring.UseAdviceWith;
-import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.analytics.pojo.output.workload.inventory.WorkloadInventoryReportModel;
 import org.jboss.xavier.analytics.pojo.output.workload.summary.ComplexityModel;
@@ -24,14 +20,9 @@ import org.jboss.xavier.integrations.jpa.repository.WorkloadSummaryReportReposit
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,15 +34,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class})
-@ActiveProfiles("test")
-public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModelTest {
-    @Inject
-    CamelContext camelContext;
-
+public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModelTest extends XavierCamelTest {
     @Autowired
     WorkloadInventoryReportRepository workloadInventoryReportRepository;
 
@@ -114,8 +97,6 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
     @Test
     public void DirectCalculateVMWorkloadInventoryModel_ShouldPersistWorkloadSummaryReportModel() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         String fileName = "cloudforms-export-v1-multiple-files.tar.gz";
 
         //When
@@ -166,8 +147,6 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
     @Test
     public void DirectCalculateVMWorkloadInventoryModel_ShouldPersistWorkloadComplexityReportModel() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         String fileName = "cloudforms-export-v1-multiple-files.tar.gz";
 
         //When
@@ -205,8 +184,6 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
     @Test
     public void DirectCalculateVMWorkloadInventoryModel_ShouldPersistWorkloadRecommendedTargetIMSReportModel() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         String fileName = "cloudforms-export-v1-multiple-files.tar.gz";
 
         //When
@@ -243,8 +220,6 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
     @Test
     public void DirectCalculateVMWorkloadInventoryModel_ShouldPersistWorkloadReportModel() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         String fileName = "cloudforms-export-v1-multiple-files.tar.gz";
 
         //When
@@ -285,8 +260,6 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
     @Test
     public void DirectCalculateVMWorkloadInventoryModel_ShouldPersistWorkloadFlagReportModel() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         String fileName = "cloudforms-export-v1-multiple-files.tar.gz";
 
         //When
@@ -328,8 +301,6 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
     @Test
     public void DirectCalculateVMWorkloadInventoryModel_ShouldPersistWorkloadOSTypeModel() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         String fileName = "cloudforms-export-v1-multiple-files.tar.gz";
 
         //When
@@ -373,8 +344,6 @@ public class WorkloadSummaryReportRoutes_DirectCalculateVMWorkloadInventoryModel
     @Test
     public void DirectCalculateVMWorkloadInventoryModel_ShouldPersistScanRunModel() throws Exception {
         //Given
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
         String fileName = "cloudforms-export-v1-multiple-files.tar.gz";
 
         //When

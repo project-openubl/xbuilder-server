@@ -1,21 +1,13 @@
 package org.jboss.xavier.integrations.route;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.EndpointInject;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.camel.test.spring.MockEndpointsAndSkip;
-import org.apache.camel.test.spring.UseAdviceWith;
 import org.apache.commons.io.IOUtils;
-import org.jboss.xavier.Application;
 import org.jboss.xavier.analytics.pojo.input.workload.inventory.VMWorkloadInventoryModel;
 import org.jboss.xavier.analytics.pojo.output.AnalysisModel;
 import org.jboss.xavier.integrations.jpa.service.AnalysisService;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 
 import javax.inject.Inject;
 import java.nio.charset.StandardCharsets;
@@ -27,16 +19,9 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(CamelSpringBootRunner.class)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@MockEndpointsAndSkip("direct:vm-workload-inventory")
-@UseAdviceWith // Disables automatic start of Camel context
-@SpringBootTest(classes = {Application.class})
-@ActiveProfiles("test")
-public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
-    @Inject
-    CamelContext camelContext;
 
+@MockEndpointsAndSkip("direct:vm-workload-inventory")
+public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest extends XavierCamelTest {
     @Inject
     AnalysisService analysisService;
 
@@ -47,8 +32,6 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
     public void mainRouteBuilder_DirectCalculate_JSONGiven_ShouldReturnExpectedCalculatedValues() throws Exception {
         //Given
         AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         String customerId = "CID123";
         String fileName = "cloudforms-export-v1.json";
@@ -110,8 +93,6 @@ public class MainRouteBuilder_DirectCalculateVMWorkloadInventoryTest {
     public void mainRouteBuilder_DirectCalculate_JSONOnVersion1_0_0Given_ShouldReturnExpectedCalculatedValues() throws Exception {
         //Given
         AnalysisModel analysisModel = analysisService.buildAndSave("report name", "report desc", "file name", "user name");
-        camelContext.setTracing(true);
-        camelContext.setAutoStartup(false);
 
         String customerId = "CID123";
         String fileName = "cloudforms-export-v1_0_0.json";
