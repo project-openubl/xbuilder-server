@@ -22,57 +22,51 @@
     <cbc:CustomizationID>2.0</cbc:CustomizationID>
     <cbc:ID>${serieNumero}</cbc:ID>
     <cbc:IssueDate>${fechaEmision}</cbc:IssueDate>
-    <#if horaEmision??>
-        <cbc:IssueTime>${horaEmision}</cbc:IssueTime>
-    </#if>
+    <#if horaEmision??><cbc:IssueTime>${horaEmision}</cbc:IssueTime></#if>
     <cbc:InvoiceTypeCode listID="0101"
                          listAgencyName="PE:SUNAT"
                          listName="SUNAT:Identificador de Tipo de Documento"
-                         listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo01">
-        ${codigoTipoComprobante}
-    </cbc:InvoiceTypeCode>
+                         listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo01">${codigoTipoComprobante}</cbc:InvoiceTypeCode>
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha"
                               listAgencyName="United Nations Economic Commission for Europe"
-                              listName="Currency">
-        ${moneda}
-    </cbc:DocumentCurrencyCode>
-    <cbc:LineCountNumeric>${cantidadItemsVendidos}</cbc:LineCountNumeric>
+                              listName="Currency">${moneda}</cbc:DocumentCurrencyCode>
+<#--    <cbc:LineCountNumeric>${cantidadItemsVendidos}</cbc:LineCountNumeric>-->
     <cac:Signature>
     </cac:Signature>
-    <cac:AccountingSupplierParty>
-        <cac:Party>
-            <cac:PartyIdentification>
-                <cbc:ID schemeID="6"
-                        schemeAgencyName="PE:SUNAT"
-                        schemeName="SUNAT:Identificador de Documento de Identidad"
-                        schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06">
-                    ${proveedor.ruc}
-                </cbc:ID>
-            </cac:PartyIdentification>
-            <cac:PartyName>
-                <cbc:Name>${proveedor.nombreComercial}</cbc:Name>
-            </cac:PartyName>
-            <cac:PartyLegalEntity>
-                <cbc:RegistrationName><![CDATA[${proveedor.razonSocial}]]></cbc:RegistrationName>
-                <cac:RegistrationAddress>
-                    <cbc:AddressTypeCode>${proveedor.codigoPostal}</cbc:AddressTypeCode>
-                </cac:RegistrationAddress>
-            </cac:PartyLegalEntity>
-        </cac:Party>
-    </cac:AccountingSupplierParty>
-    <cac:AccountingCustomerParty>
-        <cac:Party>
-            <cac:PartyIdentification>
-                <cbc:ID schemeID="${cliente.codigoDocumentoIdentidad}"
-                        schemeAgencyName="PE:SUNAT"
-                        schemeName="SUNAT:Identificador de Documento de Identidad"
-                        schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06">
-                    ${cliente.numeroDocumentoIdentidad}
-                </cbc:ID>
-            </cac:PartyIdentification>
-            <cac:PartyLegalEntity>
-                <cbc:RegistrationName><![CDATA[${cliente.nombre}]]></cbc:RegistrationName>
-            </cac:PartyLegalEntity>
-        </cac:Party>
-    </cac:AccountingCustomerParty>
+<#--    <cac:AccountingSupplierParty>-->
+<#--        <cac:Party>-->
+<#--            <cac:PartyIdentification>-->
+<#--                <cbc:ID schemeID="6"-->
+<#--                        schemeAgencyName="PE:SUNAT"-->
+<#--                        schemeName="SUNAT:Identificador de Documento de Identidad"-->
+<#--                        schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06">-->
+<#--                    ${proveedor.ruc}-->
+<#--                </cbc:ID>-->
+<#--            </cac:PartyIdentification>-->
+<#--            <cac:PartyName>-->
+<#--                <cbc:Name>${proveedor.nombreComercial}</cbc:Name>-->
+<#--            </cac:PartyName>-->
+<#--            <cac:PartyLegalEntity>-->
+<#--                <cbc:RegistrationName><![CDATA[${proveedor.razonSocial}]]></cbc:RegistrationName>-->
+<#--                <cac:RegistrationAddress>-->
+<#--                    <cbc:AddressTypeCode>${proveedor.codigoPostal}</cbc:AddressTypeCode>-->
+<#--                </cac:RegistrationAddress>-->
+<#--            </cac:PartyLegalEntity>-->
+<#--        </cac:Party>-->
+<#--    </cac:AccountingSupplierParty>-->
+<#--    <cac:AccountingCustomerParty>-->
+<#--        <cac:Party>-->
+<#--            <cac:PartyIdentification>-->
+<#--                <cbc:ID schemeID="${cliente.codigoDocumentoIdentidad}"-->
+<#--                        schemeAgencyName="PE:SUNAT"-->
+<#--                        schemeName="SUNAT:Identificador de Documento de Identidad"-->
+<#--                        schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06">-->
+<#--                    ${cliente.numeroDocumentoIdentidad}-->
+<#--                </cbc:ID>-->
+<#--            </cac:PartyIdentification>-->
+<#--            <cac:PartyLegalEntity>-->
+<#--                <cbc:RegistrationName><![CDATA[${cliente.nombre}]]></cbc:RegistrationName>-->
+<#--            </cac:PartyLegalEntity>-->
+<#--        </cac:Party>-->
+<#--    </cac:AccountingCustomerParty>-->
 </Invoice>

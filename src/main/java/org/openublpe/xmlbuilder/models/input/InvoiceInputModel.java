@@ -1,11 +1,26 @@
 package org.openublpe.xmlbuilder.models.input;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 public class InvoiceInputModel {
 
+    @NotNull
+    @NotBlank
     private String serie;
-    private int numero;
-    private long fechaHoraEmision;
+
+    @NotNull
+    @Min(1)
+    private Integer numero;
+
+    @NotNull
+    private Long fechaEmision;
+
+    @NotNull
+    @NotBlank
     private String moneda;
+
     private ProveedorInputModel proveedor;
     private ClienteInputModel cliente;
 
@@ -17,20 +32,20 @@ public class InvoiceInputModel {
         this.serie = serie;
     }
 
-    public int getNumero() {
+    public Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(int numero) {
+    public void setNumero(Integer numero) {
         this.numero = numero;
     }
 
-    public long getFechaHoraEmision() {
-        return fechaHoraEmision;
+    public Long getFechaEmision() {
+        return fechaEmision;
     }
 
-    public void setFechaHoraEmision(long fechaHoraEmision) {
-        this.fechaHoraEmision = fechaHoraEmision;
+    public void setFechaEmision(Long fechaEmision) {
+        this.fechaEmision = fechaEmision;
     }
 
     public String getMoneda() {

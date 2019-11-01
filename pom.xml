@@ -9,9 +9,10 @@
     <properties>
         <surefire-plugin.version>2.22.0</surefire-plugin.version>
 
-        <quarkus.version>0.23.2</quarkus.version>
+        <quarkus.version>0.27.0</quarkus.version>
         <camel.quarkus.version>0.2.0</camel.quarkus.version>
-        <version.org.kie.kogito>0.5.1</version.org.kie.kogito>
+<!--        <version.org.kie.kogito>0.5.1</version.org.kie.kogito>-->
+<!--        <version.org.kie.kogito>8.0.0-SNAPSHOT</version.org.kie.kogito>-->
 
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -21,6 +22,26 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.parameters>true</maven.compiler.parameters>
     </properties>
+
+<!--    <repositories>-->
+<!--        &lt;!&ndash; Bootstrap repository to locate the parent pom when the parent pom-->
+<!--          has not been build locally. &ndash;&gt;-->
+<!--        <repository>-->
+<!--            <id>jboss-public-repository-group</id>-->
+<!--            <name>JBoss Public Repository Group</name>-->
+<!--            <url>https://repository.jboss.org/nexus/content/groups/public/</url>-->
+<!--            <layout>default</layout>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>never</updatePolicy>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>daily</updatePolicy>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+<!--    </repositories>-->
+
     <dependencyManagement>
         <dependencies>
             <!--Quarkus-->
@@ -33,13 +54,13 @@
             </dependency>
 
             <!--Camel Quarkus-->
-            <dependency>
-                <groupId>org.apache.camel.quarkus</groupId>
-                <artifactId>camel-quarkus-bom</artifactId>
-                <version>${camel.quarkus.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.apache.camel.quarkus</groupId>-->
+<!--                <artifactId>camel-quarkus-bom</artifactId>-->
+<!--                <version>${camel.quarkus.version}</version>-->
+<!--                <type>pom</type>-->
+<!--                <scope>import</scope>-->
+<!--            </dependency>-->
 
             <!--Kogito-->
 <!--            <dependency>-->
@@ -102,21 +123,21 @@
     </dependencyManagement>
     <dependencies>
         <!--Quarkus-->
-<!--        <dependency>-->
-<!--            <groupId>io.quarkus</groupId>-->
-<!--            <artifactId>quarkus-arc</artifactId>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-arc</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-resteasy</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jsonb</artifactId>
+            <artifactId>quarkus-resteasy-jackson</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-swagger-ui</artifactId>
+            <artifactId>quarkus-hibernate-validator</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -124,10 +145,6 @@
         </dependency>
 
         <!--Kogito-->
-<!--        <dependency>-->
-<!--            <groupId>org.kie.kogito</groupId>-->
-<!--            <artifactId>kogito-api</artifactId>-->
-<!--        </dependency>-->
 <!--        <dependency>-->
 <!--            <groupId>org.kie.kogito</groupId>-->
 <!--            <artifactId>drools-decisiontables</artifactId>-->
@@ -171,6 +188,15 @@
         </dependency>
     </dependencies>
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.kie.kogito</groupId>
+                    <artifactId>kogito-maven-plugin</artifactId>
+                    <version>${version.org.kie.kogito}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>io.quarkus</groupId>
@@ -200,7 +226,6 @@
 <!--            <plugin>-->
 <!--                <groupId>org.kie.kogito</groupId>-->
 <!--                <artifactId>kogito-maven-plugin</artifactId>-->
-<!--                <version>${version.org.kie.kogito}</version>-->
 <!--                <extensions>true</extensions>-->
 <!--            </plugin>-->
         </plugins>

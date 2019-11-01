@@ -6,6 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.models.input.InvoiceInputModel;
 
+import java.util.Date;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -14,14 +16,17 @@ public class InvoiceResourceTest {
 
     @Test
     public void testHelloEndpoint() throws JsonProcessingException {
-        InvoiceInputModel input = new InvoiceInputModel();
-        input.setSerie("F5");
-        input.setNumero(123);
+        InvoiceInputModel invoice = new InvoiceInputModel();
+        invoice.setSerie("F5");
+        invoice.setNumero(123);
+        invoice.setFechaEmision(new Date().getTime());
+        invoice.setMoneda("PEN");
 
-        String body = new ObjectMapper().writeValueAsString(input);
+        String body = new ObjectMapper().writeValueAsString(invoice);
 
         given()
                 .body(body)
+                .header("Content-Type", "application/json")
         .when()
                 .post("/invoices/build-xml")
         .then()
