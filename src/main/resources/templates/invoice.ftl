@@ -33,40 +33,38 @@
 <#--    <cbc:LineCountNumeric>${cantidadItemsVendidos}</cbc:LineCountNumeric>-->
     <cac:Signature>
     </cac:Signature>
-<#--    <cac:AccountingSupplierParty>-->
-<#--        <cac:Party>-->
-<#--            <cac:PartyIdentification>-->
-<#--                <cbc:ID schemeID="6"-->
-<#--                        schemeAgencyName="PE:SUNAT"-->
-<#--                        schemeName="SUNAT:Identificador de Documento de Identidad"-->
-<#--                        schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06">-->
-<#--                    ${proveedor.ruc}-->
-<#--                </cbc:ID>-->
-<#--            </cac:PartyIdentification>-->
-<#--            <cac:PartyName>-->
-<#--                <cbc:Name>${proveedor.nombreComercial}</cbc:Name>-->
-<#--            </cac:PartyName>-->
-<#--            <cac:PartyLegalEntity>-->
-<#--                <cbc:RegistrationName><![CDATA[${proveedor.razonSocial}]]></cbc:RegistrationName>-->
-<#--                <cac:RegistrationAddress>-->
-<#--                    <cbc:AddressTypeCode>${proveedor.codigoPostal}</cbc:AddressTypeCode>-->
-<#--                </cac:RegistrationAddress>-->
-<#--            </cac:PartyLegalEntity>-->
-<#--        </cac:Party>-->
-<#--    </cac:AccountingSupplierParty>-->
-<#--    <cac:AccountingCustomerParty>-->
-<#--        <cac:Party>-->
-<#--            <cac:PartyIdentification>-->
-<#--                <cbc:ID schemeID="${cliente.codigoDocumentoIdentidad}"-->
-<#--                        schemeAgencyName="PE:SUNAT"-->
-<#--                        schemeName="SUNAT:Identificador de Documento de Identidad"-->
-<#--                        schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06">-->
-<#--                    ${cliente.numeroDocumentoIdentidad}-->
-<#--                </cbc:ID>-->
-<#--            </cac:PartyIdentification>-->
-<#--            <cac:PartyLegalEntity>-->
-<#--                <cbc:RegistrationName><![CDATA[${cliente.nombre}]]></cbc:RegistrationName>-->
-<#--            </cac:PartyLegalEntity>-->
-<#--        </cac:Party>-->
-<#--    </cac:AccountingCustomerParty>-->
+    <cac:AccountingSupplierParty>
+        <cac:Party>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="6"
+                        schemeAgencyName="PE:SUNAT"
+                        schemeName="SUNAT:Identificador de Documento de Identidad"
+                        schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06">${proveedor.ruc}</cbc:ID>
+            </cac:PartyIdentification>
+            <#if proveedor.nombreComercial??>
+            <cac:PartyName>
+                <cbc:Name>${proveedor.nombreComercial}</cbc:Name>
+            </cac:PartyName>
+            </#if>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName><![CDATA[${proveedor.razonSocial}]]></cbc:RegistrationName>
+                <cac:RegistrationAddress>
+                    <cbc:AddressTypeCode>${proveedor.codigoPostal}</cbc:AddressTypeCode>
+                </cac:RegistrationAddress>
+            </cac:PartyLegalEntity>
+        </cac:Party>
+    </cac:AccountingSupplierParty>
+    <cac:AccountingCustomerParty>
+        <cac:Party>
+            <cac:PartyIdentification>
+                <cbc:ID schemeID="${cliente.codigoDocumentoIdentidad}"
+                        schemeAgencyName="PE:SUNAT"
+                        schemeName="SUNAT:Identificador de Documento de Identidad"
+                        schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06">${cliente.numeroDocumentoIdentidad}</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyLegalEntity>
+                <cbc:RegistrationName><![CDATA[${cliente.nombre}]]></cbc:RegistrationName>
+            </cac:PartyLegalEntity>
+        </cac:Party>
+    </cac:AccountingCustomerParty>
 </Invoice>

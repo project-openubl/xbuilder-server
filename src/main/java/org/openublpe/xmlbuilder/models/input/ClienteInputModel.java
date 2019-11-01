@@ -1,17 +1,24 @@
 package org.openublpe.xmlbuilder.models.input;
 
+import javax.validation.constraints.NotBlank;
+
 public class ClienteInputModel {
 
-    private String codigoDocumentoIdentidad;
+    @NotBlank
+    private String tipoDocumentoIdentidad;
+
+    @NotBlank
     private String numeroDocumentoIdentidad;
+
+    @NotBlank
     private String nombre;
 
-    public String getCodigoDocumentoIdentidad() {
-        return codigoDocumentoIdentidad;
+    public String getTipoDocumentoIdentidad() {
+        return tipoDocumentoIdentidad;
     }
 
-    public void setCodigoDocumentoIdentidad(String codigoDocumentoIdentidad) {
-        this.codigoDocumentoIdentidad = codigoDocumentoIdentidad;
+    public void setTipoDocumentoIdentidad(String tipoDocumentoIdentidad) {
+        this.tipoDocumentoIdentidad = tipoDocumentoIdentidad;
     }
 
     public String getNumeroDocumentoIdentidad() {

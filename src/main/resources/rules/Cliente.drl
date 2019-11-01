@@ -1,0 +1,22 @@
+package rules;
+
+import org.openublpe.xmlbuilder.models.input.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.output.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.output.ClienteOutputModel;
+
+import function org.openublpe.xmlbuilder.utils.UBLUtils.getCodigoTipoDocumentoIdentidad;
+
+dialect "java"
+
+rule "Cliente"
+when
+    $input : InvoiceInputModel(cliente != null)
+    $output : InvoiceOutputModel()
+then
+    $output.setCliente(new ClienteOutputModel());
+    $output.getCliente().setNombre($input.getCliente().getNombre());
+    $output.getCliente().setNumeroDocumentoIdentidad($input.getCliente().getNumeroDocumentoIdentidad());
+    $output.getCliente().setCodigoDocumentoIdentidad(
+        getCodigoTipoDocumentoIdentidad($input.getCliente().getTipoDocumentoIdentidad())
+    );
+end

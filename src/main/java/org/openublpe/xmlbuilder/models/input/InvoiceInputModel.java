@@ -1,5 +1,6 @@
 package org.openublpe.xmlbuilder.models.input;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -21,7 +22,12 @@ public class InvoiceInputModel {
     @NotBlank
     private String moneda;
 
+    @NotNull
+    @Valid
     private ProveedorInputModel proveedor;
+
+    @NotNull
+    @Valid
     private ClienteInputModel cliente;
 
     public String getSerie() {

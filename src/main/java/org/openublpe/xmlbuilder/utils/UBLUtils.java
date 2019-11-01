@@ -1,6 +1,7 @@
 package org.openublpe.xmlbuilder.utils;
 
 import org.openublpe.xmlbuilder.models.ubl.Catalog1;
+import org.openublpe.xmlbuilder.models.ubl.Catalog6;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,6 +20,16 @@ public class UBLUtils {
         }
 
         return result;
+    }
+
+    public static String getCodigoTipoDocumentoIdentidad(String tipoDocumentoIdentidad) {
+        try {
+            Catalog6 catalog6 = Catalog6.valueOf(tipoDocumentoIdentidad.toUpperCase());
+            return catalog6.getCode();
+        } catch (Exception e) {
+            // TODO use the user defined Code
+            return tipoDocumentoIdentidad;
+        }
     }
 
 }
