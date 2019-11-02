@@ -53,6 +53,14 @@
                 <scope>import</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.helger</groupId>
+                <artifactId>ph-ubl-parent-pom</artifactId>
+                <version>6.1.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!--Camel Quarkus-->
 <!--            <dependency>-->
 <!--                <groupId>org.apache.camel.quarkus</groupId>-->
@@ -184,6 +192,12 @@
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.helger</groupId>
+            <artifactId>ph-ubl21</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

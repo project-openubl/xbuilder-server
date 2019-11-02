@@ -13,10 +13,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 >
     <ext:UBLExtensions>
-        <ext:UBLExtension>
-            <ext:ExtensionContent>
-            </ext:ExtensionContent>
-        </ext:UBLExtension>
     </ext:UBLExtensions>
     <cbc:UBLVersionID>2.1</cbc:UBLVersionID>
     <cbc:CustomizationID>2.0</cbc:CustomizationID>
@@ -32,6 +28,21 @@
                               listName="Currency">${moneda}</cbc:DocumentCurrencyCode>
     <cbc:LineCountNumeric>${detalleSize}</cbc:LineCountNumeric>
     <cac:Signature>
+        <cbc:ID>20123456789</cbc:ID>
+        <cbc:Note>GREENTER</cbc:Note>
+        <cac:SignatoryParty>
+            <cac:PartyIdentification>
+                <cbc:ID>20123456789</cbc:ID>
+            </cac:PartyIdentification>
+            <cac:PartyName>
+                <cbc:Name><![CDATA[GREENTER S.A.C]]></cbc:Name>
+            </cac:PartyName>
+        </cac:SignatoryParty>
+        <cac:DigitalSignatureAttachment>
+            <cac:ExternalReference>
+                <cbc:URI>#SIGN-GREEN</cbc:URI>
+            </cac:ExternalReference>
+        </cac:DigitalSignatureAttachment>
     </cac:Signature>
     <cac:AccountingSupplierParty>
         <cac:Party>
@@ -68,8 +79,40 @@
         </cac:Party>
     </cac:AccountingCustomerParty>
     <cac:TaxTotal>
+        <cbc:TaxAmount currencyID="PEN">7503.22</cbc:TaxAmount>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="PEN">41684.56</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="PEN">7503.22</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305"
+                        schemeName="Tax Category Identifie">S
+                </cbc:ID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">1000
+                    </cbc:ID>
+                    <cbc:Name>IGV</cbc:Name>
+                    <cbc:TaxTypeCode>VAT</cbc:TaxTypeCode>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+        <cac:TaxSubtotal>
+            <cbc:TaxableAmount currencyID="PEN">0.00</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="PEN">0.00</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305"
+                        schemeName="Tax Category Identifie">S
+                </cbc:ID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">9996
+                    </cbc:ID>
+                    <cbc:Name>GRA</cbc:Name>
+                    <cbc:TaxTypeCode>FRE</cbc:TaxTypeCode>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
     </cac:TaxTotal>
     <cac:LegalMonetaryTotal>
+        <cbc:PayableAmount currencyID="PEN">49187.80</cbc:PayableAmount>
     </cac:LegalMonetaryTotal>
     <#list detalle as item>
     <cac:InvoiceLine>
