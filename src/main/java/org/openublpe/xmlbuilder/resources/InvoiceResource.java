@@ -1,28 +1,21 @@
 package org.openublpe.xmlbuilder.resources;
 
-import freemarker.template.*;
-import org.kie.api.KieBase;
-import org.kie.api.event.process.*;
-import org.kie.api.event.rule.*;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.rule.Agenda;
-import org.kie.kogito.rules.RuleUnit;
-import org.kie.kogito.rules.impl.SessionMemory;
+import org.kie.kogito.rules.KieRuntimeBuilder;
 import org.openublpe.xmlbuilder.FreemarkerInvoiceTemplates;
 import org.openublpe.xmlbuilder.models.input.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.output.ClienteOutputModel;
 import org.openublpe.xmlbuilder.models.output.InvoiceOutputModel;
-import org.openublpe.xmlbuilder.models.output.ProveedorOutputModel;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.*;
-
-import org.kie.kogito.rules.KieRuntimeBuilder;
+import java.io.IOException;
+import java.io.StringWriter;
 
 @Path("/invoices")
 @Consumes(MediaType.APPLICATION_JSON)

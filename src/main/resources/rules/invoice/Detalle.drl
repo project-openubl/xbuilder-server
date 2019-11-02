@@ -1,0 +1,20 @@
+package rules.invoice;
+
+import org.openublpe.xmlbuilder.models.input.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.output.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.output.ProveedorOutputModel;
+
+//import function org.openublpe.xmlbuilder.utils.UBLUtils.getDetalle;
+
+dialect "java"
+
+rule "Detalle"
+when
+    $input : InvoiceInputModel(detalle != null)
+    $output : InvoiceOutputModel()
+then
+    $output.setDetalleSize($input.getDetalle().size());
+//    $output.setDetalle(
+//        getDetalle($input.getDetalle())
+//    );
+end

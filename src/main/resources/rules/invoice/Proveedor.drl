@@ -1,4 +1,4 @@
-package rules;
+package rules.invoice;
 
 import org.openublpe.xmlbuilder.models.input.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.output.InvoiceOutputModel;

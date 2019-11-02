@@ -1,35 +1,41 @@
 package org.openublpe.xmlbuilder.utils;
 
-import org.openublpe.xmlbuilder.models.ubl.Catalog1;
-import org.openublpe.xmlbuilder.models.ubl.Catalog6;
+import org.openublpe.xmlbuilder.models.input.DetalleInputModel;
+import org.openublpe.xmlbuilder.models.output.DetalleOutputModel;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
+import java.util.LinkedList;
+import java.util.List;
 
 public class UBLUtils {
 
-    public static String getInvoiceTypeCode(String serie) {
-        String result = null;
+    public static List<DetalleOutputModel> getDetalle(List<DetalleInputModel> list) {
+        List<DetalleOutputModel> result = new LinkedList<>();
 
-        String upperCase = serie.toUpperCase();
-        if (upperCase.startsWith("F")) {
-            result = Catalog1.FACTURA.getCode();
-        } else if (upperCase.startsWith("B")) {
-            result = Catalog1.BOLETA.getCode();
+        for (int i = 0; i < list.size(); i++) {
+            DetalleInputModel item = list.get(i);
+
+            DetalleOutputModel output = new DetalleOutputModel();
+            result.add(output);
+
+            output.setIndex(i + 1);
+            output.setDescripcion(item.getDescripcion());
+            output.setUnidadMedida(item.getUnidadMedida() != null ? item.getUnidadMedida() : "NIU");
+            output.setCantidad(item.getCantidad());
+
+            output.setValorUnitario(item.getValorUnitario());
+            output.setPrecioUnitario(item.getPrecioUnitario());
+            output.setSubtotal(item.getSubtotal());
+            output.setTotal(item.getTotal());
+
+            if (output.getSubtotal() == null){
+                output.setSubtotal(output.getCantidad().multiply(output.getValorUnitario()));
+            }
+            if (output.getTotal() == null){
+                output.setTotal(output.getCantidad().multiply(output.getPrecioUnitario()));
+            }
         }
 
         return result;
-    }
-
-    public static String getCodigoTipoDocumentoIdentidad(String tipoDocumentoIdentidad) {
-        try {
-            Catalog6 catalog6 = Catalog6.valueOf(tipoDocumentoIdentidad.toUpperCase());
-            return catalog6.getCode();
-        } catch (Exception e) {
-            // TODO use the user defined Code
-            return tipoDocumentoIdentidad;
-        }
     }
 
 }

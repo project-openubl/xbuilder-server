@@ -1,0 +1,18 @@
+package rules.invoice;
+
+import org.openublpe.xmlbuilder.models.input.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.output.InvoiceOutputModel;
+
+import function org.openublpe.xmlbuilder.utils.DateUtils.toGregorianCalendarDate;
+import function org.openublpe.xmlbuilder.utils.DateUtils.toGregorianCalendarTime;
+
+dialect "java"
+
+rule "Fecha y hora de emision"
+when
+    $input : InvoiceInputModel(fechaEmision != null)
+    $output: InvoiceOutputModel()
+then
+    $output.setFechaEmision(toGregorianCalendarDate($input.getFechaEmision()));
+    $output.setHoraEmision(toGregorianCalendarTime($input.getFechaEmision()));
+end

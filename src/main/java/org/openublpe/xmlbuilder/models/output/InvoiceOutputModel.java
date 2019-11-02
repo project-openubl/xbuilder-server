@@ -1,5 +1,7 @@
 package org.openublpe.xmlbuilder.models.output;
 
+import java.util.List;
+
 public class InvoiceOutputModel {
 
     private String serieNumero;
@@ -10,6 +12,8 @@ public class InvoiceOutputModel {
     private int cantidadItemsVendidos;
     private ProveedorOutputModel proveedor;
     private ClienteOutputModel cliente;
+    private Integer detalleSize;
+    private List<DetalleOutputModel> detalle;
 
     public String getSerieNumero() {
         return serieNumero;
@@ -73,5 +77,21 @@ public class InvoiceOutputModel {
 
     public void setCliente(ClienteOutputModel cliente) {
         this.cliente = cliente;
+    }
+
+    public Integer getDetalleSize() {
+        return detalleSize;
+    }
+
+    public void setDetalleSize(Integer detalleSize) {
+        this.detalleSize = detalleSize;
+    }
+
+    public List<DetalleOutputModel> getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(List<DetalleOutputModel> detalle) {
+        this.detalle = detalle;
     }
 }

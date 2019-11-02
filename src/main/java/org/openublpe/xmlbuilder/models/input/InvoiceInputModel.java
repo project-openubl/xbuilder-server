@@ -3,7 +3,9 @@ package org.openublpe.xmlbuilder.models.input;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class InvoiceInputModel {
 
@@ -18,8 +20,6 @@ public class InvoiceInputModel {
     @NotNull
     private Long fechaEmision;
 
-    @NotNull
-    @NotBlank
     private String moneda;
 
     @NotNull
@@ -29,6 +29,10 @@ public class InvoiceInputModel {
     @NotNull
     @Valid
     private ClienteInputModel cliente;
+
+    @NotEmpty
+    @Valid
+    private List<DetalleInputModel> detalle;
 
     public String getSerie() {
         return serie;
@@ -77,4 +81,13 @@ public class InvoiceInputModel {
     public void setCliente(ClienteInputModel cliente) {
         this.cliente = cliente;
     }
+
+    public List<DetalleInputModel> getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(List<DetalleInputModel> detalle) {
+        this.detalle = detalle;
+    }
+
 }

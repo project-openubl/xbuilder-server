@@ -11,13 +11,13 @@ public enum Catalog6 implements Catalog {
 
     private final String code;
 
+    Catalog6(String code) {
+        this.code = code;
+    }
+
     @Override
     public String getCode() {
         return code;
-    }
-
-    Catalog6(String code) {
-        this.code = code;
     }
 
 }

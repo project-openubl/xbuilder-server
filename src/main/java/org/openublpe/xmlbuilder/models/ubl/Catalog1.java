@@ -1,5 +1,6 @@
 package org.openublpe.xmlbuilder.models.ubl;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public enum Catalog1 implements Catalog {
@@ -32,12 +33,10 @@ public enum Catalog1 implements Catalog {
         return code;
     }
 
-    public static Catalog1 valueOfCode(String code) {
+    public static Optional<Catalog1> valueOfCode(String code) {
         return Stream.of(Catalog1.values())
                 .filter(p -> p.code.equals(code))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
-
 
 }
