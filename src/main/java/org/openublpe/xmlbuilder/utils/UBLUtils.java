@@ -11,6 +11,9 @@ public class UBLUtils {
     public static List<DetalleOutputModel> getDetalle(List<DetalleInputModel> list) {
         List<DetalleOutputModel> result = new LinkedList<>();
 
+        for (DetalleInputModel item : list) {
+
+        }
         for (int i = 0; i < list.size(); i++) {
             DetalleInputModel item = list.get(i);
 
@@ -22,10 +25,10 @@ public class UBLUtils {
             output.setUnidadMedida(item.getUnidadMedida() != null ? item.getUnidadMedida() : "NIU");
             output.setCantidad(item.getCantidad());
 
-            output.setValorUnitario(item.getValorUnitario());
+//            output.setValorUnitario(item.getValorUnitario());
             output.setPrecioUnitario(item.getPrecioUnitario());
-            output.setSubtotal(item.getSubtotal());
-            output.setTotal(item.getTotal());
+//            output.setSubtotal(item.getSubtotal());
+//            output.setTotal(item.getTotal());
 
             if (output.getSubtotal() == null){
                 output.setSubtotal(output.getCantidad().multiply(output.getValorUnitario()));

@@ -1,6 +1,9 @@
 package org.openublpe.xmlbuilder.models.input;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class DetalleInputModel {
@@ -8,25 +11,19 @@ public class DetalleInputModel {
     @NotBlank
     private String descripcion;
 
+    private String unidadMedida;
+
     @NotNull
     @Positive
     @Digits(integer = Integer.MAX_VALUE, fraction = 3)
     private BigDecimal cantidad;
-    private String unidadMedida;
 
-    // Sin impuestos
-    private BigDecimal valorUnitario;
-
-    // Con impuestos
+    // Precio con impuestos
     @NotNull
     @Positive
     private BigDecimal precioUnitario;
 
-    @Positive
-    private BigDecimal subtotal;
-
-    @Positive
-    private BigDecimal total;
+    private String tipoIGV;
 
     public BigDecimal getCantidad() {
         return cantidad;
@@ -52,14 +49,6 @@ public class DetalleInputModel {
         this.unidadMedida = unidadMedida;
     }
 
-    public BigDecimal getValorUnitario() {
-        return valorUnitario;
-    }
-
-    public void setValorUnitario(BigDecimal valorUnitario) {
-        this.valorUnitario = valorUnitario;
-    }
-
     public BigDecimal getPrecioUnitario() {
         return precioUnitario;
     }
@@ -68,19 +57,11 @@ public class DetalleInputModel {
         this.precioUnitario = precioUnitario;
     }
 
-    public BigDecimal getSubtotal() {
-        return subtotal;
+    public String getTipoIGV() {
+        return tipoIGV;
     }
 
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
+    public void setTipoIGV(String tipoIGV) {
+        this.tipoIGV = tipoIGV;
     }
 }

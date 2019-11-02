@@ -1,13 +1,19 @@
 package org.openublpe.xmlbuilder.models.output;
 
+import org.openublpe.xmlbuilder.models.ubl.Catalog1;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 public class InvoiceOutputModel {
 
+    private BigDecimal igv;
+    private BigDecimal igvPercent;
+
     private String serieNumero;
     private String fechaEmision;
     private String horaEmision;
-    private String codigoTipoComprobante;
+    private Catalog1 tipoComprobante;
     private String moneda;
     private int cantidadItemsVendidos;
     private ProveedorOutputModel proveedor;
@@ -39,12 +45,12 @@ public class InvoiceOutputModel {
         this.horaEmision = horaEmision;
     }
 
-    public String getCodigoTipoComprobante() {
-        return codigoTipoComprobante;
+    public Catalog1 getTipoComprobante() {
+        return tipoComprobante;
     }
 
-    public void setCodigoTipoComprobante(String codigoTipoComprobante) {
-        this.codigoTipoComprobante = codigoTipoComprobante;
+    public void setTipoComprobante(Catalog1 tipoComprobante) {
+        this.tipoComprobante = tipoComprobante;
     }
 
     public String getMoneda() {
@@ -93,5 +99,21 @@ public class InvoiceOutputModel {
 
     public void setDetalle(List<DetalleOutputModel> detalle) {
         this.detalle = detalle;
+    }
+
+    public BigDecimal getIgv() {
+        return igv;
+    }
+
+    public void setIgv(BigDecimal igv) {
+        this.igv = igv;
+    }
+
+    public BigDecimal getIgvPercent() {
+        return igvPercent;
+    }
+
+    public void setIgvPercent(BigDecimal igvPercent) {
+        this.igvPercent = igvPercent;
     }
 }

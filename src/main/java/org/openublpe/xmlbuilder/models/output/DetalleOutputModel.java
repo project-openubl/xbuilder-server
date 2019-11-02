@@ -1,5 +1,8 @@
 package org.openublpe.xmlbuilder.models.output;
 
+import org.openublpe.xmlbuilder.models.ubl.Catalog16;
+import org.openublpe.xmlbuilder.models.ubl.Catalog7;
+
 import java.math.BigDecimal;
 
 public class DetalleOutputModel {
@@ -20,6 +23,11 @@ public class DetalleOutputModel {
 
     // precioUnitario * cantidad
     private BigDecimal total;
+
+    private BigDecimal igv;
+
+    private Catalog7 tipoIGV;
+    private Catalog16 tipoPrecio;
 
     public Integer getIndex() {
         return index;
@@ -83,5 +91,29 @@ public class DetalleOutputModel {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public Catalog7 getTipoIGV() {
+        return tipoIGV;
+    }
+
+    public void setTipoIGV(Catalog7 tipoIGV) {
+        this.tipoIGV = tipoIGV;
+    }
+
+    public Catalog16 getTipoPrecio() {
+        return tipoPrecio;
+    }
+
+    public void setTipoPrecio(Catalog16 tipoPrecio) {
+        this.tipoPrecio = tipoPrecio;
+    }
+
+    public BigDecimal getIgv() {
+        return igv;
+    }
+
+    public void setIgv(BigDecimal igv) {
+        this.igv = igv;
     }
 }

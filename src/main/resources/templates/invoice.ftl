@@ -26,11 +26,11 @@
     <cbc:InvoiceTypeCode listID="0101"
                          listAgencyName="PE:SUNAT"
                          listName="SUNAT:Identificador de Tipo de Documento"
-                         listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo01">${codigoTipoComprobante}</cbc:InvoiceTypeCode>
+                         listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo01">${tipoComprobante.code}</cbc:InvoiceTypeCode>
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha"
                               listAgencyName="United Nations Economic Commission for Europe"
                               listName="Currency">${moneda}</cbc:DocumentCurrencyCode>
-<#--    <cbc:LineCountNumeric>${cantidadItemsVendidos}</cbc:LineCountNumeric>-->
+    <cbc:LineCountNumeric>${detalleSize}</cbc:LineCountNumeric>
     <cac:Signature>
     </cac:Signature>
     <cac:AccountingSupplierParty>
@@ -57,7 +57,7 @@
     <cac:AccountingCustomerParty>
         <cac:Party>
             <cac:PartyIdentification>
-                <cbc:ID schemeID="${cliente.codigoDocumentoIdentidad}"
+                <cbc:ID schemeID="${cliente.tipoDocumentoIdentidad.code}"
                         schemeAgencyName="PE:SUNAT"
                         schemeName="SUNAT:Identificador de Documento de Identidad"
                         schemeURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo06">${cliente.numeroDocumentoIdentidad}</cbc:ID>
@@ -71,43 +71,48 @@
     </cac:TaxTotal>
     <cac:LegalMonetaryTotal>
     </cac:LegalMonetaryTotal>
-<#--    <#list detalle as item>-->
-<#--    <cac:InvoiceLine>-->
-<#--        <cbc:ID>${item.index}</cbc:ID>-->
-<#--        <cbc:InvoicedQuantity-->
-<#--                unitCode="${item.unidadMedida}"-->
-<#--                unitCodeListAgencyName="United Nations Economic Commission for Europe"-->
-<#--                unitCodeListID="UN/ECE rec 20">${item.cantidad}</cbc:InvoicedQuantity>-->
-<#--        <cbc:LineExtensionAmount currencyID="${moneda}">${item.subtotal}</cbc:LineExtensionAmount>-->
-<#--        <cac:PricingReference>-->
-<#--            <cac:AlternativeConditionPrice>-->
-<#--                <cbc:PriceAmount currencyID="PEN">32.00</cbc:PriceAmount>-->
-<#--                <cbc:PriceTypeCode listAgencyName="PE:SUNAT" listName="SUNAT:Indicador de Tipo de Precio" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">01</cbc:PriceTypeCode>-->
-<#--            </cac:AlternativeConditionPrice>-->
-<#--        </cac:PricingReference>-->
-<#--        <cac:TaxTotal>-->
-<#--            <cbc:TaxAmount currencyID="PEN">4.88</cbc:TaxAmount>-->
-<#--            <cac:TaxSubtotal>-->
-<#--                <cbc:TaxableAmount currencyID="PEN">27.11</cbc:TaxableAmount>-->
-<#--                <cbc:TaxAmount currencyID="PEN">4.88</cbc:TaxAmount>-->
-<#--                <cac:TaxCategory>-->
-<#--                    <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifier">S</cbc:ID>-->
-<#--                    <cbc:Percent>18.00</cbc:Percent>-->
-<#--                    <cbc:TaxExemptionReasonCode listAgencyName="PE:SUNAT" listName="SUNAT:Codigo de Tipo de Afectaci�n del IGV" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo07">10</cbc:TaxExemptionReasonCode>-->
-<#--                    <cac:TaxScheme>-->
-<#--                        <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">1000</cbc:ID>-->
-<#--                        <cbc:Name>IGV</cbc:Name>-->
-<#--                        <cbc:TaxTypeCode>VAT</cbc:TaxTypeCode>-->
-<#--                    </cac:TaxScheme>-->
-<#--                </cac:TaxCategory>-->
-<#--            </cac:TaxSubtotal>-->
-<#--        </cac:TaxTotal>-->
-<#--        <cac:Item>-->
-<#--            <cbc:Description><![CDATA[${item.descripcion}]]></cbc:Description>-->
-<#--        </cac:Item>-->
-<#--        <cac:Price>-->
-<#--            <cbc:PriceAmount currencyID="${moneda}">${item.valorUnitario}</cbc:PriceAmount>-->
-<#--        </cac:Price>-->
-<#--    </cac:InvoiceLine>-->
-<#--    </#list>-->
+    <#list detalle as item>
+    <cac:InvoiceLine>
+        <cbc:ID>${item?index + 1}</cbc:ID>
+        <cbc:InvoicedQuantity
+                unitCode="${item.unidadMedida}"
+                unitCodeListAgencyName="United Nations Economic Commission for Europe"
+                unitCodeListID="UN/ECE rec 20">${item.cantidad}</cbc:InvoicedQuantity>
+        <cbc:LineExtensionAmount currencyID="${moneda}">${item.subtotal}</cbc:LineExtensionAmount>
+        <cac:PricingReference>
+            <cac:AlternativeConditionPrice>
+                <cbc:PriceAmount currencyID="${moneda}">${item.precioUnitario}</cbc:PriceAmount>
+                <cbc:PriceTypeCode listAgencyName="PE:SUNAT"
+                                   listName="SUNAT:Indicador de Tipo de Precio"
+                                   listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">${item.tipoPrecio.code}</cbc:PriceTypeCode>
+            </cac:AlternativeConditionPrice>
+        </cac:PricingReference>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="${moneda}">${item.igv}</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxableAmount currencyID="${moneda}">${item.total}</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="${moneda}">${item.igv}</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifier">S</cbc:ID>
+                    <cbc:Percent>${igvPercent}</cbc:Percent>
+                    <cbc:TaxExemptionReasonCode
+                            listAgencyName="PE:SUNAT"
+                            listName="SUNAT:Codigo de Tipo de Afectación del IGV"
+                            listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo07">10</cbc:TaxExemptionReasonCode>
+                    <cac:TaxScheme>
+                        <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">1000</cbc:ID>
+                        <cbc:Name>IGV</cbc:Name>
+                        <cbc:TaxTypeCode>VAT</cbc:TaxTypeCode>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:TaxTotal>
+        <cac:Item>
+            <cbc:Description><![CDATA[${item.descripcion}]]></cbc:Description>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="${moneda}">${item.valorUnitario}</cbc:PriceAmount>
+        </cac:Price>
+    </cac:InvoiceLine>
+    </#list>
 </Invoice>

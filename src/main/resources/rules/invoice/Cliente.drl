@@ -18,11 +18,7 @@ then
     $output.getCliente().setNombre($input.getCliente().getNombre());
     $output.getCliente().setNumeroDocumentoIdentidad($input.getCliente().getNumeroDocumentoIdentidad());
 
-    $output.getCliente().setCodigoDocumentoIdentidad(
-        Catalog.valueOfCode(Catalog6.class, $input.getCliente().getTipoDocumentoIdentidad())
-            .map(Catalog6::getCode)
-            .orElse(
-                    $input.getCliente().getTipoDocumentoIdentidad()
-            )
+    $output.getCliente().setTipoDocumentoIdentidad(
+        Catalog.valueOfCode(Catalog6.class, $input.getCliente().getTipoDocumentoIdentidad()).get()
     );
 end

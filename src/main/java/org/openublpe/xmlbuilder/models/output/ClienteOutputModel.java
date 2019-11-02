@@ -1,17 +1,19 @@
 package org.openublpe.xmlbuilder.models.output;
 
+import org.openublpe.xmlbuilder.models.ubl.Catalog6;
+
 public class ClienteOutputModel {
 
-    private String codigoDocumentoIdentidad;
+    private Catalog6 tipoDocumentoIdentidad;
     private String numeroDocumentoIdentidad;
     private String nombre;
 
-    public String getCodigoDocumentoIdentidad() {
-        return codigoDocumentoIdentidad;
+    public Catalog6 getTipoDocumentoIdentidad() {
+        return tipoDocumentoIdentidad;
     }
 
-    public void setCodigoDocumentoIdentidad(String codigoDocumentoIdentidad) {
-        this.codigoDocumentoIdentidad = codigoDocumentoIdentidad;
+    public void setTipoDocumentoIdentidad(Catalog6 tipoDocumentoIdentidad) {
+        this.tipoDocumentoIdentidad = tipoDocumentoIdentidad;
     }
 
     public String getNumeroDocumentoIdentidad() {
