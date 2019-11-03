@@ -8,11 +8,16 @@ import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.KieRuntimeBuilder;
 import org.openublpe.xmlbuilder.FreemarkerConstants;
 import org.openublpe.xmlbuilder.UBLConstants;
-import org.openublpe.xmlbuilder.models.input.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.output.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.input.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.output.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.invoice.InvoiceOutputModel;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.Validator;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -35,6 +40,9 @@ public class DocumentsResource {
 
 //    @Inject @Named("invoiceKS")
 //    RuleUnit<SessionMemory> ruleUnit;
+
+    @Inject
+    Validator validator;
 
     @POST
     @Path("/invoice/create")
@@ -67,8 +75,8 @@ public class DocumentsResource {
     @POST
     @Path("/credit-note/create")
     @Produces(MediaType.TEXT_XML)
-    public Response createCreditNote(@Valid InvoiceInputModel input) {
-        InvoiceOutputModel output = new InvoiceOutputModel();
+    public Response createCreditNote(@Valid CreditNoteInputModel input) {
+        CreditNoteOutputModel output = new CreditNoteOutputModel();
 
         KieSession ksession = runtimeBuilder.newKieSession();
         ksession.setGlobal("IGV", IGV);
@@ -78,7 +86,7 @@ public class DocumentsResource {
 
         StringWriter buffer;
         try {
-            Template template = configuration.getTemplate(FreemarkerConstants.INVOICE_TEMPLATE_2_1);
+            Template template = configuration.getTemplate(FreemarkerConstants.CREDIT_NOTE_TEMPLATE_2_1);
 
             buffer = new StringWriter();
             template.process(output, buffer);
@@ -88,15 +96,15 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header("Content-Disposition", "attachment; filename=\"" + "invoice.xml" + "\"")
+                .header("Content-Disposition", "attachment; filename=\"" + "creditNote.xml" + "\"")
                 .build();
     }
 
     @POST
     @Path("/debit-note/create")
     @Produces(MediaType.TEXT_XML)
-    public Response createDebitNote(@Valid InvoiceInputModel input) {
-        InvoiceOutputModel output = new InvoiceOutputModel();
+    public Response createDebitNote(@Valid DebitNoteInputModel input) {
+        DebitNoteOutputModel output = new DebitNoteOutputModel();
 
         KieSession ksession = runtimeBuilder.newKieSession();
         ksession.setGlobal("IGV", IGV);
@@ -106,7 +114,7 @@ public class DocumentsResource {
 
         StringWriter buffer;
         try {
-            Template template = configuration.getTemplate(FreemarkerConstants.INVOICE_TEMPLATE_2_1);
+            Template template = configuration.getTemplate(FreemarkerConstants.DEBIT_NOTE_TEMPLATE_2_1);
 
             buffer = new StringWriter();
             template.process(output, buffer);
@@ -116,7 +124,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header("Content-Disposition", "attachment; filename=\"" + "invoice.xml" + "\"")
+                .header("Content-Disposition", "attachment; filename=\"" + "debitNote.xml" + "\"")
                 .build();
     }
 }

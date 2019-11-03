@@ -1,0 +1,20 @@
+package rules.note.debitNote;
+
+import org.openublpe.xmlbuilder.models.input.AbstractNoteInputDocumentModel;
+import org.openublpe.xmlbuilder.models.output.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.models.ubl.Catalog;
+import org.openublpe.xmlbuilder.models.ubl.Catalog10;
+
+dialect "java"
+
+rule "Tipo Documento Debit Note"
+when
+    $input : AbstractNoteInputDocumentModel()
+    $output : DebitNoteOutputModel()
+then
+    if ($input.getTipoNota() != null) {
+        $output.setTipoNota(Catalog.valueOfCode(Catalog10.class, $input.getTipoNota()).get());
+    } else {
+        $output.setTipoNota(Catalog10.AUMENTO_EN_EL_VALOR);
+    }
+end

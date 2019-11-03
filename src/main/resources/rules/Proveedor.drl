@@ -1,15 +1,15 @@
-package rules.invoice;
+package rules;
 
-import org.openublpe.xmlbuilder.models.input.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.output.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.input.AbstractInputDocumentModel;
+import org.openublpe.xmlbuilder.models.output.AbstractOutputDocumentModel;
 import org.openublpe.xmlbuilder.models.output.ProveedorOutputModel;
 
 dialect "java"
 
 rule "Proveedor"
 when
-    $input : InvoiceInputModel(proveedor != null)
-    $output : InvoiceOutputModel()
+    $input : AbstractInputDocumentModel(proveedor != null)
+    $output : AbstractOutputDocumentModel()
 then
     $output.setProveedor(new ProveedorOutputModel());
     $output.getProveedor().setRuc($input.getProveedor().getRuc());

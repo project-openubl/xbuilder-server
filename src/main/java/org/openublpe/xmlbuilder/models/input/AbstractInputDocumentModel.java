@@ -3,35 +3,38 @@ package org.openublpe.xmlbuilder.models.input;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
-public class InvoiceInputModel {
+public abstract class AbstractInputDocumentModel {
 
-    @NotNull
     @NotBlank
-    private String serie;
+    @Size(min = 4, max = 4)
+    protected String serie;
 
-    @NotNull
     @Min(1)
-    private Integer numero;
-
     @NotNull
-    private Long fechaEmision;
+    private Integer numero;
 
     private String moneda;
 
     @NotNull
+    private Long fechaEmision;
+
     @Valid
+    private FirmanteInputModel firmante;
+
+//    @Valid
+//    @NotNull
     private ProveedorInputModel proveedor;
 
-    @NotNull
-    @Valid
+//    @Valid
+//    @NotNull
     private ClienteInputModel cliente;
 
-    @NotEmpty
-    @Valid
+//    @Valid
+//    @NotEmpty
     private List<DetalleInputModel> detalle;
 
     public String getSerie() {
@@ -50,6 +53,14 @@ public class InvoiceInputModel {
         this.numero = numero;
     }
 
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
+
     public Long getFechaEmision() {
         return fechaEmision;
     }
@@ -58,12 +69,12 @@ public class InvoiceInputModel {
         this.fechaEmision = fechaEmision;
     }
 
-    public String getMoneda() {
-        return moneda;
+    public FirmanteInputModel getFirmante() {
+        return firmante;
     }
 
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
+    public void setFirmante(FirmanteInputModel firmante) {
+        this.firmante = firmante;
     }
 
     public ProveedorInputModel getProveedor() {
@@ -89,5 +100,4 @@ public class InvoiceInputModel {
     public void setDetalle(List<DetalleInputModel> detalle) {
         this.detalle = detalle;
     }
-
 }

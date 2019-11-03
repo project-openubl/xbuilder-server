@@ -1,7 +1,8 @@
 package rules.invoice;
 
-import org.openublpe.xmlbuilder.models.input.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.output.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.input.AbstractInputDocumentModel;
+import org.openublpe.xmlbuilder.models.input.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.output.invoice.InvoiceOutputModel;
 import java.math.BigDecimal;
 
 global java.math.BigDecimal IGV;
