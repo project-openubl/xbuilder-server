@@ -18,14 +18,12 @@
                 <cbc:TaxableAmount currencyID="${moneda}">${item.total}</cbc:TaxableAmount>
                 <cbc:TaxAmount currencyID="${moneda}">${item.igv}</cbc:TaxAmount>
                 <cac:TaxCategory>
-                    <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifier">S
-                    </cbc:ID>
-                    <cbc:Percent>${item.igv}</cbc:Percent>
+                    <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifier">${item.categoriaIgv.categoria}</cbc:ID>
                     <cbc:TaxExemptionReasonCode listAgencyName="PE:SUNAT" listName="SUNAT:Codigo de Tipo de Afectación del IGV" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo07">${item.tipoIgv.code}</cbc:TaxExemptionReasonCode>
                     <cac:TaxScheme>
-                        <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">1000</cbc:ID>
-                        <cbc:Name>IGV</cbc:Name>
-                        <cbc:TaxTypeCode>VAT</cbc:TaxTypeCode>
+                        <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">${item.categoriaIgv.code}</cbc:ID>
+                        <cbc:Name>${item.categoriaIgv.nombre}</cbc:Name>
+                        <cbc:TaxTypeCode>${item.categoriaIgv.tipo}</cbc:TaxTypeCode>
                     </cac:TaxScheme>
                 </cac:TaxCategory>
             </cac:TaxSubtotal>

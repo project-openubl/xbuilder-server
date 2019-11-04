@@ -1,6 +1,7 @@
 package org.openublpe.xmlbuilder.models.output.general;
 
 import org.openublpe.xmlbuilder.models.ubl.Catalog16;
+import org.openublpe.xmlbuilder.models.ubl.Catalog5;
 import org.openublpe.xmlbuilder.models.ubl.Catalog7;
 
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ public class DetalleOutputModel {
     private BigDecimal igv;
 
     private Catalog7 tipoIgv;
+    private Catalog5 categoriaIgv;
     private Catalog16 tipoPrecio;
 
     public Integer getIndex() {
@@ -115,5 +117,13 @@ public class DetalleOutputModel {
 
     public void setIgv(BigDecimal igv) {
         this.igv = igv;
+    }
+
+    public Catalog5 getCategoriaIgv() {
+        return categoriaIgv;
+    }
+
+    public void setCategoriaIgv(Catalog5 categoriaIgv) {
+        this.categoriaIgv = categoriaIgv;
     }
 }
