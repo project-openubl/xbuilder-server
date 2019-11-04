@@ -1,0 +1,25 @@
+package rules.invoice;
+
+import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
+import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.output.general.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.ubl.Catalog1;
+
+dialect "java"
+
+rule "Codigo tipo comprobante - Factura"
+when
+    $input : InvoiceInputModel(serie != null, serie.startsWith("F"))
+    $output : InvoiceOutputModel()
+then
+    $output.setTipoComprobante(Catalog1.FACTURA);
+end
+
+rule "Codigo tipo comprobante - Boleta"
+when
+    $input : InvoiceInputModel(serie != null, serie.startsWith("B"))
+    $output : InvoiceOutputModel()
+then
+    $output.setTipoComprobante(Catalog1.BOLETA);
+end
+

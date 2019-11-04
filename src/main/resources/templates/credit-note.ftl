@@ -20,7 +20,7 @@
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha"
                               listName="Currency"
                               listAgencyName="United Nations Economic Commission for Europe">${moneda}</cbc:DocumentCurrencyCode>
-    <#if detalleSize??><cbc:LineCountNumeric>${detalleSize}</cbc:LineCountNumeric></#if>
+    <cbc:LineCountNumeric>${detalleSize}</cbc:LineCountNumeric>
     <cac:DiscrepancyResponse>
         <cbc:ReferenceID>${serieNumeroInvoiceReference}</cbc:ReferenceID>
         <cbc:ResponseCode listAgencyName="PE:SUNAT"
@@ -123,20 +123,30 @@
 <#--    <cac:LegalMonetaryTotal>-->
 <#--        <cbc:PayableAmount currencyID="PEN">3077455.73</cbc:PayableAmount>-->
 <#--    </cac:LegalMonetaryTotal>-->
-<#--    <cac:CreditNoteLine>-->
-<#--        <cbc:ID>1</cbc:ID>-->
-<#--        <cbc:CreditedQuantity unitCode="NIU" unitCodeListAgencyName="United Nations Economic Commission for Europe"-->
-<#--                              unitCodeListID="UN/ECE rec 20">1-->
-<#--        </cbc:CreditedQuantity>-->
-<#--        <cbc:LineExtensionAmount currencyID="PEN">2608013.33</cbc:LineExtensionAmount>-->
-<#--        <cac:PricingReference>-->
-<#--            <cac:AlternativeConditionPrice>-->
-<#--                <cbc:PriceAmount currencyID="PEN">3077455.73</cbc:PriceAmount>-->
-<#--                <cbc:PriceTypeCode listAgencyName="PE:SUNAT" listName="SUNAT:Indicador de Tipo de Precio"-->
-<#--                                   listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">01-->
-<#--                </cbc:PriceTypeCode>-->
-<#--            </cac:AlternativeConditionPrice>-->
-<#--        </cac:PricingReference>-->
+    <#list detalle as item>
+    <cac:CreditNoteLine>
+        <cbc:ID>${item?index + 1}</cbc:ID>
+        <cbc:CreditedQuantity
+                unitCode="${item.unidadMedida}"
+                unitCodeListAgencyName="United Nations Economic Commission for Europe"
+                unitCodeListID="UN/ECE rec 20">${item.cantidad}</cbc:CreditedQuantity>
+        <cbc:LineExtensionAmount currencyID="${moneda}">${item.subtotal}</cbc:LineExtensionAmount>
+        <cac:PricingReference>
+            <#if !item.tipoIgv.operacionOnerosa>
+            <cac:AlternativeConditionPrice>
+                <cbc:PriceAmount currencyID="${moneda}">0</cbc:PriceAmount>
+                <cbc:PriceTypeCode listAgencyName="PE:SUNAT"
+                                   listName="SUNAT:Indicador de Tipo de Precio"
+                                   listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">01</cbc:PriceTypeCode>
+            </cac:AlternativeConditionPrice>
+            </#if>
+            <cac:AlternativeConditionPrice>
+                <cbc:PriceAmount currencyID="${moneda}">${item.precioUnitario}</cbc:PriceAmount><cbc:PriceAmount currencyID="PEN">12076.26</cbc:PriceAmount>
+                <cbc:PriceTypeCode listAgencyName="PE:SUNAT"
+                                   listName="SUNAT:Indicador de Tipo de Precio"
+                                   listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">${item.tipoPrecio.code}</cbc:PriceTypeCode>
+            </cac:AlternativeConditionPrice>
+        </cac:PricingReference>
 <#--        <cac:TaxTotal>-->
 <#--            <cbc:TaxAmount currencyID="PEN">469442.40</cbc:TaxAmount>-->
 <#--            <cac:TaxSubtotal>-->
@@ -161,12 +171,12 @@
 <#--                </cac:TaxCategory>-->
 <#--            </cac:TaxSubtotal>-->
 <#--        </cac:TaxTotal>-->
-<#--        <cac:Item>-->
-<#--            <cbc:Description>desc-->
-<#--            </cbc:Description>-->
-<#--        </cac:Item>-->
-<#--        <cac:Price>-->
-<#--            <cbc:PriceAmount currencyID="PEN">23413.33</cbc:PriceAmount>-->
-<#--        </cac:Price>-->
-<#--    </cac:CreditNoteLine>-->
+        <cac:Item>
+            <cbc:Description><![CDATA[${item.descripcion}]]></cbc:Description>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="${moneda}">${item.valorUnitario}</cbc:PriceAmount>
+        </cac:Price>
+    </cac:CreditNoteLine>
+    </#list>
 </CreditNote>

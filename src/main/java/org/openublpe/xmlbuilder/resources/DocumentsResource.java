@@ -8,12 +8,12 @@ import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.KieRuntimeBuilder;
 import org.openublpe.xmlbuilder.FreemarkerConstants;
 import org.openublpe.xmlbuilder.UBLConstants;
-import org.openublpe.xmlbuilder.models.input.creditNote.CreditNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.output.debitNote.DebitNoteOutputModel;
-import org.openublpe.xmlbuilder.models.output.creditNote.CreditNoteOutputModel;
-import org.openublpe.xmlbuilder.models.output.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.input.general.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.general.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.output.general.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.general.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.general.invoice.InvoiceOutputModel;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -67,6 +67,7 @@ public class DocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
+        System.out.println(buffer.toString());
         return Response.ok(buffer.toString())
                 .header("Content-Disposition", "attachment; filename=\"" + "invoice.xml" + "\"")
                 .build();

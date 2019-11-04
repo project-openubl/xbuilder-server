@@ -1,0 +1,19 @@
+package rules;
+
+import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
+import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
+import org.openublpe.xmlbuilder.models.output.ProveedorOutputModel;
+
+dialect "java"
+
+rule "Proveedor"
+when
+    $input : AbstractInputDocumentModel(proveedor != null)
+    $output : AbstractOutputDocumentModel()
+then
+    $output.setProveedor(new ProveedorOutputModel());
+    $output.getProveedor().setRuc($input.getProveedor().getRuc());
+    $output.getProveedor().setRazonSocial($input.getProveedor().getRazonSocial());
+    $output.getProveedor().setNombreComercial($input.getProveedor().getNombreComercial());
+    $output.getProveedor().setCodigoPostal($input.getProveedor().getCodigoPostal());
+end

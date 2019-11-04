@@ -20,7 +20,7 @@
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha"
                               listName="Currency"
                               listAgencyName="United Nations Economic Commission for Europe">${moneda}</cbc:DocumentCurrencyCode>
-    <#if detalleSize??><cbc:LineCountNumeric>${detalleSize}</cbc:LineCountNumeric></#if>
+    <cbc:LineCountNumeric>${detalleSize}</cbc:LineCountNumeric>
     <cac:DiscrepancyResponse>
         <cbc:ReferenceID>${serieNumeroInvoiceReference}</cbc:ReferenceID>
         <cbc:ResponseCode listAgencyName="PE:SUNAT"
@@ -124,20 +124,29 @@
 <#--    <cac:RequestedMonetaryTotal>-->
 <#--        <cbc:PayableAmount currencyID="PEN">12076.26</cbc:PayableAmount>-->
 <#--    </cac:RequestedMonetaryTotal>-->
-<#--    <cac:DebitNoteLine>-->
-<#--        <cbc:ID>1</cbc:ID>-->
-<#--        <cbc:DebitedQuantity unitCode="NIU" unitCodeListAgencyName="United Nations Economic Commission for Europe"-->
-<#--                             unitCodeListID="UN/ECE rec 20">1-->
-<#--        </cbc:DebitedQuantity>-->
-<#--        <cbc:LineExtensionAmount currencyID="PEN">12076.26</cbc:LineExtensionAmount>-->
-<#--        <cac:PricingReference>-->
-<#--            <cac:AlternativeConditionPrice>-->
-<#--                <cbc:PriceAmount currencyID="PEN">12076.26</cbc:PriceAmount>-->
-<#--                <cbc:PriceTypeCode listAgencyName="PE:SUNAT" listName="SUNAT:Indicador de Tipo de Precio"-->
-<#--                                   listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">01-->
-<#--                </cbc:PriceTypeCode>-->
-<#--            </cac:AlternativeConditionPrice>-->
-<#--        </cac:PricingReference>-->
+    <cac:DebitNoteLine>
+        <cbc:ID>${item?index + 1}</cbc:ID>
+        <cbc:DebitedQuantity
+                unitCode="${item.unidadMedida}"
+                unitCodeListAgencyName="United Nations Economic Commission for Europe"
+                unitCodeListID="UN/ECE rec 20">${item.cantidad}</cbc:DebitedQuantity>
+        <cbc:LineExtensionAmount currencyID="${moneda}">${item.subtotal}</cbc:LineExtensionAmount>
+        <cac:PricingReference>
+            <#if !item.tipoIgv.operacionOnerosa>
+            <cac:AlternativeConditionPrice>
+                <cbc:PriceAmount currencyID="${moneda}">0</cbc:PriceAmount>
+                <cbc:PriceTypeCode listAgencyName="PE:SUNAT"
+                                   listName="SUNAT:Indicador de Tipo de Precio"
+                                   listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">01</cbc:PriceTypeCode>
+            </cac:AlternativeConditionPrice>
+            </#if>
+            <cac:AlternativeConditionPrice>
+                <cbc:PriceAmount currencyID="${moneda}">${item.precioUnitario}</cbc:PriceAmount><cbc:PriceAmount currencyID="PEN">12076.26</cbc:PriceAmount>
+                <cbc:PriceTypeCode listAgencyName="PE:SUNAT"
+                                   listName="SUNAT:Indicador de Tipo de Precio"
+                                   listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">${item.tipoPrecio.code}</cbc:PriceTypeCode>
+            </cac:AlternativeConditionPrice>
+        </cac:PricingReference>
 <#--        <cac:TaxTotal>-->
 <#--            <cbc:TaxAmount currencyID="PEN">0.00</cbc:TaxAmount>-->
 <#--            <cac:TaxSubtotal>-->
@@ -162,11 +171,11 @@
 <#--                </cac:TaxCategory>-->
 <#--            </cac:TaxSubtotal>-->
 <#--        </cac:TaxTotal>-->
-<#--        <cac:Item>-->
-<#--            <cbc:Description>INTERES MORATORIO</cbc:Description>-->
-<#--        </cac:Item>-->
-<#--        <cac:Price>-->
-<#--            <cbc:PriceAmount currencyID="PEN">12076.26</cbc:PriceAmount>-->
-<#--        </cac:Price>-->
-<#--    </cac:DebitNoteLine>-->
+        <cac:Item>
+            <cbc:Description><![CDATA[${item.descripcion}]]></cbc:Description>
+        </cac:Item>
+        <cac:Price>
+            <cbc:PriceAmount currencyID="${moneda}">${item.valorUnitario}</cbc:PriceAmount>
+        </cac:Price>
+    </cac:DebitNoteLine>
 </DebitNote>

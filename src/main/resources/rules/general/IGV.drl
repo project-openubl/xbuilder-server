@@ -1,0 +1,18 @@
+package rules.invoice;
+
+import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
+import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
+import java.math.BigDecimal;
+
+global java.math.BigDecimal IGV;
+
+dialect "java"
+
+rule "Global IGV"
+when
+    $input : AbstractInputDocumentModel()
+    $output : AbstractOutputDocumentModel()
+then
+    $output.setIgv(IGV);
+    $output.setIgvPercent(IGV.multiply(new BigDecimal(100)));
+end

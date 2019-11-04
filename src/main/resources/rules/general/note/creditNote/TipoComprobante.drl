@@ -1,0 +1,21 @@
+package rules.note.creditNote;
+
+import org.openublpe.xmlbuilder.models.input.general.note.AbstractNoteInputDocumentModel;
+import org.openublpe.xmlbuilder.models.output.general.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.models.ubl.Catalog;
+import org.openublpe.xmlbuilder.models.ubl.Catalog9;
+
+dialect "java"
+
+rule "Tipo Documento Credit Note"
+when
+    $input : AbstractNoteInputDocumentModel()
+    $output : CreditNoteOutputModel()
+then
+    if ($input.getTipoNota() != null) {
+        $output.setTipoNota(Catalog.valueOfCode(Catalog9.class, $input.getTipoNota()).get());
+    } else {
+        // TODO default value
+        $output.setTipoNota(Catalog9.ANULACION_DE_LA_OPERACION);
+    }
+end

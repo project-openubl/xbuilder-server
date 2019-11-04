@@ -1,0 +1,15 @@
+package rules;
+
+import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
+import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
+
+dialect "java"
+
+// Usar PEN por defecto
+rule "Moneda"
+when
+    $input : AbstractInputDocumentModel()
+    $output : AbstractOutputDocumentModel()
+then
+    $output.setMoneda($input.getMoneda() != null ? $input.getMoneda() : "PEN");
+end

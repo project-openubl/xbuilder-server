@@ -1,0 +1,17 @@
+package rules;
+
+import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
+import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
+import org.openublpe.xmlbuilder.models.output.FirmanteOutputModel;
+
+dialect "java"
+
+rule "Firmante"
+when
+    $input : AbstractInputDocumentModel(firmante != null)
+    $output : AbstractOutputDocumentModel()
+then
+    $output.setFirmante(new FirmanteOutputModel());
+    $output.getFirmante().setRuc($input.getFirmante().getRuc());
+    $output.getFirmante().setRazonSocial($input.getFirmante().getRazonSocial());
+end

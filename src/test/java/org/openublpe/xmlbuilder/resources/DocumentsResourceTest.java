@@ -9,9 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.CreditNoteInputGenerator;
 import org.openublpe.xmlbuilder.DebitNoteInputGenerator;
 import org.openublpe.xmlbuilder.InvoiceInputGenerator;
-import org.openublpe.xmlbuilder.models.input.creditNote.CreditNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.input.general.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.general.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 
 import java.util.ArrayList;
 import java.util.List;

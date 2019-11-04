@@ -1,7 +1,7 @@
 package org.openublpe.xmlbuilder.utils;
 
-import org.openublpe.xmlbuilder.models.input.DetalleInputModel;
-import org.openublpe.xmlbuilder.models.output.DetalleOutputModel;
+import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
+import org.openublpe.xmlbuilder.models.output.general.DetalleOutputModel;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -1,10 +1,7 @@
 package org.openublpe.xmlbuilder;
 
-import org.openublpe.xmlbuilder.models.input.ClienteInputModel;
-import org.openublpe.xmlbuilder.models.input.DetalleInputModel;
-import org.openublpe.xmlbuilder.models.input.ProveedorInputModel;
-import org.openublpe.xmlbuilder.models.input.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.ubl.Catalog6;
+import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
+import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
