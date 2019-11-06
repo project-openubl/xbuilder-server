@@ -11,16 +11,6 @@ import java.util.List;
 
 public class AbstractOutputDocumentModel {
 
-    @NotNull
-    @Min(0)
-    @Max(1)
-    private BigDecimal igv;
-
-    @NotNull
-    @Min(0)
-    @Max(100)
-    private BigDecimal igvPercent;
-
     @NotBlank
     private String serieNumero;
 
@@ -47,6 +37,10 @@ public class AbstractOutputDocumentModel {
     @NotNull
     @Min(1)
     private Integer detalleSize;
+
+    @Valid
+    @NotEmpty
+    private List<ImpuestoOutputModel> impuestos;
 
     @Valid
     @NotEmpty
@@ -124,19 +118,11 @@ public class AbstractOutputDocumentModel {
         this.detalle = detalle;
     }
 
-    public BigDecimal getIgv() {
-        return igv;
+    public List<ImpuestoOutputModel> getImpuestos() {
+        return impuestos;
     }
 
-    public void setIgv(BigDecimal igv) {
-        this.igv = igv;
-    }
-
-    public BigDecimal getIgvPercent() {
-        return igvPercent;
-    }
-
-    public void setIgvPercent(BigDecimal igvPercent) {
-        this.igvPercent = igvPercent;
+    public void setImpuestos(List<ImpuestoOutputModel> impuestos) {
+        this.impuestos = impuestos;
     }
 }

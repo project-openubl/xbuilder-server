@@ -1,16 +1,23 @@
 package org.openublpe.xmlbuilder.models.output.general;
 
-import org.openublpe.xmlbuilder.models.ubl.Catalog16;
-import org.openublpe.xmlbuilder.models.ubl.Catalog5;
-import org.openublpe.xmlbuilder.models.ubl.Catalog7;
-
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
+import java.util.List;
 
 public class DetalleOutputModel {
 
-    private Integer index;
+    @NotBlank
     private String descripcion;
+
+    @NotNull
+    @Positive
     private BigDecimal cantidad;
+
+    @NotBlank
     private String unidadMedida;
 
     // Sin impuestos
@@ -25,19 +32,13 @@ public class DetalleOutputModel {
     // precioUnitario * cantidad
     private BigDecimal total;
 
-    private BigDecimal igv;
+    @Valid
+    @NotNull
+    private ImpuestoOutputModel igv;
 
-    private Catalog7 tipoIgv;
-    private Catalog5 categoriaIgv;
-    private Catalog16 tipoPrecio;
-
-    public Integer getIndex() {
-        return index;
-    }
-
-    public void setIndex(Integer index) {
-        this.index = index;
-    }
+    @Valid
+    @NotEmpty
+    private List<PrecioReferenciaOutputModel> preciosDeReferencia;
 
     public BigDecimal getCantidad() {
         return cantidad;
@@ -95,35 +96,19 @@ public class DetalleOutputModel {
         this.total = total;
     }
 
-    public Catalog7 getTipoIgv() {
-        return tipoIgv;
-    }
-
-    public void setTipoIgv(Catalog7 tipoIgv) {
-        this.tipoIgv = tipoIgv;
-    }
-
-    public Catalog16 getTipoPrecio() {
-        return tipoPrecio;
-    }
-
-    public void setTipoPrecio(Catalog16 tipoPrecio) {
-        this.tipoPrecio = tipoPrecio;
-    }
-
-    public BigDecimal getIgv() {
+    public ImpuestoOutputModel getIgv() {
         return igv;
     }
 
-    public void setIgv(BigDecimal igv) {
+    public void setIgv(ImpuestoOutputModel igv) {
         this.igv = igv;
     }
 
-    public Catalog5 getCategoriaIgv() {
-        return categoriaIgv;
+    public List<PrecioReferenciaOutputModel> getPreciosDeReferencia() {
+        return preciosDeReferencia;
     }
 
-    public void setCategoriaIgv(Catalog5 categoriaIgv) {
-        this.categoriaIgv = categoriaIgv;
+    public void setPreciosDeReferencia(List<PrecioReferenciaOutputModel> preciosDeReferencia) {
+        this.preciosDeReferencia = preciosDeReferencia;
     }
 }

@@ -1,29 +1,23 @@
+<#list item.preciosDeReferencia as precioDeReferencia>
         <cac:PricingReference>
-            <#if !item.tipoIgv.operacionOnerosa>
-                <cac:AlternativeConditionPrice>
-                    <cbc:PriceAmount currencyID="${moneda}">0</cbc:PriceAmount>
-                    <cbc:PriceTypeCode listAgencyName="PE:SUNAT" listName="SUNAT:Indicador de Tipo de Precio" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">01
-                    </cbc:PriceTypeCode>
-                </cac:AlternativeConditionPrice>
-            </#if>
             <cac:AlternativeConditionPrice>
-                <cbc:PriceAmount currencyID="${moneda}">${item.precioUnitario}</cbc:PriceAmount>
-                <cbc:PriceAmount currencyID="PEN">12076.26</cbc:PriceAmount>
-                <cbc:PriceTypeCode listAgencyName="PE:SUNAT" listName="SUNAT:Indicador de Tipo de Precio" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">${item.tipoPrecio.code}</cbc:PriceTypeCode>
+                <cbc:PriceAmount currencyID="${moneda}">${precioDeReferencia.precio}</cbc:PriceAmount>
+                <cbc:PriceTypeCode listAgencyName="PE:SUNAT" listName="SUNAT:Indicador de Tipo de Precio" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">${precioDeReferencia.tipoPrecio.code}</cbc:PriceTypeCode>
             </cac:AlternativeConditionPrice>
         </cac:PricingReference>
+</#list>
         <cac:TaxTotal>
-            <cbc:TaxAmount currencyID="${moneda}">${item.igv}</cbc:TaxAmount>
+            <cbc:TaxAmount currencyID="${moneda}">${item.igv.importe}</cbc:TaxAmount>
             <cac:TaxSubtotal>
-                <cbc:TaxableAmount currencyID="${moneda}">${item.total}</cbc:TaxableAmount>
-                <cbc:TaxAmount currencyID="${moneda}">${item.igv}</cbc:TaxAmount>
+                <cbc:TaxableAmount currencyID="${moneda}">${item.igv.baseImponible}</cbc:TaxableAmount>
+                <cbc:TaxAmount currencyID="${moneda}">${item.igv.importe}</cbc:TaxAmount>
                 <cac:TaxCategory>
-                    <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifier">${item.categoriaIgv.categoria}</cbc:ID>
-                    <cbc:TaxExemptionReasonCode listAgencyName="PE:SUNAT" listName="SUNAT:Codigo de Tipo de Afectación del IGV" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo07">${item.tipoIgv.code}</cbc:TaxExemptionReasonCode>
+                    <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifier">${item.igv.categoria.categoria}</cbc:ID>
+                    <cbc:TaxExemptionReasonCode listAgencyName="PE:SUNAT" listName="SUNAT:Codigo de Tipo de Afectación del IGV" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo07">${item.igv.tipo.code}</cbc:TaxExemptionReasonCode>
                     <cac:TaxScheme>
-                        <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">${item.categoriaIgv.code}</cbc:ID>
-                        <cbc:Name>${item.categoriaIgv.nombre}</cbc:Name>
-                        <cbc:TaxTypeCode>${item.categoriaIgv.tipo}</cbc:TaxTypeCode>
+                        <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">${item.igv.categoria.code}</cbc:ID>
+                        <cbc:Name>${item.igv.categoria.nombre}</cbc:Name>
+                        <cbc:TaxTypeCode>${item.igv.categoria.tipo}</cbc:TaxTypeCode>
                     </cac:TaxScheme>
                 </cac:TaxCategory>
             </cac:TaxSubtotal>
