@@ -38,6 +38,9 @@ public class AbstractOutputDocumentModel {
     @Min(1)
     private Integer detalleSize;
 
+    @NotNull
+    private BigDecimal totalImpuestos;
+
     @Valid
     @NotEmpty
     private List<ImpuestoOutputModel> impuestos;
@@ -124,5 +127,13 @@ public class AbstractOutputDocumentModel {
 
     public void setImpuestos(List<ImpuestoOutputModel> impuestos) {
         this.impuestos = impuestos;
+    }
+
+    public BigDecimal getTotalImpuestos() {
+        return totalImpuestos;
+    }
+
+    public void setTotalImpuestos(BigDecimal totalImpuestos) {
+        this.totalImpuestos = totalImpuestos;
     }
 }

@@ -12,7 +12,8 @@ import java.util.ArrayList;
 
 import org.openublpe.xmlbuilder.models.ubl.Catalog;
 import org.openublpe.xmlbuilder.models.ubl.Catalog7;
-import org.openublpe.xmlbuilder.models.ubl.Catalog16
+import org.openublpe.xmlbuilder.models.ubl.Catalog7_1;
+import org.openublpe.xmlbuilder.models.ubl.Catalog16;
 
 global java.math.BigDecimal IGV;
 
@@ -70,4 +71,24 @@ then
         outputDetalle.getPreciosDeReferencia().add(new PrecioReferenciaOutputModel($inputDetalle.getPrecioUnitario(), Catalog16.PRECIO_UNITARIO_INCLUYE_IGV));
     }
 
+    // gravado, exonerado, inafecto
+    ImpuestoOutputModel impuesto = $output.getImpuestos()
+        .stream()
+        .filter(p -> p.getTipo().equals(tipoIgv))
+        .findFirst()
+        .orElseGet(() -> {
+            ImpuestoOutputModel i = new ImpuestoOutputModel();
+            i.setImporte(BigDecimal.ZERO);
+            i.setBaseImponible(BigDecimal.ZERO);
+            $output.getImpuestos().add(i);
+            return i;
+        });
+    impuesto.setTipo(tipoIgv);
+    impuesto.setCategoria(tipoIgv.getTaxCategory());
+    impuesto.setImporte(impuesto.getImporte().add(importeIgv));
+    impuesto.setBaseImponible(impuesto.getBaseImponible().add(total));
+
+    if (impuesto.getTipo().getGrupo().equals(Catalog7_1.GRAVADO)) {
+        $output.setTotalImpuestos($output.getTotalImpuestos().add(importeIgv));
+    }
 end

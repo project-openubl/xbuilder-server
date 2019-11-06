@@ -1,5 +1,5 @@
     <cac:TaxTotal>
-        <cbc:TaxAmount currencyID="PEN">7503.22</cbc:TaxAmount>
+        <cbc:TaxAmount currencyID="PEN">${totalImpuestos}</cbc:TaxAmount>
 <#list impuestos as impuesto>
         <cac:TaxSubtotal>
             <cbc:TaxableAmount currencyID="PEN">${impuesto.baseImponible}</cbc:TaxableAmount>

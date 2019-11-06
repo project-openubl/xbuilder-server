@@ -3,7 +3,8 @@ package rules;
 import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
 import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
 import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
-import java.util.LinkedList;
+import java.util.LinkedList
+import java.math.BigDecimal;
 
 dialect "java"
 
@@ -15,6 +16,8 @@ then
     $output.setDetalleSize($input.getDetalle().size());
 
     $output.setDetalle(new LinkedList<>());
+    $output.setImpuestos(new LinkedList<>());
+    $output.setTotalImpuestos(BigDecimal.ZERO);
     for (DetalleInputModel item : $input.getDetalle()) {
         insert(item);
     }
