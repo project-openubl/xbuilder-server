@@ -11,7 +11,9 @@ when
     $input : AbstractInputDocumentModel(firmante != null)
     $output : AbstractOutputDocumentModel()
 then
-    $output.setFirmante(new FirmanteOutputModel());
-    $output.getFirmante().setRuc($input.getFirmante().getRuc());
-    $output.getFirmante().setRazonSocial($input.getFirmante().getRazonSocial());
+    FirmanteOutputModel firmante = new FirmanteOutputModel();
+    $output.setFirmante(firmante);
+
+    firmante.setRuc($input.getFirmante().getRuc());
+    firmante.setRazonSocial($input.getFirmante().getRazonSocial());
 end

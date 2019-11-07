@@ -12,9 +12,9 @@
     <#include "./general/supplier.ftl">
     <#include "./general/customer.ftl">
     <#include "./general/tax-total.ftl">
-<#--    <cac:RequestedMonetaryTotal>-->
-<#--        <cbc:PayableAmount currencyID="PEN">12076.26</cbc:PayableAmount>-->
-<#--    </cac:RequestedMonetaryTotal>-->
+    <cac:RequestedMonetaryTotal>
+    <#include "./general/monetary-total.ftl">
+    </cac:RequestedMonetaryTotal>
     <cac:DebitNoteLine>
         <cbc:ID>${item?index + 1}</cbc:ID>
         <cbc:DebitedQuantity unitCode="${item.unidadMedida}" unitCodeListAgencyName="United Nations Economic Commission for Europe" unitCodeListID="UN/ECE rec 20">${item.cantidad}</cbc:DebitedQuantity>

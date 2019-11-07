@@ -12,10 +12,9 @@ when
     $input : AbstractNoteInputDocumentModel()
     $output : CreditNoteOutputModel()
 then
-    if ($input.getTipoNota() != null) {
-        $output.setTipoNota(Catalog.valueOfCode(Catalog9.class, $input.getTipoNota()).get());
-    } else {
-        // TODO default value
-        $output.setTipoNota(Catalog9.ANULACION_DE_LA_OPERACION);
-    }
+    // Default values
+    Catalog9 DEFAULT_TIPO_NOTA = Catalog9.ANULACION_DE_LA_OPERACION;
+
+    Catalog9 tipoNota = $input.getTipoNota() != null ? Catalog.valueOfCode(Catalog9.class, $input.getTipoNota()).get() : DEFAULT_TIPO_NOTA;
+    $output.setTipoNota(tipoNota);
 end

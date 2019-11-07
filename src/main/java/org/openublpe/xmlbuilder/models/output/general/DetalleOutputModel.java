@@ -34,7 +34,7 @@ public class DetalleOutputModel {
 
     @Valid
     @NotNull
-    private ImpuestoOutputModel igv;
+    private DetalleImpuestoOutputModel igv;
 
     @Valid
     @NotEmpty
@@ -96,11 +96,11 @@ public class DetalleOutputModel {
         this.total = total;
     }
 
-    public ImpuestoOutputModel getIgv() {
+    public DetalleImpuestoOutputModel getIgv() {
         return igv;
     }
 
-    public void setIgv(ImpuestoOutputModel igv) {
+    public void setIgv(DetalleImpuestoOutputModel igv) {
         this.igv = igv;
     }
 

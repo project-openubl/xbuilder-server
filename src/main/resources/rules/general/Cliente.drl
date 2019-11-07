@@ -13,12 +13,12 @@ when
     $input : AbstractInputDocumentModel(cliente != null)
     $output : AbstractOutputDocumentModel()
 then
-    $output.setCliente(new ClienteOutputModel());
+    ClienteOutputModel cliente = new ClienteOutputModel();
+    $output.setCliente(cliente);
 
-    $output.getCliente().setNombre($input.getCliente().getNombre());
-    $output.getCliente().setNumeroDocumentoIdentidad($input.getCliente().getNumeroDocumentoIdentidad());
+    cliente.setNombre($input.getCliente().getNombre());
+    cliente.setNumeroDocumentoIdentidad($input.getCliente().getNumeroDocumentoIdentidad());
 
-    $output.getCliente().setTipoDocumentoIdentidad(
-        Catalog.valueOfCode(Catalog6.class, $input.getCliente().getTipoDocumentoIdentidad()).get()
-    );
+    Catalog6 tipoDocumentoIdentidad = Catalog.valueOfCode(Catalog6.class, $input.getCliente().getTipoDocumentoIdentidad()).get();
+    cliente.setTipoDocumentoIdentidad(tipoDocumentoIdentidad);
 end

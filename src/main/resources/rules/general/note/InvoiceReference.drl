@@ -2,7 +2,7 @@ package rules.note;
 
 import org.openublpe.xmlbuilder.models.input.general.note.AbstractNoteInputDocumentModel;
 import org.openublpe.xmlbuilder.models.output.general.note.AbstractNoteOutputDocumentModel;
-import java.util.regex.Pattern;
+import org.openublpe.xmlbuilder.utils.UBLUtils;
 import org.openublpe.xmlbuilder.models.ubl.Catalog6;
 import org.openublpe.xmlbuilder.models.ubl.Catalog1;
 
@@ -16,10 +16,9 @@ then
     $output.setSerieNumeroInvoiceReference($input.getSerieNumeroInvoiceReference());
     $output.setDescripcionSustentoInvoiceReference($input.getDescripcionSustentoInvoiceReference());
 
-    if (Pattern.compile("^[F|f].*$").matcher($output.getSerieNumeroInvoiceReference()).find()) {
+    if (UBLUtils.FACTURA_SERIE_REGEX.matcher($output.getSerieNumeroInvoiceReference()).find()) {
         $output.setTipoComprobanteInvoiceReference(Catalog1.FACTURA);
-    } else if (Pattern.compile("^[B|b].*$").matcher($output.getSerieNumeroInvoiceReference()).find()) {
+    } else if (UBLUtils.BOLETA_SERIE_REGEX.matcher($output.getSerieNumeroInvoiceReference()).find()) {
        $output.setTipoComprobanteInvoiceReference(Catalog1.BOLETA);
     }
-
 end

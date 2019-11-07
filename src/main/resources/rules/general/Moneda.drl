@@ -11,5 +11,8 @@ when
     $input : AbstractInputDocumentModel()
     $output : AbstractOutputDocumentModel()
 then
-    $output.setMoneda($input.getMoneda() != null ? $input.getMoneda() : "PEN");
+    // Default values
+    String DEFAULT_MONEDA = "PEN";
+
+    $output.setMoneda($input.getMoneda() != null ? $input.getMoneda() : DEFAULT_MONEDA);
 end

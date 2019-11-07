@@ -8,7 +8,7 @@ import function org.openublpe.xmlbuilder.utils.DateUtils.toGregorianCalendarTime
 
 dialect "java"
 
-rule "Fecha y hora de emision"
+rule "Fecha y Hora de emision"
 when
     $input : AbstractInputDocumentModel(fechaEmision != null)
     $output: AbstractOutputDocumentModel()

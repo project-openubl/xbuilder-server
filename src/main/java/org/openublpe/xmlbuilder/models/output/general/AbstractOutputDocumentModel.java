@@ -35,19 +35,38 @@ public class AbstractOutputDocumentModel {
     private ClienteOutputModel cliente;
 
     @NotNull
-    @Min(1)
-    private Integer detalleSize;
-
-    @NotNull
-    private BigDecimal totalImpuestos;
+    private BigDecimal importeTotalImpuestos;
 
     @Valid
     @NotEmpty
-    private List<ImpuestoOutputModel> impuestos;
+    private List<ImpuestoOutputModel> totalImpuestos;
+
+    @NotNull
+    @Min(1)
+    private Integer detalleSize;
 
     @Valid
     @NotEmpty
     private List<DetalleOutputModel> detalle;
+
+    /**
+     * Totales
+     */
+
+    @NotNull
+    private BigDecimal totalValorVenta;
+
+    @NotNull
+    private BigDecimal totalPrecioVenta;
+
+    @NotNull
+    private BigDecimal totalDescuentos;
+
+    @NotNull
+    private BigDecimal totalOtrosCargos;
+
+    @NotNull
+    private BigDecimal importeTotal;
 
     public String getSerieNumero() {
         return serieNumero;
@@ -121,19 +140,59 @@ public class AbstractOutputDocumentModel {
         this.detalle = detalle;
     }
 
-    public List<ImpuestoOutputModel> getImpuestos() {
-        return impuestos;
-    }
-
-    public void setImpuestos(List<ImpuestoOutputModel> impuestos) {
-        this.impuestos = impuestos;
-    }
-
-    public BigDecimal getTotalImpuestos() {
+    public List<ImpuestoOutputModel> getTotalImpuestos() {
         return totalImpuestos;
     }
 
-    public void setTotalImpuestos(BigDecimal totalImpuestos) {
+    public void setTotalImpuestos(List<ImpuestoOutputModel> totalImpuestos) {
         this.totalImpuestos = totalImpuestos;
+    }
+
+    public BigDecimal getImporteTotalImpuestos() {
+        return importeTotalImpuestos;
+    }
+
+    public void setImporteTotalImpuestos(BigDecimal importeTotalImpuestos) {
+        this.importeTotalImpuestos = importeTotalImpuestos;
+    }
+
+    public BigDecimal getTotalValorVenta() {
+        return totalValorVenta;
+    }
+
+    public void setTotalValorVenta(BigDecimal totalValorVenta) {
+        this.totalValorVenta = totalValorVenta;
+    }
+
+    public BigDecimal getTotalPrecioVenta() {
+        return totalPrecioVenta;
+    }
+
+    public void setTotalPrecioVenta(BigDecimal totalPrecioVenta) {
+        this.totalPrecioVenta = totalPrecioVenta;
+    }
+
+    public BigDecimal getTotalDescuentos() {
+        return totalDescuentos;
+    }
+
+    public void setTotalDescuentos(BigDecimal totalDescuentos) {
+        this.totalDescuentos = totalDescuentos;
+    }
+
+    public BigDecimal getTotalOtrosCargos() {
+        return totalOtrosCargos;
+    }
+
+    public void setTotalOtrosCargos(BigDecimal totalOtrosCargos) {
+        this.totalOtrosCargos = totalOtrosCargos;
+    }
+
+    public BigDecimal getImporteTotal() {
+        return importeTotal;
+    }
+
+    public void setImporteTotal(BigDecimal importeTotal) {
+        this.importeTotal = importeTotal;
     }
 }

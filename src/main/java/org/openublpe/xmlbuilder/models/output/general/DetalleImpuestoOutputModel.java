@@ -5,11 +5,12 @@ import org.openublpe.xmlbuilder.models.ubl.Catalog7;
 
 import java.math.BigDecimal;
 
-public class ImpuestoOutputModel {
+public class DetalleImpuestoOutputModel {
 
     private BigDecimal importe;
     private BigDecimal baseImponible;
     private Catalog5 categoria;
+    private Catalog7 tipo;
 
     public BigDecimal getImporte() {
         return importe;
@@ -33,5 +34,13 @@ public class ImpuestoOutputModel {
 
     public void setCategoria(Catalog5 categoria) {
         this.categoria = categoria;
+    }
+
+    public Catalog7 getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(Catalog7 tipo) {
+        this.tipo = tipo;
     }
 }

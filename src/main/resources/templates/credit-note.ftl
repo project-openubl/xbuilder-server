@@ -12,9 +12,9 @@
     <#include "./general/supplier.ftl">
     <#include "./general/customer.ftl">
     <#include "./general/tax-total.ftl">
-<#--    <cac:LegalMonetaryTotal>-->
-<#--        <cbc:PayableAmount currencyID="PEN">3077455.73</cbc:PayableAmount>-->
-<#--    </cac:LegalMonetaryTotal>-->
+    <cac:LegalMonetaryTotal>
+    <#include "./general/monetary-total.ftl">
+    </cac:LegalMonetaryTotal>
     <#list detalle as item>
     <cac:CreditNoteLine>
         <cbc:ID>${item?index + 1}</cbc:ID>

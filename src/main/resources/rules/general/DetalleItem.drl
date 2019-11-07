@@ -4,7 +4,7 @@ import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
 import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
 import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
 import org.openublpe.xmlbuilder.models.output.general.DetalleOutputModel;
-import org.openublpe.xmlbuilder.models.output.general.ImpuestoOutputModel;
+import org.openublpe.xmlbuilder.models.output.general.DetalleImpuestoOutputModel;
 import org.openublpe.xmlbuilder.models.output.general.PrecioReferenciaOutputModel;
 
 import java.math.BigDecimal;
@@ -26,12 +26,12 @@ when
     $inputDetalle: DetalleInputModel()
 then
     DetalleOutputModel outputDetalle = new DetalleOutputModel();
-    outputDetalle.setIgv(new ImpuestoOutputModel());
+    outputDetalle.setIgv(new DetalleImpuestoOutputModel());
     outputDetalle.setPreciosDeReferencia(new ArrayList<>());
 
     $output.getDetalle().add(outputDetalle);
 
-    // Default values
+    // DEFAULT VALUES
     String DEFAULT_UNIDAD_MEDIDA = "NIU";
     Catalog7 DEFAULT_TIPO_IGV = Catalog7.GRAVADO_OPERACION_ONEROSA;
 
@@ -55,7 +55,7 @@ then
     BigDecimal subTotal = $inputDetalle.getCantidad().multiply(outputDetalle.getValorUnitario());
     outputDetalle.setSubtotal(subTotal);
 
-    // igv
+    // IGV
     Catalog7 tipoIgv = $inputDetalle.getTipoIGV() != null ? Catalog.valueOfCode(Catalog7.class, $inputDetalle.getTipoIGV()).get() : DEFAULT_TIPO_IGV;
     BigDecimal importeIgv = tipoIgv.isGravado() ? outputDetalle.getTotal().multiply(IGV) : BigDecimal.ZERO;
     outputDetalle.getIgv().setTipo(tipoIgv);
@@ -69,26 +69,5 @@ then
     } else {
         outputDetalle.getPreciosDeReferencia().add(new PrecioReferenciaOutputModel(BigDecimal.ZERO, Catalog16.VALOR_FERENCIAL_UNITARIO_EN_OPERACIONES_NO_ONEROSAS));
         outputDetalle.getPreciosDeReferencia().add(new PrecioReferenciaOutputModel($inputDetalle.getPrecioUnitario(), Catalog16.PRECIO_UNITARIO_INCLUYE_IGV));
-    }
-
-    // gravado, exonerado, inafecto
-    ImpuestoOutputModel impuesto = $output.getImpuestos()
-        .stream()
-        .filter(p -> p.getTipo().equals(tipoIgv))
-        .findFirst()
-        .orElseGet(() -> {
-            ImpuestoOutputModel i = new ImpuestoOutputModel();
-            i.setImporte(BigDecimal.ZERO);
-            i.setBaseImponible(BigDecimal.ZERO);
-            $output.getImpuestos().add(i);
-            return i;
-        });
-    impuesto.setTipo(tipoIgv);
-    impuesto.setCategoria(tipoIgv.getTaxCategory());
-    impuesto.setImporte(impuesto.getImporte().add(importeIgv));
-    impuesto.setBaseImponible(impuesto.getBaseImponible().add(total));
-
-    if (impuesto.getTipo().getGrupo().equals(Catalog7_1.GRAVADO)) {
-        $output.setTotalImpuestos($output.getTotalImpuestos().add(importeIgv));
     }
 end

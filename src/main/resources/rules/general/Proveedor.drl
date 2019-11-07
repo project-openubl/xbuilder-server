@@ -11,9 +11,11 @@ when
     $input : AbstractInputDocumentModel(proveedor != null)
     $output : AbstractOutputDocumentModel()
 then
-    $output.setProveedor(new ProveedorOutputModel());
-    $output.getProveedor().setRuc($input.getProveedor().getRuc());
-    $output.getProveedor().setRazonSocial($input.getProveedor().getRazonSocial());
-    $output.getProveedor().setNombreComercial($input.getProveedor().getNombreComercial());
-    $output.getProveedor().setCodigoPostal($input.getProveedor().getCodigoPostal());
+    ProveedorOutputModel proveedor = new ProveedorOutputModel();
+    $output.setProveedor(proveedor);
+
+    proveedor.setRuc($input.getProveedor().getRuc());
+    proveedor.setRazonSocial($input.getProveedor().getRazonSocial());
+    proveedor.setNombreComercial($input.getProveedor().getNombreComercial());
+    proveedor.setCodigoPostal($input.getProveedor().getCodigoPostal());
 end
