@@ -15,16 +15,17 @@ import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.data.CreditNoteInputGenerator;
 import org.openublpe.xmlbuilder.data.DebitNoteInputGenerator;
 import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
+import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.utils.CertificateDetails;
 import org.openublpe.xmlbuilder.utils.CertificateDetailsFactory;
 import org.openublpe.xmlbuilder.utils.XMLSigner;
 import org.openublpe.xmlbuilder.utils.XMLUtils;
 import org.w3c.dom.Document;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
@@ -40,9 +41,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @QuarkusTest
 public class DocumentsResourceTest {
 
-    static String SIGN_REFERENCE_ID = "TestID";
+    static String SIGN_REFERENCE_ID = "SIGN-ID";
 
-    static String KEYSTORE = "keystore.jks";
+    static String KEYSTORE = "LLAMA-PE-CERTIFICADO-DEMO-10467793549.pfx";
     static String KEYSTORE_PASSWORD = "password";
     static CertificateDetails CERTIFICATE;
 
@@ -98,10 +99,10 @@ public class DocumentsResourceTest {
             assertNotNull(xmlDocument);
 
             // Sign document
-            XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
+            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
 
             // Validate valid XML
-            InvoiceType invoiceType = UBL21Reader.invoice().read(xmlDocument);
+            InvoiceType invoiceType = UBL21Reader.invoice().read(xmlSignedDocument);
             assertNotNull(invoiceType);
 
             // Send to test
@@ -111,8 +112,9 @@ public class DocumentsResourceTest {
                     .password(SUNAT_BETA_PASSWORD)
                     .build();
             String invoiceFileNameWithoutExtension = XMLUtils.getInvoiceFileName(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
-            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", XMLUtils.documentToBytes(xmlDocument), config);
-            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO);
+            byte[] bytes = XMLUtils.documentToBytes(xmlSignedDocument);
+            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", bytes, config);
+            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO, billServiceModel.getCode() + ":" + billServiceModel.getDescription());
         }
     }
 
@@ -139,10 +141,10 @@ public class DocumentsResourceTest {
             assertNotNull(xmlDocument);
 
             // Sign document
-            XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
+            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
 
             // Validate valid XML
-            CreditNoteType creditNoteType = UBL21Reader.creditNote().read(xmlDocument);
+            CreditNoteType creditNoteType = UBL21Reader.creditNote().read(xmlSignedDocument);
             assertNotNull(creditNoteType);
 
             // Send to test
@@ -151,9 +153,10 @@ public class DocumentsResourceTest {
                     .username(input.getProveedor().getRuc() + SUNAT_BETA_USERNAME)
                     .password(SUNAT_BETA_PASSWORD)
                     .build();
-            String invoiceFileNameWithoutExtension = XMLUtils.getInvoiceFileName(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
-            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", XMLUtils.documentToBytes(xmlDocument), config);
-            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO);
+            String invoiceFileNameWithoutExtension = XMLUtils.getNotaCredito(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
+            byte[] bytes = XMLUtils.documentToBytes(xmlSignedDocument);
+            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", bytes, config);
+            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO, billServiceModel.getCode() + ":" + billServiceModel.getDescription());
         }
     }
 
@@ -180,10 +183,10 @@ public class DocumentsResourceTest {
             assertNotNull(xmlDocument);
 
             // Sign document
-            XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
+            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
 
             // Validate valid XML
-            DebitNoteType debitNoteType = UBL21Reader.debitNote().read(xmlDocument);
+            DebitNoteType debitNoteType = UBL21Reader.debitNote().read(xmlSignedDocument);
             assertNotNull(debitNoteType);
 
             // Send to test
@@ -192,9 +195,10 @@ public class DocumentsResourceTest {
                     .username(input.getProveedor().getRuc() + SUNAT_BETA_USERNAME)
                     .password(SUNAT_BETA_PASSWORD)
                     .build();
-            String invoiceFileNameWithoutExtension = XMLUtils.getInvoiceFileName(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
-            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", XMLUtils.documentToBytes(xmlDocument), config);
-            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO);
+            String invoiceFileNameWithoutExtension = XMLUtils.getNotaDebito(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
+            byte[] bytes = XMLUtils.documentToBytes(xmlSignedDocument);
+            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", bytes, config);
+            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO, billServiceModel.getCode() + ":" + billServiceModel.getDescription());
         }
     }
 

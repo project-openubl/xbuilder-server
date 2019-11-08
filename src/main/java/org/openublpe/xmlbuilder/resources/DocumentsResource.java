@@ -8,12 +8,12 @@ import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.KieRuntimeBuilder;
 import org.openublpe.xmlbuilder.FreemarkerConstants;
 import org.openublpe.xmlbuilder.UBLConstants;
+import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.output.general.note.debitNote.DebitNoteOutputModel;
-import org.openublpe.xmlbuilder.models.output.general.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.models.output.general.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.output.general.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.general.note.debitNote.DebitNoteOutputModel;
 
 import javax.inject.Inject;
 import javax.validation.Valid;

@@ -2,12 +2,16 @@ package org.openublpe.xmlbuilder.utils;
 
 import org.openublpe.xmlbuilder.models.ubl.Catalog1;
 import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
@@ -43,19 +47,49 @@ public class XMLUtils {
         transformer.transform(source, result);
     }
 
+    public static Document cloneDocument(Document document) throws ParserConfigurationException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Node originalRoot = document.getDocumentElement();
+        Document copyDocument = db.newDocument();
+        Node copiedRoot = copyDocument.importNode(originalRoot, true);
+        copyDocument.appendChild(copiedRoot);
+        return copyDocument;
+    }
+
     public static String getInvoiceFileName(String ruc, String serie, Integer numero) {
-        Catalog1 tipoInvoice;
+        Catalog1 catalog1;
         if (UBLUtils.FACTURA_SERIE_REGEX.matcher(serie.toUpperCase()).find()) {
-            tipoInvoice = Catalog1.FACTURA;
+            catalog1 = Catalog1.FACTURA;
         } else if (UBLUtils.BOLETA_SERIE_REGEX.matcher(serie.toUpperCase()).find()) {
-            tipoInvoice = Catalog1.BOLETA;
+            catalog1 = Catalog1.BOLETA;
         } else {
             throw new IllegalStateException("Invalid Serie, can not detect code");
         }
 
         return new StringBuilder()
                 .append(ruc).append("-")
-                .append(tipoInvoice.getCode()).append("-")
+                .append(catalog1.getCode()).append("-")
+                .append(serie.toUpperCase()).append("-")
+                .append(numero)
+                .toString();
+    }
+
+    public static String getNotaCredito(String ruc, String serie, Integer numero) {
+        Catalog1 catalog1 = Catalog1.NOTA_CREDITO;
+        return new StringBuilder()
+                .append(ruc).append("-")
+                .append(catalog1.getCode()).append("-")
+                .append(serie.toUpperCase()).append("-")
+                .append(numero)
+                .toString();
+    }
+
+    public static String getNotaDebito(String ruc, String serie, Integer numero) {
+        Catalog1 catalog1 = Catalog1.NOTA_DEBITO;
+        return new StringBuilder()
+                .append(ruc).append("-")
+                .append(catalog1.getCode()).append("-")
                 .append(serie.toUpperCase()).append("-")
                 .append(numero)
                 .toString();

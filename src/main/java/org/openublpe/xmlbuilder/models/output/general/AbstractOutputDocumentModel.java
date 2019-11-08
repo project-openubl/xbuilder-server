@@ -5,7 +5,10 @@ import org.openublpe.xmlbuilder.models.output.FirmanteOutputModel;
 import org.openublpe.xmlbuilder.models.output.ProveedorOutputModel;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.List;
 

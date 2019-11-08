@@ -1,9 +1,9 @@
 package org.openublpe.xmlbuilder.utils;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.*;
@@ -13,6 +13,7 @@ import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
 import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
+import javax.xml.parsers.ParserConfigurationException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -28,12 +29,19 @@ public class XMLSigner {
             String referenceID,
             X509Certificate certificate,
             PrivateKey privateKey
-    ) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, MarshalException, XMLSignatureException {
-        addUBLExtensions(document);
-        addUBLExtension(document);
-        Node nodeExtensionContent = addExtensionContent(document);
+    ) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, MarshalException, XMLSignatureException, ParserConfigurationException {
+        Document copyDocument = XMLUtils.cloneDocument(document);
+
+        addUBLExtensions(copyDocument);
+        addUBLExtension(copyDocument);
+        Node nodeExtensionContent = addExtensionContent(copyDocument);
 
         XMLSignatureFactory signatureFactory = XMLSignatureFactory.getInstance();
+
+        DOMSignContext signContext = new DOMSignContext(privateKey, copyDocument.getDocumentElement());
+        signContext.setDefaultNamespacePrefix("ds");
+        signContext.setParent(nodeExtensionContent);
+
         Reference reference = signatureFactory.newReference("",
                 signatureFactory.newDigestMethod(DigestMethod.SHA1, null),
                 Collections.singletonList(signatureFactory.newTransform(Transform.ENVELOPED, (TransformParameterSpec) null)), null, null);
@@ -42,19 +50,15 @@ public class XMLSigner {
                 signatureFactory.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE, (C14NMethodParameterSpec) null),
                 signatureFactory.newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(reference));
 
-        KeyInfoFactory keyInfoFactory = signatureFactory.getKeyInfoFactory();
-        List<X509Certificate> x509Content = new ArrayList<>();
-
         // Certificate
+        List<X509Certificate> x509Content = new ArrayList<>();
         x509Content.add(certificate);
 
+        KeyInfoFactory keyInfoFactory = signatureFactory.getKeyInfoFactory();
         X509Data xdata = keyInfoFactory.newX509Data(x509Content);
         KeyInfo keyInfo = keyInfoFactory.newKeyInfo(Collections.singletonList(xdata));
 
-        DOMSignContext signContext = new DOMSignContext(privateKey, document.getDocumentElement());
-        signContext.setDefaultNamespacePrefix("ds");
-        signContext.setParent(nodeExtensionContent);
-
+        // Sign
         XMLSignature signature = signatureFactory.newXMLSignature(signedInfo, keyInfo);
         signature.sign(signContext);
 
@@ -64,7 +68,7 @@ public class XMLSigner {
             elementSignature.setAttribute("Id", referenceID);
         }
 
-        return document;
+        return copyDocument;
     }
 
     private static void addUBLExtensions(Document document) {

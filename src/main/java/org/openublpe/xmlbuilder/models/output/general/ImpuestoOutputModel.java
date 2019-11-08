@@ -1,7 +1,6 @@
 package org.openublpe.xmlbuilder.models.output.general;
 
 import org.openublpe.xmlbuilder.models.ubl.Catalog5;
-import org.openublpe.xmlbuilder.models.ubl.Catalog7;
 
 import java.math.BigDecimal;
 
