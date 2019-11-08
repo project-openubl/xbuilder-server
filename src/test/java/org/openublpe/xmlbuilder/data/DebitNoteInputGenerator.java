@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder;
+package org.openublpe.xmlbuilder.data;
 
 import org.openublpe.xmlbuilder.models.input.general.note.debitNote.DebitNoteInputModel;
 

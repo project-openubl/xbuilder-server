@@ -2,8 +2,7 @@
 <DebitNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
         <#include "./general/namespaces.ftl">
 >
-    <ext:UBLExtensions>
-    </ext:UBLExtensions>
+    <#include "./general/ubl-extensions.ftl">
     <#include "./general/general-data.ftl">
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyName="United Nations Economic Commission for Europe" listName="Currency">${moneda}</cbc:DocumentCurrencyCode>
     <cbc:LineCountNumeric>${detalleSize}</cbc:LineCountNumeric>

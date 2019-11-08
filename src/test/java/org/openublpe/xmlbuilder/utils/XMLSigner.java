@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SignXMLDocumentUtils {
+public class XMLSigner {
 
     public static Document firmarXML(
             Document document,
@@ -29,8 +29,9 @@ public class SignXMLDocumentUtils {
             X509Certificate certificate,
             PrivateKey privateKey
     ) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, MarshalException, XMLSignatureException {
-        Document signedDocument = addUBLExtensions(document);
-        Node parentNode = addExtensionContent(signedDocument);
+        addUBLExtensions(document);
+        addUBLExtension(document);
+        Node nodeExtensionContent = addExtensionContent(document);
 
         XMLSignatureFactory signatureFactory = XMLSignatureFactory.getInstance();
         Reference reference = signatureFactory.newReference("",
@@ -50,68 +51,51 @@ public class SignXMLDocumentUtils {
         X509Data xdata = keyInfoFactory.newX509Data(x509Content);
         KeyInfo keyInfo = keyInfoFactory.newKeyInfo(Collections.singletonList(xdata));
 
-        DOMSignContext signContext = new DOMSignContext(privateKey, signedDocument.getDocumentElement());
-        XMLSignature signature = signatureFactory.newXMLSignature(signedInfo, keyInfo);
-        if (parentNode != null) {
-            signContext.setParent(parentNode);
-        }
+        DOMSignContext signContext = new DOMSignContext(privateKey, document.getDocumentElement());
         signContext.setDefaultNamespacePrefix("ds");
+        signContext.setParent(nodeExtensionContent);
+
+        XMLSignature signature = signatureFactory.newXMLSignature(signedInfo, keyInfo);
         signature.sign(signContext);
+
         Element elementParent = (Element) signContext.getParent();
         if ((referenceID != null) && (elementParent.getElementsByTagName("ds:Signature") != null)) {
             Element elementSignature = (Element) elementParent.getElementsByTagName("ds:Signature").item(0);
             elementSignature.setAttribute("Id", referenceID);
         }
 
-        return signedDocument;
+        return document;
     }
 
-    private static Document addUBLExtensions(Document document) {
-        NodeList nodeList = document.getDocumentElement().getElementsByTagName("ext:UBLExtensions");
-        Node extensions = nodeList.item(0);
-        if (extensions == null) {
-            Element element = document.getDocumentElement();
-            extensions = document.createElement("ext:UBLExtensions");
-            element.insertBefore(extensions, element.getFirstChild());
-            extensions.appendChild(document.createTextNode("\n"));
-            return document;
-        } else {
-            return document;
+    private static void addUBLExtensions(Document document) {
+        NodeList nodeListUBLExtensions = document.getDocumentElement().getElementsByTagName("ext:UBLExtensions");
+        Node nodeUBLExtensions = nodeListUBLExtensions.item(0);
+        if (nodeUBLExtensions == null) {
+            Element documentElement = document.getDocumentElement();
+            nodeUBLExtensions = document.createElement("ext:UBLExtensions");
+            documentElement.insertBefore(nodeUBLExtensions, documentElement.getFirstChild());
+        }
+    }
+
+    private static void addUBLExtension(Document document) {
+        NodeList nodeListUBLExtensions = document.getDocumentElement().getElementsByTagName("ext:UBLExtensions");
+        NodeList nodeListUBLExtension = document.getDocumentElement().getElementsByTagName("ext:UBLExtension");
+        Node nodeUBLExtension = nodeListUBLExtension.item(0);
+        if (nodeUBLExtension == null) {
+            nodeUBLExtension = document.createElement("ext:UBLExtension");
+            nodeListUBLExtensions.item(0).appendChild(nodeUBLExtension);
         }
     }
 
     private static Node addExtensionContent(Document document) {
-        NodeList nodeList = document.getDocumentElement().getElementsByTagName("ext:UBLExtensions");
-        Node extensions = nodeList.item(0);
-        Node content = null;
-        if (extensions != null) {
-            NodeList previousSignature = extensions.getOwnerDocument().getElementsByTagName("ds:Signature");
-            if (previousSignature != null && previousSignature.getLength() > 0) {
-                Node previousContent = previousSignature.item(0).getParentNode();
-                removeAll(previousContent);
-                content = previousContent;
-            } else {
-                Node extension = document.createElement("ext:UBLExtension");
-                content = document.createElement("ext:ExtensionContent");
-                extension.appendChild(content);
-                extensions.appendChild(extension);
-            }
+        NodeList nodeListUBLExtension = document.getDocumentElement().getElementsByTagName("ext:UBLExtension");
+        NodeList nodeListExtensionContent = document.getDocumentElement().getElementsByTagName("ext:ExtensionContent");
+        Node nodeExtensionContent = nodeListExtensionContent.item(0);
+        if (nodeExtensionContent == null) {
+            nodeExtensionContent = document.createElement("ext:ExtensionContent");
+            nodeListUBLExtension.item(0).appendChild(nodeExtensionContent);
         }
-        return content;
+        return nodeExtensionContent;
     }
 
-    private static void removeAll(Node node) {
-        NodeList childNodes = node.getChildNodes();
-        if (childNodes != null) {
-            for (int i = 0; i < childNodes.getLength(); i++) {
-                Node n = node.getChildNodes().item(i);
-                if (n.hasChildNodes()) {
-                    removeAll(n);
-                    node.removeChild(n);
-                } else {
-                    node.removeChild(n);
-                }
-            }
-        }
-    }
 }

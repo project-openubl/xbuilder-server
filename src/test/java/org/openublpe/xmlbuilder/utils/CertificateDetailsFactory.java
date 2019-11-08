@@ -14,9 +14,9 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
-public class CertificateUtil {
+public class CertificateDetailsFactory {
 
-    public static CertificateDetails getCertificateDetails(InputStream is, String jksPassword)
+    public static CertificateDetails create(InputStream is, String jksPassword)
             throws KeyStoreException, UnrecoverableEntryException, NoSuchAlgorithmException, IOException, CertificateException {
         CertificateDetails certDetails = null;
 

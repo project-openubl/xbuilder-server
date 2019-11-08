@@ -9,7 +9,6 @@ public class CertificateDetails {
 
     private X509Certificate x509Certificate;
 
-
     public PrivateKey getPrivateKey() {
         return privateKey;
     }

@@ -2,42 +2,19 @@ package org.openublpe.xmlbuilder.utils;
 
 import org.openublpe.xmlbuilder.models.ubl.Catalog1;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.crypto.MarshalException;
-import javax.xml.crypto.dsig.*;
-import javax.xml.crypto.dsig.dom.DOMSignContext;
-import javax.xml.crypto.dsig.keyinfo.KeyInfo;
-import javax.xml.crypto.dsig.keyinfo.KeyInfoFactory;
-import javax.xml.crypto.dsig.keyinfo.X509Data;
-import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
-import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.*;
 
-public class XMLReaderUtils {
+public class XMLUtils {
 
-    public static Document inputStreamToDocument(InputStream inputStream) throws ParserConfigurationException, IOException, SAXException {
+    public static Document inputStreamToDocument(InputStream inputStream) throws ParserConfigurationException, IOException, SAXException, TransformerConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -52,6 +29,18 @@ public class XMLReaderUtils {
         StreamResult result = new StreamResult(bos);
         transformer.transform(new DOMSource(document), result);
         return bos.toByteArray();
+    }
+
+    public static void writeDocumentToFile(Document document, File file) throws IOException, TransformerException {
+        DOMSource source = new DOMSource(document);
+        FileWriter writer = new FileWriter(file);
+        StreamResult result = new StreamResult(writer);
+
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+//        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+        transformer.transform(source, result);
     }
 
     public static String getInvoiceFileName(String ruc, String serie, Integer numero) {
