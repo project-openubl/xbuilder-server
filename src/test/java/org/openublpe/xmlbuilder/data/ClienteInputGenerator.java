@@ -9,7 +9,15 @@ public class ClienteInputGenerator {
         // TODO just static methods
     }
 
-    public static ClienteInputModel getCliente() {
+    public static ClienteInputModel getClienteConRUC() {
+        ClienteInputModel cliente = new ClienteInputModel();
+        cliente.setNombre("Carlos Feria S.A.C.");
+        cliente.setNumeroDocumentoIdentidad("12345678912");
+        cliente.setTipoDocumentoIdentidad(Catalog6.RUC.toString());
+        return cliente;
+    }
+
+    public static ClienteInputModel getClienteConDNI() {
         ClienteInputModel cliente = new ClienteInputModel();
         cliente.setNombre("Carlos Feria");
         cliente.setNumeroDocumentoIdentidad("12345678");

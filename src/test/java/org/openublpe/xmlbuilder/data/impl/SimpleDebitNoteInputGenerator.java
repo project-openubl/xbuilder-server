@@ -24,7 +24,7 @@ public class SimpleDebitNoteInputGenerator implements DebitNoteInputGenerator {
         input.setFirmante(FirmanteInputGenerator.getFirmante());
 
         input.setProveedor(ProveedorInputGenerator.getProveedor());
-        input.setCliente(ClienteInputGenerator.getCliente());
+        input.setCliente(ClienteInputGenerator.getClienteConRUC());
 
         List<DetalleInputModel> detalle = new ArrayList<>();
         input.setDetalle(detalle);
