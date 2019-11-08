@@ -1,6 +1,6 @@
     <cac:Signature>
     <#if firmante??>
-    <cbc:ID>${firmante.ruc}</cbc:ID>
+    <cbc:ID>#SIGN-ID</cbc:ID>
         <cac:SignatoryParty>
             <cac:PartyIdentification>
                 <cbc:ID>${firmante.ruc}</cbc:ID>

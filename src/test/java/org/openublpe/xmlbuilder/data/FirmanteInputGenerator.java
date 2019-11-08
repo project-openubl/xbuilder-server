@@ -10,8 +10,8 @@ public class FirmanteInputGenerator {
 
     public static FirmanteInputModel getFirmante() {
         FirmanteInputModel result = new FirmanteInputModel();
-        result.setRuc("98765432198");
-        result.setRazonSocial("Softgreen S.A.C.");
+        result.setRuc("10467793549");
+        result.setRazonSocial("SoftGreen S.A.C.");
         return result;
     }
 }
