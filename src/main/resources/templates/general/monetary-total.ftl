@@ -4,14 +4,14 @@
         <#--A través de este elemento se debe indicar el valor de venta total de la operación. Es decir-->
         <#--el importe total de la venta sin considerar los descuentos, impuestos u otros tributos a que-->
         <#--se refiere el numeral anterior, pero que incluye cualquier monto de redondeo aplicable.-->
-        <cbc:PayableAmount currencyID="PEN">${totalValorVenta}</cbc:PayableAmount>
+        <#if totalValorVenta??><cbc:LineExtensionAmount currencyID="PEN">${totalValorVenta}</cbc:LineExtensionAmount></#if>
         <#---------->
         <#--PUNTO2-->
         <#---------->
         <#--TOTAL PRECIO DE VENTA-->
         <#--A través de este elemento se debe indicar el valor de venta total de la operación incluido-->
         <#--los impuestos.-->
-        <cbc:TaxInclusiveAmount currencyID="PEN">${totalPrecioVenta}</cbc:TaxInclusiveAmount>
+        <#if totalPrecioVenta??><cbc:TaxInclusiveAmount currencyID="PEN">${totalPrecioVenta}</cbc:TaxInclusiveAmount></#if>
         <#---------->
         <#--PUNTO3-->
         <#---------->
@@ -21,7 +21,7 @@
         <#--Su propósito es permitir consignar en el comprobante de pago:-->
         <#--* La sumatoria de los descuentos de cada línea (descuentos por ítem), ó-->
         <#--* La sumatoria de los descuentos de cada línea (ítem) + descuentos globales-->
-        <cbc:AllowanceTotalAmount currencyID="PEN">${totalDescuentos}</cbc:AllowanceTotalAmount>
+        <#if totalDescuentos??><cbc:AllowanceTotalAmount currencyID="PEN">${totalDescuentos}</cbc:AllowanceTotalAmount></#if>
         <#---------->
         <#--PUNTO4-->
         <#---------->
@@ -30,7 +30,7 @@
         <#--parte de la operación que se factura, es decir no forman parte del(os) valor(es) de ventas-->
         <#--señaladas anteriormente, pero sí forman parte del importe total de la Venta (Ejemplo:-->
         <#--propinas, garantías para devolución de envases, etc.)-->
-        <cbc:ChargeTotalAmount currencyID="PEN">${totalOtrosCargos}</cbc:ChargeTotalAmount>
+        <#if totalDescuentos??><cbc:ChargeTotalAmount currencyID="PEN">${totalOtrosCargos}</cbc:ChargeTotalAmount></#if>
         <#---------->
         <#--PUNTO5-->
         <#---------->

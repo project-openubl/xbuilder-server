@@ -2,6 +2,9 @@ package org.openublpe.xmlbuilder.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.helger.ubl21.UBL21Reader;
+import io.github.carlosthe19916.webservices.managers.BillServiceManager;
+import io.github.carlosthe19916.webservices.providers.BillServiceModel;
+import io.github.carlosthe19916.webservices.wrappers.ServiceConfig;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
 import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
@@ -42,6 +45,10 @@ public class DocumentsResourceTest {
     static String KEYSTORE = "keystore.jks";
     static String KEYSTORE_PASSWORD = "password";
     static CertificateDetails CERTIFICATE;
+
+    static final String SUNAT_BETA_URL = "https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService";
+    static final String SUNAT_BETA_USERNAME = "MODDATOS";
+    static final String SUNAT_BETA_PASSWORD = "MODDATOS";
 
     static List<InvoiceInputModel> invoiceInputs = new ArrayList<>();
     static List<CreditNoteInputModel> creditNoteInputs = new ArrayList<>();
@@ -98,14 +105,14 @@ public class DocumentsResourceTest {
             assertNotNull(invoiceType);
 
             // Send to test
-//            final ServiceConfig config = new ServiceConfig.Builder()
-//                    .url("https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService")
-//                    .username(input.getProveedor().getRuc() + "MODDATOS")
-//                    .password("MODDATOS")
-//                    .build();
-//            String invoiceFileNameWithoutExtension = XMLReaderUtils.getInvoiceFileName(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
-//            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", XMLReaderUtils.documentToBytes(xmlDocument), config);
-//            System.out.println(billServiceModel);
+            final ServiceConfig config = new ServiceConfig.Builder()
+                    .url(SUNAT_BETA_URL)
+                    .username(input.getProveedor().getRuc() + SUNAT_BETA_USERNAME)
+                    .password(SUNAT_BETA_PASSWORD)
+                    .build();
+            String invoiceFileNameWithoutExtension = XMLUtils.getInvoiceFileName(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
+            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", XMLUtils.documentToBytes(xmlDocument), config);
+            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO);
         }
     }
 
@@ -137,6 +144,16 @@ public class DocumentsResourceTest {
             // Validate valid XML
             CreditNoteType creditNoteType = UBL21Reader.creditNote().read(xmlDocument);
             assertNotNull(creditNoteType);
+
+            // Send to test
+            final ServiceConfig config = new ServiceConfig.Builder()
+                    .url(SUNAT_BETA_URL)
+                    .username(input.getProveedor().getRuc() + SUNAT_BETA_USERNAME)
+                    .password(SUNAT_BETA_PASSWORD)
+                    .build();
+            String invoiceFileNameWithoutExtension = XMLUtils.getInvoiceFileName(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
+            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", XMLUtils.documentToBytes(xmlDocument), config);
+            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO);
         }
     }
 
@@ -168,6 +185,16 @@ public class DocumentsResourceTest {
             // Validate valid XML
             DebitNoteType debitNoteType = UBL21Reader.debitNote().read(xmlDocument);
             assertNotNull(debitNoteType);
+
+            // Send to test
+            final ServiceConfig config = new ServiceConfig.Builder()
+                    .url(SUNAT_BETA_URL)
+                    .username(input.getProveedor().getRuc() + SUNAT_BETA_USERNAME)
+                    .password(SUNAT_BETA_PASSWORD)
+                    .build();
+            String invoiceFileNameWithoutExtension = XMLUtils.getInvoiceFileName(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
+            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", XMLUtils.documentToBytes(xmlDocument), config);
+            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO);
         }
     }
 

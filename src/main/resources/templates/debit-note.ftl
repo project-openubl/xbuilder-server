@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <DebitNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
-        <#include "./general/namespaces.ftl">
+            <#include "./general/namespaces.ftl">
 >
     <#include "./general/ubl-extensions.ftl">
     <#include "./general/general-data.ftl">
@@ -14,10 +14,12 @@
     <cac:RequestedMonetaryTotal>
     <#include "./general/monetary-total.ftl">
     </cac:RequestedMonetaryTotal>
+    <#list detalle as item>
     <cac:DebitNoteLine>
         <cbc:ID>${item?index + 1}</cbc:ID>
         <cbc:DebitedQuantity unitCode="${item.unidadMedida}" unitCodeListAgencyName="United Nations Economic Commission for Europe" unitCodeListID="UN/ECE rec 20">${item.cantidad}</cbc:DebitedQuantity>
         <cbc:LineExtensionAmount currencyID="${moneda}">${item.subtotal}</cbc:LineExtensionAmount>
         <#include "./general/detail.ftl">
     </cac:DebitNoteLine>
+    </#list>
 </DebitNote>

@@ -18,10 +18,6 @@ when
     $input : AbstractInputDocumentModel()
     $output : AbstractOutputDocumentModel()
 then
-    // TODO this is temporary
-    $output.setTotalOtrosCargos(BigDecimal.ZERO);
-    $output.setTotalDescuentos(BigDecimal.ZERO);
-
     // TOTAL IMPUESTOS
     BigDecimal totalIGV = $output.getDetalle()
         .stream()
@@ -68,7 +64,14 @@ then
     $output.getTotalImpuestos().add(totalInafecto);
 
     // TOTAL PAYABLE
-    $output.setTotalValorVenta(BigDecimal.ZERO);
-    $output.setTotalPrecioVenta(BigDecimal.ZERO);
-    $output.setImporteTotal(BigDecimal.ZERO);
+     BigDecimal importeTotal = $output.getDetalle()
+            .stream()
+            .map(DetalleOutputModel::getTotal)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    $output.setTotalValorVenta(null);
+    $output.setTotalPrecioVenta(null);
+    $output.setTotalDescuentos(null);
+    $output.setTotalOtrosCargos(null);
+    $output.setImporteTotal(importeTotal);
 end
