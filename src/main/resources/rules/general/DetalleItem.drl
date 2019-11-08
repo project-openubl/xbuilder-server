@@ -27,7 +27,6 @@ when
 then
     DetalleOutputModel outputDetalle = new DetalleOutputModel();
     outputDetalle.setIgv(new DetalleImpuestoOutputModel());
-    outputDetalle.setPreciosDeReferencia(new ArrayList<>());
 
     $output.getDetalle().add(outputDetalle);
 
@@ -64,6 +63,8 @@ then
     outputDetalle.getIgv().setImporte(importeIgv);
 
     // Precios de referencia
+    outputDetalle.setPreciosDeReferencia(new ArrayList<>());
+
     if (tipoIgv.isOperacionOnerosa()) {
         outputDetalle.getPreciosDeReferencia().add(new PrecioReferenciaOutputModel($inputDetalle.getPrecioUnitario(), Catalog16.PRECIO_UNITARIO_INCLUYE_IGV));
     } else {

@@ -15,7 +15,7 @@ public abstract class AbstractNoteOutputDocumentModel extends AbstractOutputDocu
     private String descripcionSustentoInvoiceReference;
 
     @NotNull
-    private Catalog1 tipoComprobanteInvoiceReference;
+    private Catalog1 tipoInvoiceReference;
 
     public String getSerieNumeroInvoiceReference() {
         return serieNumeroInvoiceReference;
@@ -33,11 +33,11 @@ public abstract class AbstractNoteOutputDocumentModel extends AbstractOutputDocu
         this.descripcionSustentoInvoiceReference = descripcionSustentoInvoiceReference;
     }
 
-    public Catalog1 getTipoComprobanteInvoiceReference() {
-        return tipoComprobanteInvoiceReference;
+    public Catalog1 getTipoInvoiceReference() {
+        return tipoInvoiceReference;
     }
 
-    public void setTipoComprobanteInvoiceReference(Catalog1 tipoComprobanteInvoiceReference) {
-        this.tipoComprobanteInvoiceReference = tipoComprobanteInvoiceReference;
+    public void setTipoInvoiceReference(Catalog1 tipoInvoiceReference) {
+        this.tipoInvoiceReference = tipoInvoiceReference;
     }
 }

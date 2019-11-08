@@ -1,11 +1,11 @@
-<#list item.preciosDeReferencia as precioDeReferencia>
+        <#list item.preciosDeReferencia as precioDeReferencia>
         <cac:PricingReference>
             <cac:AlternativeConditionPrice>
                 <cbc:PriceAmount currencyID="${moneda}">${precioDeReferencia.precio}</cbc:PriceAmount>
                 <cbc:PriceTypeCode listAgencyName="PE:SUNAT" listName="SUNAT:Indicador de Tipo de Precio" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">${precioDeReferencia.tipoPrecio.code}</cbc:PriceTypeCode>
             </cac:AlternativeConditionPrice>
         </cac:PricingReference>
-</#list>
+        </#list>
         <cac:TaxTotal>
             <cbc:TaxAmount currencyID="${moneda}">${item.igv.importe}</cbc:TaxAmount>
             <cac:TaxSubtotal>

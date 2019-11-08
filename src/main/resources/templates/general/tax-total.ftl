@@ -1,6 +1,6 @@
     <cac:TaxTotal>
         <cbc:TaxAmount currencyID="PEN">${importeTotalImpuestos}</cbc:TaxAmount>
-<#list totalImpuestos as impuesto>
+        <#list totalImpuestos as impuesto>
         <cac:TaxSubtotal>
             <cbc:TaxableAmount currencyID="PEN">${impuesto.baseImponible}</cbc:TaxableAmount>
             <cbc:TaxAmount currencyID="PEN">${impuesto.importe}</cbc:TaxAmount>
@@ -13,5 +13,5 @@
                 </cac:TaxScheme>
             </cac:TaxCategory>
         </cac:TaxSubtotal>
-</#list>
+        </#list>
     </cac:TaxTotal>

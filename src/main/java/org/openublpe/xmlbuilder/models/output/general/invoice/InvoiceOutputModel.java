@@ -8,14 +8,14 @@ import javax.validation.constraints.NotNull;
 public class InvoiceOutputModel extends AbstractOutputDocumentModel {
 
     @NotNull
-    private Catalog1 tipoComprobante;
+    private Catalog1 tipoInvoice;
 
-    public Catalog1 getTipoComprobante() {
-        return tipoComprobante;
+    public Catalog1 getTipoInvoice() {
+        return tipoInvoice;
     }
 
-    public void setTipoComprobante(Catalog1 tipoComprobante) {
-        this.tipoComprobante = tipoComprobante;
+    public void setTipoInvoice(Catalog1 tipoInvoice) {
+        this.tipoInvoice = tipoInvoice;
     }
 
 }

@@ -17,8 +17,8 @@ then
     $output.setDescripcionSustentoInvoiceReference($input.getDescripcionSustentoInvoiceReference());
 
     if (UBLUtils.FACTURA_SERIE_REGEX.matcher($output.getSerieNumeroInvoiceReference()).find()) {
-        $output.setTipoComprobanteInvoiceReference(Catalog1.FACTURA);
+        $output.setTipoInvoiceReference(Catalog1.FACTURA);
     } else if (UBLUtils.BOLETA_SERIE_REGEX.matcher($output.getSerieNumeroInvoiceReference()).find()) {
-       $output.setTipoComprobanteInvoiceReference(Catalog1.BOLETA);
+       $output.setTipoInvoiceReference(Catalog1.BOLETA);
     }
 end

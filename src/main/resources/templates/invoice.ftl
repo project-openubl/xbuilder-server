@@ -4,7 +4,7 @@
 >
     <#include "./general/ubl-extensions.ftl">
     <#include "./general/general-data.ftl">
-    <cbc:InvoiceTypeCode listID="0101" listAgencyName="PE:SUNAT" listName="SUNAT:Identificador de Tipo de Documento" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo01">${tipoComprobante.code}</cbc:InvoiceTypeCode>
+    <cbc:InvoiceTypeCode listID="0101" listAgencyName="PE:SUNAT" listName="SUNAT:Identificador de Tipo de Documento" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo01">${tipoInvoice.code}</cbc:InvoiceTypeCode>
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyName="United Nations Economic Commission for Europe" listName="Currency">${moneda}</cbc:DocumentCurrencyCode>
     <cbc:LineCountNumeric>${detalleSize}</cbc:LineCountNumeric>
     <#include "./general/signature.ftl">

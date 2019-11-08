@@ -14,8 +14,8 @@ when
     $output : InvoiceOutputModel()
 then
     if (UBLUtils.FACTURA_SERIE_REGEX.matcher($input.getSerie()).find()) {
-        $output.setTipoComprobante(Catalog1.FACTURA);
+        $output.setTipoInvoice(Catalog1.FACTURA);
     } else if (UBLUtils.BOLETA_SERIE_REGEX.matcher($input.getSerie()).find()) {
-       $output.setTipoComprobante(Catalog1.BOLETA);
+       $output.setTipoInvoice(Catalog1.BOLETA);
     }
 end
