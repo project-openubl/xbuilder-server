@@ -24,15 +24,14 @@ import org.openublpe.xmlbuilder.utils.XMLSigner;
 import org.openublpe.xmlbuilder.utils.XMLUtils;
 import org.w3c.dom.Document;
 
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ServiceLoader;
+import java.util.*;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,6 +53,7 @@ public class DocumentsResourceTest {
     static List<InvoiceInputModel> invoiceInputs = new ArrayList<>();
     static List<CreditNoteInputModel> creditNoteInputs = new ArrayList<>();
     static List<DebitNoteInputModel> debitNoteInputs = new ArrayList<>();
+    static Map<Object, Class> generatorMap = new HashMap<>();
 
     @BeforeAll
     public static void beforeAll() throws UnrecoverableEntryException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException {
@@ -62,18 +62,38 @@ public class DocumentsResourceTest {
 
         ServiceLoader<InvoiceInputGenerator> serviceLoader1 = ServiceLoader.load(InvoiceInputGenerator.class);
         for (InvoiceInputGenerator generator : serviceLoader1) {
-            invoiceInputs.add(generator.getInvoice());
+            InvoiceInputModel invoice = generator.getInvoice();
+            invoiceInputs.add(invoice);
+            generatorMap.put(invoice, generator.getClass());
         }
 
         ServiceLoader<CreditNoteInputGenerator> serviceLoader2 = ServiceLoader.load(CreditNoteInputGenerator.class);
         for (CreditNoteInputGenerator generator : serviceLoader2) {
-            creditNoteInputs.add(generator.getCreditNote());
+            CreditNoteInputModel creditNote = generator.getCreditNote();
+            creditNoteInputs.add(creditNote);
+            generatorMap.put(creditNote, generator.getClass());
         }
 
         ServiceLoader<DebitNoteInputGenerator> serviceLoader3 = ServiceLoader.load(DebitNoteInputGenerator.class);
         for (DebitNoteInputGenerator generator : serviceLoader3) {
-            debitNoteInputs.add(generator.getDebitNote());
+            DebitNoteInputModel debitNote = generator.getDebitNote();
+            debitNoteInputs.add(debitNote);
+            generatorMap.put(debitNote, generator.getClass());
         }
+    }
+
+    String assertMessageError(Object obj, String error) {
+        return "[" + generatorMap.get(obj).getCanonicalName() + "]\n" + error;
+    }
+
+    String assertMessageError(Object obj, String error, Document document) throws TransformerException {
+        return new StringBuilder()
+                .append("\n")
+                .append(XMLUtils.documentToString(document)).append("\n")
+                .append("CLASS ")
+                .append(generatorMap.get(obj).getCanonicalName()).append("\n")
+                .append("MESSAGE ").append(error)
+                .toString();
     }
 
     @Test
@@ -91,30 +111,36 @@ public class DocumentsResourceTest {
                     .thenReturn();
 
             // Then
-            assertEquals(200, response.getStatusCode());
+            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
             InputStream bodyInputStream = response.getBody().asInputStream();
 
             // read document
             Document xmlDocument = XMLUtils.inputStreamToDocument(bodyInputStream);
-            assertNotNull(xmlDocument);
+            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
 
             // Sign document
             Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
 
             // Validate valid XML
             InvoiceType invoiceType = UBL21Reader.invoice().read(xmlSignedDocument);
-            assertNotNull(invoiceType);
+            assertNotNull(invoiceType, assertMessageError(input, "InvoiceType is no valid", xmlSignedDocument));
 
             // Send to test
-            final ServiceConfig config = new ServiceConfig.Builder()
+            ServiceConfig config = new ServiceConfig.Builder()
                     .url(SUNAT_BETA_URL)
                     .username(input.getProveedor().getRuc() + SUNAT_BETA_USERNAME)
                     .password(SUNAT_BETA_PASSWORD)
                     .build();
+
+            byte[] documentBytes = XMLUtils.documentToBytes(xmlSignedDocument);
             String invoiceFileNameWithoutExtension = XMLUtils.getInvoiceFileName(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
-            byte[] bytes = XMLUtils.documentToBytes(xmlSignedDocument);
-            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", bytes, config);
-            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO, billServiceModel.getCode() + ":" + billServiceModel.getDescription());
+
+            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", documentBytes, config);
+            assertEquals(
+                    billServiceModel.getStatus(),
+                    BillServiceModel.Status.ACEPTADO,
+                    assertMessageError(input, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]", xmlSignedDocument)
+            );
         }
     }
 
@@ -133,7 +159,7 @@ public class DocumentsResourceTest {
                     .thenReturn();
 
             // Then
-            assertEquals(200, response.getStatusCode());
+            assertEquals(200, response.getStatusCode(), response.getBody().asString());
             InputStream bodyInputStream = response.getBody().asInputStream();
 
             // read document
@@ -175,7 +201,7 @@ public class DocumentsResourceTest {
                     .thenReturn();
 
             // Then
-            assertEquals(200, response.getStatusCode());
+            assertEquals(200, response.getStatusCode(), response.getBody().asString());
             InputStream bodyInputStream = response.getBody().asInputStream();
 
             // read document

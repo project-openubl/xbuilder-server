@@ -1,3 +1,4 @@
+<#setting number_format="computer">
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <DebitNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:DebitNote-2"
             <#include "./general/namespaces.ftl">

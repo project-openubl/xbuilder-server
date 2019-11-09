@@ -1,12 +1,12 @@
         <cbc:LineExtensionAmount currencyID="${moneda}">${item.subtotal}</cbc:LineExtensionAmount>
-        <#list item.preciosDeReferencia as precioDeReferencia>
         <cac:PricingReference>
+            <#list item.preciosDeReferencia as precioDeReferencia>
             <cac:AlternativeConditionPrice>
                 <cbc:PriceAmount currencyID="${moneda}">${precioDeReferencia.precio}</cbc:PriceAmount>
                 <cbc:PriceTypeCode listAgencyName="PE:SUNAT" listName="SUNAT:Indicador de Tipo de Precio" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo16">${precioDeReferencia.tipoPrecio.code}</cbc:PriceTypeCode>
             </cac:AlternativeConditionPrice>
+            </#list>
         </cac:PricingReference>
-        </#list>
         <cac:TaxTotal>
             <cbc:TaxAmount currencyID="${moneda}">${item.igv.importe}</cbc:TaxAmount>
             <cac:TaxSubtotal>

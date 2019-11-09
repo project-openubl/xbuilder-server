@@ -8,10 +8,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
@@ -33,6 +30,19 @@ public class XMLUtils {
         StreamResult result = new StreamResult(bos);
         transformer.transform(new DOMSource(document), result);
         return bos.toByteArray();
+    }
+
+    public static String documentToString(Document document) throws TransformerException {
+        StringWriter sw = new StringWriter();
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+//        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+//        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+//        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+//        transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+
+        transformer.transform(new DOMSource(document), new StreamResult(sw));
+        return sw.toString();
     }
 
     public static void writeDocumentToFile(Document document, File file) throws IOException, TransformerException {

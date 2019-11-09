@@ -1,1 +1,8 @@
 org.openublpe.xmlbuilder.data.impl.SimpleInvoiceInputGenerator
+org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1.Caso1_InvoiceGenerator
+org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1.Caso2_InvoiceGenerator
+org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1.Caso3_InvoiceGenerator
+org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1.Caso4_InvoiceGenerator
+org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1.Caso5_InvoiceGenerator
+org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo2.Caso12_InvoiceGenerator
+org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo2.Caso13_InvoiceGenerator
