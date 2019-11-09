@@ -66,7 +66,7 @@ public class DocumentsResource {
         } catch (IOException | TemplateException e) {
             throw new InternalServerErrorException(e);
         }
-
+        System.out.println(buffer.toString());
         return Response.ok(buffer.toString())
                 .header("Content-Disposition", "attachment; filename=\"" + "invoice.xml" + "\"")
                 .build();

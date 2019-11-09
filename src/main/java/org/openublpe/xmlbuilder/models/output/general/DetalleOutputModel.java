@@ -32,6 +32,8 @@ public class DetalleOutputModel {
     // precioUnitario * cantidad
     private BigDecimal total;
 
+    private BigDecimal igvPorcentual;
+
     @Valid
     @NotNull
     private DetalleImpuestoOutputModel igv;
@@ -110,5 +112,13 @@ public class DetalleOutputModel {
 
     public void setPreciosDeReferencia(List<PrecioReferenciaOutputModel> preciosDeReferencia) {
         this.preciosDeReferencia = preciosDeReferencia;
+    }
+
+    public BigDecimal getIgvPorcentual() {
+        return igvPorcentual;
+    }
+
+    public void setIgvPorcentual(BigDecimal igvPorcentual) {
+        this.igvPorcentual = igvPorcentual;
     }
 }

@@ -9,11 +9,14 @@ import org.openublpe.xmlbuilder.models.output.general.PrecioReferenciaOutputMode
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.math.RoundingMode;
 
 import org.openublpe.xmlbuilder.models.ubl.Catalog;
 import org.openublpe.xmlbuilder.models.ubl.Catalog7;
 import org.openublpe.xmlbuilder.models.ubl.Catalog7_1;
 import org.openublpe.xmlbuilder.models.ubl.Catalog16;
+
+//import function org.openublpe.xmlbuilder.utils.NumberUtils.format2Digists;
 
 global java.math.BigDecimal IGV;
 
@@ -43,24 +46,29 @@ then
     outputDetalle.setPrecioUnitario($inputDetalle.getPrecioUnitario());
 
     // Valor unitario
-    BigDecimal valorUnitario = $inputDetalle.getPrecioUnitario().multiply(BigDecimal.ONE.subtract(IGV));
-    outputDetalle.setValorUnitario(valorUnitario);
+    BigDecimal valorUnitario = $inputDetalle.getPrecioUnitario().divide(BigDecimal.ONE.add(IGV), 100, RoundingMode.HALF_EVEN);
+    outputDetalle.setValorUnitario(valorUnitario.setScale(2, RoundingMode.HALF_EVEN));
 
     // Total
     BigDecimal total = $inputDetalle.getCantidad().multiply($inputDetalle.getPrecioUnitario());
-    outputDetalle.setTotal(total);
+    outputDetalle.setTotal(total.setScale(2, RoundingMode.HALF_EVEN));
 
-    // Subtotal
-    BigDecimal subTotal = $inputDetalle.getCantidad().multiply(outputDetalle.getValorUnitario());
-    outputDetalle.setSubtotal(subTotal);
+    // IGV porcentual
+    outputDetalle.setIgvPorcentual(IGV.multiply(new BigDecimal("100")));
 
     // IGV
     Catalog7 tipoIgv = $inputDetalle.getTipoIGV() != null ? Catalog.valueOfCode(Catalog7.class, $inputDetalle.getTipoIGV()).get() : DEFAULT_TIPO_IGV;
-    BigDecimal importeIgv = tipoIgv.isGravado() ? outputDetalle.getTotal().multiply(IGV) : BigDecimal.ZERO;
+    BigDecimal importeIgv = tipoIgv.isGravado() ? $inputDetalle.getCantidad().multiply(valorUnitario).multiply(IGV) : BigDecimal.ZERO;
+
+     // Subtotal
+            BigDecimal subTotal = total.subtract(importeIgv).setScale(2, RoundingMode.HALF_EVEN);
+            outputDetalle.setSubtotal(subTotal);
+
+    BigDecimal baseImponible = importeIgv.setScale(2, RoundingMode.HALF_EVEN).divide(IGV, 8, RoundingMode.HALF_EVEN);
     outputDetalle.getIgv().setTipo(tipoIgv);
     outputDetalle.getIgv().setCategoria(tipoIgv.getTaxCategory());
-    outputDetalle.getIgv().setBaseImponible(total);
-    outputDetalle.getIgv().setImporte(importeIgv);
+    outputDetalle.getIgv().setBaseImponible(baseImponible.setScale(2, RoundingMode.HALF_EVEN));
+    outputDetalle.getIgv().setImporte(importeIgv.setScale(2, RoundingMode.HALF_EVEN));
 
     // Precios de referencia
     outputDetalle.setPreciosDeReferencia(new ArrayList<>());

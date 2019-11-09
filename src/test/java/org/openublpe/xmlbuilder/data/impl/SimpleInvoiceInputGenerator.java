@@ -9,6 +9,7 @@ import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -17,9 +18,12 @@ public class SimpleInvoiceInputGenerator implements InvoiceInputGenerator {
     @Override
     public InvoiceInputModel getInvoice() {
         InvoiceInputModel input = new InvoiceInputModel();
-        input.setSerie("F001");
-        input.setNumero(123);
-        input.setFechaEmision(new Date().getTime());
+        input.setSerie("F004");
+        input.setNumero(584);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2019, Calendar.NOVEMBER, 8);
+        input.setFechaEmision(calendar.getTimeInMillis());
 
         input.setFirmante(FirmanteInputGenerator.getFirmante());
 
@@ -33,13 +37,7 @@ public class SimpleInvoiceInputGenerator implements InvoiceInputGenerator {
         detalle.add(item1);
         item1.setDescripcion("Item1");
         item1.setCantidad(BigDecimal.ONE);
-        item1.setPrecioUnitario(BigDecimal.TEN);
-
-        DetalleInputModel item2 = new DetalleInputModel();
-        detalle.add(item2);
-        item2.setDescripcion("item2");
-        item2.setCantidad(BigDecimal.TEN);
-        item2.setPrecioUnitario(BigDecimal.ONE);
+        item1.setPrecioUnitario(new BigDecimal("65"));
 
         return input;
     }
