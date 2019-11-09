@@ -18,7 +18,6 @@
     <cac:DebitNoteLine>
         <cbc:ID>${item?index + 1}</cbc:ID>
         <cbc:DebitedQuantity unitCode="${item.unidadMedida}" unitCodeListAgencyName="United Nations Economic Commission for Europe" unitCodeListID="UN/ECE rec 20">${item.cantidad}</cbc:DebitedQuantity>
-        <cbc:LineExtensionAmount currencyID="${moneda}">${item.subtotal}</cbc:LineExtensionAmount>
         <#include "./general/detail.ftl">
     </cac:DebitNoteLine>
     </#list>

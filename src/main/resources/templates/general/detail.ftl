@@ -1,3 +1,4 @@
+        <cbc:LineExtensionAmount currencyID="${moneda}">${item.subtotal}</cbc:LineExtensionAmount>
         <#list item.preciosDeReferencia as precioDeReferencia>
         <cac:PricingReference>
             <cac:AlternativeConditionPrice>

@@ -16,7 +16,7 @@ import org.openublpe.xmlbuilder.models.ubl.Catalog7;
 import org.openublpe.xmlbuilder.models.ubl.Catalog7_1;
 import org.openublpe.xmlbuilder.models.ubl.Catalog16;
 
-//import function org.openublpe.xmlbuilder.utils.NumberUtils.format2Digists;
+import function org.openublpe.xmlbuilder.utils.NumberUtils.format2Digists;
 
 global java.math.BigDecimal IGV;
 
@@ -37,46 +37,52 @@ then
     String DEFAULT_UNIDAD_MEDIDA = "NIU";
     Catalog7 DEFAULT_TIPO_IGV = Catalog7.GRAVADO_OPERACION_ONEROSA;
 
-    // Descripcion, unidad de medida, cantidad
-    outputDetalle.setDescripcion($inputDetalle.getDescripcion());
-    outputDetalle.setUnidadMedida($inputDetalle.getUnidadMedida() != null ? $inputDetalle.getUnidadMedida() : DEFAULT_UNIDAD_MEDIDA);
-    outputDetalle.setCantidad($inputDetalle.getCantidad());
-
-    // Precio unitario
-    outputDetalle.setPrecioUnitario($inputDetalle.getPrecioUnitario());
-
-    // Valor unitario
-    BigDecimal valorUnitario = $inputDetalle.getPrecioUnitario().divide(BigDecimal.ONE.add(IGV), 100, RoundingMode.HALF_EVEN);
-    outputDetalle.setValorUnitario(valorUnitario.setScale(2, RoundingMode.HALF_EVEN));
-
-    // Total
-    BigDecimal total = $inputDetalle.getCantidad().multiply($inputDetalle.getPrecioUnitario());
-    outputDetalle.setTotal(total.setScale(2, RoundingMode.HALF_EVEN));
 
     // IGV porcentual
-    outputDetalle.setIgvPorcentual(IGV.multiply(new BigDecimal("100")));
+    BigDecimal igvPorcentual = IGV.multiply(new BigDecimal("100"));
+    outputDetalle.setIgvPorcentual(igvPorcentual);
+
+    // Descripcion, unidad de medida
+    outputDetalle.setDescripcion($inputDetalle.getDescripcion());
+    outputDetalle.setUnidadMedida($inputDetalle.getUnidadMedida() != null ? $inputDetalle.getUnidadMedida() : DEFAULT_UNIDAD_MEDIDA);
+
+    // Cantidad
+    BigDecimal cantidad = $inputDetalle.getCantidad();
+    outputDetalle.setCantidad(cantidad);
+
+    // Precio unitario
+    BigDecimal precioUnitario = $inputDetalle.getPrecioUnitario();
+    outputDetalle.setPrecioUnitario(precioUnitario);
+
+    // Valor unitario
+    BigDecimal valorUnitario = precioUnitario.divide(BigDecimal.ONE.add(IGV), 100, RoundingMode.HALF_EVEN);
+    outputDetalle.setValorUnitario(format2Digists(valorUnitario));
+
+    // Total
+    BigDecimal total = cantidad.multiply(precioUnitario);
+    outputDetalle.setTotal(format2Digists(total));
 
     // IGV
     Catalog7 tipoIgv = $inputDetalle.getTipoIGV() != null ? Catalog.valueOfCode(Catalog7.class, $inputDetalle.getTipoIGV()).get() : DEFAULT_TIPO_IGV;
-    BigDecimal importeIgv = tipoIgv.isGravado() ? $inputDetalle.getCantidad().multiply(valorUnitario).multiply(IGV) : BigDecimal.ZERO;
+    BigDecimal importeIgv = tipoIgv.isGravado() ? cantidad.multiply(valorUnitario).multiply(IGV) : BigDecimal.ZERO;
 
      // Subtotal
-            BigDecimal subTotal = total.subtract(importeIgv).setScale(2, RoundingMode.HALF_EVEN);
-            outputDetalle.setSubtotal(subTotal);
+    BigDecimal subTotal = total.subtract(importeIgv).setScale(2, RoundingMode.HALF_EVEN);
+    outputDetalle.setSubtotal(subTotal);
 
-    BigDecimal baseImponible = importeIgv.setScale(2, RoundingMode.HALF_EVEN).divide(IGV, 8, RoundingMode.HALF_EVEN);
+    BigDecimal baseImponible = subTotal;
     outputDetalle.getIgv().setTipo(tipoIgv);
     outputDetalle.getIgv().setCategoria(tipoIgv.getTaxCategory());
-    outputDetalle.getIgv().setBaseImponible(baseImponible.setScale(2, RoundingMode.HALF_EVEN));
-    outputDetalle.getIgv().setImporte(importeIgv.setScale(2, RoundingMode.HALF_EVEN));
+    outputDetalle.getIgv().setBaseImponible(format2Digists(baseImponible));
+    outputDetalle.getIgv().setImporte(format2Digists(importeIgv));
 
     // Precios de referencia
     outputDetalle.setPreciosDeReferencia(new ArrayList<>());
 
     if (tipoIgv.isOperacionOnerosa()) {
-        outputDetalle.getPreciosDeReferencia().add(new PrecioReferenciaOutputModel($inputDetalle.getPrecioUnitario(), Catalog16.PRECIO_UNITARIO_INCLUYE_IGV));
+        outputDetalle.getPreciosDeReferencia().add(new PrecioReferenciaOutputModel(precioUnitario, Catalog16.PRECIO_UNITARIO_INCLUYE_IGV));
     } else {
         outputDetalle.getPreciosDeReferencia().add(new PrecioReferenciaOutputModel(BigDecimal.ZERO, Catalog16.VALOR_FERENCIAL_UNITARIO_EN_OPERACIONES_NO_ONEROSAS));
-        outputDetalle.getPreciosDeReferencia().add(new PrecioReferenciaOutputModel($inputDetalle.getPrecioUnitario(), Catalog16.PRECIO_UNITARIO_INCLUYE_IGV));
+        outputDetalle.getPreciosDeReferencia().add(new PrecioReferenciaOutputModel(precioUnitario, Catalog16.PRECIO_UNITARIO_INCLUYE_IGV));
     }
 end

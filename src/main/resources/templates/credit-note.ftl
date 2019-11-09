@@ -18,7 +18,6 @@
     <cac:CreditNoteLine>
         <cbc:ID>${item?index + 1}</cbc:ID>
         <cbc:CreditedQuantity unitCode="${item.unidadMedida}" unitCodeListAgencyName="United Nations Economic Commission for Europe" unitCodeListID="UN/ECE rec 20">${item.cantidad}</cbc:CreditedQuantity>
-        <cbc:LineExtensionAmount currencyID="${moneda}">${item.subtotal}</cbc:LineExtensionAmount>
         <#include "./general/detail.ftl">
     </cac:CreditNoteLine>
     </#list>
