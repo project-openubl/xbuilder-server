@@ -137,8 +137,8 @@ public class DocumentsResourceTest {
 
             BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", documentBytes, config);
             assertEquals(
-                    billServiceModel.getStatus(),
                     BillServiceModel.Status.ACEPTADO,
+                    billServiceModel.getStatus(),
                     assertMessageError(input, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]", xmlSignedDocument)
             );
         }
