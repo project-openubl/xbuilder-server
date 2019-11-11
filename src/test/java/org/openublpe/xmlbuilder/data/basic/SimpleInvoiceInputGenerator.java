@@ -1,22 +1,19 @@
-package org.openublpe.xmlbuilder.data.impl;
+package org.openublpe.xmlbuilder.data.basic;
 
-import org.openublpe.xmlbuilder.data.ClienteInputGenerator;
-import org.openublpe.xmlbuilder.data.FirmanteInputGenerator;
+import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
-import org.openublpe.xmlbuilder.data.ProveedorInputGenerator;
 import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
 import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 public class SimpleInvoiceInputGenerator implements InvoiceInputGenerator {
 
     @Override
-    public InvoiceInputModel getInvoice() {
+    public InvoiceInputModel getInput() {
         InvoiceInputModel input = new InvoiceInputModel();
         input.setSerie("F004");
         input.setNumero(584);
@@ -25,10 +22,9 @@ public class SimpleInvoiceInputGenerator implements InvoiceInputGenerator {
         calendar.set(2019, Calendar.NOVEMBER, 8);
         input.setFechaEmision(calendar.getTimeInMillis());
 
-        input.setFirmante(FirmanteInputGenerator.getFirmante());
-
-        input.setProveedor(ProveedorInputGenerator.getProveedor());
-        input.setCliente(ClienteInputGenerator.getClienteConRUC());
+        input.setFirmante(GeneralData.getFirmante());
+        input.setProveedor(GeneralData.getProveedor());
+        input.setCliente(GeneralData.getClienteConRUC());
 
         List<DetalleInputModel> detalle = new ArrayList<>();
         input.setDetalle(detalle);

@@ -1,21 +1,21 @@
-package org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1;
+package org.openublpe.xmlbuilder.data.homologacion.grupo1;
 
 import org.openublpe.xmlbuilder.data.CreditNoteInputGenerator;
-import org.openublpe.xmlbuilder.data.FirmanteInputGenerator;
+import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.creditNote.CreditNoteInputModel;
 
 import java.util.Date;
 
 /**
- * Nota de credito de caso 4
+ * Nota de credito de caso 3
  */
-public class Caso8_CreditNoteGenerator implements CreditNoteInputGenerator {
+public class Caso7_CreditNoteGenerator implements CreditNoteInputGenerator {
 
     public static CreditNoteInputModel CREDIT_NOTE;
 
     @Override
-    public CreditNoteInputModel getCreditNote() {
+    public CreditNoteInputModel getInput() {
         if (CREDIT_NOTE == null) {
             synchronized (this) {
                 if (CREDIT_NOTE == null) {
@@ -26,10 +26,10 @@ public class Caso8_CreditNoteGenerator implements CreditNoteInputGenerator {
                     CREDIT_NOTE.setNumero(2);
                     CREDIT_NOTE.setFechaEmision(new Date().getTime());
 
-                    CREDIT_NOTE.setFirmante(FirmanteInputGenerator.getFirmante());
+                    CREDIT_NOTE.setFirmante(GeneralData.getFirmante());
 
                     // Get invoice
-                    InvoiceInputModel invoice = Caso4_InvoiceGenerator.INVOICE;
+                    InvoiceInputModel invoice = Caso3_InvoiceGenerator.INVOICE;
 
                     // Copy
                     CREDIT_NOTE.setProveedor(invoice.getProveedor());
@@ -44,5 +44,4 @@ public class Caso8_CreditNoteGenerator implements CreditNoteInputGenerator {
 
         return CREDIT_NOTE;
     }
-
 }

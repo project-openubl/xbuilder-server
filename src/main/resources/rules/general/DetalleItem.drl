@@ -55,8 +55,12 @@ then
     outputDetalle.setPrecioUnitario(precioUnitario);
 
     // Valor unitario
-    BigDecimal valorUnitario = precioUnitario.divide(BigDecimal.ONE.add(IGV), 100, RoundingMode.HALF_EVEN);
-    outputDetalle.setValorUnitario(format2Digists(valorUnitario));
+    BigDecimal valorUnitario = precioUnitario.divide(BigDecimal.ONE.add(IGV), 2, RoundingMode.HALF_EVEN);
+    outputDetalle.setValorUnitario(valorUnitario);
+
+    // Subtotal
+    BigDecimal subTotal = valorUnitario.multiply(cantidad).setScale(2, RoundingMode.HALF_EVEN);
+    outputDetalle.setSubtotal(subTotal);
 
     // Total
     BigDecimal total = cantidad.multiply(precioUnitario);
@@ -64,11 +68,7 @@ then
 
     // IGV
     Catalog7 tipoIgv = $inputDetalle.getTipoIGV() != null ? Catalog.valueOfCode(Catalog7.class, $inputDetalle.getTipoIGV()).get() : DEFAULT_TIPO_IGV;
-    BigDecimal importeIgv = tipoIgv.isGravado() ? cantidad.multiply(valorUnitario).multiply(IGV) : BigDecimal.ZERO;
-
-     // Subtotal
-    BigDecimal subTotal = total.subtract(importeIgv).setScale(2, RoundingMode.HALF_EVEN);
-    outputDetalle.setSubtotal(subTotal);
+    BigDecimal importeIgv = tipoIgv.isGravado() ? subTotal.multiply(IGV) : BigDecimal.ZERO;
 
     BigDecimal baseImponible = subTotal;
     outputDetalle.getIgv().setTipo(tipoIgv);

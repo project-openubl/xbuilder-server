@@ -1,4 +1,4 @@
-org.openublpe.xmlbuilder.data.impl.SimpleDebitNoteInputGenerator
-org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1.Caso9_DebitNoteGenerator
-org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1.Caso10_DebitNoteGenerator
-org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1.Caso11_DebitNoteGenerator
+org.openublpe.xmlbuilder.data.basic.SimpleDebitNoteInputGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso9_DebitNoteGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso10_DebitNoteGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso11_DebitNoteGenerator

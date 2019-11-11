@@ -1,7 +1,7 @@
-package org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1;
+package org.openublpe.xmlbuilder.data.homologacion.grupo1;
 
 import org.openublpe.xmlbuilder.data.DebitNoteInputGenerator;
-import org.openublpe.xmlbuilder.data.FirmanteInputGenerator;
+import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.debitNote.DebitNoteInputModel;
 
@@ -15,7 +15,7 @@ public class Caso11_DebitNoteGenerator implements DebitNoteInputGenerator {
     public static DebitNoteInputModel DEBIT_NOTE;
 
     @Override
-    public DebitNoteInputModel getDebitNote() {
+    public DebitNoteInputModel getInput() {
         if (DEBIT_NOTE == null) {
             synchronized (this) {
                 if (DEBIT_NOTE == null) {
@@ -26,7 +26,7 @@ public class Caso11_DebitNoteGenerator implements DebitNoteInputGenerator {
                     DEBIT_NOTE.setNumero(3);
                     DEBIT_NOTE.setFechaEmision(new Date().getTime());
 
-                    DEBIT_NOTE.setFirmante(FirmanteInputGenerator.getFirmante());
+                    DEBIT_NOTE.setFirmante(GeneralData.getFirmante());
 
                     // Get invoice
                     InvoiceInputModel invoice = Caso4_InvoiceGenerator.INVOICE;

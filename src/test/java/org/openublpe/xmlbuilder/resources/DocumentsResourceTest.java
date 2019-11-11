@@ -7,9 +7,16 @@ import io.github.carlosthe19916.webservices.providers.BillServiceModel;
 import io.github.carlosthe19916.webservices.wrappers.ServiceConfig;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
+import io.restassured.response.ResponseBody;
 import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
 import oasis.names.specification.ubl.schema.xsd.debitnote_21.DebitNoteType;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
+import org.apache.commons.io.IOUtils;
+import org.custommonkey.xmlunit.DetailedDiff;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.custommonkey.xmlunit.XMLUnit;
+import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.data.CreditNoteInputGenerator;
@@ -23,10 +30,14 @@ import org.openublpe.xmlbuilder.utils.CertificateDetailsFactory;
 import org.openublpe.xmlbuilder.utils.XMLSigner;
 import org.openublpe.xmlbuilder.utils.XMLUtils;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
@@ -34,6 +45,7 @@ import java.security.cert.CertificateException;
 import java.util.*;
 
 import static io.restassured.RestAssured.given;
+import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -53,6 +65,8 @@ public class DocumentsResourceTest {
     static List<InvoiceInputModel> invoiceInputs = new ArrayList<>();
     static List<CreditNoteInputModel> creditNoteInputs = new ArrayList<>();
     static List<DebitNoteInputModel> debitNoteInputs = new ArrayList<>();
+
+    static Map<Object, Optional<String>> SNAPSHOTS = new HashMap<>();
     static Map<Object, Class> generatorMap = new HashMap<>();
 
     @BeforeAll
@@ -62,24 +76,39 @@ public class DocumentsResourceTest {
 
         ServiceLoader<InvoiceInputGenerator> serviceLoader1 = ServiceLoader.load(InvoiceInputGenerator.class);
         for (InvoiceInputGenerator generator : serviceLoader1) {
-            InvoiceInputModel invoice = generator.getInvoice();
-            invoiceInputs.add(invoice);
-            generatorMap.put(invoice, generator.getClass());
+            InvoiceInputModel input = generator.getInput();
+            invoiceInputs.add(input);
+            SNAPSHOTS.put(input, generator.getSnapshot());
+            generatorMap.put(input, generator.getClass());
         }
 
         ServiceLoader<CreditNoteInputGenerator> serviceLoader2 = ServiceLoader.load(CreditNoteInputGenerator.class);
         for (CreditNoteInputGenerator generator : serviceLoader2) {
-            CreditNoteInputModel creditNote = generator.getCreditNote();
-            creditNoteInputs.add(creditNote);
-            generatorMap.put(creditNote, generator.getClass());
+            CreditNoteInputModel input = generator.getInput();
+            creditNoteInputs.add(input);
+            SNAPSHOTS.put(input, generator.getSnapshot());
+            generatorMap.put(input, generator.getClass());
         }
 
         ServiceLoader<DebitNoteInputGenerator> serviceLoader3 = ServiceLoader.load(DebitNoteInputGenerator.class);
         for (DebitNoteInputGenerator generator : serviceLoader3) {
-            DebitNoteInputModel debitNote = generator.getDebitNote();
-            debitNoteInputs.add(debitNote);
-            generatorMap.put(debitNote, generator.getClass());
+            DebitNoteInputModel input = generator.getInput();
+            debitNoteInputs.add(input);
+            SNAPSHOTS.put(input, generator.getSnapshot());
+            generatorMap.put(input, generator.getClass());
         }
+
+        //ignore while space differances
+        XMLUnit.setIgnoreWhitespace(true);
+
+        //ignore attribute order
+        XMLUnit.setIgnoreAttributeOrder(true);
+
+        //ignore comment differances
+        XMLUnit.setIgnoreComments(true);
+
+        //ignore differance on CData and text
+        XMLUnit.setIgnoreDiffBetweenTextAndCDATA(true);
     }
 
     String assertMessageError(Object obj, String error) {
@@ -96,13 +125,101 @@ public class DocumentsResourceTest {
                 .toString();
     }
 
+    String assertMessageError(String error, Object obj, String documentString) {
+        return new StringBuilder()
+                .append("\n")
+                .append(documentString).append("\n")
+                .append("CLASS ")
+                .append(generatorMap.get(obj).getCanonicalName()).append("\n")
+                .append("MESSAGE ").append(error)
+                .toString();
+    }
+
+    public void assertSnapshot(Object input, ResponseBody responseBody) throws IOException, SAXException {
+        if (SNAPSHOTS.get(input).isPresent()) {
+            String url = SNAPSHOTS.get(input).get();
+
+            InputStream currentIS = responseBody.asInputStream();
+            InputStream expectedIS = Thread.currentThread().getContextClassLoader().getResourceAsStream(url);
+
+            InputSource expected = new InputSource(expectedIS);
+            InputSource current = new InputSource(currentIS);
+
+            DetailedDiff detailedDiff = new DetailedDiff(new Diff(expected, current));
+
+            //ignore the sorting mismatch issues
+            detailedDiff.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
+
+//        //this will print even if order mismatch elements are there. if you want to skip this use assertor
+//        Iterator i = detailedDiff.getAllDifferences().iterator();
+//        while (i.hasNext()) {
+//            System.out.println(i.next().toString());
+//        }
+//        System.out.println("================== if soarting issues are ignored =============================");
+
+            //this can use ignore soarting issues and assert
+            assertXMLEqual(
+                    assertMessageError("XML Snapshot does not match", input, responseBody.asString()),
+                    detailedDiff,
+                    true
+            );
+        }
+    }
+
+    public void assertSend(Object input, Document xmlSignedDocument) throws IOException, TransformerException {
+        if (System.getProperty("sunat") == null) {
+            return;
+        }
+
+        String proveedorRuc = null;
+        String serie = null;
+        Integer numero = null;
+        String fileName = null;
+
+        if (input instanceof InvoiceInputModel) {
+            InvoiceInputModel invoice = (InvoiceInputModel) input;
+            proveedorRuc = invoice.getProveedor().getRuc();
+            serie = invoice.getSerie();
+            numero = invoice.getNumero();
+            fileName = XMLUtils.getInvoiceFileName(proveedorRuc, serie, numero);
+        } else if (input instanceof CreditNoteInputModel) {
+            CreditNoteInputModel creditNote = (CreditNoteInputModel) input;
+            proveedorRuc = creditNote.getProveedor().getRuc();
+            serie = creditNote.getSerie();
+            numero = creditNote.getNumero();
+            fileName = XMLUtils.getNotaCredito(proveedorRuc, serie, numero);
+        } else if (input instanceof DebitNoteInputModel) {
+            DebitNoteInputModel debitNote = (DebitNoteInputModel) input;
+            proveedorRuc = debitNote.getProveedor().getRuc();
+            serie = debitNote.getSerie();
+            numero = debitNote.getNumero();
+            fileName = XMLUtils.getNotaDebito(proveedorRuc, serie, numero);
+        }
+
+        ServiceConfig config = new ServiceConfig.Builder()
+                .url(SUNAT_BETA_URL)
+                .username(proveedorRuc + SUNAT_BETA_USERNAME)
+                .password(SUNAT_BETA_PASSWORD)
+                .build();
+
+        byte[] documentBytes = XMLUtils.documentToBytes(xmlSignedDocument);
+
+
+        BillServiceModel billServiceModel = BillServiceManager.sendBill(fileName + ".xml", documentBytes, config);
+        assertEquals(
+                BillServiceModel.Status.ACEPTADO,
+                billServiceModel.getStatus(),
+                assertMessageError(input, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]", xmlSignedDocument)
+        );
+    }
+
     @Test
     public void testCreateInvoice() throws Exception {
         for (InvoiceInputModel input : invoiceInputs) {
-            // Given
+            // GIVEN
             String body = new ObjectMapper().writeValueAsString(input);
 
-            // When
+            // WHEN
             Response response = given()
                     .body(body)
                     .header("Content-Type", "application/json")
@@ -110,12 +227,15 @@ public class DocumentsResourceTest {
                     .post("/documents/invoice/create")
                     .thenReturn();
 
-            // Then
+            // THEN
             assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
-            InputStream bodyInputStream = response.getBody().asInputStream();
+            ResponseBody responseBody = response.getBody();
+
+            // snapshot
+            assertSnapshot(input, responseBody);
 
             // read document
-            Document xmlDocument = XMLUtils.inputStreamToDocument(bodyInputStream);
+            Document xmlDocument = XMLUtils.inputStreamToDocument(responseBody.asInputStream());
             assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
 
             // Sign document
@@ -126,21 +246,7 @@ public class DocumentsResourceTest {
             assertNotNull(invoiceType, assertMessageError(input, "InvoiceType is no valid", xmlSignedDocument));
 
             // Send to test
-            ServiceConfig config = new ServiceConfig.Builder()
-                    .url(SUNAT_BETA_URL)
-                    .username(input.getProveedor().getRuc() + SUNAT_BETA_USERNAME)
-                    .password(SUNAT_BETA_PASSWORD)
-                    .build();
-
-            byte[] documentBytes = XMLUtils.documentToBytes(xmlSignedDocument);
-            String invoiceFileNameWithoutExtension = XMLUtils.getInvoiceFileName(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
-
-            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", documentBytes, config);
-            assertEquals(
-                    BillServiceModel.Status.ACEPTADO,
-                    billServiceModel.getStatus(),
-                    assertMessageError(input, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]", xmlSignedDocument)
-            );
+            assertSend(input, xmlSignedDocument);
         }
     }
 
@@ -160,29 +266,24 @@ public class DocumentsResourceTest {
 
             // Then
             assertEquals(200, response.getStatusCode(), response.getBody().asString());
-            InputStream bodyInputStream = response.getBody().asInputStream();
+            ResponseBody responseBody = response.getBody();
+
+            // snapshot
+            assertSnapshot(input, responseBody);
 
             // read document
-            Document xmlDocument = XMLUtils.inputStreamToDocument(bodyInputStream);
-            assertNotNull(xmlDocument);
+            Document xmlDocument = XMLUtils.inputStreamToDocument(response.getBody().asInputStream());
+            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
 
             // Sign document
             Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
 
             // Validate valid XML
             CreditNoteType creditNoteType = UBL21Reader.creditNote().read(xmlSignedDocument);
-            assertNotNull(creditNoteType);
+            assertNotNull(creditNoteType, assertMessageError(input, "CreditNoteType is no valid", xmlSignedDocument));
 
             // Send to test
-            final ServiceConfig config = new ServiceConfig.Builder()
-                    .url(SUNAT_BETA_URL)
-                    .username(input.getProveedor().getRuc() + SUNAT_BETA_USERNAME)
-                    .password(SUNAT_BETA_PASSWORD)
-                    .build();
-            String invoiceFileNameWithoutExtension = XMLUtils.getNotaCredito(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
-            byte[] bytes = XMLUtils.documentToBytes(xmlSignedDocument);
-            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", bytes, config);
-            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO, billServiceModel.getCode() + ":" + billServiceModel.getDescription());
+            assertSend(input, xmlSignedDocument);
         }
     }
 
@@ -202,29 +303,24 @@ public class DocumentsResourceTest {
 
             // Then
             assertEquals(200, response.getStatusCode(), response.getBody().asString());
-            InputStream bodyInputStream = response.getBody().asInputStream();
+            ResponseBody responseBody = response.getBody();
+
+            // snapshot
+            assertSnapshot(input, responseBody);
 
             // read document
-            Document xmlDocument = XMLUtils.inputStreamToDocument(bodyInputStream);
-            assertNotNull(xmlDocument);
+            Document xmlDocument = XMLUtils.inputStreamToDocument(responseBody.asInputStream());
+            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
 
             // Sign document
             Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
 
             // Validate valid XML
             DebitNoteType debitNoteType = UBL21Reader.debitNote().read(xmlSignedDocument);
-            assertNotNull(debitNoteType);
+            assertNotNull(debitNoteType, assertMessageError(input, "DebitNoteType is no valid", xmlSignedDocument));
 
             // Send to test
-            final ServiceConfig config = new ServiceConfig.Builder()
-                    .url(SUNAT_BETA_URL)
-                    .username(input.getProveedor().getRuc() + SUNAT_BETA_USERNAME)
-                    .password(SUNAT_BETA_PASSWORD)
-                    .build();
-            String invoiceFileNameWithoutExtension = XMLUtils.getNotaDebito(input.getProveedor().getRuc(), input.getSerie(), input.getNumero());
-            byte[] bytes = XMLUtils.documentToBytes(xmlSignedDocument);
-            BillServiceModel billServiceModel = BillServiceManager.sendBill(invoiceFileNameWithoutExtension + ".xml", bytes, config);
-            assertEquals(billServiceModel.getStatus(), BillServiceModel.Status.ACEPTADO, billServiceModel.getCode() + ":" + billServiceModel.getDescription());
+            assertSend(input, xmlSignedDocument);
         }
     }
 

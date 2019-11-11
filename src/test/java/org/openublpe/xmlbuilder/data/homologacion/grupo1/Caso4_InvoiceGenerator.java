@@ -1,10 +1,8 @@
-package org.openublpe.xmlbuilder.data.impl.casosHomologacion.grupo1;
+package org.openublpe.xmlbuilder.data.homologacion.grupo1;
 
-import org.openublpe.xmlbuilder.data.ClienteInputGenerator;
-import org.openublpe.xmlbuilder.data.FirmanteInputGenerator;
+import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
-import org.openublpe.xmlbuilder.data.ProveedorInputGenerator;
-import org.openublpe.xmlbuilder.data.impl.casosHomologacion.HomologacionUtils;
+import org.openublpe.xmlbuilder.data.homologacion.HomologacionUtils;
 import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
 import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 
@@ -20,7 +18,7 @@ public class Caso4_InvoiceGenerator implements InvoiceInputGenerator {
     public static InvoiceInputModel INVOICE;
 
     @Override
-    public InvoiceInputModel getInvoice() {
+    public InvoiceInputModel getInput() {
         if (INVOICE == null) {
             synchronized (this) {
                 if (INVOICE == null) {
@@ -33,9 +31,9 @@ public class Caso4_InvoiceGenerator implements InvoiceInputGenerator {
                     calendar.set(2019, Calendar.NOVEMBER, 9, 8, 30, 0);
                     INVOICE.setFechaEmision(calendar.getTimeInMillis());
 
-                    INVOICE.setFirmante(FirmanteInputGenerator.getFirmante());
-                    INVOICE.setProveedor(ProveedorInputGenerator.getProveedor());
-                    INVOICE.setCliente(ClienteInputGenerator.getClienteConRUC());
+                    INVOICE.setFirmante(GeneralData.getFirmante());
+                    INVOICE.setProveedor(GeneralData.getProveedor());
+                    INVOICE.setCliente(GeneralData.getClienteConRUC());
 
                     List<DetalleInputModel> detalle = new ArrayList<>();
                     INVOICE.setDetalle(detalle);

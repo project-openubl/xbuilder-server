@@ -1,9 +1,7 @@
-package org.openublpe.xmlbuilder.data.impl;
+package org.openublpe.xmlbuilder.data.basic;
 
-import org.openublpe.xmlbuilder.data.ClienteInputGenerator;
 import org.openublpe.xmlbuilder.data.CreditNoteInputGenerator;
-import org.openublpe.xmlbuilder.data.FirmanteInputGenerator;
-import org.openublpe.xmlbuilder.data.ProveedorInputGenerator;
+import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.creditNote.CreditNoteInputModel;
 
@@ -14,17 +12,16 @@ import java.util.List;
 
 public class SimpleCreditNoteInputGenerator implements CreditNoteInputGenerator {
     @Override
-    public CreditNoteInputModel getCreditNote() {
+    public CreditNoteInputModel getInput() {
         CreditNoteInputModel input = new CreditNoteInputModel();
 
         input.setSerie("F001");
         input.setNumero(123);
         input.setFechaEmision(new Date().getTime());
 
-        input.setFirmante(FirmanteInputGenerator.getFirmante());
-
-        input.setProveedor(ProveedorInputGenerator.getProveedor());
-        input.setCliente(ClienteInputGenerator.getClienteConRUC());
+        input.setFirmante(GeneralData.getFirmante());
+        input.setProveedor(GeneralData.getProveedor());
+        input.setCliente(GeneralData.getClienteConRUC());
 
 
         List<DetalleInputModel> detalle = new ArrayList<>();

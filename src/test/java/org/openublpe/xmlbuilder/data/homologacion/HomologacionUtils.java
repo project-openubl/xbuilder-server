@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.data.impl.casosHomologacion;
+package org.openublpe.xmlbuilder.data.homologacion;
 
 import org.openublpe.xmlbuilder.models.ubl.Catalog7;
 import org.openublpe.xmlbuilder.models.ubl.Catalog7_1;
