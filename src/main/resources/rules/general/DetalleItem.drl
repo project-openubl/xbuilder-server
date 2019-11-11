@@ -58,17 +58,17 @@ then
     BigDecimal valorUnitario = precioUnitario.divide(BigDecimal.ONE.add(IGV), 2, RoundingMode.HALF_EVEN);
     outputDetalle.setValorUnitario(valorUnitario);
 
-    // Subtotal
-    BigDecimal subTotal = valorUnitario.multiply(cantidad).setScale(2, RoundingMode.HALF_EVEN);
-    outputDetalle.setSubtotal(subTotal);
-
     // Total
     BigDecimal total = cantidad.multiply(precioUnitario);
     outputDetalle.setTotal(format2Digists(total));
 
     // IGV
     Catalog7 tipoIgv = $inputDetalle.getTipoIGV() != null ? Catalog.valueOfCode(Catalog7.class, $inputDetalle.getTipoIGV()).get() : DEFAULT_TIPO_IGV;
-    BigDecimal importeIgv = tipoIgv.isGravado() ? subTotal.multiply(IGV) : BigDecimal.ZERO;
+    BigDecimal importeIgv = tipoIgv.isGravado() ? valorUnitario.multiply(cantidad).multiply(IGV) : BigDecimal.ZERO;
+
+    // Subtotal
+    BigDecimal subTotal = total.subtract(importeIgv);
+    outputDetalle.setSubtotal(format2Digists(subTotal));
 
     BigDecimal baseImponible = subTotal;
     outputDetalle.getIgv().setTipo(tipoIgv);

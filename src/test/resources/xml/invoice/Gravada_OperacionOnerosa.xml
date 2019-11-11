@@ -65,7 +65,7 @@
   <cac:TaxTotal>
     <cbc:TaxAmount currencyID="PEN">61.02</cbc:TaxAmount>
     <cac:TaxSubtotal>
-      <cbc:TaxableAmount currencyID="PEN">339</cbc:TaxableAmount>
+      <cbc:TaxableAmount currencyID="PEN">338.98</cbc:TaxableAmount>
       <cbc:TaxAmount currencyID="PEN">61.02</cbc:TaxAmount>
       <cac:TaxCategory>
         <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifie">S</cbc:ID>
@@ -83,7 +83,7 @@
   <cac:InvoiceLine>
     <cbc:ID>1</cbc:ID>
     <cbc:InvoicedQuantity unitCode="NIU" unitCodeListAgencyName="United Nations Economic Commission for Europe" unitCodeListID="UN/ECE rec 20">10</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="PEN">169.5</cbc:LineExtensionAmount>
+    <cbc:LineExtensionAmount currencyID="PEN">169.49</cbc:LineExtensionAmount>
     <cac:PricingReference>
       <cac:AlternativeConditionPrice>
         <cbc:PriceAmount currencyID="PEN">20</cbc:PriceAmount>
@@ -93,7 +93,7 @@
     <cac:TaxTotal>
       <cbc:TaxAmount currencyID="PEN">30.51</cbc:TaxAmount>
       <cac:TaxSubtotal>
-        <cbc:TaxableAmount currencyID="PEN">169.5</cbc:TaxableAmount>
+        <cbc:TaxableAmount currencyID="PEN">169.49</cbc:TaxableAmount>
         <cbc:TaxAmount currencyID="PEN">30.51</cbc:TaxAmount>
         <cac:TaxCategory>
           <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifier">S</cbc:ID>
@@ -117,7 +117,7 @@
   <cac:InvoiceLine>
     <cbc:ID>2</cbc:ID>
     <cbc:InvoicedQuantity unitCode="NIU" unitCodeListAgencyName="United Nations Economic Commission for Europe" unitCodeListID="UN/ECE rec 20">10</cbc:InvoicedQuantity>
-    <cbc:LineExtensionAmount currencyID="PEN">169.5</cbc:LineExtensionAmount>
+    <cbc:LineExtensionAmount currencyID="PEN">169.49</cbc:LineExtensionAmount>
     <cac:PricingReference>
       <cac:AlternativeConditionPrice>
         <cbc:PriceAmount currencyID="PEN">20</cbc:PriceAmount>
@@ -127,7 +127,7 @@
     <cac:TaxTotal>
       <cbc:TaxAmount currencyID="PEN">30.51</cbc:TaxAmount>
       <cac:TaxSubtotal>
-        <cbc:TaxableAmount currencyID="PEN">169.5</cbc:TaxableAmount>
+        <cbc:TaxableAmount currencyID="PEN">169.49</cbc:TaxableAmount>
         <cbc:TaxAmount currencyID="PEN">30.51</cbc:TaxAmount>
         <cac:TaxCategory>
           <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifier">S</cbc:ID>
