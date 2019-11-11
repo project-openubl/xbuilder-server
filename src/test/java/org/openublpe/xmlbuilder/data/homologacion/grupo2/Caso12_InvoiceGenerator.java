@@ -46,9 +46,9 @@ public class Caso12_InvoiceGenerator implements InvoiceInputGenerator {
 //                        item.setCantidad(HomologacionUtils.cantidadRandom());
 //                        item.setPrecioUnitario(HomologacionUtils.precioUnitarioRandom());
 //                        item.setTipoIGV(HomologacionUtils.tipoIGVInafectaExoneradaRandom());
-                        item.setCantidad(BigDecimal.TEN);
-                        item.setPrecioUnitario(BigDecimal.TEN.add(BigDecimal.TEN));
-                        item.setTipoIGV(Catalog7.EXONERADO_OPERACION_ONEROSA.toString());
+                        item.setCantidad(new BigDecimal("1"));
+                        item.setPrecioUnitario(new BigDecimal("30"));
+                        item.setTipoIGV(Catalog7.GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES.toString());
                     }
                 }
             }

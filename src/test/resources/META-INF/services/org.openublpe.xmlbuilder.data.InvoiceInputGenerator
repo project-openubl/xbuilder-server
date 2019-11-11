@@ -5,5 +5,5 @@ org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso2_InvoiceGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso3_InvoiceGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso4_InvoiceGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso5_InvoiceGenerator
-#org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso12_InvoiceGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso12_InvoiceGenerator
 #org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso13_InvoiceGenerator

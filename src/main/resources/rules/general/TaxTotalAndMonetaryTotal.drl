@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.stream.Stream;
 import org.openublpe.xmlbuilder.models.ubl.Catalog5;
 import org.openublpe.xmlbuilder.models.ubl.Catalog7;
-import org.openublpe.xmlbuilder.models.ubl.Catalog7_1
 
 dialect "java"
 
@@ -29,10 +28,10 @@ then
     // TOTAL IMPUESTOS - SUBTOTALES
     $output.setTotalImpuestos(new ArrayList<>());
 
-    // gravado
-    java.util.function.Supplier<Stream<DetalleOutputModel>> totalGravadoStream = () -> $output.getDetalle().stream().filter(g -> g.getIgv().getTipo().getGrupo().equals(Catalog7_1.GRAVADO));
-    BigDecimal importeTotalGravado = totalGravadoStream.get().map(f -> f.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
-    BigDecimal baseImponibleTotalGravado = totalGravadoStream.get().map(f -> f.getIgv().getBaseImponible()).reduce(BigDecimal.ZERO, BigDecimal::add);
+    // igv
+    java.util.function.Supplier<Stream<DetalleOutputModel>> totalIgvStream = () -> $output.getDetalle().stream().filter(i -> i.getIgv().getTipo().getTaxCategory().equals(Catalog5.IGV));
+    BigDecimal importeTotalGravado = totalIgvStream.get().map(f -> f.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
+    BigDecimal baseImponibleTotalGravado = totalIgvStream.get().map(f -> f.getIgv().getBaseImponible()).reduce(BigDecimal.ZERO, BigDecimal::add);
 
     if (baseImponibleTotalGravado.compareTo(BigDecimal.ZERO) > 0) {
         ImpuestoOutputModel totalGravado = new ImpuestoOutputModel();
@@ -44,7 +43,7 @@ then
     }
 
     // exonerado
-    java.util.function.Supplier<Stream<DetalleOutputModel>> totalExoneradoStream = () -> $output.getDetalle().stream().filter(e -> e.getIgv().getTipo().getGrupo().equals(Catalog7_1.EXONERADO));
+    java.util.function.Supplier<Stream<DetalleOutputModel>> totalExoneradoStream = () -> $output.getDetalle().stream().filter(e -> e.getIgv().getTipo().getTaxCategory().equals(Catalog5.EXONERADO));
     BigDecimal importeTotalExonerado = totalExoneradoStream.get().map(f -> f.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
     BigDecimal baseImponibleTotalExonerado = totalExoneradoStream.get().map(f -> f.getIgv().getBaseImponible()).reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -58,7 +57,7 @@ then
     }
 
     // inafecto
-    java.util.function.Supplier<Stream<DetalleOutputModel>> totalInafectoStream = () -> $output.getDetalle().stream().filter(i -> i.getIgv().getTipo().getGrupo().equals(Catalog7_1.INAFECTO));
+    java.util.function.Supplier<Stream<DetalleOutputModel>> totalInafectoStream = () -> $output.getDetalle().stream().filter(i -> i.getIgv().getTipo().getTaxCategory().equals(Catalog5.INAFECTO));
     BigDecimal importeTotalInafecto = totalInafectoStream.get().map(f -> f.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
     BigDecimal baseImponibleTotalInafecto = totalInafectoStream.get().map(f -> f.getIgv().getBaseImponible()).reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -69,6 +68,20 @@ then
         totalInafecto.setCategoria(Catalog5.INAFECTO);
 
         $output.getTotalImpuestos().add(totalInafecto);
+    }
+
+    // gratuito
+    java.util.function.Supplier<Stream<DetalleOutputModel>> totalGratuitoStream = () -> $output.getDetalle().stream().filter(g -> g.getIgv().getTipo().getTaxCategory().equals(Catalog5.GRATUITO));
+    BigDecimal importeTotalGratuito = totalGratuitoStream.get().map(f -> f.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
+    BigDecimal baseImponibleTotalGratuito = totalGratuitoStream.get().map(f -> f.getIgv().getBaseImponible()).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    if (baseImponibleTotalGratuito.compareTo(BigDecimal.ZERO) > 0) {
+        ImpuestoOutputModel totalGratuito = new ImpuestoOutputModel();
+        totalGratuito.setImporte(importeTotalGratuito);
+        totalGratuito.setBaseImponible(baseImponibleTotalInafecto);
+        totalGratuito.setCategoria(Catalog5.GRATUITO);
+
+        $output.getTotalImpuestos().add(totalGratuito);
     }
 
     // TOTAL PAYABLE

@@ -1,7 +1,6 @@
 package org.openublpe.xmlbuilder.data.homologacion;
 
 import org.openublpe.xmlbuilder.models.ubl.Catalog7;
-import org.openublpe.xmlbuilder.models.ubl.Catalog7_1;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,8 +12,17 @@ import java.util.stream.Stream;
 public class HomologacionUtils {
 
     public static final Random random = new Random();
-    public static final List<String> TIPO_IGV_INAFECTA_O_EXONERADA = Stream.of(Catalog7.values())
-            .filter(p -> p.getGrupo().equals(Catalog7_1.INAFECTO) || p.getGrupo().equals(Catalog7_1.EXONERADO))
+    public static final List<String> TIPO_IGV_INAFECTA_O_EXONERADA = Stream.of(
+            Catalog7.EXONERADO_OPERACION_ONEROSA, // Onerosa
+            Catalog7.EXONERADO_TRANSFERENCIA_GRATUITA,
+            Catalog7.INAFECTO_OPERACION_ONEROSA, // Onerosa
+            Catalog7.INAFECTO_RETIRO_POR_BONIFICACION,
+            Catalog7.INAFECTO_RETIRO,
+            Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS,
+            Catalog7.INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO,
+            Catalog7.INAFECTO_RETIRO_POR_PREMIO,
+            Catalog7.INAFECTO_RETIRO_POR_PUBLICIDAD
+    )
             .map(Catalog7::toString)
             .collect(Collectors.toList());
 
