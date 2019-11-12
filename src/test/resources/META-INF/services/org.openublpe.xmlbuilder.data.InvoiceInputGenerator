@@ -1,9 +1,13 @@
-org.openublpe.xmlbuilder.data.basic.SimpleInvoiceInputGenerator
-org.openublpe.xmlbuilder.data.cases.invoice.GravadaOperacionOnerosaInvoiceInputGenerator
+org.openublpe.xmlbuilder.data.impl.Invoice_SimpleInputGenerator
+org.openublpe.xmlbuilder.data.impl.Invoice_GravadaOperacionOnerosaInputGenerator
+org.openublpe.xmlbuilder.data.impl.Invoice_TodoInputGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso1_InvoiceGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso2_InvoiceGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso3_InvoiceGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso4_InvoiceGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso5_InvoiceGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso12_InvoiceGenerator
-#org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso13_InvoiceGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso13_InvoiceGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso14_InvoiceGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso15_InvoiceGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso16_InvoiceGenerator

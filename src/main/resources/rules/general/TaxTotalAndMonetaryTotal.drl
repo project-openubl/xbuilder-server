@@ -78,7 +78,7 @@ then
     if (baseImponibleTotalGratuito.compareTo(BigDecimal.ZERO) > 0) {
         ImpuestoOutputModel totalGratuito = new ImpuestoOutputModel();
         totalGratuito.setImporte(importeTotalGratuito);
-        totalGratuito.setBaseImponible(baseImponibleTotalInafecto);
+        totalGratuito.setBaseImponible(baseImponibleTotalGratuito);
         totalGratuito.setCategoria(Catalog5.GRATUITO);
 
         $output.getTotalImpuestos().add(totalGratuito);
@@ -87,6 +87,7 @@ then
     // TOTAL PAYABLE
      BigDecimal importeTotal = $output.getDetalle()
             .stream()
+            .filter(p -> p.getIgv().getTipo().isOperacionOnerosa())
             .map(DetalleOutputModel::getTotal)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 

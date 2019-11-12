@@ -1,4 +1,7 @@
-org.openublpe.xmlbuilder.data.basic.SimpleCreditNoteInputGenerator
+org.openublpe.xmlbuilder.data.impl.CreditNote_SimpleInputGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso6_CreditNoteGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso7_CreditNoteGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo1.Caso8_CreditNoteGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso17_CreditNoteGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso18_CreditNoteGenerator
+org.openublpe.xmlbuilder.data.homologacion.grupo2.Caso19_CreditNoteGenerator

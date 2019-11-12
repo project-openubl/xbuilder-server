@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.data.cases.invoice;
+package org.openublpe.xmlbuilder.data.impl;
 
 import org.openublpe.xmlbuilder.data.AbstractInvoiceInputGenerator;
 import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Optional;
 
-public class GravadaOperacionOnerosaInvoiceInputGenerator extends AbstractInvoiceInputGenerator implements InvoiceInputGenerator {
+public class Invoice_GravadaOperacionOnerosaInputGenerator extends AbstractInvoiceInputGenerator implements InvoiceInputGenerator {
 
     @Override
     public InvoiceInputModel getInput() {

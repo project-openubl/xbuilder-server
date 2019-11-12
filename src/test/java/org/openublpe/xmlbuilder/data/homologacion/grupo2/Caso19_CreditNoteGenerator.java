@@ -1,16 +1,12 @@
-package org.openublpe.xmlbuilder.data.homologacion.grupo1;
+package org.openublpe.xmlbuilder.data.homologacion.grupo2;
 
 import org.openublpe.xmlbuilder.data.CreditNoteInputGenerator;
-import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.creditNote.CreditNoteInputModel;
 
-import java.util.Date;
+import java.util.Calendar;
 
-/**
- * Nota de credito de caso 2
- */
-public class Caso6_CreditNoteGenerator implements CreditNoteInputGenerator {
+public class Caso19_CreditNoteGenerator implements CreditNoteInputGenerator {
 
     public static CreditNoteInputModel CREDIT_NOTE;
 
@@ -21,15 +17,17 @@ public class Caso6_CreditNoteGenerator implements CreditNoteInputGenerator {
                 if (CREDIT_NOTE == null) {
 
                     CREDIT_NOTE = new CreditNoteInputModel();
+                    CREDIT_NOTE.setSerie("FF12");
+                    CREDIT_NOTE.setNumero(3);
 
-                    CREDIT_NOTE.setSerie("FF11");
-                    CREDIT_NOTE.setNumero(1);
-                    CREDIT_NOTE.setFechaEmision(new Date().getTime());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(2019, Calendar.NOVEMBER, 9, 8, 30, 0);
+                    CREDIT_NOTE.setFechaEmision(calendar.getTimeInMillis());
 
-                    // Get invoice
-                    InvoiceInputModel invoice = Caso2_InvoiceGenerator.INVOICE;
+                    // get invoice
+                    InvoiceInputModel invoice = Caso16_InvoiceGenerator.INVOICE;
 
-                    // Copy
+                    // copy
                     CREDIT_NOTE.setFirmante(invoice.getFirmante());
                     CREDIT_NOTE.setProveedor(invoice.getProveedor());
                     CREDIT_NOTE.setCliente(invoice.getCliente());

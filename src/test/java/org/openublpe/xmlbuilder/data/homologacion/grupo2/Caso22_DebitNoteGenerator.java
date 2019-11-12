@@ -1,16 +1,12 @@
-package org.openublpe.xmlbuilder.data.homologacion.grupo1;
+package org.openublpe.xmlbuilder.data.homologacion.grupo2;
 
 import org.openublpe.xmlbuilder.data.DebitNoteInputGenerator;
-import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.debitNote.DebitNoteInputModel;
 
-import java.util.Date;
+import java.util.Calendar;
 
-/**
- * Nota de debito de caso 3
- */
-public class Caso10_DebitNoteGenerator implements DebitNoteInputGenerator {
+public class Caso22_DebitNoteGenerator implements DebitNoteInputGenerator {
 
     public static DebitNoteInputModel DEBIT_NOTE;
 
@@ -21,15 +17,17 @@ public class Caso10_DebitNoteGenerator implements DebitNoteInputGenerator {
                 if (DEBIT_NOTE == null) {
 
                     DEBIT_NOTE = new DebitNoteInputModel();
+                    DEBIT_NOTE.setSerie("FF12");
+                    DEBIT_NOTE.setNumero(3);
 
-                    DEBIT_NOTE.setSerie("FF11");
-                    DEBIT_NOTE.setNumero(2);
-                    DEBIT_NOTE.setFechaEmision(new Date().getTime());
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(2019, Calendar.NOVEMBER, 9, 8, 30, 0);
+                    DEBIT_NOTE.setFechaEmision(calendar.getTimeInMillis());
 
-                    // Get invoice
-                    InvoiceInputModel invoice = Caso3_InvoiceGenerator.INVOICE;
+                    // get invoice
+                    InvoiceInputModel invoice = Caso16_InvoiceGenerator.INVOICE;
 
-                    // Copy
+                    // copy
                     DEBIT_NOTE.setFirmante(invoice.getFirmante());
                     DEBIT_NOTE.setProveedor(invoice.getProveedor());
                     DEBIT_NOTE.setCliente(invoice.getCliente());

@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.data.basic;
+package org.openublpe.xmlbuilder.data.impl;
 
 import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class SimpleInvoiceInputGenerator implements InvoiceInputGenerator {
+public class Invoice_SimpleInputGenerator implements InvoiceInputGenerator {
 
     @Override
     public InvoiceInputModel getInput() {

@@ -226,7 +226,7 @@ public class DocumentsResourceTest {
                     .when()
                     .post("/documents/invoice/create")
                     .thenReturn();
-
+            
             // THEN
             assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();

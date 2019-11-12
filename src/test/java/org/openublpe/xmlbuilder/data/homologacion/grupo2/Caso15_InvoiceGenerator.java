@@ -5,17 +5,12 @@ import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
 import org.openublpe.xmlbuilder.data.homologacion.HomologacionUtils;
 import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
 import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.ubl.Catalog7;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-/**
- * Factura con 1 items
- */
-public class Caso12_InvoiceGenerator implements InvoiceInputGenerator {
+public class Caso15_InvoiceGenerator implements InvoiceInputGenerator {
 
     public static InvoiceInputModel INVOICE;
 
@@ -27,7 +22,7 @@ public class Caso12_InvoiceGenerator implements InvoiceInputGenerator {
 
                     INVOICE = new InvoiceInputModel();
                     INVOICE.setSerie("FF12");
-                    INVOICE.setNumero(1);
+                    INVOICE.setNumero(4);
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(2019, Calendar.NOVEMBER, 9, 8, 30, 0);
@@ -40,7 +35,7 @@ public class Caso12_InvoiceGenerator implements InvoiceInputGenerator {
                     List<DetalleInputModel> detalle = new ArrayList<>();
                     INVOICE.setDetalle(detalle);
 
-                    for (int i = 0; i < 1; i++) {
+                    for (int i = 0; i < 5; i++) {
                         DetalleInputModel item = new DetalleInputModel();
                         detalle.add(item);
                         item.setDescripcion("Item" + (i + 1));
