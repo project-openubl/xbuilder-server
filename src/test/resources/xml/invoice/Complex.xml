@@ -114,6 +114,8 @@
     </cac:TaxSubtotal>
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
+    <cbc:AllowanceTotalAmount currencyID="PEN">0</cbc:AllowanceTotalAmount>
+    <cbc:ChargeTotalAmount currencyID="PEN">0</cbc:ChargeTotalAmount>
     <cbc:PayableAmount currencyID="PEN">318</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>

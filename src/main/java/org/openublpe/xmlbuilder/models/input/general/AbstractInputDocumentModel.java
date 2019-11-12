@@ -6,6 +6,7 @@ import org.openublpe.xmlbuilder.models.input.ProveedorInputModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import java.math.BigDecimal;
 import java.util.List;
 
 public abstract class AbstractInputDocumentModel {
@@ -22,6 +23,12 @@ public abstract class AbstractInputDocumentModel {
 
     @NotNull
     private Long fechaEmision;
+
+    @Positive
+    private BigDecimal descuentoGlobal;
+
+    @Positive
+    private BigDecimal otrosCargosGlobal;
 
     @Valid
     private FirmanteInputModel firmante;
@@ -100,5 +107,21 @@ public abstract class AbstractInputDocumentModel {
 
     public void setDetalle(List<DetalleInputModel> detalle) {
         this.detalle = detalle;
+    }
+
+    public BigDecimal getDescuentoGlobal() {
+        return descuentoGlobal;
+    }
+
+    public void setDescuentoGlobal(BigDecimal descuentoGlobal) {
+        this.descuentoGlobal = descuentoGlobal;
+    }
+
+    public BigDecimal getOtrosCargosGlobal() {
+        return otrosCargosGlobal;
+    }
+
+    public void setOtrosCargosGlobal(BigDecimal otrosCargosGlobal) {
+        this.otrosCargosGlobal = otrosCargosGlobal;
     }
 }

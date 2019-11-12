@@ -78,11 +78,8 @@
     </cac:TaxSubtotal>
   </cac:TaxTotal>
   <cac:LegalMonetaryTotal>
-<!--    <cbc:LineExtensionAmount currencyID="PEN">100.00</cbc:LineExtensionAmount>-->
-<!--    <cbc:TaxInclusiveAmount currencyID="PEN">118.00</cbc:TaxInclusiveAmount>-->
-<!--    <cbc:AllowanceTotalAmount currencyID="PEN">0.00</cbc:AllowanceTotalAmount>-->
-<!--    <cbc:ChargeTotalAmount currencyID="PEN">0.00</cbc:ChargeTotalAmount>-->
-<!--    <cbc:PrepaidAmount currencyID="PEN">0.00</cbc:PrepaidAmount>-->
+    <cbc:AllowanceTotalAmount currencyID="PEN">0</cbc:AllowanceTotalAmount>
+    <cbc:ChargeTotalAmount currencyID="PEN">0</cbc:ChargeTotalAmount>
     <cbc:PayableAmount currencyID="PEN">118</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
   <cac:InvoiceLine>

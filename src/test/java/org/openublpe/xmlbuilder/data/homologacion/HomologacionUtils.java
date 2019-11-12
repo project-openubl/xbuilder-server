@@ -32,14 +32,14 @@ public class HomologacionUtils {
     public static BigDecimal cantidadRandom() {
         int valor = random.nextInt(10_000) / 1000;
         return new BigDecimal(valor).abs()
-                .add(BigDecimal.ONE)
+                .add(BigDecimal.TEN)
                 .setScale(3, RoundingMode.HALF_EVEN);
     }
 
     public static BigDecimal precioUnitarioRandom() {
         int valor = random.nextInt(1_000) / 100;
         return new BigDecimal(valor).abs()
-                .add(BigDecimal.ONE)
+                .add(BigDecimal.TEN)
                 .setScale(3, RoundingMode.HALF_EVEN);
     }
 

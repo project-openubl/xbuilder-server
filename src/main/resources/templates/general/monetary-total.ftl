@@ -30,7 +30,7 @@
         <#--parte de la operación que se factura, es decir no forman parte del(os) valor(es) de ventas-->
         <#--señaladas anteriormente, pero sí forman parte del importe total de la Venta (Ejemplo:-->
         <#--propinas, garantías para devolución de envases, etc.)-->
-        <#if totalDescuentos??><cbc:ChargeTotalAmount currencyID="PEN">${totalOtrosCargos}</cbc:ChargeTotalAmount></#if>
+        <#if totalOtrosCargos??><cbc:ChargeTotalAmount currencyID="PEN">${totalOtrosCargos}</cbc:ChargeTotalAmount></#if>
         <#---------->
         <#--PUNTO5-->
         <#---------->

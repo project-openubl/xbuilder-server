@@ -89,15 +89,23 @@ then
 
 
     // TOTAL PAYABLE
+    BigDecimal totalDescuentos = $input.getDescuentoGlobal() != null
+            ? $input.getDescuentoGlobal()
+            : BigDecimal.ZERO;
+    BigDecimal totalOtrosCargos = $input.getOtrosCargosGlobal() != null
+                ? $input.getOtrosCargosGlobal()
+                : BigDecimal.ZERO;
      BigDecimal importeTotal = $output.getDetalle()
             .stream()
             .filter(p -> !p.getIgv().getTipo().getTaxCategory().equals(Catalog5.GRATUITO))
             .map(DetalleOutputModel::getTotal)
-            .reduce(BigDecimal.ZERO, BigDecimal::add);
+            .reduce(BigDecimal.ZERO, BigDecimal::add)
+            .subtract(totalDescuentos)
+            .add(totalOtrosCargos);
 
     $output.setTotalValorVenta(null);
     $output.setTotalPrecioVenta(null);
-    $output.setTotalDescuentos(null);
-    $output.setTotalOtrosCargos(null);
+    $output.setTotalDescuentos(totalDescuentos);
+    $output.setTotalOtrosCargos(totalOtrosCargos);
     $output.setImporteTotal(importeTotal);
 end
