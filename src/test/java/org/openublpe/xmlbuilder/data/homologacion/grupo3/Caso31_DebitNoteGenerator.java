@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.data.homologacion.grupo2;
+package org.openublpe.xmlbuilder.data.homologacion.grupo3;
 
 import org.openublpe.xmlbuilder.data.DebitNoteInputGenerator;
 import org.openublpe.xmlbuilder.data.homologacion.HomologacionUtils;
@@ -9,7 +9,10 @@ import org.openublpe.xmlbuilder.models.ubl.Catalog7;
 
 import java.util.Calendar;
 
-public class Caso20_DebitNoteGenerator implements DebitNoteInputGenerator {
+/**
+ * Factura con 1 items
+ */
+public class Caso31_DebitNoteGenerator implements DebitNoteInputGenerator {
 
     public static DebitNoteInputModel DEBIT_NOTE;
 
@@ -20,15 +23,15 @@ public class Caso20_DebitNoteGenerator implements DebitNoteInputGenerator {
                 if (DEBIT_NOTE == null) {
 
                     DEBIT_NOTE = new DebitNoteInputModel();
-                    DEBIT_NOTE.setSerie("FF12");
-                    DEBIT_NOTE.setNumero(1);
+                    DEBIT_NOTE.setSerie("FF13");
+                    DEBIT_NOTE.setNumero(2);
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(2019, Calendar.NOVEMBER, 9, 8, 30, 0);
                     DEBIT_NOTE.setFechaEmision(calendar.getTimeInMillis());
 
                     // get invoice
-                    InvoiceInputModel invoice = Caso12_InvoiceGenerator.INVOICE;
+                    InvoiceInputModel invoice = Caso25_InvoiceGenerator.INVOICE;
 
                     // copy
                     DEBIT_NOTE.setFirmante(invoice.getFirmante());
