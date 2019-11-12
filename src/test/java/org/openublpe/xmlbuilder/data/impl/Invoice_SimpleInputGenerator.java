@@ -15,8 +15,8 @@ public class Invoice_SimpleInputGenerator implements InvoiceInputGenerator {
     @Override
     public InvoiceInputModel getInput() {
         InvoiceInputModel input = new InvoiceInputModel();
-        input.setSerie("F004");
-        input.setNumero(584);
+        input.setSerie("F001");
+        input.setNumero(1);
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(2019, Calendar.NOVEMBER, 8);
@@ -31,9 +31,9 @@ public class Invoice_SimpleInputGenerator implements InvoiceInputGenerator {
 
         DetalleInputModel item1 = new DetalleInputModel();
         detalle.add(item1);
-        item1.setDescripcion("Item1");
+        item1.setDescripcion("Item");
         item1.setCantidad(BigDecimal.ONE);
-        item1.setPrecioUnitario(new BigDecimal("65"));
+        item1.setPrecioUnitario(new BigDecimal("100"));
 
         return input;
     }

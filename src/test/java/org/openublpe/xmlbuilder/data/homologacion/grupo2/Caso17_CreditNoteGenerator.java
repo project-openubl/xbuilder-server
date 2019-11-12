@@ -1,15 +1,10 @@
 package org.openublpe.xmlbuilder.data.homologacion.grupo2;
 
 import org.openublpe.xmlbuilder.data.CreditNoteInputGenerator;
-import org.openublpe.xmlbuilder.data.GeneralData;
-import org.openublpe.xmlbuilder.data.homologacion.HomologacionUtils;
-import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
 import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.general.note.creditNote.CreditNoteInputModel;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class Caso17_CreditNoteGenerator implements CreditNoteInputGenerator {
 

@@ -11,10 +11,8 @@ import io.restassured.response.ResponseBody;
 import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
 import oasis.names.specification.ubl.schema.xsd.debitnote_21.DebitNoteType;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
-import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLAssert;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.junit.jupiter.api.BeforeAll;
@@ -36,13 +34,16 @@ import org.xml.sax.SAXException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
-import java.nio.charset.Charset;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ServiceLoader;
 
 import static io.restassured.RestAssured.given;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
@@ -226,7 +227,7 @@ public class DocumentsResourceTest {
                     .when()
                     .post("/documents/invoice/create")
                     .thenReturn();
-            
+
             // THEN
             assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();

@@ -5,7 +5,12 @@ import org.openublpe.xmlbuilder.models.input.FirmanteInputModel;
 import org.openublpe.xmlbuilder.models.input.ProveedorInputModel;
 
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -21,7 +26,6 @@ public abstract class AbstractInputDocumentModel {
 
     private String moneda;
 
-    @NotNull
     private Long fechaEmision;
 
     @Positive

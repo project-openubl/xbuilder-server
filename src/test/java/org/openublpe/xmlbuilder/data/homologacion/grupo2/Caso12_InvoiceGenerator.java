@@ -5,9 +5,7 @@ import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
 import org.openublpe.xmlbuilder.data.homologacion.HomologacionUtils;
 import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
 import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.ubl.Catalog7;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
