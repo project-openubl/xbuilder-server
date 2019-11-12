@@ -10,3 +10,6 @@ org.openublpe.xmlbuilder.data.homologacion.grupo3.Caso31_DebitNoteGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo4.Caso40_DebitNoteGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo4.Caso41_DebitNoteGenerator
 org.openublpe.xmlbuilder.data.homologacion.grupo4.Caso42_DebitNoteGenerator
+#org.openublpe.xmlbuilder.data.homologacion.grupo8.Caso60_DebitNoteGenerator
+#org.openublpe.xmlbuilder.data.homologacion.grupo8.Caso61_DebitNoteGenerator
+#org.openublpe.xmlbuilder.data.homologacion.grupo8.Caso62_DebitNoteGenerator
