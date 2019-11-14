@@ -93,6 +93,10 @@ public class XMLUtils {
                 .toString();
     }
 
+    public static String getVoidedDocumentFileName(String ruc, Long fechaEmision, Integer numero) {
+        return ruc + "-RA-" + DateUtils.toGregorianCalendarDate(fechaEmision).replaceAll("-", "") + "-" + numero;
+    }
+
     public static String getNotaCredito(String ruc, String serie, Integer numero) {
         Catalog1 catalog1 = Catalog1.NOTA_CREDITO;
         return new StringBuilder()

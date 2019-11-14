@@ -11,9 +11,11 @@ import org.openublpe.xmlbuilder.UBLConstants;
 import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.sunat.VoidedDocumentOutputModel;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -129,6 +131,34 @@ public class DocumentsResource {
 
         return Response.ok(buffer.toString())
                 .header("Content-Disposition", "attachment; filename=\"" + "debitNote.xml" + "\"")
+                .build();
+    }
+
+    @POST
+    @Path("/voided-document/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createVoidedDocument(@Valid VoidedDocumentInputModel input) {
+        VoidedDocumentOutputModel output = new VoidedDocumentOutputModel();
+
+        KieSession ksession = runtimeBuilder.newKieSession();
+
+        ksession.insert(output);
+        ksession.insert(input);
+        ksession.fireAllRules();
+
+        StringWriter buffer;
+        try {
+            Template template = configuration.getTemplate(FreemarkerConstants.VOIDED_DOCUMENT_TEMPLATE_2_0);
+
+            buffer = new StringWriter();
+            template.process(output, buffer);
+            buffer.flush();
+        } catch (IOException | TemplateException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        return Response.ok(buffer.toString())
+                .header("Content-Disposition", "attachment; filename=\"" + "voidedDocument.xml" + "\"")
                 .build();
     }
 }

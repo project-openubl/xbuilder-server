@@ -2,6 +2,7 @@ package rules;
 
 import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
+import org.openublpe.xmlbuilder.models.input.ClienteInputModel;
 import org.openublpe.xmlbuilder.models.output.ClienteOutputModel;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog6;
@@ -10,15 +11,12 @@ dialect "java"
 
 rule "Cliente"
 when
-    $input : DocumentInputModel(cliente != null)
-    $output : DocumentOutputModel()
+    $input : ClienteInputModel()
+    $output : ClienteOutputModel()
 then
-    ClienteOutputModel cliente = new ClienteOutputModel();
-    $output.setCliente(cliente);
+    $output.setNombre($input.getNombre());
+    $output.setNumeroDocumentoIdentidad($input.getNumeroDocumentoIdentidad());
 
-    cliente.setNombre($input.getCliente().getNombre());
-    cliente.setNumeroDocumentoIdentidad($input.getCliente().getNumeroDocumentoIdentidad());
-
-    Catalog6 tipoDocumentoIdentidad = Catalog.valueOfCode(Catalog6.class, $input.getCliente().getTipoDocumentoIdentidad()).get();
-    cliente.setTipoDocumentoIdentidad(tipoDocumentoIdentidad);
+    Catalog6 tipoDocumentoIdentidad = Catalog.valueOfCode(Catalog6.class, $input.getTipoDocumentoIdentidad()).get();
+    $output.setTipoDocumentoIdentidad(tipoDocumentoIdentidad);
 end

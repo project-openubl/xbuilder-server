@@ -3,19 +3,17 @@ package rules;
 import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.ProveedorOutputModel;
+import org.openublpe.xmlbuilder.models.input.ProveedorInputModel;
 
 dialect "java"
 
 rule "Proveedor"
 when
-    $input : DocumentInputModel(proveedor != null)
-    $output : DocumentOutputModel()
+    $input : ProveedorInputModel()
+    $output : ProveedorOutputModel()
 then
-    ProveedorOutputModel proveedor = new ProveedorOutputModel();
-    $output.setProveedor(proveedor);
-
-    proveedor.setRuc($input.getProveedor().getRuc());
-    proveedor.setRazonSocial($input.getProveedor().getRazonSocial());
-    proveedor.setNombreComercial($input.getProveedor().getNombreComercial());
-    proveedor.setCodigoPostal($input.getProveedor().getCodigoPostal());
+    $output.setRuc($input.getRuc());
+    $output.setRazonSocial($input.getRazonSocial());
+    $output.setNombreComercial($input.getNombreComercial());
+    $output.setCodigoPostal($input.getCodigoPostal());
 end

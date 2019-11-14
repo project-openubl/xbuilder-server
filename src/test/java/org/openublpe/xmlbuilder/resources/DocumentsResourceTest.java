@@ -20,9 +20,11 @@ import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.data.CreditNoteInputGenerator;
 import org.openublpe.xmlbuilder.data.DebitNoteInputGenerator;
 import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
+import org.openublpe.xmlbuilder.data.VoidedDocumentInputGenerator;
 import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.utils.CertificateDetails;
 import org.openublpe.xmlbuilder.utils.CertificateDetailsFactory;
 import org.openublpe.xmlbuilder.utils.XMLSigner;
@@ -66,6 +68,7 @@ public class DocumentsResourceTest {
     static List<InvoiceInputModel> invoiceInputs = new ArrayList<>();
     static List<CreditNoteInputModel> creditNoteInputs = new ArrayList<>();
     static List<DebitNoteInputModel> debitNoteInputs = new ArrayList<>();
+    static List<VoidedDocumentInputModel> voidedDocumentInputs = new ArrayList<>();
 
     static Map<Object, Optional<String>> SNAPSHOTS = new HashMap<>();
     static Map<Object, Class> generatorMap = new HashMap<>();
@@ -95,6 +98,14 @@ public class DocumentsResourceTest {
         for (DebitNoteInputGenerator generator : serviceLoader3) {
             DebitNoteInputModel input = generator.getInput();
             debitNoteInputs.add(input);
+            SNAPSHOTS.put(input, generator.getSnapshot());
+            generatorMap.put(input, generator.getClass());
+        }
+
+        ServiceLoader<VoidedDocumentInputGenerator> serviceLoader4 = ServiceLoader.load(VoidedDocumentInputGenerator.class);
+        for (VoidedDocumentInputGenerator generator : serviceLoader4) {
+            VoidedDocumentInputModel input = generator.getInput();
+            voidedDocumentInputs.add(input);
             SNAPSHOTS.put(input, generator.getSnapshot());
             generatorMap.put(input, generator.getClass());
         }
@@ -167,33 +178,31 @@ public class DocumentsResourceTest {
         }
     }
 
-    public void assertSend(Object input, Document xmlSignedDocument) throws IOException, TransformerException {
+    public void assertSendBill(Object input, Document xmlSignedDocument) throws IOException, TransformerException {
         if (System.getProperty("sunat") == null) {
             return;
         }
 
         String proveedorRuc = null;
-        String serie = null;
-        Integer numero = null;
         String fileName = null;
 
         if (input instanceof InvoiceInputModel) {
             InvoiceInputModel invoice = (InvoiceInputModel) input;
             proveedorRuc = invoice.getProveedor().getRuc();
-            serie = invoice.getSerie();
-            numero = invoice.getNumero();
+            String serie = invoice.getSerie();
+            Integer numero = invoice.getNumero();
             fileName = XMLUtils.getInvoiceFileName(proveedorRuc, serie, numero);
         } else if (input instanceof CreditNoteInputModel) {
             CreditNoteInputModel creditNote = (CreditNoteInputModel) input;
             proveedorRuc = creditNote.getProveedor().getRuc();
-            serie = creditNote.getSerie();
-            numero = creditNote.getNumero();
+            String serie = creditNote.getSerie();
+            Integer numero = creditNote.getNumero();
             fileName = XMLUtils.getNotaCredito(proveedorRuc, serie, numero);
         } else if (input instanceof DebitNoteInputModel) {
             DebitNoteInputModel debitNote = (DebitNoteInputModel) input;
             proveedorRuc = debitNote.getProveedor().getRuc();
-            serie = debitNote.getSerie();
-            numero = debitNote.getNumero();
+            String serie = debitNote.getSerie();
+            Integer numero = debitNote.getNumero();
             fileName = XMLUtils.getNotaDebito(proveedorRuc, serie, numero);
         }
 
@@ -210,6 +219,36 @@ public class DocumentsResourceTest {
         assertEquals(
                 BillServiceModel.Status.ACEPTADO,
                 billServiceModel.getStatus(),
+                assertMessageError(input, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]", xmlSignedDocument)
+        );
+    }
+
+    public void assertSendSummary(Object input, Document xmlSignedDocument) throws IOException, TransformerException {
+        if (System.getProperty("sunat") == null) {
+            return;
+        }
+
+        String proveedorRuc = null;
+        String fileName = null;
+
+        if (input instanceof VoidedDocumentInputModel) {
+            VoidedDocumentInputModel voidedDocument = (VoidedDocumentInputModel) input;
+            proveedorRuc = voidedDocument.getProveedor().getRuc();
+            fileName = XMLUtils.getVoidedDocumentFileName(proveedorRuc, voidedDocument.getFechaEmision(), voidedDocument.getNumero());
+        }
+
+        ServiceConfig config = new ServiceConfig.Builder()
+                .url(SUNAT_BETA_URL)
+                .username(proveedorRuc + SUNAT_BETA_USERNAME)
+                .password(SUNAT_BETA_PASSWORD)
+                .build();
+
+        byte[] documentBytes = XMLUtils.documentToBytes(xmlSignedDocument);
+
+
+        BillServiceModel billServiceModel = BillServiceManager.sendSummary(fileName + ".xml", documentBytes, config);
+        assertNotNull(
+                billServiceModel.getTicket(),
                 assertMessageError(input, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]", xmlSignedDocument)
         );
     }
@@ -247,7 +286,7 @@ public class DocumentsResourceTest {
             assertNotNull(invoiceType, assertMessageError(input, "InvoiceType is no valid", xmlSignedDocument));
 
             // Send to test
-            assertSend(input, xmlSignedDocument);
+            assertSendBill(input, xmlSignedDocument);
         }
     }
 
@@ -284,7 +323,7 @@ public class DocumentsResourceTest {
             assertNotNull(creditNoteType, assertMessageError(input, "CreditNoteType is no valid", xmlSignedDocument));
 
             // Send to test
-            assertSend(input, xmlSignedDocument);
+            assertSendBill(input, xmlSignedDocument);
         }
     }
 
@@ -321,8 +360,44 @@ public class DocumentsResourceTest {
             assertNotNull(debitNoteType, assertMessageError(input, "DebitNoteType is no valid", xmlSignedDocument));
 
             // Send to test
-            assertSend(input, xmlSignedDocument);
+            assertSendBill(input, xmlSignedDocument);
         }
     }
 
+    @Test
+    public void testCreateVoidedDocument() throws Exception {
+        for (VoidedDocumentInputModel input : voidedDocumentInputs) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // THEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post("/documents/voided-document/create")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), response.getBody().asString());
+            ResponseBody responseBody = response.getBody();
+
+            // snapshot
+            assertSnapshot(input, responseBody);
+
+            // read document
+            Document xmlDocument = XMLUtils.inputStreamToDocument(responseBody.asInputStream());
+            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
+
+            // Sign document
+            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
+
+//            // Validate valid XML
+//            DebitNoteType debitNoteType = UBL21Reader.debitNote().read(xmlSignedDocument);
+//            assertNotNull(debitNoteType, assertMessageError(input, "DebitNoteType is no valid", xmlSignedDocument));
+//
+            // Send to test
+            assertSendSummary(input, xmlSignedDocument);
+        }
+    }
 }
