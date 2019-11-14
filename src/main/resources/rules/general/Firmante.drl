@@ -1,15 +1,15 @@
 package rules;
 
-import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
-import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
+import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.FirmanteOutputModel;
 
 dialect "java"
 
 rule "Firmante"
 when
-    $input : AbstractInputDocumentModel(firmante != null)
-    $output : AbstractOutputDocumentModel()
+    $input : DocumentInputModel(firmante != null)
+    $output : DocumentOutputModel()
 then
     FirmanteOutputModel firmante = new FirmanteOutputModel();
     $output.setFirmante(firmante);

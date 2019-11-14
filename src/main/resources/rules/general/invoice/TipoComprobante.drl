@@ -1,9 +1,9 @@
 package rules.invoice;
 
-import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
-import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.output.general.invoice.InvoiceOutputModel;
-import org.openublpe.xmlbuilder.models.ubl.Catalog1;
+import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.utils.UBLUtils;
 
 dialect "java"

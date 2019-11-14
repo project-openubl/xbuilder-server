@@ -1,17 +1,17 @@
 package rules;
 
-import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
-import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
+import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.ClienteOutputModel;
-import org.openublpe.xmlbuilder.models.ubl.Catalog;
-import org.openublpe.xmlbuilder.models.ubl.Catalog6;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog6;
 
 dialect "java"
 
 rule "Cliente"
 when
-    $input : AbstractInputDocumentModel(cliente != null)
-    $output : AbstractOutputDocumentModel()
+    $input : DocumentInputModel(cliente != null)
+    $output : DocumentOutputModel()
 then
     ClienteOutputModel cliente = new ClienteOutputModel();
     $output.setCliente(cliente);

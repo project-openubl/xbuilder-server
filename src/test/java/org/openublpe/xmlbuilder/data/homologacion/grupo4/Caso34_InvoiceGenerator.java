@@ -3,8 +3,8 @@ package org.openublpe.xmlbuilder.data.homologacion.grupo4;
 import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
 import org.openublpe.xmlbuilder.data.homologacion.HomologacionUtils;
-import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
-import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class Caso34_InvoiceGenerator implements InvoiceInputGenerator {
                     INVOICE.setProveedor(GeneralData.getProveedor());
                     INVOICE.setCliente(GeneralData.getClienteConRUC());
 
-                    INVOICE.setDescuentoGlobal(BigDecimal.ONE);
+                    INVOICE.setTotalDescuentos(BigDecimal.ONE);
 
                     List<DetalleInputModel> detalle = new ArrayList<>();
                     INVOICE.setDetalle(detalle);

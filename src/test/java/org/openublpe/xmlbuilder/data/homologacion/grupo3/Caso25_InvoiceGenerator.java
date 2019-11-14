@@ -3,8 +3,8 @@ package org.openublpe.xmlbuilder.data.homologacion.grupo3;
 import org.openublpe.xmlbuilder.data.GeneralData;
 import org.openublpe.xmlbuilder.data.InvoiceInputGenerator;
 import org.openublpe.xmlbuilder.data.homologacion.HomologacionUtils;
-import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
-import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;

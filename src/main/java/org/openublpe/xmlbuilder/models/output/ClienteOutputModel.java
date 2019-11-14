@@ -1,11 +1,19 @@
 package org.openublpe.xmlbuilder.models.output;
 
-import org.openublpe.xmlbuilder.models.ubl.Catalog6;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog6;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class ClienteOutputModel {
 
+    @NotNull
     private Catalog6 tipoDocumentoIdentidad;
+
+    @NotBlank
     private String numeroDocumentoIdentidad;
+
+    @NotBlank
     private String nombre;
 
     public Catalog6 getTipoDocumentoIdentidad() {
@@ -31,5 +39,5 @@ public class ClienteOutputModel {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
+
 }

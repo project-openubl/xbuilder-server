@@ -2,10 +2,10 @@ package org.openublpe.xmlbuilder.data.homologacion.grupo2;
 
 import org.openublpe.xmlbuilder.data.DebitNoteInputGenerator;
 import org.openublpe.xmlbuilder.data.homologacion.HomologacionUtils;
-import org.openublpe.xmlbuilder.models.input.general.DetalleInputModel;
-import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.input.general.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.ubl.Catalog7;
+import org.openublpe.xmlbuilder.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
 
 import java.util.Calendar;
 

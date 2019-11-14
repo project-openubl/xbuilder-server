@@ -1,6 +1,6 @@
 package org.openublpe.xmlbuilder.utils;
 
-import org.openublpe.xmlbuilder.models.ubl.Catalog1;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;

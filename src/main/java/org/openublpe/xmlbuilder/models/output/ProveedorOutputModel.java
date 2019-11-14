@@ -1,10 +1,18 @@
 package org.openublpe.xmlbuilder.models.output;
 
+import javax.validation.constraints.NotBlank;
+
 public class ProveedorOutputModel {
 
+    @NotBlank
     private String ruc;
+
     private String nombreComercial;
+
+    @NotBlank
     private String razonSocial;
+
+    @NotBlank
     private String codigoPostal;
 
     public String getRuc() {

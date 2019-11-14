@@ -1,15 +1,15 @@
 package rules;
 
-import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
-import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
+import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.ProveedorOutputModel;
 
 dialect "java"
 
 rule "Proveedor"
 when
-    $input : AbstractInputDocumentModel(proveedor != null)
-    $output : AbstractOutputDocumentModel()
+    $input : DocumentInputModel(proveedor != null)
+    $output : DocumentOutputModel()
 then
     ProveedorOutputModel proveedor = new ProveedorOutputModel();
     $output.setProveedor(proveedor);

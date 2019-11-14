@@ -1,14 +1,14 @@
 package rules;
 
-import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
-import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
+import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
 
 dialect "java"
 
 rule "Serie y numero"
 when
-    $input : AbstractInputDocumentModel(serie != null, numero != null)
-    $output : AbstractOutputDocumentModel()
+    $input : DocumentInputModel(serie != null, numero != null)
+    $output : DocumentOutputModel()
 then
     $output.setSerieNumero($input.getSerie().toUpperCase() + "-" + $input.getNumero());
 end

@@ -1,8 +1,8 @@
 package org.openublpe.xmlbuilder.data.homologacion.grupo1;
 
 import org.openublpe.xmlbuilder.data.DebitNoteInputGenerator;
-import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.input.general.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
 
 import java.util.Date;
 

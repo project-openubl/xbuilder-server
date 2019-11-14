@@ -1,15 +1,15 @@
 package rules.note.debitNote;
 
-import org.openublpe.xmlbuilder.models.input.general.note.AbstractNoteInputDocumentModel;
-import org.openublpe.xmlbuilder.models.output.general.note.debitNote.DebitNoteOutputModel;
-import org.openublpe.xmlbuilder.models.ubl.Catalog;
-import org.openublpe.xmlbuilder.models.ubl.Catalog10;
+import org.openublpe.xmlbuilder.models.input.standard.note.NoteInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog10;
 
 dialect "java"
 
 rule "Tipo Documento Debit Note"
 when
-    $input : AbstractNoteInputDocumentModel()
+    $input : NoteInputModel()
     $output : DebitNoteOutputModel()
 then
     // Default values

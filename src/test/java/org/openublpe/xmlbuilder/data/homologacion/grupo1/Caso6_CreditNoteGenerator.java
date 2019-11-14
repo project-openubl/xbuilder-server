@@ -1,8 +1,8 @@
 package org.openublpe.xmlbuilder.data.homologacion.grupo1;
 
 import org.openublpe.xmlbuilder.data.CreditNoteInputGenerator;
-import org.openublpe.xmlbuilder.models.input.general.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.input.general.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 
 import java.util.Date;
 

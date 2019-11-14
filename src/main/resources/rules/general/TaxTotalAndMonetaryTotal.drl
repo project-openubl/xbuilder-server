@@ -1,27 +1,27 @@
 package rules;
 
-import org.openublpe.xmlbuilder.models.input.general.AbstractInputDocumentModel;
-import org.openublpe.xmlbuilder.models.output.general.AbstractOutputDocumentModel;
-import org.openublpe.xmlbuilder.models.output.general.ImpuestoOutputModel;
-import org.openublpe.xmlbuilder.models.output.general.DetalleOutputModel;
+import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
+import org.openublpe.xmlbuilder.models.output.standard.ImpuestoOutputModel;
+import org.openublpe.xmlbuilder.models.output.standard.DetalleOutputModel;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.stream.Stream;
-import org.openublpe.xmlbuilder.models.ubl.Catalog5;
-import org.openublpe.xmlbuilder.models.ubl.Catalog7;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog5;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
 
 dialect "java"
 
 rule "Tax Total and Monetary Total" salience -1
 when
-    $input : AbstractInputDocumentModel()
-    $output : AbstractOutputDocumentModel()
+    $input : DocumentInputModel()
+    $output : DocumentOutputModel()
 then
     // TOTAL IMPUESTOS
     BigDecimal totalIGV = $output.getDetalle()
         .stream()
         .filter(p -> p.getIgv().getCategoria().equals(Catalog5.IGV))
-        .map(f -> f.getIgv().getImporte())
+        .map(m -> m.getIgv().getImporte())
         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
     $output.setImporteTotalImpuestos(totalIGV);
@@ -32,7 +32,7 @@ then
 
     // igv
     java.util.function.Supplier<Stream<DetalleOutputModel>> totalIgvStream = () -> $output.getDetalle().stream().filter(i -> i.getIgv().getTipo().getTaxCategory().equals(Catalog5.IGV));
-    BigDecimal importeTotalGravado = totalIgvStream.get().map(f -> f.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
+    BigDecimal importeTotalGravado = totalIgvStream.get().map(s -> s.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
     BigDecimal baseImponibleTotalGravado = totalIgvStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
 
     if (baseImponibleTotalGravado.compareTo(BigDecimal.ZERO) > 0) {
@@ -59,7 +59,7 @@ then
     }
 
     // inafecto
-    java.util.function.Supplier<Stream<DetalleOutputModel>> totalInafectoStream = () -> $output.getDetalle().stream().filter(i -> i.getIgv().getTipo().getTaxCategory().equals(Catalog5.INAFECTO));
+    java.util.function.Supplier<Stream<DetalleOutputModel>> totalInafectoStream = () -> $output.getDetalle().stream().filter(f -> f.getIgv().getTipo().getTaxCategory().equals(Catalog5.INAFECTO));
     BigDecimal importeTotalInafecto = BigDecimal.ZERO;
     BigDecimal baseImponibleTotalInafecto = totalInafectoStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -89,11 +89,11 @@ then
 
 
     // TOTAL PAYABLE
-    BigDecimal totalDescuentos = $input.getDescuentoGlobal() != null
-            ? $input.getDescuentoGlobal()
+    BigDecimal totalDescuentos = $input.getTotalDescuentos() != null
+            ? $input.getTotalDescuentos()
             : BigDecimal.ZERO;
-    BigDecimal totalOtrosCargos = $input.getOtrosCargosGlobal() != null
-                ? $input.getOtrosCargosGlobal()
+    BigDecimal totalOtrosCargos = $input.getTotalOtrosCargos() != null
+                ? $input.getTotalOtrosCargos()
                 : BigDecimal.ZERO;
      BigDecimal importeTotal = $output.getDetalle()
             .stream()
