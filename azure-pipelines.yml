@@ -18,10 +18,6 @@ pr:
       - dco.txt
       - .github/ISSUE_TEMPLATE/*.md
 
-variables:
-  LINUX_VM_IMAGE: 'ubuntu-16.04'
-  JDK8: '1.8'
-  JDK11: '1.11'
 stages:
   - stage: test
     displayName: Tests
@@ -32,11 +28,11 @@ stages:
           maxParallel: 2
           matrix:
             jdk8_linux:
-              imageName: $(LINUX_VM_IMAGE)
-              jdk_version: $(JDK8)
+              imageName: 'ubuntu-16.04'
+              jdk_version: '1.8'
             jdk11_linux:
-              imageName: $(LINUX_VM_IMAGE)
-              jdk_version: $(JDK11)
+              imageName: 'ubuntu-16.04'
+              jdk_version: '1.11'
         pool:
           vmImage: $(imageName)
         steps:
@@ -48,7 +44,7 @@ stages:
       - job: sunat_test
         displayName: Sunat test
         pool:
-          vmImage: $(LINUX_VM_IMAGE)
+          vmImage: 'ubuntu-16.04'
         steps:
           - task: Maven@3
             inputs:
