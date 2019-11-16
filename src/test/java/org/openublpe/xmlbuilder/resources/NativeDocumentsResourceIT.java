@@ -1,8 +1,8 @@
 package org.openublpe.xmlbuilder.resources;
 
-import io.quarkus.test.junit.SubstrateTest;
+import io.quarkus.test.junit.NativeImageTest;
 
-@SubstrateTest
+@NativeImageTest
 public class NativeDocumentsResourceIT extends DocumentsResourceTest {
 
     // Execute the same tests but in native mode.
