@@ -1,4 +1,6 @@
 # xml-builder
+[![Build Status](https://dev.azure.com/project-openubl/xml-builder/_apis/build/status/project-openubl.xml-builder?branchName=master)](https://dev.azure.com/project-openubl/xml-builder/_build/latest?definitionId=1&branchName=master)
+
 Crea archivos XML basados en UBL 2.1 - Facturacion electrónica Peru
 
 # Prerequisitos
