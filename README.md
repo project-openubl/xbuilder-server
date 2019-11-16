@@ -65,3 +65,4 @@ http://localhost:8080/documents/invoice/create
 Para saber saber más acerca de los endpoints visita:  [swaggerhu**b/project-openubl/xml-builder](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
 
 ![Swagger](docs/images/swagger.png)
+
