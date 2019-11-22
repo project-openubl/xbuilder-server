@@ -1,8 +1,8 @@
 package org.openublpe.xmlbuilder.models.input.standard;
 
-import org.openublpe.xmlbuilder.models.input.ClienteInputModel;
-import org.openublpe.xmlbuilder.models.input.FirmanteInputModel;
-import org.openublpe.xmlbuilder.models.input.ProveedorInputModel;
+import org.openublpe.xmlbuilder.models.input.common.ClienteInputModel;
+import org.openublpe.xmlbuilder.models.input.common.FirmanteInputModel;
+import org.openublpe.xmlbuilder.models.input.common.ProveedorInputModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;

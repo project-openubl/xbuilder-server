@@ -5,6 +5,8 @@ org.openublpe.xmlbuilder.inputData.invoice.Invoice_InafectoOnerosaInputGenerator
 org.openublpe.xmlbuilder.inputData.invoice.Invoice_InafectoNoOnerosaInputGenerator
 org.openublpe.xmlbuilder.inputData.invoice.Invoice_ExoneradaOnerosaInputGenerator
 org.openublpe.xmlbuilder.inputData.invoice.Invoice_ComplexInputGenerator
+org.openublpe.xmlbuilder.inputData.invoice.Invoice_GravadaOnerosaConICBInputGenerator
+org.openublpe.xmlbuilder.inputData.invoice.Invoice_GravadaNoOnerosaConICBInputGenerator
 org.openublpe.xmlbuilder.inputData.homologacion.grupo1.Caso1_InvoiceGenerator
 org.openublpe.xmlbuilder.inputData.homologacion.grupo1.Caso2_InvoiceGenerator
 org.openublpe.xmlbuilder.inputData.homologacion.grupo1.Caso3_InvoiceGenerator

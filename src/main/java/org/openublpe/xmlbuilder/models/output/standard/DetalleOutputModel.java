@@ -1,6 +1,8 @@
 package org.openublpe.xmlbuilder.models.output.standard;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -20,35 +22,42 @@ public class DetalleOutputModel {
     @NotBlank
     private String unidadMedida;
 
-    // Sin impuestos
+    @NotNull
+    @Min(0)
     private BigDecimal valorUnitario;
 
-    // Con impuestos
+    @NotNull
+    @Min(0)
     private BigDecimal precioUnitario;
 
-    // valorUnitario * cantidad
+    @NotNull
+    @Min(0)
     private BigDecimal subtotal;
 
-    // precioUnitario * cantidad
+    @NotNull
+    @Min(0)
     private BigDecimal total;
 
+    @NotNull
+    @Min(0)
+    @Max(100)
     private BigDecimal igvPorcentual;
+
+    @NotNull
+    @Min(0)
+    private BigDecimal icbAplicado;
 
     @Valid
     @NotNull
-    private ImpuestoDetalladoOutputModel igv;
+    private ImpuestoDetalladoIGVOutputModel igv;
+
+    @Valid
+    @NotNull
+    private ImpuestoDetalladoICBOutputModel icb;
 
     @Valid
     @NotEmpty
-    private List<PrecioReferenciaOutputModel> preciosDeReferencia;
-
-    public BigDecimal getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(BigDecimal cantidad) {
-        this.cantidad = cantidad;
-    }
+    private List<DetallePrecioReferenciaOutputModel> preciosDeReferencia;
 
     public String getDescripcion() {
         return descripcion;
@@ -56,6 +65,14 @@ public class DetalleOutputModel {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public BigDecimal getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(BigDecimal cantidad) {
+        this.cantidad = cantidad;
     }
 
     public String getUnidadMedida() {
@@ -98,27 +115,43 @@ public class DetalleOutputModel {
         this.total = total;
     }
 
-    public ImpuestoDetalladoOutputModel getIgv() {
-        return igv;
-    }
-
-    public void setIgv(ImpuestoDetalladoOutputModel igv) {
-        this.igv = igv;
-    }
-
-    public List<PrecioReferenciaOutputModel> getPreciosDeReferencia() {
-        return preciosDeReferencia;
-    }
-
-    public void setPreciosDeReferencia(List<PrecioReferenciaOutputModel> preciosDeReferencia) {
-        this.preciosDeReferencia = preciosDeReferencia;
-    }
-
     public BigDecimal getIgvPorcentual() {
         return igvPorcentual;
     }
 
     public void setIgvPorcentual(BigDecimal igvPorcentual) {
         this.igvPorcentual = igvPorcentual;
+    }
+
+    public ImpuestoDetalladoIGVOutputModel getIgv() {
+        return igv;
+    }
+
+    public void setIgv(ImpuestoDetalladoIGVOutputModel igv) {
+        this.igv = igv;
+    }
+
+    public ImpuestoDetalladoICBOutputModel getIcb() {
+        return icb;
+    }
+
+    public void setIcb(ImpuestoDetalladoICBOutputModel icb) {
+        this.icb = icb;
+    }
+
+    public List<DetallePrecioReferenciaOutputModel> getPreciosDeReferencia() {
+        return preciosDeReferencia;
+    }
+
+    public void setPreciosDeReferencia(List<DetallePrecioReferenciaOutputModel> preciosDeReferencia) {
+        this.preciosDeReferencia = preciosDeReferencia;
+    }
+
+    public BigDecimal getIcbAplicado() {
+        return icbAplicado;
+    }
+
+    public void setIcbAplicado(BigDecimal icbAplicado) {
+        this.icbAplicado = icbAplicado;
     }
 }

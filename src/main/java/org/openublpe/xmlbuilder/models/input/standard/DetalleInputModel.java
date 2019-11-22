@@ -18,12 +18,15 @@ public class DetalleInputModel {
     @Digits(integer = Integer.MAX_VALUE, fraction = 3)
     private BigDecimal cantidad;
 
-    // Precio con impuestos
+    /**
+     * Precio con impuestos
+     */
     @NotNull
     @Positive
     private BigDecimal precioUnitario;
 
     private String tipoIGV;
+    private boolean icb;
 
     public BigDecimal getCantidad() {
         return cantidad;
@@ -63,5 +66,13 @@ public class DetalleInputModel {
 
     public void setTipoIGV(String tipoIGV) {
         this.tipoIGV = tipoIGV;
+    }
+
+    public boolean isIcb() {
+        return icb;
+    }
+
+    public void setIcb(boolean icb) {
+        this.icb = icb;
     }
 }
