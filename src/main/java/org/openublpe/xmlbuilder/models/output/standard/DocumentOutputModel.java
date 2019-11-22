@@ -1,8 +1,8 @@
 package org.openublpe.xmlbuilder.models.output.standard;
 
-import org.openublpe.xmlbuilder.models.output.ClienteOutputModel;
-import org.openublpe.xmlbuilder.models.output.FirmanteOutputModel;
-import org.openublpe.xmlbuilder.models.output.ProveedorOutputModel;
+import org.openublpe.xmlbuilder.models.output.common.ClienteOutputModel;
+import org.openublpe.xmlbuilder.models.output.common.FirmanteOutputModel;
+import org.openublpe.xmlbuilder.models.output.common.ProveedorOutputModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -15,18 +15,22 @@ import java.util.List;
 
 public class DocumentOutputModel {
 
+    @Size(min = 3, max = 3)
+    @NotBlank
+    private String moneda;
+
     @NotBlank
     private String serieNumero;
 
     @NotBlank
-    private String fechaEmision;
-
-    @NotBlank
     private String horaEmision;
 
-    @Size(min = 3, max = 3)
     @NotBlank
-    private String moneda;
+    private String fechaEmision;
+
+    @Valid
+    @NotNull
+    private ClienteOutputModel cliente;
 
     @Valid
     private FirmanteOutputModel firmante;
@@ -35,17 +39,6 @@ public class DocumentOutputModel {
     @NotNull
     private ProveedorOutputModel proveedor;
 
-    @Valid
-    @NotNull
-    private ClienteOutputModel cliente;
-
-    @NotNull
-    private BigDecimal importeTotalImpuestos;
-
-    @Valid
-    @NotEmpty
-    private List<ImpuestoOutputModel> totalImpuestos;
-
     @NotNull
     @Min(1)
     private Integer detalleSize;
@@ -53,6 +46,13 @@ public class DocumentOutputModel {
     @Valid
     @NotEmpty
     private List<DetalleOutputModel> detalle;
+
+    @NotNull
+    private BigDecimal importeTotalImpuestos;
+
+    @Valid
+    @NotEmpty
+    private List<ImpuestoTotalOutputModel> totalImpuestos;
 
     @NotNull
     private BigDecimal totalValorVenta;
@@ -133,11 +133,11 @@ public class DocumentOutputModel {
         this.importeTotalImpuestos = importeTotalImpuestos;
     }
 
-    public List<ImpuestoOutputModel> getTotalImpuestos() {
+    public List<ImpuestoTotalOutputModel> getTotalImpuestos() {
         return totalImpuestos;
     }
 
-    public void setTotalImpuestos(List<ImpuestoOutputModel> totalImpuestos) {
+    public void setTotalImpuestos(List<ImpuestoTotalOutputModel> totalImpuestos) {
         this.totalImpuestos = totalImpuestos;
     }
 

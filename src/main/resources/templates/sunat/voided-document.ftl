@@ -17,23 +17,7 @@
     <cbc:ReferenceDate>${fechaEmisionDocumentReference}</cbc:ReferenceDate>
     <cbc:IssueDate>${fechaEmision}</cbc:IssueDate>
     <#include "../signature.ftl">
-    <cac:AccountingSupplierParty>
-        <cbc:CustomerAssignedAccountID>${proveedor.ruc}</cbc:CustomerAssignedAccountID>
-        <cbc:AdditionalAccountID>6</cbc:AdditionalAccountID>
-        <cac:Party>
-            <#if proveedor.nombreComercial??>
-            <cac:PartyName>
-                <cbc:Name>${proveedor.nombreComercial}</cbc:Name>
-            </cac:PartyName>
-            </#if>
-            <cac:PostalAddress>
-                <cbc:ID>${proveedor.codigoPostal}</cbc:ID>
-            </cac:PostalAddress>
-            <cac:PartyLegalEntity>
-                <cbc:RegistrationName>${proveedor.razonSocial}</cbc:RegistrationName>
-            </cac:PartyLegalEntity>
-        </cac:Party>
-    </cac:AccountingSupplierParty>
+    <#include "./common/supplier.ftl">
     <sac:VoidedDocumentsLine>
         <cbc:LineID>1</cbc:LineID>
         <cbc:DocumentTypeCode>${tipoDocumentReference.code}</cbc:DocumentTypeCode>

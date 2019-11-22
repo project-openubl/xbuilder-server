@@ -1,0 +1,35 @@
+package rules.standard;
+
+import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
+import org.openublpe.xmlbuilder.models.output.common.ProveedorOutputModel;
+import org.openublpe.xmlbuilder.models.input.common.ProveedorInputModel
+import org.openublpe.xmlbuilder.models.output.common.FirmanteOutputModel
+import org.openublpe.xmlbuilder.models.output.common.ClienteOutputModel
+import org.openublpe.xmlbuilder.models.output.common.ClienteOutputModel
+import org.openublpe.xmlbuilder.models.output.common.FirmanteOutputModel
+import org.openublpe.xmlbuilder.models.output.common.ProveedorOutputModel;
+
+dialect "java"
+
+rule "Document"
+when
+    $input : DocumentInputModel()
+    $output : DocumentOutputModel()
+then
+    FirmanteOutputModel firmante = new FirmanteOutputModel();
+    $output.setFirmante(firmante);
+
+    ProveedorOutputModel proveedor = new ProveedorOutputModel();
+    $output.setProveedor(proveedor);
+
+    ClienteOutputModel cliente = new ClienteOutputModel();
+    $output.setCliente(cliente);
+
+    insert($input.getFirmante());
+    insert($input.getProveedor());
+    insert($input.getCliente());
+    insert(firmante);
+    insert(proveedor);
+    insert(cliente);
+end

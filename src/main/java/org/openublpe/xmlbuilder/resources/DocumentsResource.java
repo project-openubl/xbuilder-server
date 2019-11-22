@@ -8,6 +8,8 @@ import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.KieRuntimeBuilder;
 import org.openublpe.xmlbuilder.FreemarkerConstants;
 import org.openublpe.xmlbuilder.UBLConstants;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -35,8 +37,21 @@ import java.math.BigDecimal;
 @Consumes(MediaType.APPLICATION_JSON)
 public class DocumentsResource {
 
-    @ConfigProperty(name = UBLConstants.IGV_KEY, defaultValue = UBLConstants.IGV_DEFAULT_VALUE)
+    @ConfigProperty(name = UBLConstants.IGV_KEY)
     BigDecimal IGV;
+
+    @ConfigProperty(name = UBLConstants.ICB_KEY)
+    BigDecimal ICB;
+
+    @ConfigProperty(name = UBLConstants.MONEDA)
+    String MONEDA;
+
+    @ConfigProperty(name = UBLConstants.UNIDAD_MEDIDA)
+    String UNIDAD_MEDIDA;
+
+    @ConfigProperty(name = UBLConstants.TIPO_IGV)
+    String TIPO_IGV;
+
 
     @Inject
     Configuration configuration;
@@ -50,6 +65,16 @@ public class DocumentsResource {
     @Inject
     Validator validator;
 
+    private void setGlobalVariables(KieSession kSession) {
+        kSession.setGlobal("IGV", IGV);
+        kSession.setGlobal("ICB", ICB);
+        kSession.setGlobal("MONEDA", MONEDA);
+        kSession.setGlobal("UNIDAD_MEDIDA", UNIDAD_MEDIDA);
+        kSession.setGlobal("TIPO_IGV", Catalog.valueOfCode(Catalog7.class, TIPO_IGV)
+                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for TIPO_IGV"))
+        );
+    }
+
     @POST
     @Path("/invoice/create")
     @Produces(MediaType.TEXT_XML)
@@ -57,7 +82,8 @@ public class DocumentsResource {
         InvoiceOutputModel output = new InvoiceOutputModel();
 
         KieSession ksession = runtimeBuilder.newKieSession();
-        ksession.setGlobal("IGV", IGV);
+        setGlobalVariables(ksession);
+
         ksession.insert(output);
         ksession.insert(input);
         ksession.fireAllRules();
@@ -85,7 +111,8 @@ public class DocumentsResource {
         CreditNoteOutputModel output = new CreditNoteOutputModel();
 
         KieSession ksession = runtimeBuilder.newKieSession();
-        ksession.setGlobal("IGV", IGV);
+        setGlobalVariables(ksession);
+
         ksession.insert(output);
         ksession.insert(input);
         ksession.fireAllRules();
@@ -113,7 +140,8 @@ public class DocumentsResource {
         DebitNoteOutputModel output = new DebitNoteOutputModel();
 
         KieSession ksession = runtimeBuilder.newKieSession();
-        ksession.setGlobal("IGV", IGV);
+        setGlobalVariables(ksession);
+
         ksession.insert(output);
         ksession.insert(input);
         ksession.fireAllRules();

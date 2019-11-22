@@ -1,0 +1,22 @@
+package rules.standard;
+
+import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel
+import java.util.Calendar;
+
+import function org.openublpe.xmlbuilder.utils.DateUtils.toGregorianCalendarDate;
+import function org.openublpe.xmlbuilder.utils.DateUtils.toGregorianCalendarTime;
+
+dialect "java"
+
+rule "Fecha y Hora de emision"
+when
+    $input : DocumentInputModel()
+    $output: DocumentOutputModel()
+then
+    long fechaEmision = $input.getFechaEmision() != null
+        ? $input.getFechaEmision()
+        : Calendar.getInstance().getTimeInMillis();
+    $output.setFechaEmision(toGregorianCalendarDate(fechaEmision));
+    $output.setHoraEmision(toGregorianCalendarTime(fechaEmision));
+end
