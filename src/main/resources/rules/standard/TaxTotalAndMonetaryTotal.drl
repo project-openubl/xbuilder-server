@@ -117,7 +117,6 @@ then
 
     BigDecimal icbTotal = $output.getDetalle()
                  .stream()
-                 .filter(p -> !p.getIgv().getTipo().getTaxCategory().equals(Catalog5.GRATUITO))
                  .filter(p -> p.getIcb() != null)
                  .map(p -> p.getIcb().getImporte())
                  .reduce(BigDecimal.ZERO, BigDecimal::add);
