@@ -10,7 +10,7 @@ read -s -p "Enter Github Password: " password
 mvn versions:set -DnewVersion="$releaseVersion"
 
 git add .
-git commit -m "Prepare release $releaseVersion"
+git commit -m "Release $releaseVersion"
 git push "https://$username:$password@github.com/project-openubl/xml-builder.git"
 
 # Create tag and push
