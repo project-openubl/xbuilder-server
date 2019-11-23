@@ -51,11 +51,11 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: verify
               options: -Psunat
-      - job: coverage
-        displayName: Coverage
-        dependsOn: unit_test
-        pool:
-          vmImage: 'ubuntu-16.04'
+  - stage: test_results_analysis
+    displayName: Test results analysis
+    jobs:
+      - job: sonarCloud
+        displayName: SonarCloud
         steps:
           - task: SonarCloudPrepare@1
             inputs:
