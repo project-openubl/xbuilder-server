@@ -51,3 +51,41 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: verify
               options: -Psunat
+  - stage: release
+    displayName: Release
+    jobs:
+      - job: release_java_artifacts
+        displayName: Release Java artifacts
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: install
+              options: -DskipTests
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: 'target'
+              Contents: '*.-runner.jar'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      - job: release_to_github
+        displayName: Release to Github
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: GitHubRelease@1
+            displayName: Create Github Release
+            inputs:
+              gitHubConnection: project-openubl
+              repositoryName: '$(Build.Repository.Name)'
+              action: 'create'
+              target: '$(Build.SourceVersion)'
+              tagSource: 'gitTag'
+              assets: |
+                  $(Build.ArtifactStagingDirectory)/*.jar
+              changeLogCompareToRelease: 'lastFullRelease'
+              changeLogType: 'commitBased'
+        
+
+  
