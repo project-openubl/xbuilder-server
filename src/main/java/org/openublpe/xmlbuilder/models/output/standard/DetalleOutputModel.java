@@ -52,7 +52,6 @@ public class DetalleOutputModel {
     private ImpuestoDetalladoIGVOutputModel igv;
 
     @Valid
-    @NotNull
     private ImpuestoDetalladoICBOutputModel icb;
 
     @Valid

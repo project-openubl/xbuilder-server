@@ -52,12 +52,13 @@ public class DocumentOutputModel {
 
     @Valid
     @NotEmpty
-    private List<ImpuestoTotalOutputModel> totalImpuestos;
+    private List<ImpuestoTotalIGVOutputModel> totalImpuestosIgv;
 
+    @Valid
     @NotNull
+    private List<ImpuestoTotalICBOutputModel> totalImpuestosIcb;
+
     private BigDecimal totalValorVenta;
-
-    @NotNull
     private BigDecimal totalPrecioVenta;
 
     @NotNull
@@ -133,12 +134,12 @@ public class DocumentOutputModel {
         this.importeTotalImpuestos = importeTotalImpuestos;
     }
 
-    public List<ImpuestoTotalOutputModel> getTotalImpuestos() {
-        return totalImpuestos;
+    public List<ImpuestoTotalIGVOutputModel> getTotalImpuestosIgv() {
+        return totalImpuestosIgv;
     }
 
-    public void setTotalImpuestos(List<ImpuestoTotalOutputModel> totalImpuestos) {
-        this.totalImpuestos = totalImpuestos;
+    public void setTotalImpuestosIgv(List<ImpuestoTotalIGVOutputModel> totalImpuestosIgv) {
+        this.totalImpuestosIgv = totalImpuestosIgv;
     }
 
     public Integer getDetalleSize() {
@@ -195,5 +196,13 @@ public class DocumentOutputModel {
 
     public void setImporteTotal(BigDecimal importeTotal) {
         this.importeTotal = importeTotal;
+    }
+
+    public List<ImpuestoTotalICBOutputModel> getTotalImpuestosIcb() {
+        return totalImpuestosIcb;
+    }
+
+    public void setTotalImpuestosIcb(List<ImpuestoTotalICBOutputModel> totalImpuestosIcb) {
+        this.totalImpuestosIcb = totalImpuestosIcb;
     }
 }

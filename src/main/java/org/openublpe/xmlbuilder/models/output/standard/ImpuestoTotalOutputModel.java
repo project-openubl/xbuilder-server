@@ -6,15 +6,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class ImpuestoTotalOutputModel {
+public abstract class ImpuestoTotalOutputModel {
 
     @NotNull
     @Min(0)
     private BigDecimal importe;
-
-    @NotNull
-    @Min(0)
-    private BigDecimal baseImponible;
 
     @NotNull
     private Catalog5 categoria;
@@ -25,14 +21,6 @@ public class ImpuestoTotalOutputModel {
 
     public void setImporte(BigDecimal importe) {
         this.importe = importe;
-    }
-
-    public BigDecimal getBaseImponible() {
-        return baseImponible;
-    }
-
-    public void setBaseImponible(BigDecimal baseImponible) {
-        this.baseImponible = baseImponible;
     }
 
     public Catalog5 getCategoria() {
