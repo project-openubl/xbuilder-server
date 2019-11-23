@@ -41,26 +41,11 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: verify
               jdkVersionOption: $(jdk_version)
-      - job: sunat_test
-        displayName: Integration tests sunat
+      - job: integration_test_sunat
+        displayName: Integration tests SUNAT
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
-          - task: Maven@3
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: verify
-              options: -Psunat
-  - stage: metrics
-    displayName: Metrics
-    jobs:
-      - job: sonarCloud
-        displayName: SonarCloud
-        steps:
-          - task: Maven@3
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: 'verify'
           - task: SonarCloudPrepare@1
             displayName: 'Prepare SonarCloud analysis'
             inputs:
@@ -68,9 +53,25 @@ stages:
               organization: 'project-openubl'
               scannerMode: 'CLI'
               configMode: 'file'
-          - task: SonarCloudAnalyze@1
-            displayName: 'Run SonarCloud code analysis'
-              
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: package
+              options: -Psunat
+              publishJUnitResults: false
+              codeCoverageToolOption: 'JaCoCo'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: true
+              sqMavenPluginVersionChoice: 'latest'
+  - stage: metrics
+    displayName: Metrics
+    jobs:
+      - job: sonarCloud
+        displayName: SonarCloud
+        steps:              
           - task: SonarCloudPublish@1
             displayName: 'Publish SonarCloud quality gate results'
             inputs:
