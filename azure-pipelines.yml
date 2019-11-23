@@ -59,7 +59,7 @@ stages:
               goals: 'install'
               options: '-Psunat'
               publishJUnitResults: false
-              codeCoverageToolOption: 'JaCoCo'
+              # codeCoverageToolOption: 'JaCoCo'
               javaHomeOption: 'JDKVersion'
               mavenVersionOption: 'Default'
               mavenAuthenticateFeed: false
