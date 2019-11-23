@@ -20,7 +20,7 @@ pr:
 
 stages:
   - stage: test
-    displayName: Tests
+    displayName: Test
     jobs:
       - job: unit_test
         displayName: Unit tests
@@ -42,7 +42,7 @@ stages:
               goals: verify
               jdkVersionOption: $(jdk_version)
       - job: sunat_test
-        displayName: Sunat test
+        displayName: Integration tests sunat
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
@@ -51,8 +51,8 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: verify
               options: -Psunat
-  - stage: test_results_analysis
-    displayName: Test results analysis
+  - stage: metrics
+    displayName: Metrics
     jobs:
       - job: sonarCloud
         displayName: SonarCloud
