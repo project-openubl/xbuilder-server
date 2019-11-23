@@ -51,6 +51,17 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: verify
               options: -Psunat
+      - job: coverage
+        displayName: Coverage
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: SonarCloudPrepare@1
+            inputs:
+              SonarCloud: 'project-openubl/xml-builder'
+              organization: 'project-openubl'
+              scannerMode: 'CLI'
+              configMode: 'file'
   - stage: release
     displayName: Release
     jobs:
