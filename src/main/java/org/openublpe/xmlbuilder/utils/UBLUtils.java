@@ -8,6 +8,6 @@ public class UBLUtils {
     public static final Pattern BOLETA_SERIE_REGEX = Pattern.compile("^[B|b].*$");
 
     private UBLUtils() {
-        // TODO just static methods
+        // Just static methods
     }
 }
