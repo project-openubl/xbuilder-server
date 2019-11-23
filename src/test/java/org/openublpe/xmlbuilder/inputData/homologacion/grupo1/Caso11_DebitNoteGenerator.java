@@ -11,36 +11,42 @@ import java.util.Date;
  */
 public class Caso11_DebitNoteGenerator implements DebitNoteInputGenerator {
 
-    public static DebitNoteInputModel DEBIT_NOTE;
+    private static volatile DebitNoteInputModel DEBIT_NOTE;
 
-    @Override
-    public DebitNoteInputModel getInput() {
-        if (DEBIT_NOTE == null) {
-            synchronized (this) {
-                if (DEBIT_NOTE == null) {
+    public static DebitNoteInputModel getInstance() {
+        DebitNoteInputModel debitNote = DEBIT_NOTE;
+        if (debitNote == null) {
+            synchronized (Caso11_DebitNoteGenerator.class) {
+                debitNote = DEBIT_NOTE;
+                if (debitNote == null) {
 
-                    DEBIT_NOTE = new DebitNoteInputModel();
+                    DEBIT_NOTE = debitNote = new DebitNoteInputModel();
 
-                    DEBIT_NOTE.setSerie("FF11");
-                    DEBIT_NOTE.setNumero(3);
-                    DEBIT_NOTE.setFechaEmision(new Date().getTime());
+                    debitNote.setSerie("FF11");
+                    debitNote.setNumero(3);
+                    debitNote.setFechaEmision(new Date().getTime());
 
                     // Get invoice
                     InvoiceInputModel invoice = Caso4_InvoiceGenerator.getInstance();
 
                     // Copy
-                    DEBIT_NOTE.setFirmante(invoice.getFirmante());
-                    DEBIT_NOTE.setProveedor(invoice.getProveedor());
-                    DEBIT_NOTE.setCliente(invoice.getCliente());
-                    DEBIT_NOTE.setDetalle(invoice.getDetalle());
+                    debitNote.setFirmante(invoice.getFirmante());
+                    debitNote.setProveedor(invoice.getProveedor());
+                    debitNote.setCliente(invoice.getCliente());
+                    debitNote.setDetalle(invoice.getDetalle());
 
-                    DEBIT_NOTE.setSerieNumeroInvoiceReference(invoice.getSerie() + "-" + invoice.getNumero());
-                    DEBIT_NOTE.setDescripcionSustentoInvoiceReference("mi descripcion o sustento");
+                    debitNote.setSerieNumeroInvoiceReference(invoice.getSerie() + "-" + invoice.getNumero());
+                    debitNote.setDescripcionSustentoInvoiceReference("mi descripcion o sustento");
                 }
             }
         }
 
-        return DEBIT_NOTE;
+        return debitNote;
+    }
+
+    @Override
+    public DebitNoteInputModel getInput() {
+        return getInstance();
     }
 
 }

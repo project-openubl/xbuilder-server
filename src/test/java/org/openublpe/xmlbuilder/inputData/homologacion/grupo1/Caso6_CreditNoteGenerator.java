@@ -6,41 +6,44 @@ import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNote
 
 import java.util.Date;
 
-/**
- * Nota de credito de caso 2
- */
 public class Caso6_CreditNoteGenerator implements CreditNoteInputGenerator {
 
-    public static CreditNoteInputModel CREDIT_NOTE;
+    private static volatile CreditNoteInputModel CREDIT_NOTE;
 
-    @Override
-    public CreditNoteInputModel getInput() {
-        if (CREDIT_NOTE == null) {
-            synchronized (this) {
-                if (CREDIT_NOTE == null) {
+    public static CreditNoteInputModel getInstance() {
+        CreditNoteInputModel creditNote = CREDIT_NOTE;
+        if (creditNote == null) {
+            synchronized (Caso6_CreditNoteGenerator.class) {
+                creditNote = CREDIT_NOTE;
+                if (creditNote == null) {
 
-                    CREDIT_NOTE = new CreditNoteInputModel();
+                    CREDIT_NOTE = creditNote = new CreditNoteInputModel();
 
-                    CREDIT_NOTE.setSerie("FF11");
-                    CREDIT_NOTE.setNumero(1);
-                    CREDIT_NOTE.setFechaEmision(new Date().getTime());
+                    creditNote.setSerie("FF11");
+                    creditNote.setNumero(1);
+                    creditNote.setFechaEmision(new Date().getTime());
 
                     // Get invoice
                     InvoiceInputModel invoice = Caso2_InvoiceGenerator.getInstance();
 
                     // Copy
-                    CREDIT_NOTE.setFirmante(invoice.getFirmante());
-                    CREDIT_NOTE.setProveedor(invoice.getProveedor());
-                    CREDIT_NOTE.setCliente(invoice.getCliente());
-                    CREDIT_NOTE.setDetalle(invoice.getDetalle());
+                    creditNote.setFirmante(invoice.getFirmante());
+                    creditNote.setProveedor(invoice.getProveedor());
+                    creditNote.setCliente(invoice.getCliente());
+                    creditNote.setDetalle(invoice.getDetalle());
 
-                    CREDIT_NOTE.setSerieNumeroInvoiceReference(invoice.getSerie() + "-" + invoice.getNumero());
-                    CREDIT_NOTE.setDescripcionSustentoInvoiceReference("mi descripcion o sustento");
+                    creditNote.setSerieNumeroInvoiceReference(invoice.getSerie() + "-" + invoice.getNumero());
+                    creditNote.setDescripcionSustentoInvoiceReference("mi descripcion o sustento");
                 }
             }
         }
 
-        return CREDIT_NOTE;
+        return creditNote;
+    }
+
+    @Override
+    public CreditNoteInputModel getInput() {
+        return getInstance();
     }
 
 }
