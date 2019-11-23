@@ -57,6 +57,19 @@ stages:
       - job: sonarCloud
         displayName: SonarCloud
         steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'verify'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              codeCoverageToolOption: 'JaCoCo'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: true
+              sqMavenPluginVersionChoice: 'latest'
           - task: SonarCloudPrepare@1
             displayName: 'Prepare SonarCloud analysis'
             inputs:
@@ -66,6 +79,8 @@ stages:
               configMode: 'file'
           - task: SonarCloudAnalyze@1
             displayName: 'Run SonarCloud code analysis'
+            inputs:
+              
           - task: SonarCloudPublish@1
             displayName: 'Publish SonarCloud quality gate results'
             inputs:
