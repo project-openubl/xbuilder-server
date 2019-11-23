@@ -26,7 +26,7 @@ public class Caso10_DebitNoteGenerator implements DebitNoteInputGenerator {
                     DEBIT_NOTE.setFechaEmision(new Date().getTime());
 
                     // Get invoice
-                    InvoiceInputModel invoice = Caso3_InvoiceGenerator.INVOICE;
+                    InvoiceInputModel invoice = Caso3_InvoiceGenerator.getInstance();
 
                     // Copy
                     DEBIT_NOTE.setFirmante(invoice.getFirmante());

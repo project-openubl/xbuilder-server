@@ -13,30 +13,31 @@ import java.util.List;
 
 public class Caso52_InvoiceGenerator implements InvoiceInputGenerator {
 
-    public static InvoiceInputModel INVOICE;
+    private static volatile InvoiceInputModel INVOICE;
 
-    @Override
-    public InvoiceInputModel getInput() {
-        if (INVOICE == null) {
-            synchronized (this) {
-                if (INVOICE == null) {
+    public static InvoiceInputModel getInstance() {
+        InvoiceInputModel invoice = INVOICE;
+        if (invoice == null) {
+            synchronized (Caso52_InvoiceGenerator.class) {
+                invoice = INVOICE;
+                if (invoice == null) {
 
-                    INVOICE = new InvoiceInputModel();
-                    INVOICE.setSerie("BB11");
-                    INVOICE.setNumero(1);
+                    INVOICE = invoice = new InvoiceInputModel();
+                    invoice.setSerie("BB11");
+                    invoice.setNumero(1);
 
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(2019, Calendar.NOVEMBER, 9, 8, 30, 0);
-                    INVOICE.setFechaEmision(calendar.getTimeInMillis());
+                    invoice.setFechaEmision(calendar.getTimeInMillis());
 
-                    INVOICE.setFirmante(GeneralData.getFirmante());
-                    INVOICE.setProveedor(GeneralData.getProveedor());
-                    INVOICE.setCliente(GeneralData.getClienteConRUC());
+                    invoice.setFirmante(GeneralData.getFirmante());
+                    invoice.setProveedor(GeneralData.getProveedor());
+                    invoice.setCliente(GeneralData.getClienteConRUC());
 
-                    INVOICE.setTotalDescuentos(BigDecimal.ONE);
+                    invoice.setTotalDescuentos(BigDecimal.ONE);
 
                     List<DetalleInputModel> detalle = new ArrayList<>();
-                    INVOICE.setDetalle(detalle);
+                    invoice.setDetalle(detalle);
 
                     for (int i = 0; i < 4; i++) {
                         DetalleInputModel item = new DetalleInputModel();
@@ -49,7 +50,11 @@ public class Caso52_InvoiceGenerator implements InvoiceInputGenerator {
             }
         }
 
-        return INVOICE;
+        return invoice;
     }
 
+    @Override
+    public InvoiceInputModel getInput() {
+        return getInstance();
+    }
 }

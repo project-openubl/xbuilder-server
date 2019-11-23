@@ -26,7 +26,7 @@ public class Caso8_CreditNoteGenerator implements CreditNoteInputGenerator {
                     CREDIT_NOTE.setFechaEmision(new Date().getTime());
 
                     // Get invoice
-                    InvoiceInputModel invoice = Caso4_InvoiceGenerator.INVOICE;
+                    InvoiceInputModel invoice = Caso4_InvoiceGenerator.getInstance();
 
                     // Copy
                     CREDIT_NOTE.setFirmante(invoice.getFirmante());
