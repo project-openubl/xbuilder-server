@@ -6,7 +6,7 @@ import java.math.RoundingMode;
 public class NumberUtils {
 
     private NumberUtils() {
-        //TODO just static methods
+        // Just static methods
     }
 
     public static BigDecimal format2Digists(BigDecimal number) {

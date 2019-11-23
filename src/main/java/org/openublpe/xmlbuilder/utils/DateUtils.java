@@ -7,7 +7,7 @@ import java.util.TimeZone;
 public class DateUtils {
 
     private DateUtils() {
-        //TODO just static methods
+        // Just static methods
     }
 
     public static String toGregorianCalendarDate(long time) {

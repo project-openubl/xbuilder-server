@@ -26,7 +26,7 @@ public class HomologacionUtils {
             .collect(Collectors.toList());
 
     private HomologacionUtils() {
-        //TODO just static classess
+        // Just static classess
     }
 
     public static BigDecimal cantidadRandom() {
