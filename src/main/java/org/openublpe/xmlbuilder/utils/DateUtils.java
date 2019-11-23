@@ -6,6 +6,10 @@ import java.util.TimeZone;
 
 public class DateUtils {
 
+    private DateUtils() {
+        //TODO just static methods
+    }
+
     public static String toGregorianCalendarDate(long time) {
         Date date = new Date(time);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

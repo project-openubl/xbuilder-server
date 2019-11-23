@@ -1,5 +1,7 @@
 # xml-builder
 [![Build Status](https://dev.azure.com/project-openubl/xml-builder/_apis/build/status/project-openubl.xml-builder?branchName=master)](https://dev.azure.com/project-openubl/xml-builder/_build/latest?definitionId=1&branchName=master)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=project-openubl_xml-builder&metric=alert_status)](https://sonarcloud.io/dashboard?id=project-openubl_xml-builder)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=project-openubl_xml-builder&metric=coverage)](https://sonarcloud.io/dashboard?id=project-openubl_xml-builder)
 
 Crea archivos XML basados en UBL 2.1 - Facturacion electrónica Peru
 
