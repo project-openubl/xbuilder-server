@@ -68,8 +68,8 @@ stages:
   - stage: release
     displayName: Release
     jobs:
-      - job: create_java_artifacts
-        displayName: Create Java artifacts
+      - job: release_to_github
+        displayName: Release to Github
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
@@ -83,13 +83,6 @@ stages:
               SourceFolder: 'target'
               Contents: '*-runner.jar'
               TargetFolder: '$(Build.ArtifactStagingDirectory)'
-      - job: release_to_github
-        displayName: Release to Github
-        dependsOn:
-          - create_java_artifacts
-        pool:
-          vmImage: 'ubuntu-16.04'
-        steps:
           - task: GitHubRelease@1
             displayName: Create Github Release
             inputs:
