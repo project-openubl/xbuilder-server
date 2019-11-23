@@ -58,15 +58,18 @@ stages:
         displayName: SonarCloud
         steps:
           - task: SonarCloudPrepare@1
+            displayName: 'Prepare SonarCloud analysis'
             inputs:
               SonarCloud: 'project-openubl/xml-builder'
               organization: 'project-openubl'
               scannerMode: 'CLI'
               configMode: 'file'
+          - task: SonarCloudAnalyze@1
+            displayName: 'Run SonarCloud code analysis'
           - task: SonarCloudPublish@1
+            displayName: 'Publish SonarCloud quality gate results'
             inputs:
               pollingTimeoutSec: '300'
-          - task: SonarCloudAnalyze@1
   - stage: release
     displayName: Release
     jobs:
