@@ -62,12 +62,12 @@ stages:
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: install
+              goals: package
               options: -DskipTests
           - task: CopyFiles@2
             inputs:
               SourceFolder: 'target'
-              Contents: '*.-runner.jar'
+              Contents: '*-runner.jar'
               TargetFolder: '$(Build.ArtifactStagingDirectory)'
       - job: release_to_github
         displayName: Release to Github
