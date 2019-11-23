@@ -79,7 +79,6 @@ stages:
               configMode: 'file'
           - task: SonarCloudAnalyze@1
             displayName: 'Run SonarCloud code analysis'
-            inputs:
               
           - task: SonarCloudPublish@1
             displayName: 'Publish SonarCloud quality gate results'
