@@ -18,26 +18,39 @@ import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.models.output.standard.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.utils.XMLSigner;
 import org.openublpe.xmlbuilder.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
-public class DocumentsResourceTest extends AbstractDocumentsResourceTest{
+public class DocumentsResourceTest extends AbstractDocumentsResourceTest {
+
+    @Inject
+    Validator validator;
 
     @BeforeAll
     public static void beforeAll() throws UnrecoverableEntryException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException {
@@ -72,18 +85,147 @@ public class DocumentsResourceTest extends AbstractDocumentsResourceTest{
             //ignore the sorting mismatch issues
             detailedDiff.overrideElementQualifier(new RecursiveElementNameAndTextQualifier());
 
-//        //this will print even if order mismatch elements are there. if you want to skip this use assertor
-//        Iterator i = detailedDiff.getAllDifferences().iterator();
-//        while (i.hasNext()) {
-//            System.out.println(i.next().toString());
-//        }
-//        System.out.println("================== if soarting issues are ignored =============================");
-
             //this can use ignore soarting issues and assert
             assertXMLEqual(
                     assertMessageError("XML Snapshot does not match", input, responseBody.asString()),
                     detailedDiff,
                     true
+            );
+        }
+    }
+
+    @Test
+    public void testEnrichInvoice() throws Exception {
+        for (InvoiceInputModel input : INVOICES) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post("/documents/invoice/enrich")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            InvoiceOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), InvoiceOutputModel.class);
+
+            assertNotNull(output);
+            Set<ConstraintViolation<InvoiceOutputModel>> violations = validator.validate(output);
+            assertTrue(
+                    violations.isEmpty(),
+                    assertMessageError(
+                            input,
+                            violations.stream()
+                                    .map(f -> f.getPropertyPath() + ": " + f.getMessage())
+                                    .collect(Collectors.joining(", "))
+                    )
+            );
+        }
+    }
+
+    @Test
+    public void testEnrichCreditNote() throws Exception {
+        for (CreditNoteInputModel input : CREDIT_NOTES) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post("/documents/credit-note/enrich")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            CreditNoteOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), CreditNoteOutputModel.class);
+
+            assertNotNull(output);
+            Set<ConstraintViolation<CreditNoteOutputModel>> violations = validator.validate(output);
+            assertTrue(
+                    violations.isEmpty(),
+                    assertMessageError(
+                            input,
+                            violations.stream()
+                                    .map(f -> f.getPropertyPath() + ": " + f.getMessage())
+                                    .collect(Collectors.joining(", "))
+                    )
+            );
+        }
+    }
+
+    @Test
+    public void testEnrichDebitNote() throws Exception {
+        for (DebitNoteInputModel input : DEBIT_NOTES) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post("/documents/debit-note/enrich")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            DebitNoteOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), DebitNoteOutputModel.class);
+
+            assertNotNull(output);
+            Set<ConstraintViolation<DebitNoteOutputModel>> violations = validator.validate(output);
+            assertTrue(
+                    violations.isEmpty(),
+                    assertMessageError(
+                            input,
+                            violations.stream()
+                                    .map(f -> f.getPropertyPath() + ": " + f.getMessage())
+                                    .collect(Collectors.joining(", "))
+                    )
+            );
+        }
+    }
+
+    @Test
+    public void testEnrichVoidedDocument() throws Exception {
+        for (VoidedDocumentInputModel input : VOIDED_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post("/documents/voided-document/enrich")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            VoidedDocumentOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), VoidedDocumentOutputModel.class);
+
+            assertNotNull(output);
+            Set<ConstraintViolation<VoidedDocumentOutputModel>> violations = validator.validate(output);
+            assertTrue(
+                    violations.isEmpty(),
+                    assertMessageError(
+                            input,
+                            violations.stream()
+                                    .map(f -> f.getPropertyPath() + ": " + f.getMessage())
+                                    .collect(Collectors.joining(", "))
+                    )
             );
         }
     }

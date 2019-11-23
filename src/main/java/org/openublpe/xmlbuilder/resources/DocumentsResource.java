@@ -14,6 +14,7 @@ import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteOutputModel;
@@ -75,10 +76,7 @@ public class DocumentsResource {
         );
     }
 
-    @POST
-    @Path("/invoice/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createInvoice(@Valid InvoiceInputModel input) {
+    private InvoiceOutputModel getInvoiceOutputModel(InvoiceInputModel input) {
         InvoiceOutputModel output = new InvoiceOutputModel();
 
         KieSession ksession = runtimeBuilder.newKieSession();
@@ -87,6 +85,83 @@ public class DocumentsResource {
         ksession.insert(output);
         ksession.insert(input);
         ksession.fireAllRules();
+
+        return output;
+    }
+
+    private CreditNoteOutputModel getCreditNoteOutputModel(CreditNoteInputModel input) {
+        CreditNoteOutputModel output = new CreditNoteOutputModel();
+
+        KieSession ksession = runtimeBuilder.newKieSession();
+        setGlobalVariables(ksession);
+
+        ksession.insert(output);
+        ksession.insert(input);
+        ksession.fireAllRules();
+
+        return output;
+    }
+
+    private DebitNoteOutputModel getDebitNoteOutputModel(DebitNoteInputModel input) {
+        DebitNoteOutputModel output = new DebitNoteOutputModel();
+
+        KieSession ksession = runtimeBuilder.newKieSession();
+        setGlobalVariables(ksession);
+
+        ksession.insert(output);
+        ksession.insert(input);
+        ksession.fireAllRules();
+
+        return output;
+    }
+
+    private VoidedDocumentOutputModel getVoidedDocumentOutputModel(VoidedDocumentInputModel input) {
+        VoidedDocumentOutputModel output = new VoidedDocumentOutputModel();
+
+        KieSession ksession = runtimeBuilder.newKieSession();
+
+        ksession.insert(output);
+        ksession.insert(input);
+        ksession.fireAllRules();
+
+        return output;
+    }
+
+
+    @POST
+    @Path("/invoice/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public InvoiceOutputModel enrichInvoiceModel(@Valid InvoiceInputModel input) {
+        return getInvoiceOutputModel(input);
+    }
+
+    @POST
+    @Path("/credit-note/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public CreditNoteOutputModel enrichCreditNoteModel(@Valid CreditNoteInputModel input) {
+        return getCreditNoteOutputModel(input);
+    }
+
+    @POST
+    @Path("/debit-note/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DebitNoteOutputModel enrichDebitNoteModel(@Valid DebitNoteInputModel input) {
+        return getDebitNoteOutputModel(input);
+    }
+
+    @POST
+    @Path("/voided-document/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public VoidedDocumentOutputModel enrichVoidedDocumentModel(@Valid VoidedDocumentInputModel input) {
+        return getVoidedDocumentOutputModel(input);
+    }
+
+
+    @POST
+    @Path("/invoice/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createInvoiceXml(@Valid InvoiceInputModel input) {
+        InvoiceOutputModel output = getInvoiceOutputModel(input);
 
         StringWriter buffer;
         try {
@@ -108,14 +183,7 @@ public class DocumentsResource {
     @Path("/credit-note/create")
     @Produces(MediaType.TEXT_XML)
     public Response createCreditNote(@Valid CreditNoteInputModel input) {
-        CreditNoteOutputModel output = new CreditNoteOutputModel();
-
-        KieSession ksession = runtimeBuilder.newKieSession();
-        setGlobalVariables(ksession);
-
-        ksession.insert(output);
-        ksession.insert(input);
-        ksession.fireAllRules();
+        CreditNoteOutputModel output = getCreditNoteOutputModel(input);
 
         StringWriter buffer;
         try {
@@ -137,14 +205,7 @@ public class DocumentsResource {
     @Path("/debit-note/create")
     @Produces(MediaType.TEXT_XML)
     public Response createDebitNote(@Valid DebitNoteInputModel input) {
-        DebitNoteOutputModel output = new DebitNoteOutputModel();
-
-        KieSession ksession = runtimeBuilder.newKieSession();
-        setGlobalVariables(ksession);
-
-        ksession.insert(output);
-        ksession.insert(input);
-        ksession.fireAllRules();
+        DebitNoteOutputModel output = getDebitNoteOutputModel(input);
 
         StringWriter buffer;
         try {
@@ -166,13 +227,7 @@ public class DocumentsResource {
     @Path("/voided-document/create")
     @Produces(MediaType.TEXT_XML)
     public Response createVoidedDocument(@Valid VoidedDocumentInputModel input) {
-        VoidedDocumentOutputModel output = new VoidedDocumentOutputModel();
-
-        KieSession ksession = runtimeBuilder.newKieSession();
-
-        ksession.insert(output);
-        ksession.insert(input);
-        ksession.fireAllRules();
+        VoidedDocumentOutputModel output = getVoidedDocumentOutputModel(input);
 
         StringWriter buffer;
         try {
