@@ -53,6 +53,7 @@ stages:
               options: -Psunat
       - job: coverage
         displayName: Coverage
+        dependsOn: unit_test
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
@@ -62,6 +63,10 @@ stages:
               organization: 'project-openubl'
               scannerMode: 'CLI'
               configMode: 'file'
+          - task: SonarCloudPublish@1
+            inputs:
+              pollingTimeoutSec: '300'
+          - task: SonarCloudAnalyze@1
   - stage: release
     displayName: Release
     jobs:
