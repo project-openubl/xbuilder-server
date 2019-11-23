@@ -71,6 +71,8 @@ stages:
               TargetFolder: '$(Build.ArtifactStagingDirectory)'
       - job: release_to_github
         displayName: Release to Github
+        dependsOn:
+          - release_java_artifacts
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
