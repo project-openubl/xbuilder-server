@@ -56,8 +56,8 @@ stages:
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: package
-              options: -Psunat
+              goals: 'install'
+              options: '-Psunat'
               publishJUnitResults: false
               codeCoverageToolOption: 'JaCoCo'
               javaHomeOption: 'JDKVersion'
@@ -65,7 +65,7 @@ stages:
               mavenAuthenticateFeed: false
               effectivePomSkip: false
               sonarQubeRunAnalysis: true
-              sqMavenPluginVersionChoice: 'latest'
+              sqMavenPluginVersionChoice: 'pom'
   - stage: metrics
     displayName: Metrics
     jobs:
