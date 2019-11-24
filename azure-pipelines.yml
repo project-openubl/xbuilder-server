@@ -70,14 +70,19 @@ stages:
     jobs:
       - job: release_to_github
         displayName: Release to Github
-        pool:
-          vmImage: 'ubuntu-16.04'
         steps:
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: package
+              goals: 'install'
               options: -DskipTests
+              publishJUnitResults: false
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.8'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: false
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
           - task: CopyFiles@2
             inputs:
               SourceFolder: 'target'
