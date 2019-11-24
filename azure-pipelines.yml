@@ -74,20 +74,32 @@ stages:
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'install'
+              goals: 'package'
               options: -DskipTests
-              publishJUnitResults: false
               javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.8'
               mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
-              effectivePomSkip: false
-              sonarQubeRunAnalysis: false
           - task: CopyFiles@2
             inputs:
               SourceFolder: 'target'
-              Contents: '*-runner.jar'
-              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+              Contents: |
+                '*-runner.jar'
+                'bin/**'
+              TargetFolder: '$(Build.BinariesDirectory)'
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(Build.BinariesDirectory)'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+              replaceExistingArchive: true
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(Build.BinariesDirectory)'
+              includeRootFolder: false
+              archiveType: 'tar'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tar.gz'
+              replaceExistingArchive: true
           - task: GitHubRelease@1
             displayName: Create Github Release
             inputs:
@@ -97,7 +109,8 @@ stages:
               target: '$(Build.SourceVersion)'
               tagSource: 'gitTag'
               assets: |
-                  $(Build.ArtifactStagingDirectory)/*.jar
+                  $(Build.ArtifactStagingDirectory)/*.zip
+                  $(Build.ArtifactStagingDirectory)/*.tar.gz
               changeLogCompareToRelease: 'lastFullRelease'
               changeLogType: 'commitBased'
         
