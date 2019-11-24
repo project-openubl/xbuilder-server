@@ -82,9 +82,12 @@ stages:
           - task: CopyFiles@2
             inputs:
               SourceFolder: 'target'
-              Contents: |
-                '*-runner.jar'
-                'bin/**'
+              Contents: '*-runner.jar'
+              TargetFolder: '$(Build.BinariesDirectory)'
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: 'target'
+              Contents: 'bin/**'
               TargetFolder: '$(Build.BinariesDirectory)'
           - task: ArchiveFiles@2
             inputs:
