@@ -57,6 +57,12 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+        <!--without this azure pipeline (release) does not work-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-core</artifactId>
+        </dependency>
+
         <!--Quarkus-->
         <dependency>
             <groupId>io.quarkus</groupId>
