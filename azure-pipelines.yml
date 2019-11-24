@@ -87,7 +87,7 @@ stages:
           - task: CopyFiles@2
             inputs:
               SourceFolder: 'target'
-              Contents: 'bin/**'
+              Contents: 'lib/**'
               TargetFolder: '$(Build.BinariesDirectory)'
           - task: ArchiveFiles@2
             inputs:
