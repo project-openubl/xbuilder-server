@@ -11,7 +11,7 @@
 
         <quarkus.version>1.0.0.Final</quarkus.version>
         <camel.quarkus.version>0.2.0</camel.quarkus.version>
-        <jacoco.version>0.8.4</jacoco.version>
+        <jacoco.version>0.8.5</jacoco.version>
 
         <freemarker.version>2.3.29</freemarker.version>
         <xmlunit.version>1.6</xmlunit.version>
