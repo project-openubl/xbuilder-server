@@ -23,6 +23,9 @@ public class SummaryDocument_SimpleInputGenerator implements SummaryDocumentInpu
 
         SummaryDocumentInputModel input = new SummaryDocumentInputModel();
         input.setNumero(1);
+        input.setFechaEmision(calendar.getTimeInMillis());
+
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
         input.setFechaEmisionDocumentReference(calendar.getTimeInMillis());
 
         input.setFirmante(GeneralData.getFirmante());
@@ -31,19 +34,17 @@ public class SummaryDocument_SimpleInputGenerator implements SummaryDocumentInpu
         List<SummaryDocumentLineInputModel> detalle = new ArrayList<>();
         input.setDetalle(detalle);
 
-        for (int i = 0; i < 3; i++) {
-            SummaryDocumentLineInputModel item = new SummaryDocumentLineInputModel();
-            detalle.add(item);
+        SummaryDocumentLineInputModel item = new SummaryDocumentLineInputModel();
+        detalle.add(item);
 
-            item.setTipoComprobante(Catalog1.BOLETA.toString());
-            item.setSerieNumero("B001-1");
-            item.setCliente(GeneralData.getClienteConDNI());
-            item.setTipoOperacion(Catalog19.ADICIONAR.toString());
-            item.setImporteTotal(new BigDecimal("100"));
 
-            item.setTotalOperacionesGravadas(new BigDecimal("100"));
-            item.setIgv(new BigDecimal("18"));
-        }
+        item.setTipoComprobante(Catalog1.BOLETA.toString());
+        item.setSerieNumero("B001-1");
+        item.setCliente(GeneralData.getClienteConDNI());
+        item.setTipoOperacion(Catalog19.ADICIONAR.toString());
+        item.setImporteTotal(new BigDecimal("100"));
+        item.setTotalOperacionesGravadas(new BigDecimal("100"));
+        item.setIgv(new BigDecimal("18"));
 
         return input;
     }
