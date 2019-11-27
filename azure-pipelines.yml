@@ -70,6 +70,7 @@ stages:
     jobs:
       - job: release_to_github
         displayName: Release to Github
+        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
         steps:
           - task: Maven@3
             inputs:
@@ -94,14 +95,14 @@ stages:
               rootFolderOrFile: '$(Build.BinariesDirectory)'
               includeRootFolder: false
               archiveType: 'zip'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/xml-builder-$(Build.SourceBranchName).zip'
               replaceExistingArchive: true
           - task: ArchiveFiles@2
             inputs:
               rootFolderOrFile: '$(Build.BinariesDirectory)'
               includeRootFolder: false
               archiveType: 'tar'
-              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).tar.gz'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/xml-builder-$(Build.SourceBranchName).tar.gz'
               replaceExistingArchive: true
           - task: GitHubRelease@1
             displayName: Create Github Release
