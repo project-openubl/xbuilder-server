@@ -15,14 +15,6 @@ public class TotalValorVentaOutputModel {
     @NotNull
     private Catalog7_1 tipo;
 
-    public TotalValorVentaOutputModel() {
-    }
-
-    public TotalValorVentaOutputModel(Catalog7_1 tipo, BigDecimal importe) {
-        this.tipo = tipo;
-        this.importe = importe;
-    }
-
     public BigDecimal getImporte() {
         return importe;
     }

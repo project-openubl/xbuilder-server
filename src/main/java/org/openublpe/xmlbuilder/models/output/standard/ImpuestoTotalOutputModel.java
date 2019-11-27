@@ -15,14 +15,6 @@ public abstract class ImpuestoTotalOutputModel {
     @NotNull
     private Catalog5 categoria;
 
-    public ImpuestoTotalOutputModel() {
-    }
-
-    public ImpuestoTotalOutputModel(Catalog5 categoria, BigDecimal importe) {
-        this.categoria = categoria;
-        this.importe = importe;
-    }
-
     public BigDecimal getImporte() {
         return importe;
     }
