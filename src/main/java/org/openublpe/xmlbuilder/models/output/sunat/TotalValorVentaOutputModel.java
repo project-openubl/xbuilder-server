@@ -1,19 +1,19 @@
-package org.openublpe.xmlbuilder.models.output.standard;
+package org.openublpe.xmlbuilder.models.output.sunat;
 
-import org.openublpe.xmlbuilder.models.catalogs.Catalog5;
+import org.openublpe.xmlbuilder.models.catalogs.Catalog7_1;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public abstract class ImpuestoDetalladoOutputModel {
+public class TotalValorVentaOutputModel {
 
     @NotNull
     @Min(0)
     private BigDecimal importe;
 
     @NotNull
-    private Catalog5 categoria;
+    private Catalog7_1 tipo;
 
     public BigDecimal getImporte() {
         return importe;
@@ -23,12 +23,11 @@ public abstract class ImpuestoDetalladoOutputModel {
         this.importe = importe;
     }
 
-    public Catalog5 getCategoria() {
-        return categoria;
+    public Catalog7_1 getTipo() {
+        return tipo;
     }
 
-    public void setCategoria(Catalog5 categoria) {
-        this.categoria = categoria;
+    public void setTipo(Catalog7_1 tipo) {
+        this.tipo = tipo;
     }
-
 }

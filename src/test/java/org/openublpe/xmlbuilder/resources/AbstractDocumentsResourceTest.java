@@ -4,10 +4,12 @@ import org.openublpe.xmlbuilder.inputData.CreditNoteInputGenerator;
 import org.openublpe.xmlbuilder.inputData.DebitNoteInputGenerator;
 import org.openublpe.xmlbuilder.inputData.InputGenerator;
 import org.openublpe.xmlbuilder.inputData.InvoiceInputGenerator;
+import org.openublpe.xmlbuilder.inputData.SummaryDocumentInputGenerator;
 import org.openublpe.xmlbuilder.inputData.VoidedDocumentInputGenerator;
 import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.utils.CertificateDetails;
 import org.openublpe.xmlbuilder.utils.CertificateDetailsFactory;
@@ -39,6 +41,7 @@ public abstract class AbstractDocumentsResourceTest {
     static List<CreditNoteInputModel> CREDIT_NOTES = new ArrayList<>();
     static List<DebitNoteInputModel> DEBIT_NOTES = new ArrayList<>();
     static List<VoidedDocumentInputModel> VOIDED_DOCUMENTS = new ArrayList<>();
+    static List<SummaryDocumentInputModel> SUMMARY_DOCUMENTS = new ArrayList<>();
 
     static Map<Object, Optional<String>> SNAPSHOTS = new HashMap<>();
     static Map<Object, Class> GENERATORS_CLASSES = new HashMap<>();
@@ -64,6 +67,7 @@ public abstract class AbstractDocumentsResourceTest {
         loadGenerators(CREDIT_NOTES, CreditNoteInputGenerator.class);
         loadGenerators(DEBIT_NOTES, DebitNoteInputGenerator.class);
         loadGenerators(VOIDED_DOCUMENTS, VoidedDocumentInputGenerator.class);
+        loadGenerators(SUMMARY_DOCUMENTS, SummaryDocumentInputGenerator.class);
     }
 
     public static void loadCertificate() throws NoSuchAlgorithmException, CertificateException, UnrecoverableEntryException, KeyStoreException, IOException {

@@ -13,16 +13,16 @@ import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
-import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.sunat.VoidedDocumentOutputModel;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.Validator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
@@ -62,9 +62,6 @@ public class DocumentsResource {
 
 //    @Inject @Named("invoiceKS")
 //    RuleUnit<SessionMemory> ruleUnit;
-
-    @Inject
-    Validator validator;
 
     private void setGlobalVariables(KieSession kSession) {
         kSession.setGlobal("IGV", IGV);
@@ -119,6 +116,20 @@ public class DocumentsResource {
         VoidedDocumentOutputModel output = new VoidedDocumentOutputModel();
 
         KieSession ksession = runtimeBuilder.newKieSession();
+        setGlobalVariables(ksession);
+
+        ksession.insert(output);
+        ksession.insert(input);
+        ksession.fireAllRules();
+
+        return output;
+    }
+
+    private SummaryDocumentOutputModel getSummaryDocumentOutputModel(SummaryDocumentInputModel input) {
+        SummaryDocumentOutputModel output = new SummaryDocumentOutputModel();
+
+        KieSession ksession = runtimeBuilder.newKieSession();
+        setGlobalVariables(ksession);
 
         ksession.insert(output);
         ksession.insert(input);
@@ -154,6 +165,13 @@ public class DocumentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public VoidedDocumentOutputModel enrichVoidedDocumentModel(@Valid VoidedDocumentInputModel input) {
         return getVoidedDocumentOutputModel(input);
+    }
+
+    @POST
+    @Path("/summary-document/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public SummaryDocumentOutputModel enrichSummaryDocumentModel(@Valid SummaryDocumentInputModel input) {
+        return getSummaryDocumentOutputModel(input);
     }
 
 
@@ -242,6 +260,28 @@ public class DocumentsResource {
 
         return Response.ok(buffer.toString())
                 .header("Content-Disposition", "attachment; filename=\"" + "voidedDocument.xml" + "\"")
+                .build();
+    }
+
+    @POST
+    @Path("/summary-document/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createSummaryDocument(@Valid SummaryDocumentInputModel input) {
+        SummaryDocumentOutputModel output = getSummaryDocumentOutputModel(input);
+
+        StringWriter buffer;
+        try {
+            Template template = configuration.getTemplate(FreemarkerConstants.SUMMARY_DOCUMENT_TEMPLATE_2_0);
+
+            buffer = new StringWriter();
+            template.process(output, buffer);
+            buffer.flush();
+        } catch (IOException | TemplateException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        return Response.ok(buffer.toString())
+                .header("Content-Disposition", "attachment; filename=\"" + "summaryDocument.xml" + "\"")
                 .build();
     }
 }

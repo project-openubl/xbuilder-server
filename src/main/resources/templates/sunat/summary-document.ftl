@@ -31,25 +31,31 @@
             <cbc:AdditionalAccountID>${item.cliente.tipoDocumentoIdentidad}</cbc:AdditionalAccountID>
         </cac:AccountingCustomerParty>
         <cac:Status>
-            <cbc:ConditionCode>${item.operacion}</cbc:ConditionCode>
+            <cbc:ConditionCode>${item.tipoOperacion.code}</cbc:ConditionCode>
         </cac:Status>
-        <sac:TotalAmount currencyID=${moneda}>${item.importeTotal}</sac:TotalAmount>
+        <sac:TotalAmount currencyID="${moneda}">${item.importeTotal}</sac:TotalAmount>
         <#list item.totales as total>
         <sac:BillingPayment>
-            <cbc:PaidAmount currencyID="${moneda}">${total.valor}</cbc:PaidAmount>
+            <cbc:PaidAmount currencyID="${moneda}">${total.importe}</cbc:PaidAmount>
             <cbc:InstructionID>${total.tipo.code}</cbc:InstructionID>
         </sac:BillingPayment>
         </#list>
+        <#if item.totalOtrosCargos??>
+        <cac:AllowanceCharge>
+            <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
+            <cbc:Amount currencyID="${moneda}">${item.totalOtrosCargos}</cbc:Amount>
+        </cac:AllowanceCharge>
+        </#if>
         <#list item.impuestos as impuesto>
         <cac:TaxTotal>
-            <cbc:TaxAmount currencyID=${moneda}>${impuesto.total}</cbc:TaxAmount>
+            <cbc:TaxAmount currencyID="${moneda}">${impuesto.importe}</cbc:TaxAmount>
             <cac:TaxSubtotal>
-                <cbc:TaxAmount currencyID=${moneda}>${impuesto.total}</cbc:TaxAmount>
+                <cbc:TaxAmount currencyID="${moneda}">${impuesto.importe}</cbc:TaxAmount>
                 <cac:TaxCategory>
                     <cac:TaxScheme>
-                        <cbc:ID>1000</cbc:ID>
-                        <cbc:Name>IGV</cbc:Name>
-                        <cbc:TaxTypeCode>VAT</cbc:TaxTypeCode>
+                        <cbc:ID>${impuesto.categoria.code}</cbc:ID>
+                        <cbc:Name>${impuesto.categoria.nombre}</cbc:Name>
+                        <cbc:TaxTypeCode>${impuesto.categoria.tipo}</cbc:TaxTypeCode>
                     </cac:TaxScheme>
                 </cac:TaxCategory>
             </cac:TaxSubtotal>

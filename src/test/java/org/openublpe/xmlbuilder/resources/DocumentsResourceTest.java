@@ -17,10 +17,12 @@ import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.utils.XMLSigner;
 import org.openublpe.xmlbuilder.utils.XMLUtils;
@@ -231,6 +233,40 @@ public class DocumentsResourceTest extends AbstractDocumentsResourceTest {
     }
 
     @Test
+    public void testEnrichSummaryDocument() throws Exception {
+        for (SummaryDocumentInputModel input : SUMMARY_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post("/documents/summary-document/enrich")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            SummaryDocumentOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), SummaryDocumentOutputModel.class);
+
+            assertNotNull(output);
+            Set<ConstraintViolation<SummaryDocumentOutputModel>> violations = validator.validate(output);
+            assertTrue(
+                    violations.isEmpty(),
+                    assertMessageError(
+                            input,
+                            violations.stream()
+                                    .map(f -> f.getPropertyPath() + ": " + f.getMessage())
+                                    .collect(Collectors.joining(", "))
+                    )
+            );
+        }
+    }
+
+    @Test
     public void testCreateInvoice() throws Exception {
         for (InvoiceInputModel input : INVOICES) {
             // GIVEN
@@ -344,6 +380,41 @@ public class DocumentsResourceTest extends AbstractDocumentsResourceTest {
                     .header("Content-Type", "application/json")
                     .when()
                     .post("/documents/voided-document/create")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), response.getBody().asString());
+            ResponseBody responseBody = response.getBody();
+
+            // snapshot
+            assertSnapshot(input, responseBody);
+
+            // read document
+            Document xmlDocument = XMLUtils.inputStreamToDocument(responseBody.asInputStream());
+            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
+
+            // Sign document
+            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
+
+//            // Validate valid XML
+//            DebitNoteType debitNoteType = UBL21Reader.debitNote().read(xmlSignedDocument);
+//            assertNotNull(debitNoteType, assertMessageError(input, "DebitNoteType is no valid", xmlSignedDocument));
+//
+        }
+    }
+
+    @Test
+    public void testCreateSummaryDocument() throws Exception {
+        for (SummaryDocumentInputModel input : SUMMARY_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // THEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post("/documents/summary-document/create")
                     .thenReturn();
 
             // THEN

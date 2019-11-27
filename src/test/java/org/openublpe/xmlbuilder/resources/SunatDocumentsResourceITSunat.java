@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.utils.XMLSigner;
 import org.openublpe.xmlbuilder.utils.XMLUtils;
@@ -90,6 +91,10 @@ public class SunatDocumentsResourceITSunat extends AbstractDocumentsResourceTest
             VoidedDocumentInputModel voidedDocument = (VoidedDocumentInputModel) input;
             proveedorRuc = voidedDocument.getProveedor().getRuc();
             fileName = XMLUtils.getVoidedDocumentFileName(proveedorRuc, voidedDocument.getFechaEmision(), voidedDocument.getNumero());
+        } else if (input instanceof SummaryDocumentInputModel) {
+            SummaryDocumentInputModel summaryDocument = (SummaryDocumentInputModel) input;
+            proveedorRuc = summaryDocument.getProveedor().getRuc();
+            fileName = XMLUtils.getSummaryDocumentFileName(proveedorRuc, summaryDocument.getFechaEmision(), summaryDocument.getNumero());
         }
 
         ServiceConfig config = new ServiceConfig.Builder()
@@ -205,6 +210,33 @@ public class SunatDocumentsResourceITSunat extends AbstractDocumentsResourceTest
                     .header("Content-Type", "application/json")
                     .when()
                     .post("/documents/voided-document/create")
+                    .thenReturn();
+
+            // Then
+            Document xmlDocument = XMLUtils.inputStreamToDocument(response.getBody().asInputStream());
+            Document xmlSignedDocument = XMLSigner.firmarXML(
+                    xmlDocument,
+                    SIGN_REFERENCE_ID,
+                    CERTIFICATE.getX509Certificate(),
+                    CERTIFICATE.getPrivateKey()
+            );
+
+            assertSendSummary(input, xmlSignedDocument);
+        }
+    }
+
+    @Test
+    public void testCreateSummaryDocument() throws Exception {
+        for (SummaryDocumentInputModel input : SUMMARY_DOCUMENTS) {
+            // Given
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // When
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post("/documents/summary-document/create")
                     .thenReturn();
 
             // Then
