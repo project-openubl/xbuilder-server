@@ -1,0 +1,21 @@
+package rules.standard;
+
+import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentOutputModel;
+import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentLineInputModel;
+import java.util.ArrayList;
+import java.math.BigDecimal;
+
+dialect "java"
+
+rule "Summary Detalle"
+when
+    $input : SummaryDocumentInputModel(detalle != null)
+    $output : SummaryDocumentOutputModel()
+then
+    $output.setDetalle(new ArrayList<>());
+
+    for (SummaryDocumentLineInputModel item : $input.getDetalle()) {
+        insert(item);
+    }
+end

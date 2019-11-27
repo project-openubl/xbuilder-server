@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.models.output.standard;
+package org.openublpe.xmlbuilder.models.output.common;
 
 import org.openublpe.xmlbuilder.models.catalogs.Catalog5;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public abstract class ImpuestoTotalOutputModel {
+public abstract class ImpuestoDetalladoOutputModel {
 
     @NotNull
     @Min(0)
@@ -14,14 +14,6 @@ public abstract class ImpuestoTotalOutputModel {
 
     @NotNull
     private Catalog5 categoria;
-
-    public ImpuestoTotalOutputModel() {
-    }
-
-    public ImpuestoTotalOutputModel(Catalog5 categoria, BigDecimal importe) {
-        this.categoria = categoria;
-        this.importe = importe;
-    }
 
     public BigDecimal getImporte() {
         return importe;
@@ -38,4 +30,5 @@ public abstract class ImpuestoTotalOutputModel {
     public void setCategoria(Catalog5 categoria) {
         this.categoria = categoria;
     }
+
 }

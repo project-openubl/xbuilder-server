@@ -1,15 +1,14 @@
 package org.openublpe.xmlbuilder.models.catalogs;
 
-public enum Catalog7_1 implements Catalog {
-    GRAVADO("01"),
-    EXONERADO("02"),
-    INAFECTO("03"),
-    EXPORTACION("04"),
-    GRATUITA("05");
+public enum  Catalog19 implements Catalog {
+
+    ADICIONAR("1"),
+    MODIFICAR("2"),
+    ANULADO("3");
 
     private final String code;
 
-    Catalog7_1(String code) {
+    Catalog19(String code) {
         this.code = code;
     }
 

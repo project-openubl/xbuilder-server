@@ -6,4 +6,5 @@ public interface FreemarkerConstants {
     String DEBIT_NOTE_TEMPLATE_2_1 = "templates/standard/debit-note.ftl";
 
     String VOIDED_DOCUMENT_TEMPLATE_2_0 = "templates/sunat/voided-document.ftl";
+    String SUMMARY_DOCUMENT_TEMPLATE_2_0 = "templates/sunat/summary-document.ftl";
 }

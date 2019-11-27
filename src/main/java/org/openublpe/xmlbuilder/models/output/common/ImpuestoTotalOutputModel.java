@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.models.output.standard;
+package org.openublpe.xmlbuilder.models.output.common;
 
 import org.openublpe.xmlbuilder.models.catalogs.Catalog5;
 
@@ -14,14 +14,6 @@ public abstract class ImpuestoTotalOutputModel {
 
     @NotNull
     private Catalog5 categoria;
-
-    public ImpuestoTotalOutputModel() {
-    }
-
-    public ImpuestoTotalOutputModel(Catalog5 categoria, BigDecimal importe) {
-        this.categoria = categoria;
-        this.importe = importe;
-    }
 
     public BigDecimal getImporte() {
         return importe;
