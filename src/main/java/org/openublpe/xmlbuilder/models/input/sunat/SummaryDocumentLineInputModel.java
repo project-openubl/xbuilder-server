@@ -2,15 +2,12 @@ package org.openublpe.xmlbuilder.models.input.sunat;
 
 import org.openublpe.xmlbuilder.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.models.input.common.FirmanteInputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.ImpuestoTotalResumenDiarioOutputModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.List;
 
 public class SummaryDocumentLineInputModel {
 

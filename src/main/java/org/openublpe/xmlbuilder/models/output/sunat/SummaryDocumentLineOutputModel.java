@@ -3,18 +3,12 @@ package org.openublpe.xmlbuilder.models.output.sunat;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog19;
 import org.openublpe.xmlbuilder.models.output.common.ClienteOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.DetallePrecioReferenciaOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.ImpuestoDetalladoICBOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.ImpuestoDetalladoIGVOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.ImpuestoTotalICBOutputModel;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 import java.util.List;
 

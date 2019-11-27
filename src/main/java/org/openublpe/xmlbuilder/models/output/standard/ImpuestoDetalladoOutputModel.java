@@ -1,7 +1,6 @@
 package org.openublpe.xmlbuilder.models.output.standard;
 
 import org.openublpe.xmlbuilder.models.catalogs.Catalog5;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

@@ -23,7 +23,6 @@ import org.openublpe.xmlbuilder.models.output.sunat.VoidedDocumentOutputModel;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.Validator;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
