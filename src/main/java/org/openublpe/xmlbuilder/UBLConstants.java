@@ -6,4 +6,8 @@ public class UBLConstants {
     public static final String MONEDA = "openubl.moneda";
     public static final String UNIDAD_MEDIDA = "openubl.unidadMedida";
     public static final String TIPO_IGV = "openubl.tipoIgv";
+
+    private UBLConstants() {
+        // Just constants
+    }
 }
