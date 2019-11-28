@@ -8,7 +8,7 @@ import org.openublpe.xmlbuilder.models.input.common.ProveedorInputModel;
 public class GeneralData {
 
     private GeneralData() {
-        // TODO just static methods
+        // Just static methods
     }
 
     public static FirmanteInputModel getFirmante() {
