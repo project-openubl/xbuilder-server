@@ -2,6 +2,7 @@ package org.openublpe.xmlbuilder.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.helger.ubl21.UBL21Reader;
+import com.helger.ublpe.UBLPEReader;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
@@ -29,6 +30,7 @@ import org.openublpe.xmlbuilder.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import sunat.names.specification.ubl.peru.schema.xsd.voideddocuments_1.VoidedDocumentsType;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
@@ -396,10 +398,9 @@ public class DocumentsResourceTest extends AbstractDocumentsResourceTest {
             // Sign document
             Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
 
-//            // Validate valid XML
-//            DebitNoteType debitNoteType = UBL21Reader.debitNote().read(xmlSignedDocument);
-//            assertNotNull(debitNoteType, assertMessageError(input, "DebitNoteType is no valid", xmlSignedDocument));
-//
+            // Validate valid XML
+            VoidedDocumentsType voidedDocumentsType = UBLPEReader.voidedDocuments().read(xmlSignedDocument);
+            assertNotNull(voidedDocumentsType, assertMessageError(input, "VoidedDocumentsType is no valid", xmlSignedDocument));
         }
     }
 
@@ -431,10 +432,9 @@ public class DocumentsResourceTest extends AbstractDocumentsResourceTest {
             // Sign document
             Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
 
-//            // Validate valid XML
-//            DebitNoteType debitNoteType = UBL21Reader.debitNote().read(xmlSignedDocument);
-//            assertNotNull(debitNoteType, assertMessageError(input, "DebitNoteType is no valid", xmlSignedDocument));
-//
+            // Validate valid XML
+//            SummaryDocumentsType summaryDocumentsType = UBLPEReader.summaryDocuments().read(xmlSignedDocument);
+//            assertNotNull(summaryDocumentsType, assertMessageError(input, "SummaryDocumentsType is no valid", xmlSignedDocument));
         }
     }
 }

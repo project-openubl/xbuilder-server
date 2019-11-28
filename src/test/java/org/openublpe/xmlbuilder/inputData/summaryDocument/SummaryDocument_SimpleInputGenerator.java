@@ -4,8 +4,8 @@ import org.openublpe.xmlbuilder.inputData.GeneralData;
 import org.openublpe.xmlbuilder.inputData.SummaryDocumentInputGenerator;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog19;
-import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentLineInputModel;
 import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentLineInputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
