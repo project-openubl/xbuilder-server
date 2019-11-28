@@ -1,9 +1,13 @@
 package org.openublpe.xmlbuilder;
 
-public interface UBLConstants {
-    String IGV_KEY = "openubl.igv";
-    String ICB_KEY = "openubl.icb";
-    String MONEDA = "openubl.moneda";
-    String UNIDAD_MEDIDA = "openubl.unidadMedida";
-    String TIPO_IGV = "openubl.tipoIgv";
+public class UBLConstants {
+    public static final String IGV_KEY = "openubl.igv";
+    public static final String ICB_KEY = "openubl.icb";
+    public static final String MONEDA = "openubl.moneda";
+    public static final String UNIDAD_MEDIDA = "openubl.unidadMedida";
+    public static final String TIPO_IGV = "openubl.tipoIgv";
+
+    private UBLConstants() {
+        // Just constants
+    }
 }

@@ -28,6 +28,7 @@ import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -39,19 +40,19 @@ import java.math.BigDecimal;
 public class DocumentsResource {
 
     @ConfigProperty(name = UBLConstants.IGV_KEY)
-    BigDecimal IGV;
+    BigDecimal igv;
 
     @ConfigProperty(name = UBLConstants.ICB_KEY)
-    BigDecimal ICB;
+    BigDecimal icb;
 
     @ConfigProperty(name = UBLConstants.MONEDA)
-    String MONEDA;
+    String moneda;
 
     @ConfigProperty(name = UBLConstants.UNIDAD_MEDIDA)
-    String UNIDAD_MEDIDA;
+    String unidadMedida;
 
     @ConfigProperty(name = UBLConstants.TIPO_IGV)
-    String TIPO_IGV;
+    String tipoIgv;
 
 
     @Inject
@@ -60,17 +61,18 @@ public class DocumentsResource {
     @Inject
     KieRuntimeBuilder runtimeBuilder;
 
-//    @Inject @Named("invoiceKS")
-//    RuleUnit<SessionMemory> ruleUnit;
-
     private void setGlobalVariables(KieSession kSession) {
-        kSession.setGlobal("IGV", IGV);
-        kSession.setGlobal("ICB", ICB);
-        kSession.setGlobal("MONEDA", MONEDA);
-        kSession.setGlobal("UNIDAD_MEDIDA", UNIDAD_MEDIDA);
-        kSession.setGlobal("TIPO_IGV", Catalog.valueOfCode(Catalog7.class, TIPO_IGV)
+        kSession.setGlobal("IGV", igv);
+        kSession.setGlobal("ICB", icb);
+        kSession.setGlobal("MONEDA", moneda);
+        kSession.setGlobal("UNIDAD_MEDIDA", unidadMedida);
+        kSession.setGlobal("TIPO_IGV", Catalog.valueOfCode(Catalog7.class, tipoIgv)
                 .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for TIPO_IGV"))
         );
+    }
+
+    private String getAttachmentFileName(String fileName) {
+        return "attachment; filename=\"" + fileName + "\"";
     }
 
     private InvoiceOutputModel getInvoiceOutputModel(InvoiceInputModel input) {
@@ -193,7 +195,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header("Content-Disposition", "attachment; filename=\"" + "invoice.xml" + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("invoice.xml"))
                 .build();
     }
 
@@ -215,7 +217,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header("Content-Disposition", "attachment; filename=\"" + "creditNote.xml" + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("creditNote.xml"))
                 .build();
     }
 
@@ -237,7 +239,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header("Content-Disposition", "attachment; filename=\"" + "debitNote.xml" + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("debitNote.xml"))
                 .build();
     }
 
@@ -259,7 +261,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header("Content-Disposition", "attachment; filename=\"" + "voidedDocument.xml" + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("voidedDocument.xml"))
                 .build();
     }
 
@@ -281,7 +283,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header("Content-Disposition", "attachment; filename=\"" + "summaryDocument.xml" + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("summaryDocument.xml"))
                 .build();
     }
 }
