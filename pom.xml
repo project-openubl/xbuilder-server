@@ -9,7 +9,7 @@
     <properties>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
 
-        <quarkus.version>1.0.0.Final</quarkus.version>
+        <quarkus.version>1.0.1.Final</quarkus.version>
         <camel.quarkus.version>0.2.0</camel.quarkus.version>
         <jacoco.version>0.8.5</jacoco.version>
 
