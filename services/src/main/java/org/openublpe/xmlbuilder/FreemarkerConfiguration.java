@@ -13,7 +13,7 @@ public class FreemarkerConfiguration {
 
     @PostConstruct
     void init() {
-        configuration = new Configuration(Configuration.VERSION_2_3_29);
+        configuration = new Configuration(Configuration.VERSION_2_3_28);
         configuration.setClassForTemplateLoading(FreemarkerConfiguration.class, "/");
     }
 
