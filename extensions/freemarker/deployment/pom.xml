@@ -19,6 +19,11 @@
             <version>${quarkus.version}</version>
         </dependency>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-arc-deployment</artifactId>
+            <version>${quarkus.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.openublpe</groupId>
             <artifactId>quarkus-freemarker</artifactId>
             <version>${project.version}</version>
