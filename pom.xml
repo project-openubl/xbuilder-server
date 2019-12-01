@@ -43,13 +43,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-build-parent</artifactId>
-                <version>${quarkus.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
-            </dependency>
 
             <!--XML Utils-->
             <dependency>
@@ -59,16 +52,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!--Camel Quarkus-->
-            <!--            <dependency>-->
-            <!--                <groupId>org.apache.camel.quarkus</groupId>-->
-            <!--                <artifactId>camel-quarkus-bom</artifactId>-->
-            <!--                <version>${camel.quarkus.version}</version>-->
-            <!--                <type>pom</type>-->
-            <!--                <scope>import</scope>-->
-            <!--            </dependency>-->
-
 
             <dependency>
                 <groupId>org.openublpe</groupId>
@@ -88,14 +71,4 @@
         <module>services</module>
         <module>extensions</module>
     </modules>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-maven-plugin</artifactId>
-                <version>${quarkus.version}</version>
-            </plugin>
-        </plugins>
-    </build>
 </project>
