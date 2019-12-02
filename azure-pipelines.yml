@@ -44,6 +44,27 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: verify
               jdkVersionOption: $(jdk_version)
+      - job: native_test
+        displayName: Native tests
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: verify
+              options: '-Pnative'
+      - job: native
+        displayName: Native
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Docker Hub'
+              repository: 'projectopenubl/xml-builder'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile.multistage'
       - job: integration_test_sunat
         displayName: Integration tests SUNAT
         pool:
