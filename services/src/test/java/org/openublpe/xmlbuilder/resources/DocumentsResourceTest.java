@@ -27,8 +27,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import sunat.names.specification.ubl.peru.schema.xsd.voideddocuments_1.VoidedDocumentsType;
 
-import javax.inject.Inject;
-import javax.validation.Validator;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStoreException;
@@ -43,9 +41,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
 public class DocumentsResourceTest extends AbstractDocumentsResourceTest {
-
-    @Inject
-    Validator validator;
 
     @BeforeAll
     public static void beforeAll() throws UnrecoverableEntryException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException {
