@@ -44,16 +44,6 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: verify
               jdkVersionOption: $(jdk_version)
-      - job: native_test
-        displayName: Native tests
-        pool:
-          vmImage: 'ubuntu-16.04'
-        steps:
-          - task: Maven@3
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: verify
-              options: '-Pnative'
       - job: native
         displayName: Native
         pool:
