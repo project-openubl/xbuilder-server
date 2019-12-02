@@ -8,7 +8,7 @@ public class ConfigurationHolder {
 
     static void initialize() {
         ConfigurationHolder.configuration = new Configuration(Configuration.VERSION_2_3_28);
-        ConfigurationHolder.configuration.setClassForTemplateLoading(FreemarkerConfig.class, "/");
+        ConfigurationHolder.configuration.setClassForTemplateLoading(FreemarkerBuildConfig.class, "/");
     }
 
     static Configuration getConfiguration() {

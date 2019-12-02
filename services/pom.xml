@@ -22,19 +22,19 @@
             <groupId>org.openublpe</groupId>
             <artifactId>quarkus-freemarker</artifactId>
         </dependency>
+
+        <!--Freemarker-->
         <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>quarkus-freemarker-deployment</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+            <version>${freemarker.version}</version>
         </dependency>
 
-        <!--without this azure pipeline (release) does not work-->
+        <!--Quarkus-->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-core</artifactId>
         </dependency>
-
-        <!--Quarkus-->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc</artifactId>
