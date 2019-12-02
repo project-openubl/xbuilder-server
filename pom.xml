@@ -64,6 +64,11 @@
                 <artifactId>quarkus-freemarker</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>quarkus-freemarker-deployment</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modules>
