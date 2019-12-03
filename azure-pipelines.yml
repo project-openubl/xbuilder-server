@@ -71,8 +71,23 @@ stages:
   - stage: containers
     displayName: Containers
     jobs:
+      - job: release_snapshot_to_dockerhub
+        displayName: Release snapshot to Docker Hub
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Docker Hub'
+              repository: 'projectopenubl/xml-builder'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile.multistage'
+  - stage: release
+    displayName: Release
+    jobs:
       - job: release_to_dockerhub
         displayName: Release to Docker Hub
+        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
@@ -83,11 +98,8 @@ stages:
               command: 'buildAndPush'
               Dockerfile: '**/Dockerfile.multistage'
               tags: |
-                $(Build.BuildId)
+                $(Build.SourceBranchName)
                 latest
-  - stage: release
-    displayName: Release
-    jobs:
       - job: release_to_github
         displayName: Release to Github
         condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
