@@ -3,7 +3,7 @@ El servidor **XML Builder** puede ser levandando utilizando diferentes métodos.
 
 ## Docker
 Requisitos:
-1. Tener instalado [Docker](https://www.docker.com/). Puedes utilizar la siguiente [guía de instalación]([Docker](https://docs.docker.com/install/))
+1. Tener instalado [Docker](https://www.docker.com/). Puedes utilizar la siguiente [guía de instalación](https://docs.docker.com/install/)
 
 Levantar el servidor **XML Builder** es muy sencillo, solamente tienes que abrir un terminal y ejecutar el siguiente comando:
 
