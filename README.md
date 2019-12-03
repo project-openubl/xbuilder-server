@@ -3,7 +3,7 @@
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=org.openublpe%3Axml-builder&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openublpe%3Axml-builder)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.openublpe%3Axml-builder&metric=coverage)](https://sonarcloud.io/dashboard?id=org.openublpe%3Axml-builder)
 
-Crea archivos XML basados en UBL 2.1 - Facturacion electrónica Peru
+Crea archivos XML basados en UBL 2.1 - FacturaciÓn electrónica Peru
 
 # Prerequisitos
 - [Git](https://git-scm.com/)
@@ -11,9 +11,7 @@ Crea archivos XML basados en UBL 2.1 - Facturacion electrónica Peru
 - [Maven 3](https://maven.apache.org/download.cgi)
 
 # Levantar el servidor localmente
-- Descarga o clona xml-builder usando `git clone https://github.com/project-openubl/xml-builder.git`
-- Abre un terminal y ubicate en la carpeta donde descargaste el proyecto y despues ejecuta `./mvnw compile quarkus:dev`
-- Abre un navegador y abre [http://localhost:8080](http://localhost:8080)
+Siga las siguientes instrucciones: [LEVANTAR SERVIDOR](docs/LEVANTAR_SERVIDOR.md)
 
 **¡Felicitaciones! pudiste arrancar el proyecto localmente**
 
@@ -63,8 +61,24 @@ http://localhost:8080/documents/invoice/create
 
 ![Swagger](docs/images/curl.gif)
 
-## Rest Endpoints
-Para saber saber más acerca de los endpoints visita:  [swaggerhu**b/project-openubl/xml-builder](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
+# Rest Endpoints (API)
+XML Builder está hecho para ser consumido a travéz de peticiones HTTP.
+
+Puedes utilizar **XML Builder** desde aplicaciones front-end como:
+- Angular
+- Reactjs, etc.
+
+También puedes utilizar **XML Builder** desde aplicaciones backend como:
+- Java
+- .Net, etc.
+
+O simplemente puedes utilizar **XML Builder** a travéz de:
+- terminal de tu sistema operativo
+- Herramientas como Postman.
+
+Para saber saber más acerca de los endpoints visita: 
+
+## [swagger](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
 
 ![Swagger](docs/images/swagger.png)
 

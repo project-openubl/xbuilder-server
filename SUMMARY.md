@@ -1,5 +1,5 @@
 # Table of contents
 
-* [Initial page](README.md)
-* [Empezando](./docs/GETTING_STARTED.md)
+* [Home](README.md)
+* [Levantar servidor](docs/LEVANTAR_SERVIDOR.md)
 
