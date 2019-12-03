@@ -114,12 +114,12 @@ stages:
               mavenVersionOption: 'Default'
           - task: CopyFiles@2
             inputs:
-              SourceFolder: 'target'
+              SourceFolder: 'services/target'
               Contents: '*-runner.jar'
               TargetFolder: '$(Build.BinariesDirectory)'
           - task: CopyFiles@2
             inputs:
-              SourceFolder: 'target'
+              SourceFolder: 'services/target'
               Contents: 'lib/**'
               TargetFolder: '$(Build.BinariesDirectory)'
           - task: ArchiveFiles@2
