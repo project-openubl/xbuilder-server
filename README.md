@@ -1,14 +1,14 @@
-# xml-builder
+# XML-Builder
 [![Build Status](https://dev.azure.com/project-openubl/xml-builder/_apis/build/status/project-openubl.xml-builder?branchName=master)](https://dev.azure.com/project-openubl/xml-builder/_build/latest?definitionId=1&branchName=master)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=org.openublpe%3Axml-builder&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openublpe%3Axml-builder)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.openublpe%3Axml-builder&metric=coverage)](https://sonarcloud.io/dashboard?id=org.openublpe%3Axml-builder)
 
-Crea archivos XML basados en UBL 2.1 - FacturaciÓn electrónica Peru
+Crea archivos XML basados en UBL 2.1 - Facturación electrónica Perú. Facturas, boletas, notas de cŕedito, notas de débito, etc.
 
-# Prerequisitos
-- [Git](https://git-scm.com/)
-- Java 8
-- [Maven 3](https://maven.apache.org/download.cgi)
+# Recursos
+
+- [Documentación](https://project-openubl.gitbook.io/xml-builder/)
+- [Videos](https://www.youtube.com/channel/UChq3xxjyDgjcU346rp0bbtA/)
 
 # Levantar el servidor localmente
 Siga las siguientes instrucciones: [LEVANTAR SERVIDOR](docs/LEVANTAR_SERVIDOR.md)
