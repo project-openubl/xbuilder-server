@@ -5,15 +5,64 @@ info:
 
 servers:
   - url: http://localhost:8080
-    description: localhost environment
+    description: Local server
 
 paths:
   /documents/invoice/create:
     post:
+      summary: Crear Boleta/Factura
+      tags:
+        - Documentos generales
       description: Crear Boleta/Factura
       responses:
         200:
-          description: OK - invoice created
+          description: OK - created
+        500:
+          description: Error del sistema
+  /documents/credit-note/create:
+    post:
+      summary: Crear Nota de crédito
+      tags:
+        - Documentos generales
+      description: Crear Nota de crédito
+      responses:
+        200:
+          description: OK - created
+        500:
+          description: Error del sistema
+  /documents/debit-note/create:
+    post:
+      summary: Crear Nota de débito
+      tags:
+        - Documentos generales
+      description: Crear Nota de débito
+      responses:
+        200:
+          description: OK - created
+        500:
+          description: Error del sistema
+  /documents/voided-document/create:
+    post:
+      summary: Crear Baja
+      tags:
+        - Documentos Perú
+      description: Crear Baja
+      responses:
+        200:
+          description: OK - created
+        500:
+          description: Error del sistema
+  /documents/summary-document/create:
+    post:
+      summary: Crear Resumen diario
+      tags:
+        - Documentos Perú
+      description: Crear Resumen diario
+      responses:
+        200:
+          description: OK - created
+        500:
+          description: Error del sistema
 components:
   schemas:
     InvoiceInputModel:
@@ -22,6 +71,92 @@ components:
           example: F001
         numero:
           example: 1
+        moneda:
+          default: PEN
+          example: PEN
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        totalDescuentos:
+          default: 0
+        totalOtrosCargos:
+          default: 0
+        proveedor: {}
+        cliente: {}
+        detalle: {}
+        firmante: {}
+    CreditNoteInputModel:
+      properties:
+        serie:
+          example: FC01
+        numero:
+          example: 1
+        serieNumeroInvoiceReference:
+          example: F001-1
+        descripcionSustentoInvoiceReference:
+          example: Error en la emision del documento
+        tipoNota:
+          example: ANULACION_DE_LA_OPERACION
+          default: ANULACION_DE_LA_OPERACION
+          description: Catálogo 9
+          enum:
+            - ANULACION_DE_LA_OPERACION
+            - ANULACION_POR_ERROR_EN_EL_RUC
+            - CORRECCION_POR_ERROR_EN_LA_DESCRIPCION
+            - DECUENTO_GLOBAL
+            - DESCUENTO_POR_ITEM
+            - DEVOLUCION_TOTAL
+            - DEVOLUCION_POR_ITEM
+            - BONIFICACION
+            - DISMINUCION_EN_EL_VALOR
+            - OTROS_CONCEPTOS
+            - 01
+            - 02
+            - 03
+            - 04
+            - 05
+            - 06
+            - 07
+            - 08
+            - 09
+            - 10
+        moneda:
+          default: PEN
+          example: PEN
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        totalDescuentos:
+          default: 0
+        totalOtrosCargos:
+          default: 0
+        proveedor: {}
+        cliente: {}
+        detalle: {}
+        firmante: {}
+    DebitNoteInputModel:
+      properties:
+        serie:
+          example: FD01
+        numero:
+          example: 1
+        serieNumeroInvoiceReference:
+          example: F001-1
+        descripcionSustentoInvoiceReference:
+          example: Error en la emision del documento
+        tipoNota:
+          example: AUMENTO_EN_EL_VALOR
+          default: AUMENTO_EN_EL_VALOR
+          description: Catálogo 10
+          enum:
+            - INTERES_POR_MORA
+            - AUMENTO_EN_EL_VALOR
+            - PENALIDAD_OTROS_CONCEPTOR
+            - 01
+            - 02
+            - 03
         moneda:
           default: PEN
           example: PEN
@@ -86,6 +221,7 @@ components:
           description: Precio incluye IGV
         unidadMedida:
           example: NIU
+          default: NIU
         tipoIGV:
           example: GRAVADO_OPERACION_ONEROSA
           default: GRAVADO_OPERACION_ONEROSA

@@ -3,12 +3,15 @@ package org.openublpe.xmlbuilder.models.input.standard.note;
 import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public abstract class NoteInputModel extends DocumentInputModel {
 
+    @NotNull
     @NotBlank
     private String serieNumeroInvoiceReference;
 
+    @NotNull
     @NotBlank
     private String descripcionSustentoInvoiceReference;
 
