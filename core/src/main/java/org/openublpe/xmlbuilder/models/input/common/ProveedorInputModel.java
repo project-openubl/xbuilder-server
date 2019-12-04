@@ -1,16 +1,19 @@
 package org.openublpe.xmlbuilder.models.input.common;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class ProveedorInputModel {
 
+    @NotNull
     @NotBlank
     @Size(min = 11, max = 11)
     private String ruc;
 
     private String nombreComercial;
 
+    @NotNull
     @NotBlank
     private String razonSocial;
 

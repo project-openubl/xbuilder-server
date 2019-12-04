@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 
 public class DetalleInputModel {
 
+    @NotNull
     @NotBlank
     private String descripcion;
 

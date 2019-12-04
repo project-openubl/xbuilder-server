@@ -6,3 +6,128 @@ info:
 servers:
   - url: http://localhost:8080
     description: localhost environment
+
+paths:
+  /documents/invoice/create:
+    post:
+      description: Crear Boleta/Factura
+      responses:
+        200:
+          description: OK - invoice created
+components:
+  schemas:
+    InvoiceInputModel:
+      properties:
+        serie:
+          example: F001
+        numero:
+          example: 1
+        moneda:
+          default: PEN
+          example: PEN
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        totalDescuentos:
+          default: 0
+        totalOtrosCargos:
+          default: 0
+        proveedor: {}
+        cliente: {}
+        detalle: {}
+        firmante: {}
+    FirmanteInputModel:
+      properties:
+        ruc:
+          example: 12121212121
+        razonSocial:
+          example: CACert S.A.C.
+    ProveedorInputModel:
+      properties:
+        ruc:
+          example: 20534845147
+        razonSocial:
+          example: Softgreen S.A.C.
+        nombreComercial:
+          example: Softgreen
+        codigoPostal:
+          example: 050101
+    ClienteInputModel:
+      properties:
+        nombre:
+          example: Carlos Feria
+        numeroDocumentoIdentidad:
+          example: 12345678912
+        tipoDocumentoIdentidad:
+          description: Catálogo 6
+          example: RUC
+          enum:
+            - DNI
+            - RUC
+            - DOC_TRIB_NO_DOM_SIN_RUC
+            - EXTRANJERIA
+            - PASAPORTE
+            - DEC_DIPLOMATICA
+            - 0
+            - 1
+            - 4
+            - 6
+            - 7
+            - A
+    DetalleInputModel:
+      properties:
+        descripcion:
+          example: Lapicero
+        cantidad:
+          example: 1
+        precioUnitario:
+          example: 10
+          description: Precio incluye IGV
+        unidadMedida:
+          example: NIU
+        tipoIGV:
+          example: GRAVADO_OPERACION_ONEROSA
+          default: GRAVADO_OPERACION_ONEROSA
+          description: Catálogo 7
+          enum:
+            - GRAVADO_OPERACION_ONEROSA
+            - GRAVADO_RETIRO_POR_PREMIO
+            - GRAVADO_RETIRO_POR_DONACION
+            - GRAVADO_RETIRO
+            - GRAVADO_RETIRO_POR_PUBLICIDAD
+            - GRAVADO_BONIFICACIONES
+            - GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES
+            - GRAVADO_IVAP
+            - EXONERADO_OPERACION_ONEROSA
+            - EXONERADO_TRANSFERENCIA_GRATUITA
+            - INAFECTO_OPERACION_ONEROSA
+            - INAFECTO_RETIRO_POR_BONIFICACION
+            - INAFECTO_RETIRO
+            - INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS
+            - INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO
+            - INAFECTO_RETIRO_POR_PREMIO
+            - INAFECTO_RETIRO_POR_PUBLICIDAD
+            - EXPORTACION
+            - 10
+            - 11
+            - 12
+            - 13
+            - 14
+            - 15
+            - 16
+            - 17
+            - 20
+            - 21
+            - 30
+            - 31
+            - 32
+            - 33
+            - 34
+            - 35
+            - 36
+            - 40
+        icb:
+          example: false
+          default: false
+          description: Impuesto al Consumo de Bolsas

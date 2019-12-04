@@ -9,13 +9,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.List;
 
 public abstract class DocumentInputModel {
 
+    @NotNull
     @NotBlank
     @Size(min = 4, max = 4)
     protected String serie;
@@ -27,10 +27,10 @@ public abstract class DocumentInputModel {
     private String moneda;
     private Long fechaEmision;
 
-    @Positive
+    @Min(0)
     private BigDecimal totalDescuentos;
 
-    @Positive
+    @Min(0)
     private BigDecimal totalOtrosCargos;
 
     @Valid
@@ -45,6 +45,7 @@ public abstract class DocumentInputModel {
     private ProveedorInputModel proveedor;
 
     @Valid
+    @NotNull
     @NotEmpty
     private List<DetalleInputModel> detalle;
 
