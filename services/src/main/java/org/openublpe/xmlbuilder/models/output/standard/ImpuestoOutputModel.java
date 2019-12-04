@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public abstract class ImpuestoDetalladoOutputModel {
+public abstract class ImpuestoOutputModel {
 
     @NotNull
     @Min(0)
@@ -30,5 +30,4 @@ public abstract class ImpuestoDetalladoOutputModel {
     public void setCategoria(Catalog5 categoria) {
         this.categoria = categoria;
     }
-
 }

@@ -6,7 +6,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class ImpuestoDetalladoIGVOutputModel extends ImpuestoDetalladoOutputModel {
+public class ImpuestoDetalladoIGVOutputModel extends ImpuestoOutputModel {
 
     @NotNull
     @Min(0)
