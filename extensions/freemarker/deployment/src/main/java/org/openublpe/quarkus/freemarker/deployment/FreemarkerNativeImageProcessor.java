@@ -109,6 +109,7 @@ class FreemarkerNativeImageProcessor {
             throws IOException, URISyntaxException {
         try (final Stream<Path> pathStream = Files.walk(Paths.get(path.toURI()))) {
             return pathStream.filter(Files::isRegularFile)
+                    .filter(p -> p.getFileName().toString().endsWith(".ftl"))
                     .map(it -> {
                         String file = it.toString();
                         int indexOf = file.lastIndexOf(location);

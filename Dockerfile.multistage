@@ -1,7 +1,6 @@
 ## Stage 1 : build with maven builder image with native capabilities
 FROM quay.io/quarkus/centos-quarkus-maven:19.2.1 AS build
 
-COPY core /usr/src/app/core
 COPY extensions /usr/src/app/extensions
 COPY services /usr/src/app/services
 COPY pom.xml /usr/src/app

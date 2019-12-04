@@ -14,12 +14,6 @@
     <name>XML Builder :: Services</name>
 
     <dependencies>
-        <!--XML Builder-->
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-core</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.openublpe</groupId>
             <artifactId>quarkus-freemarker</artifactId>
@@ -109,6 +103,7 @@
     </dependencies>
 
     <build>
+        <finalName>xml-builder-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.jboss.jandex</groupId>

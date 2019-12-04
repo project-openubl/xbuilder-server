@@ -55,12 +55,6 @@
 
             <dependency>
                 <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.openublpe</groupId>
                 <artifactId>quarkus-freemarker</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -72,7 +66,6 @@
         </dependencies>
     </dependencyManagement>
     <modules>
-        <module>core</module>
         <module>services</module>
         <module>extensions</module>
     </modules>

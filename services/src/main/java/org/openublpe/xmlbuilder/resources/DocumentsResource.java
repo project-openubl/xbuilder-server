@@ -21,6 +21,8 @@ import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteO
 import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.sunat.VoidedDocumentOutputModel;
 
+import javax.annotation.PostConstruct;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -36,6 +38,7 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 
 @Path("/documents")
+@ApplicationScoped
 @Consumes(MediaType.APPLICATION_JSON)
 public class DocumentsResource {
 
@@ -60,6 +63,11 @@ public class DocumentsResource {
 
     @Inject
     KieRuntimeBuilder runtimeBuilder;
+
+    @PostConstruct
+    private void init() {
+        configuration.setClassForTemplateLoading(FreemarkerConstants.class, "/");
+    }
 
     private void setGlobalVariables(KieSession kSession) {
         kSession.setGlobal("IGV", igv);
