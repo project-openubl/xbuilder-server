@@ -1,5 +1,7 @@
 package org.openublpe.xmlbuilder.models.input.sunat;
 
+import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.models.catalogs.constraints.CatalogConstraint;
 import org.openublpe.xmlbuilder.models.input.common.FirmanteInputModel;
 import org.openublpe.xmlbuilder.models.input.common.ProveedorInputModel;
 
@@ -25,6 +27,7 @@ public class VoidedDocumentInputModel {
 
     @NotNull
     @NotBlank
+    @CatalogConstraint(value = Catalog1.class)
     private String tipoDocumentReference;
 
     @NotNull
