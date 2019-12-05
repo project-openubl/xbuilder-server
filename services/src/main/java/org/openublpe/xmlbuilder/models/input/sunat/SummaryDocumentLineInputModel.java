@@ -1,7 +1,8 @@
 package org.openublpe.xmlbuilder.models.input.sunat;
 
+import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.models.catalogs.constraints.CatalogConstraint;
 import org.openublpe.xmlbuilder.models.input.common.ClienteInputModel;
-import org.openublpe.xmlbuilder.models.input.common.FirmanteInputModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -18,6 +19,7 @@ public class SummaryDocumentLineInputModel {
     private String tipoOperacion;
 
     @NotNull
+    @CatalogConstraint(value = Catalog1.class)
     private String tipoComprobante;
 
     @Valid

@@ -1,6 +1,5 @@
 package org.openublpe.xmlbuilder.resources;
 
-import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;

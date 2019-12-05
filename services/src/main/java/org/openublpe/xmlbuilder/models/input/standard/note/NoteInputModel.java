@@ -15,8 +15,6 @@ public abstract class NoteInputModel extends DocumentInputModel {
     @NotBlank
     private String descripcionSustentoInvoiceReference;
 
-    private String tipoNota;
-
     public String getSerieNumeroInvoiceReference() {
         return serieNumeroInvoiceReference;
     }
@@ -33,11 +31,4 @@ public abstract class NoteInputModel extends DocumentInputModel {
         this.descripcionSustentoInvoiceReference = descripcionSustentoInvoiceReference;
     }
 
-    public String getTipoNota() {
-        return tipoNota;
-    }
-
-    public void setTipoNota(String tipoNota) {
-        this.tipoNota = tipoNota;
-    }
 }

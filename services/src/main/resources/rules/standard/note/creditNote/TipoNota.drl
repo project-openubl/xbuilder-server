@@ -1,6 +1,6 @@
 package rules.standard.note.creditNote;
 
-import org.openublpe.xmlbuilder.models.input.standard.note.NoteInputModel;
+import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog9;
@@ -9,7 +9,7 @@ dialect "java"
 
 rule "Tipo Documento Credit Note"
 when
-    $input : NoteInputModel()
+    $input : CreditNoteInputModel()
     $output : CreditNoteOutputModel()
 then
     // Default values

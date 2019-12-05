@@ -1,5 +1,8 @@
 package org.openublpe.xmlbuilder.models.input.common;
 
+import org.openublpe.xmlbuilder.models.catalogs.Catalog6;
+import org.openublpe.xmlbuilder.models.catalogs.constraints.CatalogConstraint;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -7,6 +10,7 @@ public class ClienteInputModel {
 
     @NotNull
     @NotBlank
+    @CatalogConstraint(value = Catalog6.class)
     private String tipoDocumentoIdentidad;
 
     @NotNull

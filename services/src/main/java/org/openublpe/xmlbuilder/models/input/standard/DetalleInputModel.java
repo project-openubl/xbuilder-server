@@ -1,5 +1,8 @@
 package org.openublpe.xmlbuilder.models.input.standard;
 
+import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
+import org.openublpe.xmlbuilder.models.catalogs.constraints.CatalogConstraint;
+
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,6 +29,7 @@ public class DetalleInputModel {
     @Positive
     private BigDecimal precioUnitario;
 
+    @CatalogConstraint(value = Catalog7.class)
     private String tipoIGV;
     private boolean icb;
 
