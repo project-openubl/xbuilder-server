@@ -172,6 +172,84 @@ components:
         cliente: {}
         detalle: {}
         firmante: {}
+    VoidedDocumentInputModel:
+      properties:
+        numero:
+          example: 1
+          description: Número de comprobante de baja. La serie será generada utilizando la 'fechaEmision'
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        fechaEmisionDocumentReference:
+          description: Fecha del documento a dar de baja en milisegundos
+          example: 1575471908438
+        serieNumeroDocumentReference:
+          description: Serie y numero del documento a dar de baja
+          example: F001-1
+        tipoDocumentReference:
+          description: Catálogo 1
+          example: FACTURA
+          enum:
+            - FACTURA
+            - BOLETA
+            - NOTA_CREDITO
+            - NOTA_DEBITO
+            - RETENCION
+            - PERCEPCION
+            - 01
+            - 03
+            - 07
+            - 08
+            - 20
+            - 40
+        proveedor: {}
+        firmante: {}
+    SummaryDocumentInputModel:
+      properties:
+        numero:
+          example: 1
+          description: Número de comprobante de resumen diario. La serie será generada utilizando la 'fechaEmision'
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        fechaEmisionDocumentReference:
+          description: Fecha en la que fueron emitidos los documentos contenidos en el resumen diario
+          example: 1575471908438
+        moneda:
+          default: PEN
+          example: PEN
+        proveedor: {}
+        firmante: {}
+    SummaryDocumentLineInputModel:
+      properties:
+        tipoOperacion:
+          example: ADICIONAR
+          description: Catalogo 19
+          enum:
+            - ADICIONAR
+            - MODIFICAR
+            - ANULADO
+            - 1
+            - 2
+            - 3
+        tipoComprobante:
+          description: Catálogo 1
+          example: FACTURA
+          enum:
+            - FACTURA
+            - BOLETA
+            - NOTA_CREDITO
+            - NOTA_DEBITO
+            - RETENCION
+            - PERCEPCION
+            - 01
+            - 03
+            - 07
+            - 08
+            - 20
+            - 40
     FirmanteInputModel:
       properties:
         ruc:

@@ -23,15 +23,18 @@ public class VoidedDocumentInputModel {
     @Valid
     private FirmanteInputModel firmante;
 
+    @NotNull
     @NotBlank
     private String tipoDocumentReference;
 
     @NotNull
     private Long fechaEmisionDocumentReference;
 
+    @NotNull
     @NotBlank
     private String serieNumeroDocumentReference;
 
+    @NotNull
     @NotBlank
     private String motivoBajaDocumentReference;
 

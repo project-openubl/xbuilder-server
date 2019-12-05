@@ -7,6 +7,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.KieRuntimeBuilder;
 import org.openublpe.xmlbuilder.FreemarkerConstants;
+import org.openublpe.xmlbuilder.FreemarkerGlobalConfiguration;
 import org.openublpe.xmlbuilder.UBLConstants;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
@@ -21,8 +22,6 @@ import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteO
 import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.models.output.sunat.VoidedDocumentOutputModel;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
@@ -38,7 +37,6 @@ import java.io.StringWriter;
 import java.math.BigDecimal;
 
 @Path("/documents")
-@ApplicationScoped
 @Consumes(MediaType.APPLICATION_JSON)
 public class DocumentsResource {
 
@@ -59,15 +57,10 @@ public class DocumentsResource {
 
 
     @Inject
-    Configuration configuration;
+    FreemarkerGlobalConfiguration freemarkerGlobalConfiguration;
 
     @Inject
     KieRuntimeBuilder runtimeBuilder;
-
-    @PostConstruct
-    private void init() {
-        configuration.setClassForTemplateLoading(FreemarkerConstants.class, "/");
-    }
 
     private void setGlobalVariables(KieSession kSession) {
         kSession.setGlobal("IGV", igv);
@@ -193,7 +186,7 @@ public class DocumentsResource {
 
         StringWriter buffer;
         try {
-            Template template = configuration.getTemplate(FreemarkerConstants.INVOICE_TEMPLATE_2_1);
+            Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.INVOICE_TEMPLATE_2_1);
 
             buffer = new StringWriter();
             template.process(output, buffer);
@@ -203,7 +196,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("invoice.xml"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
 
@@ -215,7 +208,7 @@ public class DocumentsResource {
 
         StringWriter buffer;
         try {
-            Template template = configuration.getTemplate(FreemarkerConstants.CREDIT_NOTE_TEMPLATE_2_1);
+            Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.CREDIT_NOTE_TEMPLATE_2_1);
 
             buffer = new StringWriter();
             template.process(output, buffer);
@@ -225,7 +218,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("creditNote.xml"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
 
@@ -237,7 +230,7 @@ public class DocumentsResource {
 
         StringWriter buffer;
         try {
-            Template template = configuration.getTemplate(FreemarkerConstants.DEBIT_NOTE_TEMPLATE_2_1);
+            Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.DEBIT_NOTE_TEMPLATE_2_1);
 
             buffer = new StringWriter();
             template.process(output, buffer);
@@ -247,7 +240,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("debitNote.xml"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
 
@@ -259,7 +252,7 @@ public class DocumentsResource {
 
         StringWriter buffer;
         try {
-            Template template = configuration.getTemplate(FreemarkerConstants.VOIDED_DOCUMENT_TEMPLATE_2_0);
+            Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.VOIDED_DOCUMENT_TEMPLATE_2_0);
 
             buffer = new StringWriter();
             template.process(output, buffer);
@@ -269,7 +262,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("voidedDocument.xml"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
 
@@ -281,7 +274,7 @@ public class DocumentsResource {
 
         StringWriter buffer;
         try {
-            Template template = configuration.getTemplate(FreemarkerConstants.SUMMARY_DOCUMENT_TEMPLATE_2_0);
+            Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.SUMMARY_DOCUMENT_TEMPLATE_2_0);
 
             buffer = new StringWriter();
             template.process(output, buffer);
@@ -291,7 +284,7 @@ public class DocumentsResource {
         }
 
         return Response.ok(buffer.toString())
-                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName("summaryDocument.xml"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
 }

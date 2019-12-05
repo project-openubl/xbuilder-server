@@ -29,6 +29,7 @@ public class SummaryDocumentInputModel {
     @NotNull
     private FirmanteInputModel firmante;
 
+    @NotNull
     @Valid
     @NotEmpty
     private List<SummaryDocumentLineInputModel> detalle;

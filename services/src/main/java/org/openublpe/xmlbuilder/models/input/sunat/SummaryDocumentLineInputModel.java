@@ -24,9 +24,6 @@ public class SummaryDocumentLineInputModel {
     @NotNull
     private ClienteInputModel cliente;
 
-    @Valid
-    private FirmanteInputModel firmante;
-
     @NotNull
     @Min(0)
     private BigDecimal importeTotal;
@@ -83,14 +80,6 @@ public class SummaryDocumentLineInputModel {
 
     public void setCliente(ClienteInputModel cliente) {
         this.cliente = cliente;
-    }
-
-    public FirmanteInputModel getFirmante() {
-        return firmante;
-    }
-
-    public void setFirmante(FirmanteInputModel firmante) {
-        this.firmante = firmante;
     }
 
     public BigDecimal getImporteTotal() {
