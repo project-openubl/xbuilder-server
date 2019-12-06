@@ -51,14 +51,14 @@ stages:
         steps:
           - task: SonarCloudPrepare@1
             displayName: 'Prepare SonarCloud analysis'
-            condition: ne(variables['System.PullRequest.IsFork'])
+            condition: eq(variables['System.PullRequest.IsFork'], 'True')
             inputs:
               SonarCloud: 'project-openubl/xml-builder'
               organization: 'project-openubl'
               scannerMode: 'CLI'
               configMode: 'file'
           - task: Maven@3
-            condition: ne(variables['System.PullRequest.IsFork'])
+            condition: eq(variables['System.PullRequest.IsFork'], 'True')
             inputs:
               mavenPomFile: 'pom.xml'
               goals: 'install'
@@ -71,7 +71,7 @@ stages:
               sonarQubeRunAnalysis: true
               sqMavenPluginVersionChoice: 'pom'
           - task: Maven@3
-            condition: variables['System.PullRequest.IsFork']
+            condition: eq(variables['System.PullRequest.IsFork'], 'False')
             inputs:
               mavenPomFile: 'pom.xml'
               goals: 'install'
