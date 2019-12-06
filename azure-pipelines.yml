@@ -41,7 +41,7 @@ stages:
         steps:
           - task: SonarCloudPrepare@1
             displayName: 'Prepare SonarCloud analysis'
-            condition: and(eq($(jdk_version), '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
+            condition: and(eq(variables['jdk_version'], '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
             inputs:
               SonarCloud: 'project-openubl/xml-builder'
               organization: 'project-openubl'
@@ -49,7 +49,7 @@ stages:
               configMode: 'file'
           - task: Maven@3
             displayName: Maven with SonarQube analysis
-            condition: and(eq($(jdk_version), '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
+            condition: and(eq(variables['jdk_version'], '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
             inputs:
               mavenPomFile: 'pom.xml'
               goals: verify
