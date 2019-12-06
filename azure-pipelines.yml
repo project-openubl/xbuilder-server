@@ -39,55 +39,47 @@ stages:
         pool:
           vmImage: $(imageName)
         steps:
-          - task: Maven@3
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: verify
-              jdkVersionOption: $(jdk_version)
-      - job: integration_test_sunat
-        displayName: Integration tests SUNAT
-        pool:
-          vmImage: 'ubuntu-16.04'
-        steps:
           - task: SonarCloudPrepare@1
             displayName: 'Prepare SonarCloud analysis'
-            condition: eq(variables['System.PullRequest.IsFork'], 'False')
+            condition: and(eq($(jdk_version), '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
             inputs:
               SonarCloud: 'project-openubl/xml-builder'
               organization: 'project-openubl'
               scannerMode: 'CLI'
               configMode: 'file'
           - task: Maven@3
-            condition: eq(variables['System.PullRequest.IsFork'], 'False')
+            displayName: Maven with SonarQube analysis
+            condition: and(eq($(jdk_version), '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'install'
-              options: '-Psunat'
-              publishJUnitResults: false
-              javaHomeOption: 'JDKVersion'
-              mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
-              effectivePomSkip: false
+              goals: verify
+              jdkVersionOption: $(jdk_version)
               sonarQubeRunAnalysis: true
-              sqMavenPluginVersionChoice: 'pom'
           - task: Maven@3
+            displayName: Maven without SonarQube analysis
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
             inputs:
               mavenPomFile: 'pom.xml'
+              goals: verify
+              jdkVersionOption: $(jdk_version)
+              sonarQubeRunAnalysis: false
+      - job: test_sunat
+        displayName: Tests SUNAT
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
               goals: 'install'
               options: '-Psunat'
-              publishJUnitResults: false
               javaHomeOption: 'JDKVersion'
               mavenVersionOption: 'Default'
-              mavenAuthenticateFeed: false
-              effectivePomSkip: false
-              sonarQubeRunAnalysis: false
-              sqMavenPluginVersionChoice: 'pom'
-  - stage: containers
-    displayName: Containers
+  - stage: native_test
+    displayName: Native tests
     jobs:
       - job: release_snapshot_to_dockerhub
-        displayName: Release snapshot to Docker Hub
+        displayName: Build native image and push it to DockerHub
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
