@@ -1,12 +1,15 @@
-# Crear Factura electrónica
+# Crear Comprobante Electrónico
 ## Requisitos
 - Tener el servidor XML Builder levantado. Puedes leer [Levantar servidor](LEVANTAR_SERVIDOR.md) para aprender cómo.
 
-# Cómo crear una factura electrónica
 **XML Builder** está hecho para recibir peticiones HTTP por lo que podemos utilizar varios métodos para consumir sus servicios.
 Veamos algunos de ellos
 
 ## 1. Utilizando el comando CURL en el terminal
+> Si tienes windows puedes descargar CURL utilizando el siguiente enlace: https://curl.haxx.se/windows/
+
+**El siguiente ejemplo creará una Factura Electrónica.**
+
 Abra un terminal en su sistema operativo y ejecute el siguiente comando:
 
 ```
@@ -42,7 +45,8 @@ curl -X POST \
 http://localhost:8080/documents/invoice/create
 ```
 
-Nótese que debes de cambiar `http://localhost:8080` dependiendo de la ubicación de tu servidor.
+- Debes de cambiar `http://localhost:8080` por ubicación de tu servidor.
+- Si deseas creear otro tipo de documento debes de cambiar `/invoice` por credit-note, debit-note, etc. Vea el [API](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder) para más información.
 
 El ejemplo anterior creará un comprobante con los datos mínimos. **XML Builder** se encargará de generar todos los datos por ti.
 
@@ -50,6 +54,8 @@ El ejemplo anterior creará un comprobante con los datos mínimos. **XML Builder
 
 
 ## 2. Utilizando [Postman](https://www.getpostman.com/)
+**El siguiente ejemplo creará una Factura Electrónica.**
+
 - Instale Postman
 - Abra Postman y cree una nueva peticion HTTP. Utilize las siguientes imágenes como guía:
 
@@ -90,6 +96,17 @@ Deberá utilizar el siguiente body:
 ```
 
 Por último deberá hacer clic en el boton SEND.
+
+## 3. Utilizando [Swagger](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
+> Este método requiere que levantes el servidor en modo desarrollador, vea el manual [Levantar servidor para desarrolladores](./DEVELOPERS.md)  
+
+- Abra en un navegador http://localhost:8080/swagger-ui
+- Seleccione el tipo de documento que desea crear
+- Click en el boton "Try out"
+- Click en el boton "Execute"
+- Descargue el archivo generado haciendo click en el botón "Downlad File"
+
+![terminal](images/swagger_execute.png)
 
 ## API
 Para conocer un poco más acerca del JSON que se envía a **XML Builder** vea la [documentación del API](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
