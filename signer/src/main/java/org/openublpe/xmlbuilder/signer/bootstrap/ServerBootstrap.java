@@ -9,13 +9,10 @@ import org.openublpe.xmlbuilder.signer.models.OrganizationProvider;
 import org.openublpe.xmlbuilder.signer.models.OrganizationType;
 import org.openublpe.xmlbuilder.signer.models.utils.DefaultKeyProviders;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * Checks if MASTER organization already exists

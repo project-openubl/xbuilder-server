@@ -16,7 +16,7 @@ public class DefaultComponentUtil implements ComponentUtil {
 
     @Inject
     @Any
-    Instance<ComponentFactory> componentFactories;
+    Instance<KeyProviderFactory> componentFactories;
 
     @Override
     public ComponentFactory getComponentFactory(String providerType, String providerId) {
@@ -31,7 +31,7 @@ public class DefaultComponentUtil implements ComponentUtil {
             Annotation componentProviderLiteral = new ComponentProviderLiteral(aClass);
             Annotation rsaKeyProviderLiteral = new RsaKeyProviderLiteral(op.get());
 
-            return componentFactories.select(ComponentFactory.class, componentProviderLiteral, rsaKeyProviderLiteral).get();
+            return componentFactories.select(KeyProviderFactory.class, componentProviderLiteral, rsaKeyProviderLiteral).get();
         } catch (ClassNotFoundException e) {
             throw new IllegalStateException("Invalid factory", e);
         }
