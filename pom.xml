@@ -68,5 +68,6 @@
     <modules>
         <module>services</module>
         <module>extensions</module>
+        <module>signer</module>
     </modules>
 </project>
