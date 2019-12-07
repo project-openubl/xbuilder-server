@@ -84,13 +84,13 @@ stages:
           vmImage: 'ubuntu-16.04'
         steps:
           - task: Docker@2
+            displayName: Docker native build
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
             inputs:
-              containerRegistry: 'Docker Hub'
-              repository: 'projectopenubl/xml-builder'
               command: 'build'
               Dockerfile: '**/Dockerfile.multistage'
           - task: Docker@2
+            displayName: Docker native build and push
             condition: eq(variables['System.PullRequest.IsFork'], 'False')
             inputs:
               containerRegistry: 'Docker Hub'
