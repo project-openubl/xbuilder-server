@@ -21,13 +21,13 @@ import java.util.Optional;
 public class OrganizationManager {
 
     @Inject
-    private ComponentProvider componentProvider;
+    ComponentProvider componentProvider;
 
     @Inject
-    private DefaultKeyProviders defaultKeyProviders;
+    DefaultKeyProviders defaultKeyProviders;
 
     @Inject
-    private OrganizationProvider organizationProvider;
+    OrganizationProvider organizationProvider;
 
     public OrganizationModel createOrganization(OrganizationRepresentation representation) {
         OrganizationType organizationType = Optional.ofNullable(representation.getType()).map(f -> OrganizationType.valueOf(f.toLowerCase())).orElse(OrganizationType.common);

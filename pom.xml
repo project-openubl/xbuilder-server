@@ -63,6 +63,17 @@
                 <artifactId>quarkus-freemarker-deployment</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-services</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-signer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modules>
