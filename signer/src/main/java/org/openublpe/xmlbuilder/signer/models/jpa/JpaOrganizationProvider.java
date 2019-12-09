@@ -1,6 +1,5 @@
 package org.openublpe.xmlbuilder.signer.models.jpa;
 
-import org.hibernate.Session;
 import org.openublpe.xmlbuilder.signer.models.OrganizationModel;
 import org.openublpe.xmlbuilder.signer.models.OrganizationProvider;
 import org.openublpe.xmlbuilder.signer.models.OrganizationType;

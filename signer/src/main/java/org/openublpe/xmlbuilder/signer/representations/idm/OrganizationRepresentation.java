@@ -1,7 +1,5 @@
 package org.openublpe.xmlbuilder.signer.representations.idm;
 
-import java.util.Map;
-
 public class OrganizationRepresentation {
 
     private String id;
