@@ -1,9 +1,11 @@
 package org.openublpe.xmlbuilder.signer.keys;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import org.keycloak.jose.jws.AlgorithmType;
 
 import java.util.List;
 
+@RegisterForReflection
 public interface KeyProvider<T extends KeyMetadata> {
 
     /**

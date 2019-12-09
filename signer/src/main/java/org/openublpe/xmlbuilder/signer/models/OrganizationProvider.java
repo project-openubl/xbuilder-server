@@ -14,8 +14,6 @@ public interface OrganizationProvider {
 
     Optional<OrganizationModel> getOrganization(String id);
 
-    Optional<OrganizationModel> getOrganizationByName(String name);
-
     List<OrganizationModel> getOrganizations(int offset, int limit);
 
     List<OrganizationModel> getOrganizations(String filterText, int offset, int limit);

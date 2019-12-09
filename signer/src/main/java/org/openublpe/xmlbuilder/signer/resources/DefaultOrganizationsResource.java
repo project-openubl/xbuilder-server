@@ -58,10 +58,6 @@ public class DefaultOrganizationsResource implements OrganizationsResource {
 
     @Override
     public OrganizationRepresentation createOrganization(@Valid OrganizationRepresentation representation) {
-        organizationProvider.getOrganizationByName(representation.getName()).ifPresent(organization -> {
-            throw new BadRequestException("Organization Name already registered");
-        });
-
         OrganizationModel organization = organizationManager.createOrganization(representation);
         return ModelToRepresentation.toRepresentation(organization, true);
     }

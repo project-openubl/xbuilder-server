@@ -9,10 +9,7 @@ public class OrganizationRepresentation {
     private String description;
 
     private String type;
-
     private Boolean useCustomCertificates;
-    private Boolean useCustomSmtpConfig;
-    private Map<String, String> smtpServer;
 
     public OrganizationRepresentation() {
 
@@ -24,8 +21,6 @@ public class OrganizationRepresentation {
         this.description = rep.getDescription();
         this.type = rep.getType();
         this.useCustomCertificates = rep.getUseCustomCertificates();
-        this.useCustomSmtpConfig = rep.getUseCustomSmtpConfig();
-        this.smtpServer = rep.getSmtpServer();
     }
 
     public String getId() {
@@ -50,22 +45,6 @@ public class OrganizationRepresentation {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Map<String, String> getSmtpServer() {
-        return smtpServer;
-    }
-
-    public void setSmtpServer(Map<String, String> smtpServer) {
-        this.smtpServer = smtpServer;
-    }
-
-    public Boolean getUseCustomSmtpConfig() {
-        return useCustomSmtpConfig;
-    }
-
-    public void setUseCustomSmtpConfig(Boolean useCustomSmtpConfig) {
-        this.useCustomSmtpConfig = useCustomSmtpConfig;
     }
 
     public Boolean getUseCustomCertificates() {

@@ -30,8 +30,7 @@ public class OrganizationManager {
     OrganizationProvider organizationProvider;
 
     public OrganizationModel createOrganization(OrganizationRepresentation representation) {
-        OrganizationType organizationType = Optional.ofNullable(representation.getType()).map(f -> OrganizationType.valueOf(f.toLowerCase())).orElse(OrganizationType.common);
-        OrganizationModel organization = organizationProvider.addOrganization(representation.getName(), organizationType);
+        OrganizationModel organization = organizationProvider.addOrganization(representation.getName(), OrganizationType.common);
         RepresentationToModel.updateOrganization(representation, organization);
 
         // Certificate

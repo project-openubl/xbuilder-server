@@ -1,6 +1,8 @@
 package org.openublpe.xmlbuilder.signer.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.h2.H2DatabaseTestResource;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
+@QuarkusTestResource(H2DatabaseTestResource.class)
 public class RemoteDocumentResourceTest {
 
     public FirmanteInputModel getFirmante() {

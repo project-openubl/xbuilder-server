@@ -1,7 +1,5 @@
 package org.openublpe.xmlbuilder.signer.models.jpa.entities;
 
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.Type;
 import org.openublpe.xmlbuilder.signer.models.OrganizationType;
 
 import javax.persistence.Access;
@@ -14,15 +12,12 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "organization", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "name")
-})
+@Table(name = "organization")
 @NamedQueries(value = {
         @NamedQuery(name = "ListOrganizations", query = "select o from OrganizationEntity o"),
         @NamedQuery(name = "FilterOrganizations", query = "select o from OrganizationEntity o where lower(o.name) like :filterText"),
@@ -40,7 +35,6 @@ public class OrganizationEntity implements Serializable {
     private OrganizationType type;
 
     @NotNull
-    @NaturalId(mutable = true)
     @Column(name = "name")
     private String name;
 
@@ -48,7 +42,7 @@ public class OrganizationEntity implements Serializable {
     private String description;
 
     @NotNull
-    @Type(type = "org.hibernate.type.TrueFalseType")
+//    @Type(type = "org.hibernate.type.TrueFalseType")
     @Column(name = "use_custom_certificates")
     private boolean useCustomCertificates;
 
