@@ -2,10 +2,9 @@ package org.openublpe.xmlbuilder.signer.keys.component;
 
 import org.keycloak.common.util.MultivaluedHashMap;
 
-import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ComponentModel implements Serializable {
+public class ComponentModel {
 
     private String id;
     private String name;

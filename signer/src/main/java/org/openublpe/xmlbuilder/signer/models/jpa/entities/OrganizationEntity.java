@@ -22,7 +22,7 @@ import java.io.Serializable;
         @NamedQuery(name = "ListOrganizations", query = "select o from OrganizationEntity o"),
         @NamedQuery(name = "FilterOrganizations", query = "select o from OrganizationEntity o where lower(o.name) like :filterText"),
 })
-public class OrganizationEntity implements Serializable {
+public class OrganizationEntity {
 
     @Id
     @Column(name = "id")

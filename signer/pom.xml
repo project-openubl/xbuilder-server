@@ -19,6 +19,23 @@
             <artifactId>xml-builder-services</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.openublpe</groupId>
+            <artifactId>quarkus-bouncycastle</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openublpe</groupId>
+            <artifactId>quarkus-bouncycastle-deployment</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openublpe</groupId>
+            <artifactId>quarkus-keycloak</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openublpe</groupId>
+            <artifactId>quarkus-keycloak-deployment</artifactId>
+        </dependency>
+
         <!--Quarkus-->
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -55,12 +72,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jdbc-postgresql</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.keycloak</groupId>
-            <artifactId>keycloak-core</artifactId>
-            <version>8.0.1</version>
         </dependency>
 
         <!--Test-->

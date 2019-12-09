@@ -20,6 +20,9 @@
         <jacoco.version>0.8.5</jacoco.version>
 
         <freemarker.version>2.3.28</freemarker.version>
+        <bouncycastle.version>1.60</bouncycastle.version>
+        <keycloak.version>8.0.1</keycloak.version>
+
         <xmlunit.version>1.6</xmlunit.version>
         <sunat-web-services.version>1.3.4.Final</sunat-web-services.version>
         <junit4.version>4.12</junit4.version>
@@ -61,6 +64,26 @@
             <dependency>
                 <groupId>org.openublpe</groupId>
                 <artifactId>quarkus-freemarker-deployment</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>quarkus-bouncycastle</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>quarkus-bouncycastle-deployment</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>quarkus-keycloak</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>quarkus-keycloak-deployment</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
