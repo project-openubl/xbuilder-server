@@ -33,4 +33,7 @@ bin/
 .DS_Store
 
 # ommit
-/signer/src/main/resources/rules/
+/api/src/main/resources/rules/
+/api/src/main/resources/META-INF/kmodule.xml
+/api-signer/src/main/resources/rules/
+/api-signer/src/main/resources/META-INF/kmodule.xml
