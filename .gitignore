@@ -33,7 +33,7 @@ bin/
 .DS_Store
 
 # ommit
-/api/src/main/resources/rules/
 /api/src/main/resources/META-INF/kmodule.xml
-/api-signer/src/main/resources/rules/
+/api/src/main/resources/org/openublpe/xmlbuilder/rules/files/
 /api-signer/src/main/resources/META-INF/kmodule.xml
+/api-signer/src/main/resources/org/openublpe/xmlbuilder/rules/files/

@@ -1,4 +1,4 @@
-package rules.standard;
+package org.openublpe.xmlbuilder.rules.files.sunat;
 
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentLineInputModel;

@@ -1,4 +1,4 @@
-package rules.standard.note;
+package org.openublpe.xmlbuilder.rules.files.standard.note;
 
 import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;

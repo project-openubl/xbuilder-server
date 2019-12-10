@@ -1,4 +1,4 @@
-package rules;
+package org.openublpe.xmlbuilder.rules.files.sunat;
 
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;

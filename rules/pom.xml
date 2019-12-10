@@ -22,7 +22,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-kogito</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <!--Test-->

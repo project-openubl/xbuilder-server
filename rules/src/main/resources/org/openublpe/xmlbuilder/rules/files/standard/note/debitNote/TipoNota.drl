@@ -1,4 +1,4 @@
-package rules.standard.note.debitNote;
+package org.openublpe.xmlbuilder.rules.files.standard.note.debitNote;
 
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
