@@ -1,11 +1,11 @@
 package org.openublpe.xmlbuilder.inputdata.generator.summaryDocument;
 
-import org.openublpe.xmlbuilder.inputdata.generator.GeneralData;
-import org.openublpe.xmlbuilder.inputdata.generator.SummaryDocumentInputGenerator;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentLineInputModel;
+import org.openublpe.xmlbuilder.inputdata.generator.GeneralData;
+import org.openublpe.xmlbuilder.inputdata.generator.SummaryDocumentInputGenerator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

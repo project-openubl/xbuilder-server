@@ -1,7 +1,6 @@
 package org.openublpe.xmlbuilder.rules.executors;
 
 import io.quarkus.test.junit.QuarkusTest;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
@@ -50,7 +49,7 @@ class KieExecutorTest extends AbstractInputDataTest {
             Set<ConstraintViolation<InvoiceOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())
@@ -76,7 +75,7 @@ class KieExecutorTest extends AbstractInputDataTest {
             Set<ConstraintViolation<CreditNoteOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())
@@ -102,7 +101,7 @@ class KieExecutorTest extends AbstractInputDataTest {
             Set<ConstraintViolation<DebitNoteOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())
@@ -128,7 +127,7 @@ class KieExecutorTest extends AbstractInputDataTest {
             Set<ConstraintViolation<VoidedDocumentOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())
@@ -154,7 +153,7 @@ class KieExecutorTest extends AbstractInputDataTest {
             Set<ConstraintViolation<SummaryDocumentOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())

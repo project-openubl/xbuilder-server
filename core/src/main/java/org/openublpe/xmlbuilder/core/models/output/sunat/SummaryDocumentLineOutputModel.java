@@ -1,8 +1,8 @@
 package org.openublpe.xmlbuilder.core.models.output.sunat;
 
-import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
+import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;

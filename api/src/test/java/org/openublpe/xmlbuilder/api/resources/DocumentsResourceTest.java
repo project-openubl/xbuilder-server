@@ -26,6 +26,7 @@ import static io.restassured.RestAssured.given;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
 public class DocumentsResourceTest extends AbstractInputDataTest {
@@ -62,7 +63,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
 
             //this can use ignore soarting issues and assert
             assertXMLEqual(
-                    assertMessageError(input, responseBody.asString(), "XML Snapshot does not match"),
+                    messageInputDataError(input, responseBody.asString(), "XML Snapshot does not match"),
                     detailedDiff,
                     true
             );
@@ -86,7 +87,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             // snapshot

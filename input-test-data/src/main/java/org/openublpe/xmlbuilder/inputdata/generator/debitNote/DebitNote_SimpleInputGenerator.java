@@ -1,9 +1,9 @@
 package org.openublpe.xmlbuilder.inputdata.generator.debitNote;
 
-import org.openublpe.xmlbuilder.inputdata.generator.DebitNoteInputGenerator;
-import org.openublpe.xmlbuilder.inputdata.generator.GeneralData;
 import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.inputdata.generator.DebitNoteInputGenerator;
+import org.openublpe.xmlbuilder.inputdata.generator.GeneralData;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

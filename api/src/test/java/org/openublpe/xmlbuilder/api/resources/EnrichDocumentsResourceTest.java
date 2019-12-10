@@ -4,11 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
-import org.custommonkey.xmlunit.DetailedDiff;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.XMLUnit;
-import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
@@ -21,23 +16,14 @@ import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.Debit
 import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static io.restassured.RestAssured.given;
-import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -66,16 +52,16 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             InvoiceOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), InvoiceOutputModel.class);
+            assertNotNull(output, messageInputDataError(input, "Invalid output"));
 
-            assertNotNull(output);
             Set<ConstraintViolation<InvoiceOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())
@@ -87,7 +73,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichCreditNote() throws Exception {
-        assertFalse(INVOICES.isEmpty(), "No inputs to test");
+        assertFalse(CREDIT_NOTES.isEmpty(), "No inputs to test");
 
         for (CreditNoteInputModel input : CREDIT_NOTES) {
             // GIVEN
@@ -102,16 +88,16 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             CreditNoteOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), CreditNoteOutputModel.class);
+            assertNotNull(output, messageInputDataError(input, "Invalid output"));
 
-            assertNotNull(output);
             Set<ConstraintViolation<CreditNoteOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())
@@ -123,7 +109,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichDebitNote() throws Exception {
-        assertFalse(INVOICES.isEmpty(), "No inputs to test");
+        assertFalse(DEBIT_NOTES.isEmpty(), "No inputs to test");
 
         for (DebitNoteInputModel input : DEBIT_NOTES) {
             // GIVEN
@@ -138,16 +124,16 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             DebitNoteOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), DebitNoteOutputModel.class);
+            assertNotNull(output, messageInputDataError(input, "Invalid output"));
 
-            assertNotNull(output);
             Set<ConstraintViolation<DebitNoteOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())
@@ -159,7 +145,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichVoidedDocument() throws Exception {
-        assertFalse(INVOICES.isEmpty(), "No inputs to test");
+        assertFalse(VOIDED_DOCUMENTS.isEmpty(), "No inputs to test");
 
         for (VoidedDocumentInputModel input : VOIDED_DOCUMENTS) {
             // GIVEN
@@ -174,16 +160,16 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             VoidedDocumentOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), VoidedDocumentOutputModel.class);
+            assertNotNull(output, messageInputDataError(input, "Invalid output"));
 
-            assertNotNull(output);
             Set<ConstraintViolation<VoidedDocumentOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())
@@ -195,7 +181,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichSummaryDocument() throws Exception {
-        assertFalse(INVOICES.isEmpty(), "No inputs to test");
+        assertFalse(SUMMARY_DOCUMENTS.isEmpty(), "No inputs to test");
 
         for (SummaryDocumentInputModel input : SUMMARY_DOCUMENTS) {
             // GIVEN
@@ -210,16 +196,16 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             SummaryDocumentOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), SummaryDocumentOutputModel.class);
+            assertNotNull(output, messageInputDataError(input, "Invalid output"));
 
-            assertNotNull(output);
             Set<ConstraintViolation<SummaryDocumentOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
-                    assertMessageError(
+                    messageInputDataError(
                             input,
                             violations.stream()
                                     .map(f -> f.getPropertyPath() + ": " + f.getMessage())

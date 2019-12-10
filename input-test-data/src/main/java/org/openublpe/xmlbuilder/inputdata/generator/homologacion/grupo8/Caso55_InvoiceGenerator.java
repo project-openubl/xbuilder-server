@@ -1,10 +1,10 @@
 package org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8;
 
+import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.inputdata.generator.GeneralData;
 import org.openublpe.xmlbuilder.inputdata.generator.InvoiceInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.homologacion.HomologacionUtils;
-import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
-import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

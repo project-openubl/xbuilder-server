@@ -58,11 +58,11 @@ public abstract class AbstractInputDataTest {
         loadGenerators(SUMMARY_DOCUMENTS, SummaryDocumentInputGenerator.class);
     }
 
-    protected String assertMessageError(Object input, String errorMessage) {
+    protected String messageInputDataError(Object input, String errorMessage) {
         return "[" + GENERATORS_CLASSES.get(input).getCanonicalName() + "]\n" + errorMessage;
     }
 
-    protected String assertMessageError(Object input, String xml, String errorMessage) {
+    protected String messageInputDataError(Object input, String xml, String errorMessage) {
         return new StringBuilder()
                 .append("\n")
                 .append(xml).append("\n")

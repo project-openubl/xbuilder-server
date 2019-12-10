@@ -3,7 +3,6 @@ package org.openublpe.xmlbuilder.rules.executors;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.KieRuntimeBuilder;
-import org.openublpe.xmlbuilder.rules.UBLConstants;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
@@ -16,6 +15,7 @@ import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.Cred
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
+import org.openublpe.xmlbuilder.rules.UBLConstants;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

@@ -151,7 +151,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
         assertEquals(
                 BillServiceModel.Status.ACEPTADO,
                 billServiceModel.getStatus(),
-                assertMessageError(input, xmlString, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]")
+                messageInputDataError(input, xmlString, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]")
         );
     }
 
@@ -183,7 +183,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
         BillServiceModel billServiceModel = BillServiceManager.sendSummary(fileName + ".xml", documentBytes, config);
         assertNotNull(
                 billServiceModel.getTicket(),
-                assertMessageError(input, xmlString, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]")
+                messageInputDataError(input, xmlString, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]")
         );
     }
 
@@ -204,7 +204,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .thenReturn();
 
             // Then
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
             assertSendBill(input, responseBody.asInputStream(), responseBody.asString());
         }
@@ -227,7 +227,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .thenReturn();
 
             // Then
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
             assertSendBill(input, responseBody.asInputStream(), responseBody.asString());
         }
@@ -250,7 +250,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .thenReturn();
 
             // Then
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
             assertSendBill(input, responseBody.asInputStream(), responseBody.asString());
         }
@@ -273,7 +273,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .thenReturn();
 
             // Then
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
             assertSendSummary(input, responseBody.asInputStream(), responseBody.asString());
         }
@@ -296,7 +296,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .thenReturn();
 
             // Then
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
             assertSendSummary(input, responseBody.asInputStream(), responseBody.asString());
         }

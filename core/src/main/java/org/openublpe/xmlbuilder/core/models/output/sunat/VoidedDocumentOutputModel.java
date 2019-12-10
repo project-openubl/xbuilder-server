@@ -1,8 +1,8 @@
 package org.openublpe.xmlbuilder.core.models.output.sunat;
 
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

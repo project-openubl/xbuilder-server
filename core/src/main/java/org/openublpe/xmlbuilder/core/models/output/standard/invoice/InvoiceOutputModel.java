@@ -1,7 +1,7 @@
 package org.openublpe.xmlbuilder.core.models.output.standard.invoice;
 
-import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 
 import javax.validation.constraints.NotNull;
 

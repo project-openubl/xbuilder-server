@@ -65,14 +65,14 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             assertSignatureExists(responseBody.asString());
 
             // Validate valid XML
             InvoiceType invoiceType = UBL21Reader.invoice().read(responseBody.asInputStream());
-            assertNotNull(invoiceType, assertMessageError(input, responseBody.asString(), "InvoiceType is no valid"));
+            assertNotNull(invoiceType, messageInputDataError(input, responseBody.asString(), "InvoiceType is no valid"));
         }
     }
 
@@ -93,14 +93,14 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             assertSignatureExists(responseBody.asString());
 
             // Validate valid XML
             CreditNoteType creditNoteType = UBL21Reader.creditNote().read(responseBody.asInputStream());
-            assertNotNull(creditNoteType, assertMessageError(input, responseBody.asString(), "CreditNoteType is no valid"));
+            assertNotNull(creditNoteType, messageInputDataError(input, responseBody.asString(), "CreditNoteType is no valid"));
         }
     }
 
@@ -121,13 +121,13 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             assertSignatureExists(responseBody.asString());
 
             DebitNoteType debitNoteType = UBL21Reader.debitNote().read(responseBody.asInputStream());
-            assertNotNull(debitNoteType, assertMessageError(input, responseBody.asString(), "DebitNoteType is no valid"));
+            assertNotNull(debitNoteType, messageInputDataError(input, responseBody.asString(), "DebitNoteType is no valid"));
         }
     }
 
@@ -148,14 +148,14 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             assertSignatureExists(responseBody.asString());
 
             // Validate valid XML
             VoidedDocumentsType voidedDocumentsType = UBLPEReader.voidedDocuments().read(responseBody.asInputStream());
-            assertNotNull(voidedDocumentsType, assertMessageError(input, responseBody.asString(), "VoidedDocumentsType is no valid"));
+            assertNotNull(voidedDocumentsType, messageInputDataError(input, responseBody.asString(), "VoidedDocumentsType is no valid"));
         }
     }
 
@@ -176,7 +176,7 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
                     .thenReturn();
 
             // THEN
-            assertEquals(200, response.getStatusCode(), assertMessageError(input, response.getBody().asString()));
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
 
             assertSignatureExists(responseBody.asString());
