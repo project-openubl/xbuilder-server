@@ -31,3 +31,6 @@ quarkus.log
 
 bin/
 .DS_Store
+
+# ommit
+/signer/src/main/resources/rules/
