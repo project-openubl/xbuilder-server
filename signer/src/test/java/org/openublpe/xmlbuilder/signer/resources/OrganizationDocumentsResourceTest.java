@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
 @QuarkusTestResource(H2DatabaseTestResource.class)
-class OrganizationsDocumentsResourceTest {
+class OrganizationDocumentsResourceTest {
 
     static final String SIGNATURE_XPATH = "//ext:UBLExtensions/ext:UBLExtension/ext:ExtensionContent/ds:Signature";
 

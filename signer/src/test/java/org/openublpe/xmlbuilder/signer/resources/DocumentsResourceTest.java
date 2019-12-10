@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @QuarkusTest
 @QuarkusTestResource(H2DatabaseTestResource.class)
-public class RemoteDocumentResourceTest {
+public class DocumentsResourceTest {
 
 
 

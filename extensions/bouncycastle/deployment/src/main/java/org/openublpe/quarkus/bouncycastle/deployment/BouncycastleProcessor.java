@@ -18,8 +18,8 @@ class BouncycastleProcessor {
     void reflective(BuildProducer<ReflectiveClassBuildItem> reflectiveClass) {
         reflectiveClass.produce(
                 new ReflectiveClassBuildItem(
-                        true,
-                        true,
+                        false,
+                        false,
                         "org.bouncycastle.jcajce.provider.asymmetric.rsa.KeyFactorySpi",
                         "org.bouncycastle.jcajce.provider.asymmetric.x509.CertificateFactory"));
     }

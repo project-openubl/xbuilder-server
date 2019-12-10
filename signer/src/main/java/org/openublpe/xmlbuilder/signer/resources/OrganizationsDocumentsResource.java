@@ -1,5 +1,6 @@
 package org.openublpe.xmlbuilder.signer.resources;
 
+import org.drools.core.io.impl.InputStreamResource;
 import org.openublpe.xmlbuilder.executors.FreemarkerExecutor;
 import org.openublpe.xmlbuilder.executors.KieExecutor;
 import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
@@ -37,6 +38,7 @@ import javax.ws.rs.core.Response;
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.XMLSignatureException;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
@@ -82,7 +84,7 @@ public class OrganizationsDocumentsResource {
     public Response createInvoiceXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid InvoiceInputModel input
-    ) {
+    ) throws TransformerException {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -96,7 +98,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(xmlSignedDocument)
+        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -107,7 +109,7 @@ public class OrganizationsDocumentsResource {
     public Response createCreditNoteXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid CreditNoteInputModel input
-    ) {
+    ) throws TransformerException {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -121,7 +123,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(xmlSignedDocument)
+        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -132,7 +134,7 @@ public class OrganizationsDocumentsResource {
     public Response createDebitNoteXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid DebitNoteInputModel input
-    ) {
+    ) throws TransformerException {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -146,7 +148,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(xmlSignedDocument)
+        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -157,7 +159,7 @@ public class OrganizationsDocumentsResource {
     public Response createVoidedDocumentXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid VoidedDocumentInputModel input
-    ) {
+    ) throws TransformerException {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -171,7 +173,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(xmlSignedDocument)
+        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -182,7 +184,7 @@ public class OrganizationsDocumentsResource {
     public Response createSummaryDocumentXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid SummaryDocumentInputModel input
-    ) {
+    ) throws TransformerException {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -196,7 +198,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(xmlSignedDocument)
+        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
