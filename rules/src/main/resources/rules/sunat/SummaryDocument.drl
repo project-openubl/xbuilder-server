@@ -1,13 +1,13 @@
 package rules;
 
-import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
 import java.util.Calendar
-import org.openublpe.xmlbuilder.models.catalogs.Catalog
-import org.openublpe.xmlbuilder.models.catalogs.Catalog10
-import org.openublpe.xmlbuilder.models.catalogs.Catalog1
-import org.openublpe.xmlbuilder.models.output.common.FirmanteOutputModel
-import org.openublpe.xmlbuilder.models.output.common.ProveedorOutputModel;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1
+import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel
+import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
 
 import function org.openublpe.xmlbuilder.utils.DateUtils.toGregorianCalendarDate;
 

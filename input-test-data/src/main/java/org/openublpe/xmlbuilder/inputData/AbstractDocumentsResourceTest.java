@@ -1,10 +1,10 @@
 package org.openublpe.xmlbuilder.inputData;
 
-import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -1,9 +1,11 @@
 package rules.standard.note.creditNote;
 
-import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
-import org.openublpe.xmlbuilder.models.output.standard.note.creditNote.CreditNoteOutputModel;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog9;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 
 dialect "java"
 

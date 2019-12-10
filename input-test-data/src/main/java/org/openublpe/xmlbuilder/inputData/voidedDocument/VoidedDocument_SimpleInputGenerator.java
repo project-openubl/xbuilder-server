@@ -2,8 +2,8 @@ package org.openublpe.xmlbuilder.inputData.voidedDocument;
 
 import org.openublpe.xmlbuilder.inputData.GeneralData;
 import org.openublpe.xmlbuilder.inputData.VoidedDocumentInputGenerator;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 
 import java.util.Calendar;
 import java.util.Optional;

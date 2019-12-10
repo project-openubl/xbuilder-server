@@ -4,11 +4,11 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.openublpe.xmlbuilder.FreemarkerConstants;
 import org.openublpe.xmlbuilder.FreemarkerGlobalConfiguration;
-import org.openublpe.xmlbuilder.models.output.standard.invoice.InvoiceOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.note.creditNote.CreditNoteOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteOutputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentOutputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.VoidedDocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

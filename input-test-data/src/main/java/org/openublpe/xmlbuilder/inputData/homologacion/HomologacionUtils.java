@@ -1,8 +1,8 @@
 package org.openublpe.xmlbuilder.inputData.homologacion;
 
-import org.openublpe.xmlbuilder.models.catalogs.Catalog5;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog7_1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

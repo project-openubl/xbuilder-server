@@ -1,15 +1,19 @@
 package rules.standard;
 
-import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
-import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.DetalleOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.ImpuestoTotalIGVOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.ImpuestoTotalICBOutputModel;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog5;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DetalleOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalIGVOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalICBOutputModel;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.stream.Stream;
+import java.util.stream.Stream
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalICBOutputModel
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalIGVOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5
+import org.openublpe.xmlbuilder.core.models.output.standard.DetalleOutputModel;
 
 dialect "java"
 

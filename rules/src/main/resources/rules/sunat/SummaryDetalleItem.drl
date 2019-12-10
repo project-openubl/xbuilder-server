@@ -1,30 +1,40 @@
 package rules.standard;
 
-import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentLineInputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentOutputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentLineOutputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.TotalValorVentaOutputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.ImpuestoTotalResumenDiarioOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.DetallePrecioReferenciaOutputModel;
-import org.openublpe.xmlbuilder.models.output.common.ClienteOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentLineInputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentLineOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.TotalValorVentaOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.ImpuestoTotalResumenDiarioOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DetallePrecioReferenciaOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.math.RoundingMode;
 
-import org.openublpe.xmlbuilder.models.catalogs.Catalog;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog19;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog7_1;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog6;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog5;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1
+import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentLineOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6
+import org.openublpe.xmlbuilder.core.models.output.sunat.ImpuestoTotalResumenDiarioOutputModel
+import org.openublpe.xmlbuilder.core.models.output.sunat.TotalValorVentaOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
 
 global java.math.BigDecimal IGV;
 global java.math.BigDecimal ICB;
 global java.lang.String UNIDAD_MEDIDA;
-global org.openublpe.xmlbuilder.models.catalogs.Catalog7 TIPO_IGV;
+global org.openublpe.xmlbuilder.core.models.catalogs.Catalog7 TIPO_IGV;
 
 dialect "java"
 

@@ -10,11 +10,11 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.xml.sax.SAXException;
 
 import java.io.IOException;

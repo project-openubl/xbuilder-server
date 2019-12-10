@@ -1,9 +1,9 @@
 package org.openublpe.xmlbuilder.inputData;
 
-import org.openublpe.xmlbuilder.models.catalogs.Catalog6;
-import org.openublpe.xmlbuilder.models.input.common.ClienteInputModel;
-import org.openublpe.xmlbuilder.models.input.common.FirmanteInputModel;
-import org.openublpe.xmlbuilder.models.input.common.ProveedorInputModel;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
+import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 
 public class GeneralData {
 

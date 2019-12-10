@@ -1,7 +1,7 @@
 package org.openublpe.xmlbuilder.inputData;
 
-import org.openublpe.xmlbuilder.models.input.standard.DetalleInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;

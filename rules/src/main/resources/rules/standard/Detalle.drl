@@ -1,10 +1,11 @@
 package rules.standard;
 
-import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
-import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
-import org.openublpe.xmlbuilder.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
 import java.util.ArrayList;
-import java.math.BigDecimal;
+import java.math.BigDecimal
+import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
 
 dialect "java"
 

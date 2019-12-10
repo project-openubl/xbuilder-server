@@ -2,8 +2,8 @@ package org.openublpe.xmlbuilder.inputData.invoice;
 
 import org.openublpe.xmlbuilder.inputData.GeneralData;
 import org.openublpe.xmlbuilder.inputData.InvoiceInputGenerator;
-import org.openublpe.xmlbuilder.models.input.standard.DetalleInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

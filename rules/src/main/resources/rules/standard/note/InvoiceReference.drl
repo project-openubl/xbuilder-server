@@ -1,10 +1,11 @@
 package rules.standard.note;
 
-import org.openublpe.xmlbuilder.models.input.standard.note.NoteInputModel;
-import org.openublpe.xmlbuilder.models.output.standard.note.NoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;
 import org.openublpe.xmlbuilder.utils.UBLUtils;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog6;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 
 dialect "java"
 

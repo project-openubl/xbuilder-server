@@ -1,18 +1,18 @@
 package org.openublpe.xmlbuilder.signer.resources;
 
-import org.openublpe.xmlbuilder.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog19;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog6;
-import org.openublpe.xmlbuilder.models.input.common.ClienteInputModel;
-import org.openublpe.xmlbuilder.models.input.common.FirmanteInputModel;
-import org.openublpe.xmlbuilder.models.input.common.ProveedorInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.DetalleInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentLineInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
+import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentLineInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

@@ -1,9 +1,11 @@
 package rules.standard.note.debitNote;
 
-import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteOutputModel;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog10;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
 
 dialect "java"
 

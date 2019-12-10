@@ -1,29 +1,31 @@
 package rules.standard;
 
-import org.openublpe.xmlbuilder.models.input.standard.DocumentInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.DetalleInputModel;
-import org.openublpe.xmlbuilder.models.output.standard.DocumentOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.DetalleOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.ImpuestoDetalladoIGVOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.ImpuestoDetalladoICBOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.DetallePrecioReferenciaOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DetalleOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoIGVOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoICBOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DetallePrecioReferenciaOutputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.math.RoundingMode;
 
-import org.openublpe.xmlbuilder.models.catalogs.Catalog;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog7;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog16
-import org.openublpe.xmlbuilder.models.catalogs.Catalog5;
-import org.openublpe.xmlbuilder.models.catalogs.Catalog7_1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog16
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
 
-import function org.openublpe.xmlbuilder.utils.NumberUtils.format2Digists;
+import function org.openublpe.xmlbuilder.utils.NumberUtils.format2Digists
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoICBOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
 
 global java.math.BigDecimal IGV;
 global java.math.BigDecimal ICB;
 global java.lang.String UNIDAD_MEDIDA;
-global org.openublpe.xmlbuilder.models.catalogs.Catalog7 TIPO_IGV;
+global org.openublpe.xmlbuilder.core.models.catalogs.Catalog7 TIPO_IGV;
 
 dialect "java"
 

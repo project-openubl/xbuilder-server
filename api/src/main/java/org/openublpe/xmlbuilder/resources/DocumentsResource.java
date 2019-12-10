@@ -1,34 +1,27 @@
 package org.openublpe.xmlbuilder.resources;
 
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
-import org.openublpe.xmlbuilder.FreemarkerConstants;
-import org.openublpe.xmlbuilder.FreemarkerGlobalConfiguration;
 import org.openublpe.xmlbuilder.executors.FreemarkerExecutor;
 import org.openublpe.xmlbuilder.executors.KieExecutor;
-import org.openublpe.xmlbuilder.models.input.standard.invoice.InvoiceInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.note.creditNote.CreditNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.standard.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.SummaryDocumentInputModel;
-import org.openublpe.xmlbuilder.models.input.sunat.VoidedDocumentInputModel;
-import org.openublpe.xmlbuilder.models.output.standard.invoice.InvoiceOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.note.creditNote.CreditNoteOutputModel;
-import org.openublpe.xmlbuilder.models.output.standard.note.debitNote.DebitNoteOutputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.SummaryDocumentOutputModel;
-import org.openublpe.xmlbuilder.models.output.sunat.VoidedDocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.StringWriter;
 
 @Path("/documents")
 @Consumes(MediaType.APPLICATION_JSON)
