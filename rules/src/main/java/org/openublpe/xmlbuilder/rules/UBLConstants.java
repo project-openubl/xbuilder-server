@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder;
+package org.openublpe.xmlbuilder.rules;
 
 public class UBLConstants {
     public static final String IGV_KEY = "openubl.igv";

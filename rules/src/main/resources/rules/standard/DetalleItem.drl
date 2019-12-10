@@ -18,7 +18,7 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog16
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
 
-import function org.openublpe.xmlbuilder.utils.NumberUtils.format2Digists
+import function org.openublpe.xmlbuilder.rules.utils.NumberUtils.format2Digists
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoICBOutputModel
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
 

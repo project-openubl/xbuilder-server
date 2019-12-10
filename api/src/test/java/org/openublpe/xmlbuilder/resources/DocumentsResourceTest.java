@@ -20,8 +20,8 @@ import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.Credi
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
-import org.openublpe.xmlbuilder.utils.XMLSigner;
-import org.openublpe.xmlbuilder.utils.XMLUtils;
+import org.openublpe.xmlbuilder.rules.utils.XMLSigner;
+import org.openublpe.xmlbuilder.rules.utils.XMLUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;

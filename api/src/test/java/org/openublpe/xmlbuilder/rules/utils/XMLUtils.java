@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.utils;
+package org.openublpe.xmlbuilder.rules.utils;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.w3c.dom.Document;

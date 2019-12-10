@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.utils;
+package org.openublpe.xmlbuilder.rules.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

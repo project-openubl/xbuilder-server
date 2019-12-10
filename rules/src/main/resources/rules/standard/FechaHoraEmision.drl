@@ -4,8 +4,8 @@ import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel
 import java.util.Calendar;
 
-import function org.openublpe.xmlbuilder.utils.DateUtils.toGregorianCalendarDate;
-import function org.openublpe.xmlbuilder.utils.DateUtils.toGregorianCalendarTime;
+import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
+import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarTime;
 
 dialect "java"
 

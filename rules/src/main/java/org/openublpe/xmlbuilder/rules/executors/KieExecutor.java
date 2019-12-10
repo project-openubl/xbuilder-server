@@ -1,9 +1,9 @@
-package org.openublpe.xmlbuilder.templates.executors;
+package org.openublpe.xmlbuilder.rules.executors;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.KieRuntimeBuilder;
-import org.openublpe.xmlbuilder.UBLConstants;
+import org.openublpe.xmlbuilder.rules.UBLConstants;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;

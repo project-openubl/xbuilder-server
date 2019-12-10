@@ -1,9 +1,9 @@
 package org.openublpe.xmlbuilder.resources;
 
 import org.openublpe.xmlbuilder.inputData.AbstractDocumentsResourceTest;
-import org.openublpe.xmlbuilder.utils.CertificateDetails;
-import org.openublpe.xmlbuilder.utils.CertificateDetailsFactory;
-import org.openublpe.xmlbuilder.utils.XMLUtils;
+import org.openublpe.xmlbuilder.rules.utils.CertificateDetails;
+import org.openublpe.xmlbuilder.rules.utils.CertificateDetailsFactory;
+import org.openublpe.xmlbuilder.rules.utils.XMLUtils;
 import org.w3c.dom.Document;
 
 import javax.xml.transform.TransformerException;

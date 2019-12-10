@@ -4,7 +4,7 @@ import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.utils.UBLUtils
+import org.openublpe.xmlbuilder.rules.utils.UBLUtils
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 
 dialect "java"

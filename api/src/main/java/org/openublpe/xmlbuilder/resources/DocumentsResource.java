@@ -1,7 +1,7 @@
 package org.openublpe.xmlbuilder.resources;
 
 import org.openublpe.xmlbuilder.templates.executors.FreemarkerExecutor;
-import org.openublpe.xmlbuilder.templates.executors.KieExecutor;
+import org.openublpe.xmlbuilder.rules.executors.KieExecutor;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;

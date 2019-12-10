@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.utils;
+package org.openublpe.xmlbuilder.rules.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

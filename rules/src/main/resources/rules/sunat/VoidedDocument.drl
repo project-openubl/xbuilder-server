@@ -9,7 +9,7 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
 
-import function org.openublpe.xmlbuilder.utils.DateUtils.toGregorianCalendarDate;
+import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
 
 dialect "java"
 

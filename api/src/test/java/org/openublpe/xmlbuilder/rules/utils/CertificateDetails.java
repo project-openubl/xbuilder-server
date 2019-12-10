@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.utils;
+package org.openublpe.xmlbuilder.rules.utils;
 
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
