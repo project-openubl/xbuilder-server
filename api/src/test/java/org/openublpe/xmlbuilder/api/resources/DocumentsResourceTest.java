@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.resources;
+package org.openublpe.xmlbuilder.api.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;

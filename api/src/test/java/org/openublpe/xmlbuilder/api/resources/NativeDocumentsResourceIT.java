@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.resources;
+package org.openublpe.xmlbuilder.api.resources;
 
 import io.quarkus.test.junit.NativeImageTest;
 

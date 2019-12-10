@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.rules.utils;
+package org.openublpe.xmlbuilder.api.resources.utils;
 
 import java.io.IOException;
 import java.io.InputStream;

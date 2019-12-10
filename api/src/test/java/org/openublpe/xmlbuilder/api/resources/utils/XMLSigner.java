@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.rules.utils;
+package org.openublpe.xmlbuilder.api.resources.utils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
