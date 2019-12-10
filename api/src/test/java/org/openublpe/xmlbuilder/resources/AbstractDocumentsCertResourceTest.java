@@ -1,6 +1,6 @@
 package org.openublpe.xmlbuilder.resources;
 
-import org.openublpe.xmlbuilder.inputData.AbstractDocumentsResourceTest;
+import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
 import org.openublpe.xmlbuilder.rules.utils.CertificateDetails;
 import org.openublpe.xmlbuilder.rules.utils.CertificateDetailsFactory;
 import org.openublpe.xmlbuilder.rules.utils.XMLUtils;
@@ -14,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableEntryException;
 import java.security.cert.CertificateException;
 
-public abstract class AbstractDocumentsCertResourceTest extends AbstractDocumentsResourceTest {
+public abstract class AbstractDocumentsCertResourceTest extends AbstractInputDataTest {
 
     static String SIGN_REFERENCE_ID = "SIGN-ID";
     static String KEYSTORE = "LLAMA-PE-CERTIFICADO-DEMO-10467793549.pfx";
