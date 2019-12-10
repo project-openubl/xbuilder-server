@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.executors;
+package org.openublpe.xmlbuilder.templates.executors;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.kie.api.runtime.KieSession;

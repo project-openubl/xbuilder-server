@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder;
+package org.openublpe.xmlbuilder.templates;
 
 import freemarker.template.Configuration;
 

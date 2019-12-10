@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder;
+package org.openublpe.xmlbuilder.templates;
 
 public class FreemarkerConstants {
     public static final String INVOICE_TEMPLATE_2_1 = "templates/standard/invoice.ftl";
