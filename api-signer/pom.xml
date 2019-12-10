@@ -118,6 +118,29 @@
             <version>${junit4.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.openublpe</groupId>
+            <artifactId>xml-builder-input-test-data</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.helger</groupId>
+            <artifactId>ph-ubl21</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.helger</groupId>
+            <artifactId>ph-ublpe</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.carlosthe19916</groupId>
+            <artifactId>sunat-web-services</artifactId>
+            <version>${sunat-web-services.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

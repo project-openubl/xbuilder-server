@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class OrganizationsResourceTest {
 
     @Test
-    public void testGetOrganizations() throws Exception {
+     void testGetOrganizations() throws Exception {
         // GIVEN
 
         // WHEN
@@ -43,7 +43,7 @@ public class OrganizationsResourceTest {
     }
 
     @Test
-    public void testGetOrganization() throws Exception {
+     void testGetOrganization() throws Exception {
         // GIVEN
 
         // WHEN
@@ -63,7 +63,7 @@ public class OrganizationsResourceTest {
     }
 
     @Test
-    public void testCreateOrganization() throws Exception {
+     void testCreateOrganization() throws Exception {
         // GIVEN
         OrganizationRepresentation organization = new OrganizationRepresentation();
         organization.setName("myCompanyNamae");
@@ -93,7 +93,7 @@ public class OrganizationsResourceTest {
     }
 
     @Test
-    public void testUpdateOrganization() throws Exception {
+     void testUpdateOrganization() throws Exception {
         // GIVEN
         String organizationId = "master";
 
@@ -125,7 +125,7 @@ public class OrganizationsResourceTest {
     }
 
     @Test
-    public void testGetKeyMetadata() throws Exception {
+     void testGetKeyMetadata() throws Exception {
         // GIVEN
         String organizationId = "master";
 
@@ -147,7 +147,7 @@ public class OrganizationsResourceTest {
     }
 
     @Test
-    public void testGetComponents() throws Exception {
+     void testGetComponents() throws Exception {
         // GIVEN
         String organizationId = "master";
 

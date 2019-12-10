@@ -80,30 +80,8 @@
             <groupId>org.openublpe</groupId>
             <artifactId>xml-builder-input-test-data</artifactId>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.openublpe</groupId>
-                    <artifactId>xml-builder-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-ubl21</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-ublpe</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.carlosthe19916</groupId>
-            <artifactId>sunat-web-services</artifactId>
-            <version>${sunat-web-services.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>xmlunit</groupId>
             <artifactId>xmlunit</artifactId>
@@ -230,26 +208,6 @@
                                 </configuration>
                             </execution>
                         </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>sunat</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>${surefire-plugin.version}</version>
-                        <configuration>
-                            <includes>
-                                <include>**/*ITSunat.java</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/*Test.java</exclude>
-                            </excludes>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

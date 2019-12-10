@@ -1,14 +1,9 @@
 package org.openublpe.xmlbuilder.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.helger.ubl21.UBL21Reader;
-import com.helger.ublpe.UBLPEReader;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
-import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
-import oasis.names.specification.ubl.schema.xsd.debitnote_21.DebitNoteType;
-import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 import org.custommonkey.xmlunit.DetailedDiff;
 import org.custommonkey.xmlunit.Diff;
 import org.custommonkey.xmlunit.XMLUnit;
@@ -20,33 +15,23 @@ import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.Credi
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
-import org.openublpe.xmlbuilder.rules.utils.XMLSigner;
-import org.openublpe.xmlbuilder.rules.utils.XMLUtils;
-import org.w3c.dom.Document;
+import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import sunat.names.specification.ubl.peru.schema.xsd.voideddocuments_1.VoidedDocumentsType;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableEntryException;
-import java.security.cert.CertificateException;
 
 import static io.restassured.RestAssured.given;
 import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @QuarkusTest
-public class DocumentsResourceTest extends AbstractDocumentsCertResourceTest {
+public class DocumentsResourceTest extends AbstractInputDataTest {
 
     @BeforeAll
-    public static void beforeAll() throws UnrecoverableEntryException, NoSuchAlgorithmException, KeyStoreException, IOException, CertificateException {
-        AbstractDocumentsCertResourceTest.loadCertificate();
-        AbstractDocumentsCertResourceTest.loadInputGenerators();
-
+    public static void beforeAll() {
         //ignore while space differances
         XMLUnit.setIgnoreWhitespace(true);
 
@@ -77,7 +62,7 @@ public class DocumentsResourceTest extends AbstractDocumentsCertResourceTest {
 
             //this can use ignore soarting issues and assert
             assertXMLEqual(
-                    assertMessageError("XML Snapshot does not match", input, responseBody.asString()),
+                    assertMessageError(input, responseBody.asString(), "XML Snapshot does not match"),
                     detailedDiff,
                     true
             );
@@ -85,7 +70,9 @@ public class DocumentsResourceTest extends AbstractDocumentsCertResourceTest {
     }
 
     @Test
-    public void testCreateInvoice() throws Exception {
+    void testCreateInvoice() throws Exception {
+        assertFalse(INVOICES.isEmpty(), "No invoices to test");
+
         for (InvoiceInputModel input : INVOICES) {
             // GIVEN
             String body = new ObjectMapper().writeValueAsString(input);
@@ -104,22 +91,13 @@ public class DocumentsResourceTest extends AbstractDocumentsCertResourceTest {
 
             // snapshot
             assertSnapshot(input, responseBody);
-
-            // read document
-            Document xmlDocument = XMLUtils.inputStreamToDocument(responseBody.asInputStream());
-            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
-
-            // Sign document
-            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
-
-            // Validate valid XML
-            InvoiceType invoiceType = UBL21Reader.invoice().read(xmlSignedDocument);
-            assertNotNull(invoiceType, assertMessageError(input, "InvoiceType is no valid", xmlSignedDocument));
         }
     }
 
     @Test
-    public void testCreateCreditNote() throws Exception {
+    void testCreateCreditNote() throws Exception {
+        assertFalse(CREDIT_NOTES.isEmpty(), "No credit notes to test");
+
         for (CreditNoteInputModel input : CREDIT_NOTES) {
             // Given
             String body = new ObjectMapper().writeValueAsString(input);
@@ -138,22 +116,12 @@ public class DocumentsResourceTest extends AbstractDocumentsCertResourceTest {
 
             // snapshot
             assertSnapshot(input, responseBody);
-
-            // read document
-            Document xmlDocument = XMLUtils.inputStreamToDocument(response.getBody().asInputStream());
-            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
-
-            // Sign document
-            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
-
-            // Validate valid XML
-            CreditNoteType creditNoteType = UBL21Reader.creditNote().read(xmlSignedDocument);
-            assertNotNull(creditNoteType, assertMessageError(input, "CreditNoteType is no valid", xmlSignedDocument));
         }
     }
 
     @Test
-    public void testCreateDebitNote() throws Exception {
+    void testCreateDebitNote() throws Exception {
+        assertFalse(DEBIT_NOTES.isEmpty(), "No debit notes to test");
         for (DebitNoteInputModel input : DEBIT_NOTES) {
             // Given
             String body = new ObjectMapper().writeValueAsString(input);
@@ -172,22 +140,13 @@ public class DocumentsResourceTest extends AbstractDocumentsCertResourceTest {
 
             // snapshot
             assertSnapshot(input, responseBody);
-
-            // read document
-            Document xmlDocument = XMLUtils.inputStreamToDocument(responseBody.asInputStream());
-            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
-
-            // Sign document
-            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
-
-            // Validate valid XML
-            DebitNoteType debitNoteType = UBL21Reader.debitNote().read(xmlSignedDocument);
-            assertNotNull(debitNoteType, assertMessageError(input, "DebitNoteType is no valid", xmlSignedDocument));
         }
     }
 
     @Test
-    public void testCreateVoidedDocument() throws Exception {
+    void testCreateVoidedDocument() throws Exception {
+        assertFalse(VOIDED_DOCUMENTS.isEmpty(), "No voided documents to test");
+
         for (VoidedDocumentInputModel input : VOIDED_DOCUMENTS) {
             // GIVEN
             String body = new ObjectMapper().writeValueAsString(input);
@@ -206,22 +165,12 @@ public class DocumentsResourceTest extends AbstractDocumentsCertResourceTest {
 
             // snapshot
             assertSnapshot(input, responseBody);
-
-            // read document
-            Document xmlDocument = XMLUtils.inputStreamToDocument(responseBody.asInputStream());
-            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
-
-            // Sign document
-            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
-
-            // Validate valid XML
-            VoidedDocumentsType voidedDocumentsType = UBLPEReader.voidedDocuments().read(xmlSignedDocument);
-            assertNotNull(voidedDocumentsType, assertMessageError(input, "VoidedDocumentsType is no valid", xmlSignedDocument));
         }
     }
 
     @Test
-    public void testCreateSummaryDocument() throws Exception {
+    void testCreateSummaryDocument() throws Exception {
+        assertFalse(SUMMARY_DOCUMENTS.isEmpty(), "No summary documents to test");
         for (SummaryDocumentInputModel input : SUMMARY_DOCUMENTS) {
             // GIVEN
             String body = new ObjectMapper().writeValueAsString(input);
@@ -240,17 +189,6 @@ public class DocumentsResourceTest extends AbstractDocumentsCertResourceTest {
 
             // snapshot
             assertSnapshot(input, responseBody);
-
-            // read document
-            Document xmlDocument = XMLUtils.inputStreamToDocument(responseBody.asInputStream());
-            assertNotNull(xmlDocument, assertMessageError(input, "Response.body to Document should not be null"));
-
-            // Sign document
-            Document xmlSignedDocument = XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, CERTIFICATE.getX509Certificate(), CERTIFICATE.getPrivateKey());
-
-            // Validate valid XML
-//            SummaryDocumentsType summaryDocumentsType = UBLPEReader.summaryDocuments().read(xmlSignedDocument);
-//            assertNotNull(summaryDocumentsType, assertMessageError(input, "SummaryDocumentsType is no valid", xmlSignedDocument));
         }
     }
 }

@@ -30,6 +30,10 @@ public abstract class AbstractInputDataTest {
     protected static Map<Object, Optional<String>> SNAPSHOTS = new HashMap<>();
     protected static Map<Object, Class> GENERATORS_CLASSES = new HashMap<>();
 
+    public AbstractInputDataTest() {
+        loadInputGenerators();
+    }
+
     private static void loadGenerators(List inputs, Class<? extends InputGenerator> classz) {
         if (inputs.isEmpty()) {
             synchronized (AbstractInputDataTest.class) {
@@ -46,7 +50,7 @@ public abstract class AbstractInputDataTest {
         }
     }
 
-    public static void loadInputGenerators() {
+    private static void loadInputGenerators() {
         loadGenerators(INVOICES, InvoiceInputGenerator.class);
         loadGenerators(CREDIT_NOTES, CreditNoteInputGenerator.class);
         loadGenerators(DEBIT_NOTES, DebitNoteInputGenerator.class);
@@ -54,17 +58,17 @@ public abstract class AbstractInputDataTest {
         loadGenerators(SUMMARY_DOCUMENTS, SummaryDocumentInputGenerator.class);
     }
 
-    protected String assertMessageError(Object obj, String error) {
-        return "[" + GENERATORS_CLASSES.get(obj).getCanonicalName() + "]\n" + error;
+    protected String assertMessageError(Object input, String errorMessage) {
+        return "[" + GENERATORS_CLASSES.get(input).getCanonicalName() + "]\n" + errorMessage;
     }
 
-    protected String assertMessageError(String error, Object obj, String documentString) {
+    protected String assertMessageError(Object input, String xml, String errorMessage) {
         return new StringBuilder()
                 .append("\n")
-                .append(documentString).append("\n")
+                .append(xml).append("\n")
                 .append("CLASS ")
-                .append(GENERATORS_CLASSES.get(obj).getCanonicalName()).append("\n")
-                .append("MESSAGE ").append(error)
+                .append(GENERATORS_CLASSES.get(input).getCanonicalName()).append("\n")
+                .append("MESSAGE ").append(errorMessage)
                 .toString();
     }
 
