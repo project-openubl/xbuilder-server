@@ -3,6 +3,8 @@ notifications:
   email: false
 jdk:
   - openjdk8
+services:
+  - docker
 addons:
   sonarcloud:
     organization: project-xavier
@@ -18,3 +20,12 @@ jobs:
         - mvn test -DtestLogRootLevel=warn -Pcoverage
         - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then sonar-scanner; fi'
         - bash <(curl -s https://codecov.io/bash)
+    - stage: Release
+      script:
+        - 'if [ "TRAVIS_TAG" != "" ]; ./.travis/release.sh; fi'
+      deploy:
+        provider: releases
+        api_key: $GITHUB_OAUTH_TOKEN
+        skip_cleanup: true
+        on:
+          tags: true
