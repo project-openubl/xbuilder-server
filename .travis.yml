@@ -5,11 +5,11 @@ jdk:
   - openjdk8
 services:
   - docker
-addons:
-  sonarcloud:
-    organization: project-xavier
-    token:
-      secure: $SONAR_TOKEN
+#addons:
+#  sonarcloud:
+#    organization: project-xavier
+#    token:
+#      secure: $SONAR_TOKEN
 install:
   - cp ./configuration/settings.xml $HOME/.m2/settings.xml
   - mvn install -P !fuse-fabric8-docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
@@ -22,7 +22,7 @@ jobs:
 #        - bash <(curl -s https://codecov.io/bash)
     - stage: Release
       script:
-        - 'if [ "TRAVIS_TAG" != "" ]; ./.travis/release.sh; fi'
+        - 'if [ "$TRAVIS_TAG" != "" ]; then ./.travis/release.sh; fi'
       deploy:
         provider: releases
         api_key: $GITHUB_OAUTH_TOKEN
