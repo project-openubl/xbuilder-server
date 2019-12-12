@@ -4,7 +4,7 @@
 
     <groupId>org.jboss.xavier</groupId>
     <artifactId>xavier-integration</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.1-SNAPSHOT</version>
 
     <name>Xavier Integration</name>
     <description>Integration component created using Fuse (on Spring Boot) to integrate JPA (with external DB), JMS (AMQ Broker), Drools (remote invocation), Rest APIs, Swagger</description>
