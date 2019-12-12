@@ -15,11 +15,11 @@ install:
   - mvn install -P !fuse-fabric8-docker -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 jobs:
   include:
-    - stage: Test
-      script:
-        - mvn test -DtestLogRootLevel=warn -Pcoverage
-        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then sonar-scanner; fi'
-        - bash <(curl -s https://codecov.io/bash)
+#    - stage: Test
+#      script:
+#        - mvn test -DtestLogRootLevel=warn -Pcoverage
+#        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then sonar-scanner; fi'
+#        - bash <(curl -s https://codecov.io/bash)
     - stage: Release
       script:
         - 'if [ "TRAVIS_TAG" != "" ]; ./.travis/release.sh; fi'
