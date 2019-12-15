@@ -71,15 +71,14 @@ stages:
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'install'
+              goals: 'verify'
               options: '-Psunat'
               javaHomeOption: 'JDKVersion'
-              mavenVersionOption: 'Default'
   - stage: native_test
     displayName: Native tests
     jobs:
-      - job: release_snapshot_to_dockerhub
-        displayName: Build native image and push it to DockerHub
+      - job: api_release_snapshot_to_dockerhub
+        displayName: API Build native image and push it to DockerHub
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
@@ -88,7 +87,7 @@ stages:
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
             inputs:
               command: 'build'
-              Dockerfile: '**/Dockerfile.multistage'
+              Dockerfile: '**/Dockerfile.api.multistage'
           - task: Docker@2
             displayName: Docker native build and push
             condition: eq(variables['System.PullRequest.IsFork'], 'False')
@@ -96,7 +95,26 @@ stages:
               containerRegistry: 'Docker Hub'
               repository: 'projectopenubl/xml-builder'
               command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile.multistage'
+              Dockerfile: '**/Dockerfile.api.multistage'
+      - job: api_signer_release_snapshot_to_dockerhub
+        displayName: API Signer Build native image and push it to DockerHub
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: Docker@2
+            displayName: Docker native build
+            condition: eq(variables['System.PullRequest.IsFork'], 'True')
+            inputs:
+              command: 'build'
+              Dockerfile: '**/Dockerfile.apisigner.multistage'
+          - task: Docker@2
+            displayName: Docker native build and push
+            condition: eq(variables['System.PullRequest.IsFork'], 'False')
+            inputs:
+              containerRegistry: 'Docker Hub'
+              repository: 'projectopenubl/xml-builder-signer'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile.apisigner.multistage'
   - stage: release
     displayName: Release
     jobs:
@@ -111,7 +129,16 @@ stages:
               containerRegistry: 'Docker Hub'
               repository: 'projectopenubl/xml-builder'
               command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile.multistage'
+              Dockerfile: '**/Dockerfile.api.multistage'
+              tags: |
+                $(Build.SourceBranchName)
+                latest
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Docker Hub'
+              repository: 'projectopenubl/xml-builder-signer'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile.apisigner.multistage'
               tags: |
                 $(Build.SourceBranchName)
                 latest
@@ -127,30 +154,59 @@ stages:
               javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.8'
               mavenVersionOption: 'Default'
+
           - task: CopyFiles@2
             inputs:
-              SourceFolder: 'services/target'
+              SourceFolder: 'api/target'
               Contents: '*-runner.jar'
-              TargetFolder: '$(Build.BinariesDirectory)'
+              TargetFolder: '$(Build.BinariesDirectory)/api'
           - task: CopyFiles@2
             inputs:
-              SourceFolder: 'services/target'
+              SourceFolder: 'api/target'
               Contents: 'lib/**'
-              TargetFolder: '$(Build.BinariesDirectory)'
+              TargetFolder: '$(Build.BinariesDirectory)/api'
+
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: 'api-signer/target'
+              Contents: '*-runner.jar'
+              TargetFolder: '$(Build.BinariesDirectory)/api-signer'
+          - task: CopyFiles@2
+            inputs:
+              SourceFolder: 'api-signer/target'
+              Contents: 'lib/**'
+              TargetFolder: '$(Build.BinariesDirectory)/api-signer'
+
           - task: ArchiveFiles@2
             inputs:
-              rootFolderOrFile: '$(Build.BinariesDirectory)'
+              rootFolderOrFile: '$(Build.BinariesDirectory)/api'
               includeRootFolder: false
               archiveType: 'zip'
               archiveFile: '$(Build.ArtifactStagingDirectory)/xml-builder-$(Build.SourceBranchName).zip'
               replaceExistingArchive: true
           - task: ArchiveFiles@2
             inputs:
-              rootFolderOrFile: '$(Build.BinariesDirectory)'
+              rootFolderOrFile: '$(Build.BinariesDirectory)/api'
               includeRootFolder: false
               archiveType: 'tar'
               archiveFile: '$(Build.ArtifactStagingDirectory)/xml-builder-$(Build.SourceBranchName).tar.gz'
               replaceExistingArchive: true
+
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(Build.BinariesDirectory)/api-signer'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/xml-builder-signer-$(Build.SourceBranchName).zip'
+              replaceExistingArchive: true
+          - task: ArchiveFiles@2
+            inputs:
+              rootFolderOrFile: '$(Build.BinariesDirectory)/api-signer'
+              includeRootFolder: false
+              archiveType: 'tar'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/xml-builder-signer-$(Build.SourceBranchName).tar.gz'
+              replaceExistingArchive: true
+
           - task: GitHubRelease@1
             displayName: Create Github Release
             inputs:
@@ -164,6 +220,5 @@ stages:
                   $(Build.ArtifactStagingDirectory)/*.tar.gz
               changeLogCompareToRelease: 'lastFullRelease'
               changeLogType: 'commitBased'
-        
 
-  
+

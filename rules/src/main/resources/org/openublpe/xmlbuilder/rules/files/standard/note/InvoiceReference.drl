@@ -1,0 +1,25 @@
+package org.openublpe.xmlbuilder.rules.files.standard.note;
+
+import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;
+import org.openublpe.xmlbuilder.rules.utils.UBLUtils;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+
+dialect "java"
+
+rule "Invoice Reference"
+when
+    $input : NoteInputModel(serieNumeroInvoiceReference != null)
+    $output : NoteOutputModel()
+then
+    $output.setSerieNumeroInvoiceReference($input.getSerieNumeroInvoiceReference());
+    $output.setDescripcionSustentoInvoiceReference($input.getDescripcionSustentoInvoiceReference());
+
+    if (UBLUtils.FACTURA_SERIE_REGEX.matcher($output.getSerieNumeroInvoiceReference()).find()) {
+        $output.setTipoInvoiceReference(Catalog1.FACTURA);
+    } else if (UBLUtils.BOLETA_SERIE_REGEX.matcher($output.getSerieNumeroInvoiceReference()).find()) {
+       $output.setTipoInvoiceReference(Catalog1.BOLETA);
+    }
+end

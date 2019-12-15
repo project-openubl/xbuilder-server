@@ -1,0 +1,125 @@
+package org.openublpe.xmlbuilder.rules.files.sunat;
+
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentLineInputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentLineOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.TotalValorVentaOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.ImpuestoTotalResumenDiarioOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DetallePrecioReferenciaOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.math.RoundingMode;
+
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1
+import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentLineOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6
+import org.openublpe.xmlbuilder.core.models.output.sunat.ImpuestoTotalResumenDiarioOutputModel
+import org.openublpe.xmlbuilder.core.models.output.sunat.TotalValorVentaOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
+
+global java.math.BigDecimal IGV;
+global java.math.BigDecimal ICB;
+global java.lang.String UNIDAD_MEDIDA;
+global org.openublpe.xmlbuilder.core.models.catalogs.Catalog7 TIPO_IGV;
+
+dialect "java"
+
+rule "Summary Document Detalle Item"
+when
+    $input : SummaryDocumentInputModel(detalle != null)
+    $output : SummaryDocumentOutputModel()
+    $inputDetalle: SummaryDocumentLineInputModel()
+then
+    SummaryDocumentLineOutputModel outputDetalle = new SummaryDocumentLineOutputModel();
+    $output.getDetalle().add(outputDetalle);
+
+    outputDetalle.setSerieNumero($inputDetalle.getSerieNumero());
+
+    // Tipo comprobante
+    Catalog1 tipoComprobante = Catalog.valueOfCode(Catalog1.class, $inputDetalle.getTipoComprobante()).get();
+    outputDetalle.setTipoComprobante(tipoComprobante);
+
+    // Tipo operacion
+    Catalog19 tipoOperacion = Catalog.valueOfCode(Catalog19.class, $inputDetalle.getTipoOperacion()).get();
+    outputDetalle.setTipoOperacion(tipoOperacion);
+
+    outputDetalle.setImporteTotal($inputDetalle.getImporteTotal());
+    outputDetalle.setTotalOtrosCargos($inputDetalle.getTotalOtrosCargos());
+
+    // Totales
+    outputDetalle.setTotales(new ArrayList<>());
+
+    if ($inputDetalle.getTotalOperacionesGravadas() != null) {
+        TotalValorVentaOutputModel gravado = new TotalValorVentaOutputModel();
+        gravado.setTipo(Catalog7_1.GRAVADO);
+        gravado.setImporte($inputDetalle.getTotalOperacionesGravadas());
+
+        outputDetalle.getTotales().add(gravado);
+    }
+    if ($inputDetalle.getTotalOperacionesExoneradas() != null) {
+        TotalValorVentaOutputModel exonerado = new TotalValorVentaOutputModel();
+        exonerado.setTipo(Catalog7_1.EXONERADO);
+        exonerado.setImporte($inputDetalle.getTotalOperacionesExoneradas());
+
+        outputDetalle.getTotales().add(exonerado);
+    }
+    if ($inputDetalle.getTotalOperacionesInafectas() != null) {
+        TotalValorVentaOutputModel inafecta = new TotalValorVentaOutputModel();
+        inafecta.setTipo(Catalog7_1.INAFECTO);
+        inafecta.setImporte($inputDetalle.getTotalOperacionesInafectas());
+
+        outputDetalle.getTotales().add(inafecta);
+    }
+    if ($inputDetalle.getTotalOperacionesGratuitas() != null) {
+        TotalValorVentaOutputModel gratuita = new TotalValorVentaOutputModel();
+        gratuita.setTipo(Catalog7_1.GRATUITA);
+        gratuita.setImporte($inputDetalle.getTotalOperacionesGratuitas());
+
+        outputDetalle.getTotales().add(gratuita);
+    }
+
+    // Impuestos
+    outputDetalle.setImpuestos(new ArrayList<>());
+
+    if ($inputDetalle.getIgv() != null) {
+        ImpuestoTotalResumenDiarioOutputModel igv = new ImpuestoTotalResumenDiarioOutputModel();
+        igv.setCategoria(Catalog5.IGV);
+        igv.setImporte($inputDetalle.getIgv());
+
+        outputDetalle.getImpuestos().add(igv);
+    }
+    if ($inputDetalle.getIcb() != null) {
+        ImpuestoTotalResumenDiarioOutputModel icb = new ImpuestoTotalResumenDiarioOutputModel();
+        icb.setCategoria(Catalog5.ICBPER);
+        icb.setImporte($inputDetalle.getIcb());
+
+        outputDetalle.getImpuestos().add(icb);
+    }
+
+    // Cliente
+    if ($inputDetalle.getCliente() != null) {
+        ClienteOutputModel cliente = new ClienteOutputModel();
+        outputDetalle.setCliente(cliente);
+
+        cliente.setNombre($inputDetalle.getCliente().getNombre());
+        cliente.setNumeroDocumentoIdentidad($inputDetalle.getCliente().getNumeroDocumentoIdentidad());
+
+        Catalog6 tipoDocumentoIdentidad = Catalog.valueOfCode(Catalog6.class, $inputDetalle.getCliente().getTipoDocumentoIdentidad()).get();
+        cliente.setTipoDocumentoIdentidad(tipoDocumentoIdentidad);
+    }
+
+end

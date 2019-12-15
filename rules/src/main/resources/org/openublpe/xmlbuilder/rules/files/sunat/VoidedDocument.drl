@@ -1,0 +1,50 @@
+package org.openublpe.xmlbuilder.rules.files.sunat;
+
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
+import java.util.Calendar;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
+
+import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
+
+dialect "java"
+
+rule "Voided Document"
+when
+    $input : VoidedDocumentInputModel()
+    $output : VoidedDocumentOutputModel()
+then
+    long fechaEmision = $input.getFechaEmision() != null
+            ? $input.getFechaEmision()
+            : Calendar.getInstance().getTimeInMillis();
+    String fechaEmisionString = toGregorianCalendarDate(fechaEmision);
+
+    $output.setSerieNumero("RA-" + fechaEmisionString.replaceAll("-", "") + "-" + $input.getNumero());
+    $output.setFechaEmision(fechaEmisionString);
+
+    $output.setFechaEmisionDocumentReference(toGregorianCalendarDate($input.getFechaEmisionDocumentReference()));
+
+    Catalog1 tipoDocumentReference = Catalog.valueOfCode(Catalog1.class, $input.getTipoDocumentReference()).get();
+    $output.setTipoDocumentReference(tipoDocumentReference);
+
+    String[] serieNumero = $input.getSerieNumeroDocumentReference().split("-");
+    $output.setSerieDocumentReference(serieNumero[0]);
+    $output.setNumeroDocumentReference(serieNumero[1]);
+    $output.setMotivoBajaDocumentReference($input.getMotivoBajaDocumentReference());
+
+
+    FirmanteOutputModel firmante = new FirmanteOutputModel();
+    $output.setFirmante(firmante);
+
+    ProveedorOutputModel proveedor = new ProveedorOutputModel();
+    $output.setProveedor(proveedor);
+
+    insert($input.getFirmante());
+    insert($input.getProveedor());
+    insert(firmante);
+    insert(proveedor);
+end

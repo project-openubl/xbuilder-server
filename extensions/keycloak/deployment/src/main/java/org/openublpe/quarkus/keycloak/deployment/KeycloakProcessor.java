@@ -23,6 +23,14 @@ class KeycloakProcessor {
                         "org.keycloak.representations.idm.KeysMetadataRepresentation$KeyMetadataRepresentation",
                         "org.keycloak.representations.idm.KeysMetadataRepresentation"));
 
+        // Workaround until https://github.com/quarkusio/quarkus/issues/1762 is solved
+        reflectiveClass.produce(
+                new ReflectiveClassBuildItem(
+                        false,
+                        false,
+                        "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl",
+                        "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"));
+
         reflectiveClass.produce(
                 new ReflectiveClassBuildItem(
                         false,
@@ -32,18 +40,9 @@ class KeycloakProcessor {
 
         reflectiveClass.produce(
                 new ReflectiveClassBuildItem(
-                        true,
-                        true,
-                        "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl",
-                        "com.sun.org.apache.xml.internal.serializer.utils.SerializerMessages"));
-
-        // Workaround until https://github.com/quarkusio/quarkus/issues/1762 is solved
-        reflectiveClass.produce(
-                new ReflectiveClassBuildItem(
                         false,
                         false,
-                        "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl",
-                        "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"));
+                        "com.sun.org.apache.xerces.internal.dom.DOMXSImplementationSourceImpl"));
     }
 
 }

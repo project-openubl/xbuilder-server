@@ -14,7 +14,11 @@
     <properties>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
 
-        <quarkus.version>1.0.1.Final</quarkus.version>
+        <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+        <quarkus-plugin.version>1.0.1.Final</quarkus-plugin.version>
+        <quarkus.platform.version>1.0.1.Final</quarkus.platform.version>
+
         <jandex.version>1.0.6</jandex.version>
         <camel.quarkus.version>0.2.0</camel.quarkus.version>
         <jacoco.version>0.8.5</jacoco.version>
@@ -30,19 +34,21 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven.compiler.source>1.8</maven.compiler.source>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
         <maven.compiler.parameters>true</maven.compiler.parameters>
+        <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!--Quarkus-->
             <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus.version}</version>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -89,19 +95,66 @@
 
             <dependency>
                 <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-services</artifactId>
+                <artifactId>xml-builder-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-signer</artifactId>
+                <artifactId>xml-builder-input-test-data</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-templates</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-rules</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-api-signer</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
     <modules>
-        <module>services</module>
+        <module>core</module>
+        <module>input-test-data</module>
         <module>extensions</module>
-        <module>signer</module>
+        <module>templates</module>
+        <module>rules</module>
+        <module>api</module>
+        <module>api-signer</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>sunat</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${surefire-plugin.version}</version>
+                        <configuration>
+                            <includes>
+                                <include>**/*ITSunat.java</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/*Test.java</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
