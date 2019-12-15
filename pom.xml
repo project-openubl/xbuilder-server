@@ -14,7 +14,11 @@
     <properties>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
 
+        <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
+        <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <quarkus-plugin.version>1.0.1.Final</quarkus-plugin.version>
+        <quarkus.platform.version>1.0.1.Final</quarkus.platform.version>
+
         <jandex.version>1.0.6</jandex.version>
         <camel.quarkus.version>0.2.0</camel.quarkus.version>
         <jacoco.version>0.8.5</jacoco.version>
@@ -30,9 +34,10 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven.compiler.source>1.8</maven.compiler.source>
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
+        <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
     </properties>
@@ -41,9 +46,9 @@
         <dependencies>
             <!--Quarkus-->
             <dependency>
-                <groupId>io.quarkus</groupId>
-                <artifactId>quarkus-bom</artifactId>
-                <version>${quarkus-plugin.version}</version>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>${quarkus.platform.artifact-id}</artifactId>
+                <version>${quarkus.platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

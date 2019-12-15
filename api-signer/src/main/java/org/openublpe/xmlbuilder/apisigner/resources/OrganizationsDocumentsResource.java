@@ -5,7 +5,7 @@ import org.openublpe.xmlbuilder.apisigner.models.ModelRuntimeException;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationModel;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationProvider;
 import org.openublpe.xmlbuilder.apisigner.xml.XMLSigner;
-import org.openublpe.xmlbuilder.apisigner.xml.XMLUtils;
+import org.openublpe.xmlbuilder.apisigner.xml.XmlSignatureHelper;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -36,7 +36,6 @@ import javax.ws.rs.core.Response;
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.XMLSignatureException;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
@@ -72,8 +71,57 @@ public class OrganizationsDocumentsResource {
 
     private Document signXML(KeyManager.ActiveRsaKey activeRsaKey, String xml)
             throws ParserConfigurationException, SAXException, IOException, NoSuchAlgorithmException, XMLSignatureException, InvalidAlgorithmParameterException, MarshalException {
-        Document xmlDocument = XMLUtils.stringToDocument(xml);
-        return XMLSigner.firmarXML(xmlDocument, SIGN_REFERENCE_ID, activeRsaKey.getCertificate(), activeRsaKey.getPrivateKey());
+        return XMLSigner.firmarXML(xml, SIGN_REFERENCE_ID, activeRsaKey.getCertificate(), activeRsaKey.getPrivateKey());
+    }
+
+    @POST
+    @Path("/invoice/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public InvoiceOutputModel enrichInvoiceModel(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid InvoiceInputModel input
+    ) {
+        return kieExecutor.getInvoiceOutputModel(input);
+    }
+
+    @POST
+    @Path("/credit-note/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public CreditNoteOutputModel enrichCreditNoteModel(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid CreditNoteInputModel input
+    ) {
+        return kieExecutor.getCreditNoteOutputModel(input);
+    }
+
+    @POST
+    @Path("/debit-note/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DebitNoteOutputModel enrichDebitNoteModel(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid DebitNoteInputModel input
+    ) {
+        return kieExecutor.getDebitNoteOutputModel(input);
+    }
+
+    @POST
+    @Path("/voided-document/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public VoidedDocumentOutputModel enrichVoidedDocumentModel(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid VoidedDocumentInputModel input
+    ) {
+        return kieExecutor.getVoidedDocumentOutputModel(input);
+    }
+
+    @POST
+    @Path("/summary-document/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public SummaryDocumentOutputModel enrichSummaryDocumentModel(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid SummaryDocumentInputModel input
+    ) {
+        return kieExecutor.getSummaryDocumentOutputModel(input);
     }
 
     @POST
@@ -82,7 +130,7 @@ public class OrganizationsDocumentsResource {
     public Response createInvoiceXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid InvoiceInputModel input
-    ) throws TransformerException {
+    ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -96,7 +144,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
+        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -107,7 +155,7 @@ public class OrganizationsDocumentsResource {
     public Response createCreditNoteXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid CreditNoteInputModel input
-    ) throws TransformerException {
+    ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -121,7 +169,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
+        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -132,7 +180,7 @@ public class OrganizationsDocumentsResource {
     public Response createDebitNoteXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid DebitNoteInputModel input
-    ) throws TransformerException {
+    ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -146,7 +194,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
+        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -157,7 +205,7 @@ public class OrganizationsDocumentsResource {
     public Response createVoidedDocumentXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid VoidedDocumentInputModel input
-    ) throws TransformerException {
+    ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -171,7 +219,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
+        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -182,7 +230,7 @@ public class OrganizationsDocumentsResource {
     public Response createSummaryDocumentXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid SummaryDocumentInputModel input
-    ) throws TransformerException {
+    ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
@@ -196,7 +244,7 @@ public class OrganizationsDocumentsResource {
             throw new InternalServerErrorException(e);
         }
 
-        return Response.ok(XMLUtils.getBytesFromDocument(xmlSignedDocument))
+        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }

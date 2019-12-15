@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import javax.xml.crypto.MarshalException;
 import javax.xml.crypto.dsig.CanonicalizationMethod;
@@ -22,8 +23,10 @@ import javax.xml.crypto.dsig.keyinfo.X509Data;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.crypto.dsig.spec.TransformParameterSpec;
 import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -33,18 +36,35 @@ import java.util.List;
 public class XMLSigner {
 
     public static Document firmarXML(
-            Document document,
+            String text,
+            String referenceID,
+            X509Certificate certificate,
+            PrivateKey privateKey
+    ) throws ParserConfigurationException, NoSuchAlgorithmException, XMLSignatureException, InvalidAlgorithmParameterException, MarshalException, IOException, SAXException {
+        Document document = XmlSignatureHelper.convertStringToXMLDocument(text);
+        return firmarXML(document, referenceID, certificate, privateKey);
+    }
+
+    public static Document firmarXML(
+            Document copyDocument,
             String referenceID,
             X509Certificate certificate,
             PrivateKey privateKey
     ) throws InvalidAlgorithmParameterException, NoSuchAlgorithmException, MarshalException, XMLSignatureException, ParserConfigurationException {
-        Document copyDocument = XMLUtils.cloneDocument(document);
+//        Document copyDocument = XMLUtils.cloneDocument(document);
 
         addUBLExtensions(copyDocument);
         addUBLExtension(copyDocument);
         Node nodeExtensionContent = addExtensionContent(copyDocument);
 
-        XMLSignatureFactory signatureFactory = XMLSignatureFactory.getInstance();
+        XMLSignatureFactory signatureFactory;
+        // Try to install the Santuario Provider - fall back to the JDK provider if this does
+        // not work
+        try {
+            signatureFactory = XMLSignatureFactory.getInstance("DOM", "ApacheXMLDSig");
+        } catch (NoSuchProviderException ex) {
+            signatureFactory = XMLSignatureFactory.getInstance("DOM");
+        }
 
         DOMSignContext signContext = new DOMSignContext(privateKey, copyDocument.getDocumentElement());
         signContext.setDefaultNamespacePrefix("ds");
