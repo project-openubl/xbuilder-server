@@ -133,6 +133,7 @@
         <module>rules</module>
         <module>api</module>
         <module>api-signer</module>
+        <module>ui</module>
     </modules>
 
     <profiles>

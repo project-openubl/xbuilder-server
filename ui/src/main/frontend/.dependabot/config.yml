@@ -1,0 +1,14 @@
+version: 1
+update_configs:
+  - package_manager: "javascript"
+    directory: "/"
+    update_schedule: "live"
+    default_reviewers:
+      - "carlosthe19916"
+    allowed_updates:
+      - match:
+          dependency_name: "react*"
+          dependency_type: "direct"
+      - match:
+          dependency_name: "@patternfly/*"
+          dependency_type: "direct"
