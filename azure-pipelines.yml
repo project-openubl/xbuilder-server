@@ -71,7 +71,7 @@ stages:
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'install' # to make build native pass
+              goals: 'verify'
               options: '-Psunat'
               javaHomeOption: 'JDKVersion'
   - stage: native_test
@@ -82,6 +82,12 @@ stages:
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'install'
+              options: '-DskipTests'
+              javaHomeOption: 'JDKVersion'
           - task: Docker@2
             displayName: Docker native build
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
@@ -101,6 +107,12 @@ stages:
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'install'
+              options: '-DskipTests'
+              javaHomeOption: 'JDKVersion'
           - task: Docker@2
             displayName: Docker native build
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
@@ -124,6 +136,12 @@ stages:
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'install'
+              options: '-DskipTests'
+              javaHomeOption: 'JDKVersion'
           - task: Docker@2
             inputs:
               containerRegistry: 'Docker Hub'
