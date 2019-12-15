@@ -71,7 +71,7 @@ stages:
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
-              goals: 'verify'
+              goals: 'install' # to make build native pass
               options: '-Psunat'
               javaHomeOption: 'JDKVersion'
   - stage: native_test
@@ -220,5 +220,4 @@ stages:
                   $(Build.ArtifactStagingDirectory)/*.tar.gz
               changeLogCompareToRelease: 'lastFullRelease'
               changeLogType: 'commitBased'
-
 
