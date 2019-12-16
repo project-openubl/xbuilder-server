@@ -1419,7 +1419,7 @@
   resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.43.1.tgz#9961e331ac78f2cf55a73527656503f5555b053e"
   integrity sha512-dWw4FeQfLHFXva1VmH8Epusu3VX91VrOH+9FVvRDsCEcajsq5Pc5BCF+H9KyQ4eA6EfTEMsW2F0zVWD/7B4RFA==
 
-"@patternfly/react-core@^3.124.1":
+"@patternfly/react-core@3.124.1", "@patternfly/react-core@^3.124.1":
   version "3.124.1"
   resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.124.1.tgz#26cc7021126f1336840a312f42c9af6a7b1b529a"
   integrity sha512-jKCTyyT3FmAiOMkm/Nt3zHoAyIlrLBKLWOFi+GuC+4PAVyQetK42+Hp8JyrSBPi4q+pfjGjQUngmpkhooGETlg==
@@ -1439,7 +1439,7 @@
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
 
-"@patternfly/react-inline-edit-extension@^2.13.9":
+"@patternfly/react-inline-edit-extension@2.13.9":
   version "2.13.9"
   resolved "https://registry.yarnpkg.com/@patternfly/react-inline-edit-extension/-/react-inline-edit-extension-2.13.9.tgz#600a26cef20e6e1735592ed749e228cb569a905d"
   integrity sha512-CIV7arfGvqSVj8I+iK9FmCw+Kwq0s+ybHJY0bWkCauAwcriJWJt+vTz6PGOIPlwLiONGBUGWCy5je3+3mKzeFA==
@@ -1474,7 +1474,7 @@
     resolve-from "^4.0.0"
     typescript "3.4.5"
 
-"@patternfly/react-table@^2.24.41":
+"@patternfly/react-table@2.24.41", "@patternfly/react-table@^2.24.41":
   version "2.24.41"
   resolved "https://registry.yarnpkg.com/@patternfly/react-table/-/react-table-2.24.41.tgz#3b5bc70fdc8c16f844c6fdefbfaff404c2aea6bd"
   integrity sha512-aYfE8jA4tbYj0DxjA6FmtPRNsVNHDcsk+dG2I2mljREDOictMpGDtN0xVP95F9L5iu7YbldsP6Z4//MTe/CCIg==

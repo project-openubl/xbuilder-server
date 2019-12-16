@@ -3,6 +3,7 @@ import { Route, RouteComponentProps, Switch } from "react-router-dom";
 import WelcomePage from "./Pages/WelcomePage";
 import NotFoundPage from "./Pages/NotFoundPage";
 import StandardDocumentPage from "./Pages/StandardDocumentPage";
+import KeysPage from "./Pages/KeysPage";
 
 export interface IAppRoute {
   path: string;
@@ -24,6 +25,12 @@ export const routes: IAppRoute[] = [
     path: "/documents/standard",
     component: StandardDocumentPage,
     sidebarLabel: "Documentos estandar",
+    exact: true
+  },
+  {
+    path: "/documents/keys",
+    component: KeysPage,
+    sidebarLabel: "Llaves",
     exact: true
   }
 ];
