@@ -22,13 +22,13 @@ export const routes: IAppRoute[] = [
     exact: true
   },
   {
-    path: "/documents/standard",
+    path: "/documents",
     component: StandardDocumentPage,
-    sidebarLabel: "Documentos estandar",
+    sidebarLabel: "Comprobantes de pago",
     exact: true
   },
   {
-    path: "/documents/keys",
+    path: "/keys",
     component: KeysPage,
     sidebarLabel: "Llaves",
     exact: true
