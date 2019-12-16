@@ -1,6 +1,6 @@
 # Crear Comprobante Electrónico
 ## Requisitos
-- Tener el servidor XML Builder levantado. Puedes leer [Levantar servidor](LEVANTAR_SERVIDOR.md) para aprender cómo.
+- Tener el servidor XML Builder levantado. Puedes leer [Levantar servidor](INSTALACION_CONFIGURACION_SERVIDOR.md) para aprender cómo.
 
 **XML Builder** está hecho para recibir peticiones HTTP por lo que podemos utilizar varios métodos para consumir sus servicios.
 Veamos algunos de ellos
@@ -96,17 +96,6 @@ Deberá utilizar el siguiente body:
 ```
 
 Por último deberá hacer clic en el boton SEND.
-
-## 3. Utilizando [Swagger](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
-> Este método requiere que levantes el servidor en modo desarrollador, vea el manual [Levantar servidor para desarrolladores](./DEVELOPERS.md)  
-
-- Abra en un navegador http://localhost:8080/swagger-ui
-- Seleccione el tipo de documento que desea crear
-- Click en el boton "Try out"
-- Click en el boton "Execute"
-- Descargue el archivo generado haciendo click en el botón "Downlad File"
-
-![terminal](images/swagger_execute.png)
 
 ## API
 Para conocer un poco más acerca del JSON que se envía a **XML Builder** vea la [documentación del API](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)

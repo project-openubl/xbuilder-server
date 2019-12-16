@@ -1,29 +1,30 @@
 # XML-Builder
 [![Build Status](https://dev.azure.com/project-openubl/xml-builder/_apis/build/status/project-openubl.xml-builder?branchName=master)](https://dev.azure.com/project-openubl/xml-builder/_build/latest?definitionId=1&branchName=master)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=org.openublpe%3Axml-builder&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.openublpe%3Axml-builder)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=org.openublpe%3Axml-builder&metric=coverage)](https://sonarcloud.io/dashboard?id=org.openublpe%3Axml-builder)
 
 Crea archivos XML basados en UBL 2.1 - Facturación electrónica Perú. Facturas, boletas, notas de cŕedito, notas de débito, etc.
 
-# Recursos
+# Documentación y ayuda
 
 - [Documentación](https://project-openubl.gitbook.io/xml-builder/)
 - [Videos](https://www.youtube.com/channel/UChq3xxjyDgjcU346rp0bbtA/)
 
-# Levantar el servidor localmente
-Siga las siguientes instrucciones: [LEVANTAR SERVIDOR](docs/LEVANTAR_SERVIDOR.md)
+# Empezar
+El método más fácil de iniciar el servidor localmente es usando Docker:
 
-**¡Felicitaciones! pudiste arrancar el proyecto localmente**
+```
+docker run -p 8080:8080 projectopenubl/xml-builder
+```
 
-# Crear Factura UBL 2.1.
+Podrás ver el servidor en: http://localhost:8080 
+
+Para más información puedes leer: [Instalación y configuration del servidor](docs/INSTALACION_CONFIGURACION_SERVIDOR.md)
+
+## Crear Factura UBL 2.1.
 Para crear comprobantes debes de haber levantantado el servidor localmente.
-
-XML Builder es muy sencillo de usar. En este ejemplo voy a crear una Factura.
 
 Pasos:
 1. Abrir un terminal
-1. Ejecutar el comando de abajo
-1. **¡Eso es todo! ¿Que fácil verdad?**
+1. Ejecutar el comando:
 
 ```
 
@@ -59,9 +60,11 @@ curl -X POST \
 http://localhost:8080/documents/invoice/create
 ```
 
+Ejemplo:
+
 ![Swagger](docs/images/curl.gif)
 
-# Rest Endpoints (API)
+# API
 XML Builder está hecho para ser consumido a travéz de peticiones HTTP.
 
 Puedes utilizar **XML Builder** desde aplicaciones front-end como:
@@ -74,11 +77,20 @@ También puedes utilizar **XML Builder** desde aplicaciones backend como:
 
 O simplemente puedes utilizar **XML Builder** a travéz de:
 - terminal de tu sistema operativo
-- Herramientas como Postman.
+- Herramientas como Postman, etc.
 
-Para saber saber más acerca de los endpoints visita: 
+Para saber saber más acerca de los endpoints visita: [API Docs](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
 
-## [swagger](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
+# Contribuye
+Aún hay muchas cosas por mejorar, tu ayuda es siempre bienvenida; no necesitas ser programador para contribuir ya que existen muchas formas de hacerlo:
 
-![Swagger](docs/images/swagger.png)
+- Mejora y corrige la documentación
+- Reporta defectos o solicita mejoras
+- Dale una estrella y/o fork a este proyecto
+- Usa el proyecto en tu empresa o software 
 
+# Reporta un problema
+Si crees que descubriste un defecto en XML Builder, por favor repórtalo en [Github issues](https://github.com/project-openubl/xml-builder/issues)
+
+# Licencia
+- [Eclipse Public License - v 2.0](./LICENSE)
