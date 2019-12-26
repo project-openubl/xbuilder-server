@@ -78,7 +78,7 @@ class BasicLayout extends React.Component<Props, State> {
                   key={`${route.sidebarLabel}-${idx}`}
                   id={`${route.sidebarLabel}-${idx}`}
                 >
-                  <NavLink exact to={route.path} activeClassName="pf-m-current">
+                  <NavLink to={route.path} activeClassName="pf-m-current">
                     {route.sidebarLabel}
                   </NavLink>
                 </NavItem>

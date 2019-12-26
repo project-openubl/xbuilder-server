@@ -1,8 +1,7 @@
 import React from "react";
-import { Route, RouteComponentProps, Switch } from "react-router-dom";
+import { Route, RouteComponentProps, Switch, Redirect } from "react-router-dom";
 import WelcomePage from "./Pages/WelcomePage";
 import NotFoundPage from "./Pages/NotFoundPage";
-import StandardDocumentPage from "./Pages/StandardDocumentPage";
 import KeysPage from "./Pages/KeysPage";
 
 export interface IAppRoute {
@@ -16,22 +15,16 @@ export interface IAppRoute {
 
 export const routes: IAppRoute[] = [
   {
-    path: "/",
+    path: "/home",
     component: WelcomePage,
-    sidebarLabel: "Bienvenido",
-    exact: true
-  },
-  {
-    path: "/documents",
-    component: StandardDocumentPage,
-    sidebarLabel: "Comprobantes de pago",
+    sidebarLabel: "Home",
     exact: true
   },
   {
     path: "/keys",
     component: KeysPage,
-    sidebarLabel: "Llaves",
-    exact: true
+    sidebarLabel: "Certificados",
+    exact: false
   }
 ];
 
@@ -41,6 +34,7 @@ export const AppRoutes = () => {
       {routes.map(({ path, component, exact }, idx) => (
         <Route path={path} component={component} exact={exact} key={idx} />
       ))}
+      <Route path="/" render={() => <Redirect to={"/home"} />} />
       <Route component={NotFoundPage} />
     </Switch>
   );
