@@ -123,6 +123,11 @@
                 <artifactId>xml-builder-api-signer</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-ui</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modules>
