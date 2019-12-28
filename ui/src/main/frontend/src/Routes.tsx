@@ -1,8 +1,9 @@
 import React from "react";
 import { Route, RouteComponentProps, Switch, Redirect } from "react-router-dom";
 import WelcomePage from "./Pages/WelcomePage";
-import NotFoundPage from "./Pages/NotFoundPage";
+import NotFoundPage from "./Layout/NotFoundPage";
 import KeysPage from "./Pages/KeysPage";
+import OrganizationListPage from "./Pages/OrganizationListPage";
 
 export interface IAppRoute {
   path: string;
@@ -19,6 +20,12 @@ export const routes: IAppRoute[] = [
     component: WelcomePage,
     sidebarLabel: "Home",
     exact: true
+  },
+  {
+    path: "/organizations",
+    component: OrganizationListPage,
+    sidebarLabel: "Organizaciones",
+    exact: false
   },
   {
     path: "/keys",

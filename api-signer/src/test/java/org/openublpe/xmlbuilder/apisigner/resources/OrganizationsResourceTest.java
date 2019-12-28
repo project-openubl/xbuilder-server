@@ -68,7 +68,7 @@ public class OrganizationsResourceTest {
         OrganizationRepresentation organization = new OrganizationRepresentation();
         organization.setName("myCompanyNamae");
         organization.setDescription("myCompanyDescription");
-        organization.setUseCustomCertificates(false);
+        organization.setUseMasterKeys(false);
         organization.setType("master"); // this field should be used, check asserts
 
         String body = new ObjectMapper().writeValueAsString(organization);
@@ -88,7 +88,7 @@ public class OrganizationsResourceTest {
         OrganizationRepresentation output = new ObjectMapper().readValue(responseBody.asInputStream(), OrganizationRepresentation.class);
         assertEquals(organization.getName(), output.getName());
         assertEquals(organization.getDescription(), output.getDescription());
-        assertEquals(organization.getUseCustomCertificates(), output.getUseCustomCertificates());
+        assertEquals(organization.getUseMasterKeys(), output.getUseMasterKeys());
         assertEquals(OrganizationType.common.toString(), output.getType());
     }
 
@@ -100,7 +100,7 @@ public class OrganizationsResourceTest {
         OrganizationRepresentation organization = new OrganizationRepresentation();
         organization.setName("myNewMasterName");
         organization.setDescription("myNewMasterDescription");
-        organization.setUseCustomCertificates(false);
+        organization.setUseMasterKeys(false);
         organization.setType("common"); // this field should never change, check asserts
 
         String body = new ObjectMapper().writeValueAsString(organization);
@@ -120,7 +120,7 @@ public class OrganizationsResourceTest {
         OrganizationRepresentation output = new ObjectMapper().readValue(responseBody.asInputStream(), OrganizationRepresentation.class);
         assertEquals(organization.getName(), output.getName());
         assertEquals(organization.getDescription(), output.getDescription());
-        assertEquals(organization.getUseCustomCertificates(), output.getUseCustomCertificates());
+        assertEquals(organization.getUseMasterKeys(), output.getUseMasterKeys());
         assertEquals(OrganizationType.master.toString(), output.getType());
     }
 

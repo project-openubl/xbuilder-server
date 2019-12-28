@@ -7,7 +7,7 @@ public class OrganizationRepresentation {
     private String description;
 
     private String type;
-    private Boolean useCustomCertificates;
+    private Boolean useMasterKeys;
 
     public OrganizationRepresentation() {
 
@@ -18,7 +18,7 @@ public class OrganizationRepresentation {
         this.name = rep.getName();
         this.description = rep.getDescription();
         this.type = rep.getType();
-        this.useCustomCertificates = rep.getUseCustomCertificates();
+        this.useMasterKeys = rep.getUseMasterKeys();
     }
 
     public String getId() {
@@ -45,12 +45,12 @@ public class OrganizationRepresentation {
         this.description = description;
     }
 
-    public Boolean getUseCustomCertificates() {
-        return useCustomCertificates;
+    public Boolean getUseMasterKeys() {
+        return useMasterKeys;
     }
 
-    public void setUseCustomCertificates(Boolean useCustomCertificates) {
-        this.useCustomCertificates = useCustomCertificates;
+    public void setUseMasterKeys(Boolean useMasterKeys) {
+        this.useMasterKeys = useMasterKeys;
     }
 
     public String getType() {

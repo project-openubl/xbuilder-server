@@ -29,8 +29,8 @@ public class RepresentationToModel {
             model.setDescription(rep.getDescription());
         }
 
-        if (rep.getUseCustomCertificates() != null) {
-            model.setUseCustomCertificates(rep.getUseCustomCertificates());
+        if (rep.getUseMasterKeys() != null) {
+            model.setUseCustomCertificates(rep.getUseMasterKeys());
         }
 
     }

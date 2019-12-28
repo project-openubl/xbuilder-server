@@ -27,7 +27,7 @@ public class ModelToRepresentation {
 
         if (fullInfo) {
             rep.setDescription(model.getDescription());
-            rep.setUseCustomCertificates(model.getUseCustomCertificates());
+            rep.setUseMasterKeys(model.getUseCustomCertificates());
         }
 
         return rep;

@@ -1,0 +1,18 @@
+import { combineReducers } from "redux";
+import { StateType } from "typesafe-actions";
+
+import {
+  organizationListStateKey,
+  organizationListReducer
+} from "./organizationList";
+import {
+  organizationKeysStateKey,
+  organizationKeysReducer
+} from "./organizationKeys";
+
+export type RootState = StateType<typeof rootReducer>;
+
+export const rootReducer = combineReducers({
+  [organizationListStateKey]: organizationListReducer,
+  [organizationKeysStateKey]: organizationKeysReducer
+});
