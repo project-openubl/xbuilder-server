@@ -4,6 +4,7 @@ import WelcomePage from "./Pages/WelcomePage";
 import NotFoundPage from "./Layout/NotFoundPage";
 import KeysPage from "./Pages/KeysPage";
 import OrganizationListPage from "./Pages/OrganizationListPage";
+import OrganizationPage from "./Pages/OrganizationPage";
 
 export interface IAppRoute {
   path: string;
@@ -22,15 +23,15 @@ export const routes: IAppRoute[] = [
     exact: true
   },
   {
-    path: "/organizations",
-    component: OrganizationListPage,
-    sidebarLabel: "Organizaciones",
+    path: "/organizations/:organizationId/keys",
+    component: KeysPage,
+    sidebarLabel: "Certificados",
     exact: false
   },
   {
-    path: "/keys",
-    component: KeysPage,
-    sidebarLabel: "Certificados",
+    path: "/list-organizations",
+    component: OrganizationListPage,
+    sidebarLabel: "Organizaciones",
     exact: false
   }
 ];
@@ -41,6 +42,13 @@ export const AppRoutes = () => {
       {routes.map(({ path, component, exact }, idx) => (
         <Route path={path} component={component} exact={exact} key={idx} />
       ))}
+      <Route path="/create-organization" component={OrganizationPage} />
+      <Route
+        path="/edit-organization/:organizationId"
+        component={OrganizationPage}
+      />
+      {/* <Route path="/organizations/:organizationId/keys" component={KeysPage} /> */}
+      <Route path="/not-found" component={NotFoundPage} />
       <Route path="/" render={() => <Redirect to={"/home"} />} />
       <Route component={NotFoundPage} />
     </Switch>

@@ -86,19 +86,19 @@ public class OrganizationsResource {
     ) {
         if (organizationId != null) {
             return organizationProvider.getOrganization(organizationId)
-                    .map(organizationModel -> Collections.singletonList(ModelToRepresentation.toRepresentation(organizationModel, false)))
+                    .map(organizationModel -> Collections.singletonList(ModelToRepresentation.toRepresentation(organizationModel, true)))
                     .orElseGet(Collections::emptyList);
         }
 
         if (filterText != null) {
             return organizationProvider.getOrganizations(filterText, offset, limit)
                     .stream()
-                    .map(model -> ModelToRepresentation.toRepresentation(model, false))
+                    .map(model -> ModelToRepresentation.toRepresentation(model, true))
                     .collect(Collectors.toList());
         } else {
             return organizationProvider.getOrganizations(offset, limit)
                     .stream()
-                    .map(model -> ModelToRepresentation.toRepresentation(model, false))
+                    .map(model -> ModelToRepresentation.toRepresentation(model, true))
                     .collect(Collectors.toList());
         }
     }

@@ -2,7 +2,7 @@ import ApiClient from "./apiClient";
 import { AxiosPromise } from "axios";
 import { OrganizationRepresentation } from "../models/xml-builder";
 
-const GET_ORGANIZATIONS_URL = "/organizations";
+const ORGANIZATIONS_URL = "/organizations";
 
 export const getAll = (
   filterText: string,
@@ -24,6 +24,29 @@ export const getAll = (
   });
 
   return ApiClient.get<OrganizationRepresentation[]>(
-    `${GET_ORGANIZATIONS_URL}?${query.join("&")}`
+    `${ORGANIZATIONS_URL}?${query.join("&")}`
+  );
+};
+
+export const create = (organization: OrganizationRepresentation) => {
+  return ApiClient.post<OrganizationRepresentation>(
+    ORGANIZATIONS_URL,
+    organization
+  );
+};
+
+export const getById = (organizationId: string) => {
+  return ApiClient.get<OrganizationRepresentation>(
+    `${ORGANIZATIONS_URL}/${organizationId}`
+  );
+};
+
+export const update = (
+  organizationId: string,
+  organization: OrganizationRepresentation
+) => {
+  return ApiClient.put<OrganizationRepresentation>(
+    `${ORGANIZATIONS_URL}/${organizationId}`,
+    organization
   );
 };

@@ -26,10 +26,14 @@ export const fetchOrganizations = (
 
     return getAll(filterText, page, pageSize)
       .then((res: AxiosResponse<OrganizationRepresentation[]>) => {
-        dispatch(fetchOrganizationListSuccess(res.data));
+        const data: OrganizationRepresentation[] = res.data;
+        dispatch(fetchOrganizationListSuccess(data));
+        return data;
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationListFailure(err));
       });
   };
 };
+
+
