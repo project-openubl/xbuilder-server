@@ -61,7 +61,7 @@ class ManageOrganization extends React.Component<Props, State> {
       };
 
       updateOrganization(organizationId, payload).then(() => {
-        history.push("/list-organizations");
+        history.push("/organizations/list");
       });
     } else {
       const { createOrganization, history } = this.props;
@@ -74,14 +74,14 @@ class ManageOrganization extends React.Component<Props, State> {
       };
 
       createOrganization(payload).then(() => {
-        history.push("/list-organizations");
+        history.push("/organizations/list");
       });
     }
   };
 
   handleModalClose = () => {
     const { history } = this.props;
-    history.push("/list-organizations");
+    history.push("/organizations/list");
   };
 
   handleOnFormChange = (isValid: boolean, value: FormData): void => {

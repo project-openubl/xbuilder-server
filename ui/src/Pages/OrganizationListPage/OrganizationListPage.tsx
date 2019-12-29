@@ -92,7 +92,9 @@ class OrganizationListPage extends React.Component<Props, State> {
           cells: [
             {
               title: (
-                <Link to={`/organizations/${item.id}/keys`}>{item.name}</Link>
+                <Link to={`/organizations/manage/${item.id}/keys`}>
+                  {item.name}
+                </Link>
               )
             },
             {
@@ -122,7 +124,7 @@ class OrganizationListPage extends React.Component<Props, State> {
     extraData: IExtraData
   ): void => {
     const { history, organizations } = this.props;
-    history.push("/edit-organization/" + organizations[rowIndex].id);
+    history.push("/organizations/edit/" + organizations[rowIndex].id);
   };
 
   renderTable = () => {
@@ -149,7 +151,7 @@ class OrganizationListPage extends React.Component<Props, State> {
             <Toolbar className="pf-l-toolbar pf-u-justify-content-space-between pf-u-mx-xl pf-u-my-md">
               <ToolbarGroup>
                 <ToolbarItem className="pf-u-mx-md">
-                  <Link to="/create-organization">
+                  <Link to="/organizations/create">
                     <Button aria-label="Action 2">Crear organización</Button>
                   </Link>
                 </ToolbarItem>

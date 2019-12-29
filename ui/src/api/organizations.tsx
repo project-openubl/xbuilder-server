@@ -3,8 +3,9 @@ import { AxiosPromise } from "axios";
 import { OrganizationRepresentation } from "../models/xml-builder";
 
 const ORGANIZATIONS_URL = "/organizations";
+const ALL_ORGANIZATIONS_URL = "/organizations/all";
 
-export const getAll = (
+export const search = (
   filterText: string,
   page: number,
   pageSize: number
@@ -26,6 +27,10 @@ export const getAll = (
   return ApiClient.get<OrganizationRepresentation[]>(
     `${ORGANIZATIONS_URL}?${query.join("&")}`
   );
+};
+
+export const getAll = (): AxiosPromise<OrganizationRepresentation[]> => {
+  return ApiClient.get<OrganizationRepresentation[]>(ALL_ORGANIZATIONS_URL);
 };
 
 export const create = (organization: OrganizationRepresentation) => {

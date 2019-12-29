@@ -104,6 +104,15 @@ public class OrganizationsResource {
     }
 
     @GET
+    @Path("/all")
+    public List<OrganizationRepresentation> getAllOrganizations() {
+        return organizationProvider.getOrganizations(-1, -1)
+                .stream()
+                .map(model -> ModelToRepresentation.toRepresentation(model, true))
+                .collect(Collectors.toList());
+    }
+
+    @GET
     @Path("/{organizationId}")
     public OrganizationRepresentation getOrganization(
             @PathParam("organizationId") String organizationId

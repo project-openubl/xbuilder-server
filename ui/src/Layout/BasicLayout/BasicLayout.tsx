@@ -19,11 +19,11 @@ import {
 import { css } from "@patternfly/react-styles";
 import accessibleStyles from "@patternfly/react-styles/css/utilities/Accessibility/accessibility";
 import { HelpIcon } from "@patternfly/react-icons";
-import { IAppRoute } from "../../Routes";
 import imgBrand from "../../logo.png";
+import { OrganizationRepresentation } from "../../models/xml-builder";
 
 interface Props {
-  sidebar: IAppRoute[];
+  allOrganizations: OrganizationRepresentation[];
 }
 
 interface State {}
@@ -66,24 +66,29 @@ class BasicLayout extends React.Component<Props, State> {
   };
 
   renderSidebar = () => {
-    const { sidebar } = this.props;
+    const { allOrganizations } = this.props;
 
     const PageNav = (
       <Nav id="nav-primary-simple" aria-label="Nav" theme="dark">
         <NavList id="nav-list-simple" variant={NavVariants.default}>
-          {sidebar.map(
-            (route: IAppRoute, idx: number) =>
-              route.sidebarLabel && (
-                <NavItem
-                  key={`${route.sidebarLabel}-${idx}`}
-                  id={`${route.sidebarLabel}-${idx}`}
-                >
-                  <NavLink to={route.path} activeClassName="pf-m-current">
-                    {route.sidebarLabel}
-                  </NavLink>
-                </NavItem>
-              )
-          )}
+          <NavItem key="home">
+            <NavLink to="/home" activeClassName="pf-m-current">
+              Home
+            </NavLink>
+          </NavItem>
+          <NavItem key="organizations">
+            <NavLink to="/organizations/list" activeClassName="pf-m-current">
+              Organizaciones
+            </NavLink>
+          </NavItem>
+          <NavItem key="keys">
+            <NavLink
+              to={`/organizations/manage/${allOrganizations[0].id}/keys`}
+              activeClassName="pf-m-current"
+            >
+              Certificados digitales
+            </NavLink>
+          </NavItem>
         </NavList>
       </Nav>
     );

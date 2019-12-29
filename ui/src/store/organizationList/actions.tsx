@@ -3,7 +3,7 @@ import { Dispatch } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { createAction } from "typesafe-actions";
 import { OrganizationRepresentation } from "../../models/xml-builder";
-import { getAll } from "../../api/organizations";
+import { search } from "../../api/organizations";
 import { RootState } from "../rootReducer";
 
 export const fetchOrganizationListRequest = createAction(
@@ -24,7 +24,7 @@ export const fetchOrganizations = (
   return (dispatch: Dispatch) => {
     dispatch(fetchOrganizationListRequest());
 
-    return getAll(filterText, page, pageSize)
+    return search(filterText, page, pageSize)
       .then((res: AxiosResponse<OrganizationRepresentation[]>) => {
         const data: OrganizationRepresentation[] = res.data;
         dispatch(fetchOrganizationListSuccess(data));

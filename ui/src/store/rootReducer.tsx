@@ -6,9 +6,10 @@ import {
   organizationListReducer
 } from "./organizationList";
 import {
-  organizationStateKey,
-  organizationReducer
-} from "./organization";
+  allOrganizationsStateKey,
+  allOrganizationsReducer
+} from "./allOrganizations";
+import { organizationStateKey, organizationReducer } from "./organization";
 import {
   organizationKeysStateKey,
   organizationKeysReducer
@@ -18,6 +19,7 @@ export type RootState = StateType<typeof rootReducer>;
 
 export const rootReducer = combineReducers({
   [organizationListStateKey]: organizationListReducer,
+  [allOrganizationsStateKey]: allOrganizationsReducer,
   [organizationStateKey]: organizationReducer,
   [organizationKeysStateKey]: organizationKeysReducer
 });
