@@ -1,3 +1,8 @@
+export interface SearchResultsRepresentation<T> {
+  items: T[];
+  totalSize: number;
+}
+
 export interface OrganizationRepresentation {
   id?: string;
   name: string;

@@ -2,6 +2,7 @@ import React from "react";
 import { Form, FormGroup, TextInput } from "@patternfly/react-core";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
+import { OrganizationRepresentation } from "../../models/xml-builder";
 
 export type FormData = {
   name: string;
@@ -9,11 +10,16 @@ export type FormData = {
 };
 
 interface Props {
-  defaultFormValue: FormData | undefined;
+  organization: OrganizationRepresentation | undefined;
   onChange: (isValid: boolean, value: FormData) => void;
+  fetchOrganizationIdByName: (organizationName: string) => any;
 }
 
-const OrganizationForm: React.FC<Props> = ({ defaultFormValue, onChange }) => {
+const OrganizationForm: React.FC<Props> = ({
+  organization,
+  onChange,
+  fetchOrganizationIdByName
+}) => {
   const validationSchema = yup.object().shape({
     name: yup
       .string()
@@ -26,6 +32,17 @@ const OrganizationForm: React.FC<Props> = ({ defaultFormValue, onChange }) => {
       .max(
         250,
         "El nombre de la organización debe de contener menos de 250 caracteres."
+      )
+      .test(
+        "availableOrganizationName",
+        "El nombre de la organización ingresada ya está en uso.",
+        async value => {
+          return await fetchOrganizationIdByName(value).then(
+            (value: string) => {
+              return !value || (organization && value === organization.id);
+            }
+          );
+        }
       ),
     description: yup
       .string()
@@ -39,7 +56,9 @@ const OrganizationForm: React.FC<Props> = ({ defaultFormValue, onChange }) => {
 
   const { register, errors, getValues, triggerValidation } = useForm<FormData>({
     mode: "onSubmit",
-    defaultValues: defaultFormValue,
+    defaultValues: organization
+      ? { name: organization.name, description: organization.description }
+      : undefined,
     validationSchema
   });
 
@@ -53,7 +72,7 @@ const OrganizationForm: React.FC<Props> = ({ defaultFormValue, onChange }) => {
 
   return (
     <React.Fragment>
-      <Form onChange={handleOnFormChange}>
+      <Form onSubmit={() => {}} onChange={handleOnFormChange}>
         <FormGroup
           label="Name"
           isRequired

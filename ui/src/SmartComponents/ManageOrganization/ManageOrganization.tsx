@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Modal } from "@patternfly/react-core";
-import OrganizationForm from "../../PresentationalComponents/OrganizationForm";
-import { FormData } from "../../PresentationalComponents/OrganizationForm/OrganizationForm";
+import OrganizationForm from "../OrganizationForm";
+import { FormData } from "../OrganizationForm/OrganizationForm";
 import { OrganizationRepresentation } from "../../models/xml-builder";
 import { AxiosError } from "axios";
 import { FetchStatus } from "../../store/common";
@@ -26,13 +26,14 @@ interface Props {
 }
 
 interface State {
+  saving: boolean;
   organizationFormData: FormData | null;
 }
 
 class ManageOrganization extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { organizationFormData: null };
+    this.state = { saving: false, organizationFormData: null };
   }
 
   componentDidMount() {
@@ -50,33 +51,35 @@ class ManageOrganization extends React.Component<Props, State> {
       return;
     }
 
-    if (organizationId) {
-      const { updateOrganization, history } = this.props;
+    this.setState({ saving: true }, () => {
+      if (organizationId) {
+        const { updateOrganization, history } = this.props;
 
-      const payload: OrganizationRepresentation = {
-        name: organizationFormData.name,
-        description: organizationFormData.description,
-        type: "",
-        useMasterKeys: false
-      };
+        const payload: OrganizationRepresentation = {
+          name: organizationFormData.name,
+          description: organizationFormData.description,
+          type: "",
+          useMasterKeys: false
+        };
 
-      updateOrganization(organizationId, payload).then(() => {
-        history.push("/organizations/list");
-      });
-    } else {
-      const { createOrganization, history } = this.props;
+        updateOrganization(organizationId, payload).then(() => {
+          history.push("/organizations/list");
+        });
+      } else {
+        const { createOrganization, history } = this.props;
 
-      const payload: OrganizationRepresentation = {
-        name: organizationFormData.name,
-        description: organizationFormData.description,
-        type: "",
-        useMasterKeys: false
-      };
+        const payload: OrganizationRepresentation = {
+          name: organizationFormData.name,
+          description: organizationFormData.description,
+          type: "",
+          useMasterKeys: false
+        };
 
-      createOrganization(payload).then(() => {
-        history.push("/organizations/list");
-      });
-    }
+        createOrganization(payload).then(() => {
+          history.push("/organizations/list");
+        });
+      }
+    });
   };
 
   handleModalClose = () => {
@@ -97,20 +100,15 @@ class ManageOrganization extends React.Component<Props, State> {
   };
 
   render() {
-    const { organizationFormData } = this.state;
+    const { saving, organizationFormData } = this.state;
     const { organizationId, organization } = this.props;
 
     let form;
     if (organization) {
-      const defaultFormValue: FormData = {
-        name: organization.name,
-        description: organization.description
-      };
-
       form = (
-        <div>
+        <div id={organization.id}>
           <OrganizationForm
-            defaultFormValue={defaultFormValue}
+            organization={organization}
             onChange={this.handleOnFormChange}
           />
         </div>
@@ -118,7 +116,7 @@ class ManageOrganization extends React.Component<Props, State> {
     } else {
       form = (
         <OrganizationForm
-          defaultFormValue={undefined}
+          organization={undefined}
           onChange={this.handleOnFormChange}
         />
       );
@@ -136,9 +134,9 @@ class ManageOrganization extends React.Component<Props, State> {
               key="confirm"
               variant="primary"
               onClick={this.handleModalSave}
-              isDisabled={!organizationFormData}
+              isDisabled={!organizationFormData || saving}
             >
-              Guardar
+              {saving ? "Guardando" : "Guardar"}
             </Button>,
             <Button key="cancel" variant="link" onClick={this.handleModalClose}>
               Cancelar

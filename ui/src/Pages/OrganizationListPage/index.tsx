@@ -7,7 +7,7 @@ import {
 } from "../../store/organizationList";
 
 const mapStateToProps = createMapStateToProps(state => ({
-  organizations: organizationListSelectors.organizations(state) || [],
+  organizations: organizationListSelectors.organizations(state),
   error: organizationListSelectors.error(state),
   status: organizationListSelectors.status(state)
 }));

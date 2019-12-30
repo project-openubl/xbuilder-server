@@ -1,7 +1,9 @@
 import React from "react";
-import { Route, RouteComponentProps, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
+import NotFound403 from "./Pages/Layout/Forbidden403";
+import NotFound404 from "./Pages/Layout/NotFound404";
+import ServiceUnavailable503 from "./Pages/Layout/ServiceUnavailable503";
 import WelcomePage from "./Pages/WelcomePage";
-import NotFoundPage from "./Layout/NotFoundPage";
 import KeysPage from "./Pages/KeysPage";
 import OrganizationListPage from "./Pages/OrganizationListPage";
 import OrganizationPage from "./Pages/OrganizationPage";
@@ -20,9 +22,11 @@ export const AppRoutes = () => {
         path="/organizations/manage/:organizationId/keys"
         component={KeysPage}
       />
-      <Route path="/not-found" component={NotFoundPage} />
+      <Route path="/error/403" component={NotFound403} />
+      <Route path="/error/404" component={NotFound404} />
+      <Route path="/error/503" component={ServiceUnavailable503} />
+
       <Route path="/" render={() => <Redirect to={"/home"} />} />
-      <Route component={NotFoundPage} />
     </Switch>
   );
 };

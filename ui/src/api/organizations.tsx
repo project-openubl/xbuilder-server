@@ -1,19 +1,24 @@
 import ApiClient from "./apiClient";
 import { AxiosPromise } from "axios";
-import { OrganizationRepresentation } from "../models/xml-builder";
+import {
+  OrganizationRepresentation,
+  SearchResultsRepresentation
+} from "../models/xml-builder";
 
 const ORGANIZATIONS_URL = "/organizations";
+const ORGANIZATIONS_SEARCH_URL = "/organizations/search";
 const ALL_ORGANIZATIONS_URL = "/organizations/all";
+const GET_ID_BY_NAME_URL = "/organizations/id-by-name";
 
 export const search = (
   filterText: string,
   page: number,
   pageSize: number
-): AxiosPromise<OrganizationRepresentation[]> => {
+): AxiosPromise<SearchResultsRepresentation<OrganizationRepresentation>> => {
   const params: any = {
     filterText,
-    offset: (page - 1) * pageSize,
-    limit: pageSize
+    page: page - 1,
+    pageSize: pageSize
   };
   const query: string[] = [];
 
@@ -24,8 +29,8 @@ export const search = (
     }
   });
 
-  return ApiClient.get<OrganizationRepresentation[]>(
-    `${ORGANIZATIONS_URL}?${query.join("&")}`
+  return ApiClient.get<SearchResultsRepresentation<OrganizationRepresentation>>(
+    `${ORGANIZATIONS_SEARCH_URL}?${query.join("&")}`
   );
 };
 
@@ -54,4 +59,8 @@ export const update = (
     `${ORGANIZATIONS_URL}/${organizationId}`,
     organization
   );
+};
+
+export const getIdByName = (name: string): AxiosPromise<string | null> => {
+  return ApiClient.get(GET_ID_BY_NAME_URL + "/" + encodeURIComponent(name));
 };

@@ -3,11 +3,15 @@ import { Dispatch } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { createAction } from "typesafe-actions";
 import { OrganizationRepresentation } from "../../models/xml-builder";
-import { getById, create, update } from "../../api/organizations";
+import { getById, create, update, getIdByName } from "../../api/organizations";
 import { RootState } from "../rootReducer";
 
 interface OrganizationActionMeta {
   organizationId: string;
+}
+
+interface OrganizationNameActionMeta {
+  organizationName: string;
 }
 
 export const fetchOrganizationRequest = createAction(
@@ -39,6 +43,16 @@ export const updateOrganizationSuccess = createAction(
 export const updateOrganizationFailure = createAction(
   "updateOrganization/fetch/failure"
 )<AxiosError, OrganizationActionMeta>();
+
+export const fetchOrganizationIdByNameRequest = createAction(
+  "organizationIdByName/fetch/request"
+)<OrganizationNameActionMeta>();
+export const fetchOrganizationIdByNameSuccess = createAction(
+  "organizationIdByName/fetch/success"
+)<string | null, OrganizationNameActionMeta>();
+export const fetchOrganizationIdByNameFailure = createAction(
+  "organizationIdByName/fetch/failure"
+)<AxiosError, OrganizationNameActionMeta>();
 
 export const fetchOrganization = (
   organizationId: string
@@ -99,6 +113,28 @@ export const updateOrganization = (
       })
       .catch((err: AxiosError) => {
         dispatch(updateOrganizationFailure(err, meta));
+      });
+  };
+};
+
+//
+
+export const fetchOrganizationIdByName = (organizationName: string) => {
+  return (dispatch: Dispatch) => {
+    const meta: OrganizationNameActionMeta = {
+      organizationName: organizationName
+    };
+
+    dispatch(fetchOrganizationIdByNameRequest(meta));
+
+    return getIdByName(organizationName)
+      .then((res: AxiosResponse<string | null>) => {
+        const data = res.data;
+        dispatch(fetchOrganizationIdByNameSuccess(data, meta));
+        return data;
+      })
+      .catch((err: AxiosError) => {
+        dispatch(fetchOrganizationIdByNameFailure(err, meta));
       });
   };
 };

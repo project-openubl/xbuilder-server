@@ -1,11 +1,11 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { AppRoutes } from "./Routes";
-import AllOrganizations from "./SmartComponents/AllOrganizations";
-import BasicLayout from "./Layout/BasicLayout";
 
 import "./App.css";
 import "./App.scss";
+import BasicLayout from "./Pages/Layout/BasicLayout";
+import AllOrganizations from "./SmartComponents/AllOrganizations";
 
 const App: React.FC = () => {
   return (

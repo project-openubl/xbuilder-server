@@ -19,8 +19,8 @@ import {
 import { css } from "@patternfly/react-styles";
 import accessibleStyles from "@patternfly/react-styles/css/utilities/Accessibility/accessibility";
 import { HelpIcon } from "@patternfly/react-icons";
-import imgBrand from "../../logo.png";
-import { OrganizationRepresentation } from "../../models/xml-builder";
+import imgBrand from "../../../logo.png";
+import { OrganizationRepresentation } from "../../../models/xml-builder";
 
 interface Props {
   allOrganizations: OrganizationRepresentation[];
@@ -81,14 +81,16 @@ class BasicLayout extends React.Component<Props, State> {
               Organizaciones
             </NavLink>
           </NavItem>
-          <NavItem key="keys">
-            <NavLink
-              to={`/organizations/manage/${allOrganizations[0].id}/keys`}
-              activeClassName="pf-m-current"
-            >
-              Certificados digitales
-            </NavLink>
-          </NavItem>
+          {allOrganizations && allOrganizations.length > 0 && (
+            <NavItem key="keys">
+              <NavLink
+                to={`/organizations/manage/${allOrganizations[0].id}/keys`}
+                activeClassName="pf-m-current"
+              >
+                Certificados digitales
+              </NavLink>
+            </NavItem>
+          )}
         </NavList>
       </Nav>
     );

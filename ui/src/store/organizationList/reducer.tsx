@@ -1,6 +1,9 @@
 import { AxiosError } from "axios";
 import { ActionType, getType } from "typesafe-actions";
-import { OrganizationRepresentation } from "../../models/xml-builder";
+import {
+  OrganizationRepresentation,
+  SearchResultsRepresentation
+} from "../../models/xml-builder";
 import { FetchStatus } from "../common";
 import {
   fetchOrganizationListRequest,
@@ -11,13 +14,13 @@ import {
 export const stateKey = "organizationList";
 
 export type OrganizationListState = Readonly<{
-  organizations: OrganizationRepresentation[] | null;
+  organizations: SearchResultsRepresentation<OrganizationRepresentation>;
   error: AxiosError<any> | null;
   status: FetchStatus;
 }>;
 
 export const defaultState: OrganizationListState = {
-  organizations: null,
+  organizations: { items: [], totalSize: 0 },
   error: null,
   status: "none"
 };

@@ -9,7 +9,7 @@ import {
 } from "@patternfly/react-core";
 import { ErrorCircleOIcon } from "@patternfly/react-icons";
 
-const NotFoundPage: React.FC = () => {
+export const NotFound404: React.FC = () => {
   return (
     <React.Fragment>
       <PageSection>
@@ -17,7 +17,7 @@ const NotFoundPage: React.FC = () => {
           <EmptyState variant={EmptyStateVariant.full}>
             <EmptyStateIcon icon={ErrorCircleOIcon} />
             <Title headingLevel="h5" size="lg">
-              Page not found!
+              Error 404 Page not found!
             </Title>
           </EmptyState>
         </Bullseye>
@@ -25,5 +25,3 @@ const NotFoundPage: React.FC = () => {
     </React.Fragment>
   );
 };
-
-export default NotFoundPage;

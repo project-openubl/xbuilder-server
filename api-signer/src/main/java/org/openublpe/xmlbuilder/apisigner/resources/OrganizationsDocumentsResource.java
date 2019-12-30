@@ -63,7 +63,7 @@ public class OrganizationsDocumentsResource {
         if (organization.getUseCustomCertificates()) {
             return keystore.getActiveRsaKey(organization);
         } else {
-            OrganizationModel masterOrganization = organizationProvider.getOrganization(OrganizationModel.MASTER_ID)
+            OrganizationModel masterOrganization = organizationProvider.getOrganizationById(OrganizationModel.MASTER_ID)
                     .orElseThrow(() -> new ModelRuntimeException("No se encontró la organización master"));
             return keystore.getActiveRsaKey(masterOrganization);
         }
@@ -131,7 +131,7 @@ public class OrganizationsDocumentsResource {
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid InvoiceInputModel input
     ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
         InvoiceOutputModel output = kieExecutor.getInvoiceOutputModel(input);
@@ -156,7 +156,7 @@ public class OrganizationsDocumentsResource {
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid CreditNoteInputModel input
     ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
         CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
@@ -181,7 +181,7 @@ public class OrganizationsDocumentsResource {
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid DebitNoteInputModel input
     ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
         DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
@@ -206,7 +206,7 @@ public class OrganizationsDocumentsResource {
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid VoidedDocumentInputModel input
     ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
         VoidedDocumentOutputModel output = kieExecutor.getVoidedDocumentOutputModel(input);
@@ -231,7 +231,7 @@ public class OrganizationsDocumentsResource {
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid SummaryDocumentInputModel input
     ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
 
         SummaryDocumentOutputModel output = kieExecutor.getSummaryDocumentOutputModel(input);

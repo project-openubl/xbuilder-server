@@ -1,5 +1,6 @@
 package org.openublpe.xmlbuilder.apisigner.models.jpa.entities;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationType;
 
 import javax.persistence.Access;
@@ -12,16 +13,20 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "organization")
+@Table(name = "organization", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"name"})
+})
 @NamedQueries(value = {
+        @NamedQuery(name = "FindByName", query = "select o from OrganizationEntity o where o.name = :name"),
         @NamedQuery(name = "ListOrganizations", query = "select o from OrganizationEntity o"),
         @NamedQuery(name = "FilterOrganizations", query = "select o from OrganizationEntity o where lower(o.name) like :filterText"),
 })
-public class OrganizationEntity {
+public class OrganizationEntity extends PanacheEntityBase {
 
     @Id
     @Column(name = "id")

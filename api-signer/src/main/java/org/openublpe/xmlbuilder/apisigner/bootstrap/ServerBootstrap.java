@@ -38,7 +38,7 @@ public class ServerBootstrap {
     }
 
     private void bootstrap() {
-        Optional<OrganizationModel> organization = organizationProvider.getOrganization(OrganizationModel.MASTER_ID);
+        Optional<OrganizationModel> organization = organizationProvider.getOrganizationById(OrganizationModel.MASTER_ID);
         if (!organization.isPresent()) {
             createMasterOrganization();
         }

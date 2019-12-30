@@ -5,8 +5,10 @@ import {
   TextContent,
   Text,
   Tabs,
-  Tab
-} from "@patternfly/react-core";
+  Tab,
+  Form,
+  FormGroup} from "@patternfly/react-core";
+import OrganizationContextSelector from "../../SmartComponents/OrganizationContextSelector";
 
 interface Props {
   match: any;
@@ -14,11 +16,7 @@ interface Props {
   location: any;
   activeKey: number;
 }
-const KeysPageTabs: React.FC<Props> = ({
-  history,
-  activeKey,
-  children
-}) => {
+const KeysPageTabs: React.FC<Props> = ({ history, activeKey, children }) => {
   const handleTabClick = (
     event: React.MouseEvent<HTMLElement, MouseEvent>,
     eventKey: number | string
@@ -35,6 +33,14 @@ const KeysPageTabs: React.FC<Props> = ({
   return (
     <React.Fragment>
       <PageSection variant={PageSectionVariants.light}>
+        <div style={{ marginBottom: 20 }}>
+          <Form isHorizontal>
+            <FormGroup label="Organización" fieldId="organizacion">
+              <OrganizationContextSelector />
+            </FormGroup>
+          </Form>
+        </div>
+
         <TextContent>
           <Text component="h1">Administrar certificados</Text>
           <Text component="p">
