@@ -1,14 +1,15 @@
 import React from "react";
-import { OrganizationRepresentation } from "../../models/xml-builder";
-import { FetchStatus } from "../../store/common";
 import { AxiosError } from "axios";
 import { ContextSelector, ContextSelectorItem } from "@patternfly/react-core";
+import { OrganizationRepresentation } from "../../models/xml-builder";
+import { FetchStatus } from "../../store/common";
 
 interface StateToProps {
   match: any;
   history: any;
   location: any;
 
+  selectedOrganization: OrganizationRepresentation | null;
   organizations: OrganizationRepresentation[];
   error: AxiosError<any> | null;
   status: FetchStatus | null;
@@ -21,7 +22,7 @@ interface Props extends StateToProps, DispatchToProps {}
 interface State {
   isOpen: boolean;
   searchValue: string;
-  selected: OrganizationRepresentation;
+  // selected: OrganizationRepresentation;
   filteredItems: OrganizationRepresentation[];
 }
 
@@ -31,7 +32,7 @@ class OrganizationContextSelector extends React.Component<Props, State> {
     this.state = {
       isOpen: false,
       searchValue: "",
-      selected: props.organizations[0],
+      // selected: props.organizations[0],
       filteredItems: props.organizations
     };
   }
@@ -48,12 +49,9 @@ class OrganizationContextSelector extends React.Component<Props, State> {
 
     const organization = organizations.find(p => p.name === value);
     if (organization) {
-      this.setState({
-        selected: organization,
-        isOpen: !this.state.isOpen
+      this.setState({ isOpen: !this.state.isOpen }, () => {
+        history.push(`/organizations/manage/${organization.id}/keys`);
       });
-
-      history.push(`/organizations/manage/${organization.id}/keys`);
     }
   };
 
@@ -76,10 +74,11 @@ class OrganizationContextSelector extends React.Component<Props, State> {
   };
 
   render() {
-    const { isOpen, selected, searchValue, filteredItems } = this.state;
+    const { selectedOrganization } = this.props;
+    const { isOpen, searchValue, filteredItems } = this.state;
     return (
       <ContextSelector
-        toggleText={selected.name}
+        toggleText={selectedOrganization ? selectedOrganization.name : ""}
         onSearchInputChange={this.onSearchInputChange}
         isOpen={isOpen}
         searchInputValue={searchValue}

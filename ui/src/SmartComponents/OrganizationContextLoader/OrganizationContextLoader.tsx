@@ -11,17 +11,17 @@ interface StateToProps {
 }
 
 interface DispatchToProps {
-  fetchAllOrganizations: () => any;
+  fetchOrganizations: () => any;
 }
 
 interface Props extends StateToProps, DispatchToProps {}
 
 interface State {}
 
-class AllOrganizations extends React.Component<Props, State> {
+class OrganizationContextLoader extends React.Component<Props, State> {
   componentDidMount() {
-    const { fetchAllOrganizations } = this.props;
-    fetchAllOrganizations();
+    const { fetchOrganizations } = this.props;
+    fetchOrganizations();
   }
 
   render() {
@@ -40,4 +40,4 @@ class AllOrganizations extends React.Component<Props, State> {
   }
 }
 
-export default AllOrganizations;
+export default OrganizationContextLoader;

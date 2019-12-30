@@ -5,15 +5,15 @@ export const organizationKeysState = (state: RootState) => state[stateKey];
 
 // Fetch migration project
 
-export const selectOrganizationKey = (
+export const selectOrganizationKeys = (
   state: RootState,
   organizationId: string
 ) => organizationKeysState(state).byOrganizationId.get(organizationId);
-export const selectMigrationProjectFetchStatus = (
+export const selectOrganizationKeysFetchStatus = (
   state: RootState,
   organizationId: string
 ) => organizationKeysState(state).fetchStatus.get(organizationId);
-export const selectMigrationProjectError = (
+export const selectOrganizationKeysError = (
   state: RootState,
   organizationId: string
 ) => organizationKeysState(state).errors.get(organizationId);

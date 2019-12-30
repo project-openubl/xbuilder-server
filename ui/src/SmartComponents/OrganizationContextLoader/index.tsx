@@ -1,22 +1,19 @@
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import { createMapStateToProps } from "../../store/common";
 import {
-  organizationContextSelectors
+  organizationContextSelectors,
+  organizationContextActions
 } from "../../store/organizationContext";
-import OrganizationContextSelector from "./OrganizationContextSelector";
+import OrganizationContextLoader from "./OrganizationContextLoader";
 
 const mapStateToProps = createMapStateToProps(state => ({
-  selectedOrganization: organizationContextSelectors.selectedOrganization(state) || null,
   organizations: organizationContextSelectors.organizations(state) || [],
   error: organizationContextSelectors.error(state),
   status: organizationContextSelectors.status(state)
 }));
 
 const mapDispatchToProps = {
-  
+  fetchOrganizations: organizationContextActions.fetchOrganizations
 };
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(OrganizationContextSelector)
-);
+export default connect(mapStateToProps, mapDispatchToProps)(OrganizationContextLoader);

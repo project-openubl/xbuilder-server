@@ -3,13 +3,31 @@ import { Switch, Route } from "react-router-dom";
 import ActiveKeysPage from "./ActiveKeysPage";
 import KeyProviderspage from "./KeyProvidersPage";
 import KeyListPage from "./KeyListPage";
+import { organizationContextActions } from "../../store/organizationContext";
+import { OrganizationRepresentation } from "../../models/xml-builder";
 
 interface Props {
   match: any;
   history: any;
   location: any;
+
+  organizations: OrganizationRepresentation[];
+  selectOrganizationContext: typeof organizationContextActions.selectOrganizationContext;
 }
-const KeysPage: React.FC<Props> = ({ match }) => {
+
+const KeysPage: React.FC<Props> = ({
+  match,
+  organizations,
+  selectOrganizationContext
+}) => {
+  const organizationId = match.params.organizationId;
+  if (match.params.organizationId) {
+    const organization = organizations.find(p => p.id === organizationId);
+    if (organization) {
+      selectOrganizationContext(organization);
+    }
+  }
+
   return (
     <React.Fragment>
       <Switch>

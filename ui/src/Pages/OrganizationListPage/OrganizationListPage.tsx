@@ -253,6 +253,9 @@ class OrganizationListPage extends React.Component<Props, State> {
         <PageSection variant={PageSectionVariants.light}>
           <TextContent>
             <Text component="h1">Organizaciones</Text>
+            <Text component="small">
+              Acá podrás administrar las organizaciones del sistema.
+            </Text>
           </TextContent>
         </PageSection>
         <PageSection>

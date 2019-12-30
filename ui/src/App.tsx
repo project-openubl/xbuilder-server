@@ -5,17 +5,17 @@ import { AppRoutes } from "./Routes";
 import "./App.css";
 import "./App.scss";
 import BasicLayout from "./Pages/Layout/BasicLayout";
-import AllOrganizations from "./SmartComponents/AllOrganizations";
+import OrganizationContextLoader from "./SmartComponents/OrganizationContextLoader";
 
 const App: React.FC = () => {
   return (
     <React.Fragment>
       <BrowserRouter>
-        <AllOrganizations>
+        <OrganizationContextLoader>
           <BasicLayout>
             <AppRoutes />
           </BasicLayout>
-        </AllOrganizations>
+        </OrganizationContextLoader>
       </BrowserRouter>
     </React.Fragment>
   );

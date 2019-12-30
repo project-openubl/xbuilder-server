@@ -2,13 +2,18 @@ import ApiClient from "./apiClient";
 import { AxiosPromise } from "axios";
 import {
   OrganizationRepresentation,
-  SearchResultsRepresentation
+  SearchResultsRepresentation,
+  KeysMetadataRepresentation,
+  ComponentRepresentation
 } from "../models/xml-builder";
 
 const ORGANIZATIONS_URL = "/organizations";
 const ORGANIZATIONS_SEARCH_URL = "/organizations/search";
 const ALL_ORGANIZATIONS_URL = "/organizations/all";
 const GET_ID_BY_NAME_URL = "/organizations/id-by-name";
+const GET_ORGANIZATION_KEYS_URL = "/organizations/{organizationId}/keys";
+const GET_ORGANIZATION_COMPONENTS_URL =
+  "/organizations/{organizationId}/components";
 
 export const search = (
   filterText: string,
@@ -63,4 +68,20 @@ export const update = (
 
 export const getIdByName = (name: string): AxiosPromise<string | null> => {
   return ApiClient.get(GET_ID_BY_NAME_URL + "/" + encodeURIComponent(name));
+};
+
+export const getOrganizationKeys = (
+  organizationId: string
+): AxiosPromise<KeysMetadataRepresentation> => {
+  return ApiClient.get<KeysMetadataRepresentation>(
+    GET_ORGANIZATION_KEYS_URL.replace("{organizationId}", organizationId)
+  );
+};
+
+export const getOrganizationComponents = (
+  organizationId: string
+): AxiosPromise<ComponentRepresentation[]> => {
+  return ApiClient.get<ComponentRepresentation[]>(
+    GET_ORGANIZATION_COMPONENTS_URL.replace("{organizationId}", organizationId)
+  );
 };

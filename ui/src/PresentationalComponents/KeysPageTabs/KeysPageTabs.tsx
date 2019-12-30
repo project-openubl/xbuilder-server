@@ -6,8 +6,8 @@ import {
   Text,
   Tabs,
   Tab,
-  Form,
-  FormGroup} from "@patternfly/react-core";
+  FormGroup
+} from "@patternfly/react-core";
 import OrganizationContextSelector from "../../SmartComponents/OrganizationContextSelector";
 
 interface Props {
@@ -16,17 +16,24 @@ interface Props {
   location: any;
   activeKey: number;
 }
-const KeysPageTabs: React.FC<Props> = ({ history, activeKey, children }) => {
+const KeysPageTabs: React.FC<Props> = ({
+  match,
+  history,
+  activeKey,
+  children
+}) => {
   const handleTabClick = (
     event: React.MouseEvent<HTMLElement, MouseEvent>,
     eventKey: number | string
   ) => {
+    const organizationId = match.params.organizationId;
+    const url = `/organizations/manage/${organizationId}`;
     if (eventKey === 0) {
-      history.push("/keys");
+      history.push(url + "/keys");
     } else if (eventKey === 1) {
-      history.push("/keys/list");
+      history.push(url + "/keys/list");
     } else if (eventKey === 2) {
-      history.push("/keys/providers");
+      history.push(url + "/keys/providers");
     }
   };
 
@@ -34,16 +41,16 @@ const KeysPageTabs: React.FC<Props> = ({ history, activeKey, children }) => {
     <React.Fragment>
       <PageSection variant={PageSectionVariants.light}>
         <div style={{ marginBottom: 20 }}>
-          <Form isHorizontal>
+          <div className="pf-c-form pf-m-horizontal">
             <FormGroup label="Organización" fieldId="organizacion">
               <OrganizationContextSelector />
             </FormGroup>
-          </Form>
+          </div>
         </div>
 
         <TextContent>
-          <Text component="h1">Administrar certificados</Text>
-          <Text component="p">
+          <Text component="h1">Certificados digitales</Text>
+          <Text component="small">
             Acá podrás configurar los certificados de seguridad que el software
             usará para firmar los comprobantes de pago electrónicos.
           </Text>
@@ -51,7 +58,7 @@ const KeysPageTabs: React.FC<Props> = ({ history, activeKey, children }) => {
         <br />
         <Tabs isFilled activeKey={activeKey} onSelect={handleTabClick}>
           <Tab eventKey={0} title="Certificados activos"></Tab>
-          <Tab eventKey={1} title="Certificados inactivos"></Tab>
+          <Tab eventKey={1} title="Todos los certificados"></Tab>
           <Tab eventKey={2} title="Proveeedores de certificados"></Tab>
         </Tabs>
       </PageSection>

@@ -1,26 +1,51 @@
-import { connect } from 'react-redux';
-import ActiveKeysPage from './ActiveKeysPage';
+import { connect } from "react-redux";
+import ActiveKeysPage from "./ActiveKeysPage";
 
-import { createMapStateToProps } from '../../../store/common';
+import { createMapStateToProps } from "../../../store/common";
+import {
+  organizationKeysActions,
+  organizationKeysSelectors
+} from "../../../store/organizationKeys";
+import {
+  organizationComponentsActions,
+  organizationComponentsSelectors
+} from "../../../store/organizationComponents";
 
-const mapStateToProps = createMapStateToProps(state => ({
-//   projects: organizationKeysSelectors.projects(state) || [],
-//   error: organizationKeysSelectors.error(state),
-//   status: organizationKeysSelectors.status(state)
-}));
+const mapStateToProps = createMapStateToProps((state, ownProps: any) => {
+  const organizationId = ownProps.match.params.organizationId;
 
-// const mapDispatchToProps = createMapDispatchToProps(() =>({
-//   fetchMigrationProjects: migrationProjectListActions.fetchMigrationProjects,
-//   showDeleteDialog: deleteDialogActions.openModal,
-//   closeDeleteDialog: deleteDialogActions.closeModal
-// }));
+  return {
+    organizationKeys: organizationKeysSelectors.selectOrganizationKeys(
+      state,
+      organizationId
+    ),
+    organizationKeysFetchStatus: organizationKeysSelectors.selectOrganizationKeysFetchStatus(
+      state,
+      organizationId
+    ),
+    organizationKeysError: organizationKeysSelectors.selectOrganizationKeysError(
+      state,
+      organizationId
+    ),
+
+    organizationComponents: organizationComponentsSelectors.selectOrganizationComponents(
+      state,
+      organizationId
+    ),
+    organizationComponentsFetchStatus: organizationComponentsSelectors.selectOrganizationComponentsFetchStatus(
+      state,
+      organizationId
+    ),
+    organizationComponentsError: organizationComponentsSelectors.selectOrganizationComponentsError(
+      state,
+      organizationId
+    )
+  };
+});
+
 const mapDispatchToProps = {
-//   fetchMigrationProjects: migrationProjectListActions.fetchMigrationProjects,
-//   showDeleteDialog: deleteDialogActions.openModal,
-//   closeDeleteDialog: deleteDialogActions.closeModal
+  fetchOrganizationKeys: organizationKeysActions.fetchOrganizationKeys,
+  fetchOrganizationComponents: organizationComponentsActions.fetchOrganizationComponents
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ActiveKeysPage);
+export default connect(mapStateToProps, mapDispatchToProps)(ActiveKeysPage);

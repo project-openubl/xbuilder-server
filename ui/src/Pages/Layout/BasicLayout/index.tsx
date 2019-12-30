@@ -1,10 +1,11 @@
 import BasicLayout from "./BasicLayout";
 import { connect } from "react-redux";
 import { createMapStateToProps } from "../../../store/common";
-import { allOrganizationsSelectors } from "../../../store/allOrganizations";
+import { organizationContextSelectors } from "../../../store/organizationContext";
 
 const mapStateToProps = createMapStateToProps(state => ({
-  allOrganizations: allOrganizationsSelectors.allOrganizations(state) || []
+  organizations: organizationContextSelectors.organizations(state) || [],
+  selectedOrganization: organizationContextSelectors.selectedOrganization(state) || null
 }));
 
 const mapDispatchToProps = {};

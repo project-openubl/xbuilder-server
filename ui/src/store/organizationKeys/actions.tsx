@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch } from "redux";
 import { createAction } from "typesafe-actions";
 import { KeysMetadataRepresentation } from "../../models/xml-builder";
-import { getOrganizationKeys } from "../../api/keys";
+import { getOrganizationKeys } from "../../api/organizations";
 
 interface OrganizationKeysActionMeta {
   organizationId: string;

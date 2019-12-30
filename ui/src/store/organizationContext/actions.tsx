@@ -6,33 +6,37 @@ import { OrganizationRepresentation } from "../../models/xml-builder";
 import { getAll } from "../../api/organizations";
 import { RootState } from "../rootReducer";
 
-export const fetchAllOrganizationsRequest = createAction(
-  "allOrganizations/fetch/request"
+export const fetchOrganizationsRequest = createAction(
+  "organizationContext/organizations/fetch/request"
 )();
-export const fetchAllOrganizationsSuccess = createAction(
-  "allOrganizations/fetch/success"
+export const fetchOrganizationsSuccess = createAction(
+  "organizationContext/organizations/fetch/success"
 )<OrganizationRepresentation[]>();
-export const fetchAllOrganizationsFailure = createAction(
-  "allOrganizations/fetch/failure"
+export const fetchOrganizationsFailure = createAction(
+  "organizationContext/organizations/fetch/failure"
 )<AxiosError>();
 
-export const fetchAllOrganizations = (): ThunkAction<
+export const selectOrganizationContext = createAction(
+  "organizationContext/organizations/select"
+)<OrganizationRepresentation>();
+
+export const fetchOrganizations = (): ThunkAction<
   void,
   RootState,
   void,
   any
 > => {
   return (dispatch: Dispatch) => {
-    dispatch(fetchAllOrganizationsRequest());
+    dispatch(fetchOrganizationsRequest());
 
     return getAll()
       .then((res: AxiosResponse<OrganizationRepresentation[]>) => {
         const data: OrganizationRepresentation[] = res.data;
-        dispatch(fetchAllOrganizationsSuccess(data));
+        dispatch(fetchOrganizationsSuccess(data));
         return data;
       })
       .catch((err: AxiosError) => {
-        dispatch(fetchAllOrganizationsFailure(err));
+        dispatch(fetchOrganizationsFailure(err));
       });
   };
 };

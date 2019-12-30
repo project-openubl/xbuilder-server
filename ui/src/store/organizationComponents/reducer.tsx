@@ -1,39 +1,39 @@
 import { AxiosError } from "axios";
 import { ActionType, getType } from "typesafe-actions";
-import { KeysMetadataRepresentation } from "../../models/xml-builder";
+import { ComponentRepresentation } from "../../models/xml-builder";
 import { FetchStatus } from "../common";
 import {
-  fetchOrganizationKeysRequest,
-  fetchOrganizationKeysSuccess,
-  fetchOrganizationKeysFailure
+  fetchOrganizationComponentsRequest,
+  fetchOrganizationComponentsSuccess,
+  fetchOrganizationComponentsFailure
 } from "./actions";
 
-export const stateKey = "organizationKeys";
+export const stateKey = "organizationComponents";
 
-export type OrganizationKeyState = Readonly<{
-  byOrganizationId: Map<string, KeysMetadataRepresentation>;
+export type OrganizationComponentsState = Readonly<{
+  byOrganizationId: Map<string, ComponentRepresentation[]>;
   errors: Map<string, AxiosError | undefined>;
   fetchStatus: Map<string, FetchStatus>;
 }>;
 
-export const defaultState: OrganizationKeyState = {
+export const defaultState: OrganizationComponentsState = {
   byOrganizationId: new Map(),
   errors: new Map(),
   fetchStatus: new Map()
 };
 
-export type OrganizationKeysAction = ActionType<
-  | typeof fetchOrganizationKeysRequest
-  | typeof fetchOrganizationKeysSuccess
-  | typeof fetchOrganizationKeysFailure
+export type OrganizationComponentsAction = ActionType<
+  | typeof fetchOrganizationComponentsRequest
+  | typeof fetchOrganizationComponentsSuccess
+  | typeof fetchOrganizationComponentsFailure
 >;
 
-export function organizationKeysReducer(
+export function organizationComponentsReducer(
   state = defaultState,
-  action: OrganizationKeysAction
-): OrganizationKeyState {
+  action: OrganizationComponentsAction
+): OrganizationComponentsState {
   switch (action.type) {
-    case getType(fetchOrganizationKeysRequest):
+    case getType(fetchOrganizationComponentsRequest):
       return {
         ...state,
         fetchStatus: new Map(state.fetchStatus).set(
@@ -41,7 +41,7 @@ export function organizationKeysReducer(
           "inProgress"
         )
       };
-    case getType(fetchOrganizationKeysSuccess):
+    case getType(fetchOrganizationComponentsSuccess):
       return {
         ...state,
         fetchStatus: new Map(state.fetchStatus).set(
@@ -50,13 +50,13 @@ export function organizationKeysReducer(
         ),
         byOrganizationId: new Map(state.byOrganizationId).set(
           action.meta.organizationId,
-          {
+          [
             ...action.payload
-          }
+          ]
         ),
         errors: new Map(state.errors).set(action.meta.organizationId, undefined)
       };
-    case getType(fetchOrganizationKeysFailure):
+    case getType(fetchOrganizationComponentsFailure):
       return {
         ...state,
         fetchStatus: new Map(state.fetchStatus).set(

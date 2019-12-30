@@ -25,6 +25,8 @@ export interface KeyMetadataRepresentation {
   algorithm: string;
   publicKey: string;
   certificate: string;
+  // This does not come from backend but from UI
+  provider?: ComponentRepresentation;
 }
 
 export interface ComponentRepresentation {

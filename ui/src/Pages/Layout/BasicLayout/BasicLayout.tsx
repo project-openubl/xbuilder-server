@@ -23,7 +23,8 @@ import imgBrand from "../../../logo.png";
 import { OrganizationRepresentation } from "../../../models/xml-builder";
 
 interface Props {
-  allOrganizations: OrganizationRepresentation[];
+  organizations: OrganizationRepresentation[];
+  selectedOrganization: OrganizationRepresentation | null;
 }
 
 interface State {}
@@ -66,7 +67,7 @@ class BasicLayout extends React.Component<Props, State> {
   };
 
   renderSidebar = () => {
-    const { allOrganizations } = this.props;
+    const { organizations, selectedOrganization } = this.props;
 
     const PageNav = (
       <Nav id="nav-primary-simple" aria-label="Nav" theme="dark">
@@ -81,10 +82,21 @@ class BasicLayout extends React.Component<Props, State> {
               Organizaciones
             </NavLink>
           </NavItem>
-          {allOrganizations && allOrganizations.length > 0 && (
+
+          {selectedOrganization && (
             <NavItem key="keys">
               <NavLink
-                to={`/organizations/manage/${allOrganizations[0].id}/keys`}
+                to={`/organizations/manage/${selectedOrganization.id}/keys`}
+                activeClassName="pf-m-current"
+              >
+                Certificados digitales
+              </NavLink>
+            </NavItem>
+          )}
+          {!selectedOrganization && organizations.length > 0 && (
+            <NavItem key="keys">
+              <NavLink
+                to={`/organizations/manage/${organizations[0].id}/keys`}
                 activeClassName="pf-m-current"
               >
                 Certificados digitales
