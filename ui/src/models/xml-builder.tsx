@@ -38,3 +38,27 @@ export interface ComponentRepresentation {
   subType: string;
   config: { [key: string]: string[] };
 }
+
+export interface ServerInfoRepresentation {
+  componentTypes: ComponentTypes;
+}
+
+export interface ComponentTypes {
+  keyProviders: ComponentTypeRepresentation[];
+}
+
+export interface ComponentTypeRepresentation {
+  id: string;
+  helpText: string;
+  properties: ConfigPropertyRepresentation[];
+}
+
+export interface ConfigPropertyRepresentation {
+  name: string;
+  label: string;
+  helpText: string;
+  type: string;
+  defaultValue: string;
+  options: string[];
+  secret: boolean;
+}

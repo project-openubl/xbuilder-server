@@ -30,7 +30,7 @@ interface State {
   organizationFormData: FormData | null;
 }
 
-class ManageOrganization extends React.Component<Props, State> {
+class ManageOrganizationModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { saving: false, organizationFormData: null };
@@ -150,4 +150,4 @@ class ManageOrganization extends React.Component<Props, State> {
   }
 }
 
-export default ManageOrganization;
+export default ManageOrganizationModal;

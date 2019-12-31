@@ -14,6 +14,8 @@ const GET_ID_BY_NAME_URL = "/organizations/id-by-name";
 const GET_ORGANIZATION_KEYS_URL = "/organizations/{organizationId}/keys";
 const GET_ORGANIZATION_COMPONENTS_URL =
   "/organizations/{organizationId}/components";
+const GET_ORGANIZATION_COMPONENT_URL =
+  "/organizations/{organizationId}/components/{componentId}";
 
 export const search = (
   filterText: string,
@@ -83,5 +85,17 @@ export const getOrganizationComponents = (
 ): AxiosPromise<ComponentRepresentation[]> => {
   return ApiClient.get<ComponentRepresentation[]>(
     GET_ORGANIZATION_COMPONENTS_URL.replace("{organizationId}", organizationId)
+  );
+};
+
+export const getComponent = (
+  organizationId: string,
+  componentId: string
+): AxiosPromise<ComponentRepresentation> => {
+  return ApiClient.get<ComponentRepresentation>(
+    GET_ORGANIZATION_COMPONENT_URL.replace(
+      "{organizationId}",
+      organizationId
+    ).replace("{componentId}", componentId)
   );
 };

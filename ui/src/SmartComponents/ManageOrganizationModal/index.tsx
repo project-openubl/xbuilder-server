@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import ManageOrganization from "./ManageOrganization";
+import ManageOrganizationModal from "./ManageOrganizationModal";
 import { createMapStateToProps } from "../../store/common";
 import {
   organizationActions,
@@ -31,5 +31,5 @@ const mapDispatchToProps = {
 };
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ManageOrganization)
+  connect(mapStateToProps, mapDispatchToProps)(ManageOrganizationModal)
 );

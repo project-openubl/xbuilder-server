@@ -1,5 +1,5 @@
 import React from "react";
-import ManageOrganization from "../../SmartComponents/ManageOrganization";
+import ManageOrganization from "../../SmartComponents/ManageOrganizationModal";
 
 interface Props {
   match: any;

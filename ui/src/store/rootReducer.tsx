@@ -18,6 +18,8 @@ import {
   organizationComponentsStateKey,
   organizationComponentsReducer
 } from "./organizationComponents";
+import { componentStateKey, componentReducer } from "./component";
+import { serverInfoStateKey, serverInfoReducer } from "./serverInfo";
 
 export type RootState = StateType<typeof rootReducer>;
 
@@ -26,5 +28,7 @@ export const rootReducer = combineReducers({
   [organizationContextStateKey]: organizationContextReducer,
   [organizationStateKey]: organizationReducer,
   [organizationKeysStateKey]: organizationKeysReducer,
-  [organizationComponentsStateKey]: organizationComponentsReducer
+  [organizationComponentsStateKey]: organizationComponentsReducer,
+  [componentStateKey]: componentReducer,
+  [serverInfoStateKey]: serverInfoReducer
 });

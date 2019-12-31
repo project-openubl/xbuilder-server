@@ -5,6 +5,7 @@ import KeyProviderspage from "./KeyProvidersPage";
 import KeyListPage from "./KeyListPage";
 import { organizationContextActions } from "../../store/organizationContext";
 import { OrganizationRepresentation } from "../../models/xml-builder";
+import ManageProviderPage from "./ManageProviderPage";
 
 interface Props {
   match: any;
@@ -40,7 +41,17 @@ const KeysPage: React.FC<Props> = ({
         <Route
           path={`${match.path}/providers`}
           component={KeyProviderspage}
-          exact={false}
+          exact={true}
+        />
+        <Route
+          path={`${match.path}/providers/:providerId`}
+          component={ManageProviderPage}
+          exact={true}
+        />
+        <Route
+          path={`${match.path}/providers/:providerId/:componentId`}
+          component={ManageProviderPage}
+          exact={true}
         />
       </Switch>
     </React.Fragment>
