@@ -1,144 +1,85 @@
 import React from "react";
 import { Button, Modal } from "@patternfly/react-core";
-import OrganizationForm from "../OrganizationForm";
-import { FormData } from "../OrganizationForm/OrganizationForm";
-import { OrganizationRepresentation } from "../../models/xml-builder";
-import { AxiosError } from "axios";
-import { FetchStatus } from "../../store/common";
+import {
+  ComponentRepresentation,
+  ServerInfoRepresentation,
+  ComponentTypeRepresentation
+} from "../../models/xml-builder";
+import { XmlBuilderRouterProps } from "../../models/routerProps";
+import ProviderForm from "../../PresentationalComponents/ProviderForm";
 
-interface Props {
-  match: any;
-  history: any;
-  location: any;
+interface StateToProps {}
 
-  // organizationId: string | null;
+interface DispatchToProps {}
 
-  // organization: OrganizationRepresentation | undefined;
-  // error: AxiosError<any> | undefined;
-  // status: FetchStatus | undefined;
-
-  // fetchOrganization: (organizationId: string) => any;
-  // createOrganization: (organization: OrganizationRepresentation) => any;
-  // updateOrganization: (
-  //   organizationId: string,
-  //   organization: OrganizationRepresentation
-  // ) => any;
+interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {
+  component: ComponentRepresentation | undefined;
+  provider: ComponentTypeRepresentation | undefined;
+  redirectTo: string | undefined;
 }
 
 interface State {
   saving: boolean;
-  organizationFormData: FormData | null;
+  formData: FormData | null;
 }
 
 class ManageProviderModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { saving: false, organizationFormData: null };
+    this.state = {
+      saving: false,
+      formData: null
+    };
   }
 
-  // componentDidMount() {
-  //   const { organizationId, fetchOrganization } = this.props;
-  //   if (organizationId) {
-  //     fetchOrganization(organizationId);
-  //   }
-  // }
+  create = () => {};
+  update = () => {};
 
-  // handleModalSave = () => {
-  //   const { organizationFormData } = this.state;
-  //   const { organizationId } = this.props;
-
-  //   if (!organizationFormData) {
-  //     return;
-  //   }
-
-  //   this.setState({ saving: true }, () => {
-  //     if (organizationId) {
-  //       const { updateOrganization, history } = this.props;
-
-  //       const payload: OrganizationRepresentation = {
-  //         name: organizationFormData.name,
-  //         description: organizationFormData.description,
-  //         type: "",
-  //         useMasterKeys: false
-  //       };
-
-  //       updateOrganization(organizationId, payload).then(() => {
-  //         history.push("/organizations/list");
-  //       });
-  //     } else {
-  //       const { createOrganization, history } = this.props;
-
-  //       const payload: OrganizationRepresentation = {
-  //         name: organizationFormData.name,
-  //         description: organizationFormData.description,
-  //         type: "",
-  //         useMasterKeys: false
-  //       };
-
-  //       createOrganization(payload).then(() => {
-  //         history.push("/organizations/list");
-  //       });
-  //     }
-  //   });
-  // };
+  // Handlers
 
   handleModalClose = () => {
-    const { history, match } = this.props;
-    const organizationId = match.params.organizationId;
-
-    const url = `/organizations/manage/${organizationId}/keys/providers`;
-    history.push(url);
+    const { redirectTo, history } = this.props;
+    if (redirectTo) {
+      history.push(redirectTo);
+    }
   };
 
-  handleOnFormChange = (isValid: boolean, value: FormData): void => {
-    // if (isValid) {
-    //   this.setState({
-    //     organizationFormData: value
-    //   });
-    // } else {
-    //   this.setState({
-    //     organizationFormData: null
-    //   });
-    // }
+  handleModalSave = () => {
+    const { component } = this.props;
+    this.setState({ saving: true }, () => {
+      if (component) {
+        this.update();
+      } else {
+        this.create();
+      }
+    });
+  };
+
+  handleOnFormChange = (isValid: boolean, value: any): void => {
+    if (isValid) {
+      this.setState({ formData: value });
+    } else {
+      this.setState({ formData: null });
+    }
   };
 
   render() {
-    const { saving, organizationFormData } = this.state;
-    // const { organizationId, organization } = this.props;
-
-    // let form;
-    // if (organization) {
-    //   form = (
-    //     <div id={organization.id}>
-    //       <OrganizationForm
-    //         organization={organization}
-    //         onChange={this.handleOnFormChange}
-    //       />
-    //     </div>
-    //   );
-    // } else {
-    //   form = (
-    //     <OrganizationForm
-    //       organization={undefined}
-    //       onChange={this.handleOnFormChange}
-    //     />
-    //   );
-    // }
+    const { component, provider } = this.props;
+    const { saving, formData } = this.state;
 
     return (
       <React.Fragment>
         <Modal
-          // title={(organizationId ? "Editar" : "Crear") + " organización"}
-          title={""}
+          title={(component ? "Editar" : "Crear") + " componente"}
           isOpen={true}
-          isSmall={true}
+          isLarge={true}
           onClose={this.handleModalClose}
           actions={[
             <Button
               key="confirm"
               variant="primary"
-              // onClick={this.handleModalSave}
-              isDisabled={!organizationFormData || saving}
+              onClick={this.handleModalSave}
+              isDisabled={!formData || saving}
             >
               {saving ? "Guardando" : "Guardar"}
             </Button>,
@@ -147,7 +88,12 @@ class ManageProviderModal extends React.Component<Props, State> {
             </Button>
           ]}
         >
-          form
+          <ProviderForm
+            key={component ? component.id : "create-component-modal-id"}
+            component={component}
+            provider={provider}
+            onChange={this.handleOnFormChange}
+          />
         </Modal>
       </React.Fragment>
     );
