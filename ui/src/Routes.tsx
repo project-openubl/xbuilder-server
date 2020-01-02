@@ -26,7 +26,7 @@ export const AppRoutes = () => {
       <Route path="/error/404" component={NotFound404} />
       <Route path="/error/503" component={ServiceUnavailable503} />
 
-      <Route path="/" render={() => <Redirect to={"/home"} />} />
+      <Route path="/" render={() => <Redirect to={"/organizations/list"} />} />
     </Switch>
   );
 };

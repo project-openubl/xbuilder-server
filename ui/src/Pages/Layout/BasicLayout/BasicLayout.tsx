@@ -176,11 +176,11 @@ class BasicLayout extends React.Component<Props, State> {
     const PageNav = (
       <Nav id="nav-primary-simple" aria-label="Nav" theme="dark">
         <NavList id="nav-list-simple" variant={NavVariants.default}>
-          <NavItem key="home">
+          {/* <NavItem key="home">
             <NavLink to="/home" activeClassName="pf-m-current">
               Home
             </NavLink>
-          </NavItem>
+          </NavItem> */}
           <NavItem key="organizations">
             <NavLink to="/organizations/list" activeClassName="pf-m-current">
               Organizaciones

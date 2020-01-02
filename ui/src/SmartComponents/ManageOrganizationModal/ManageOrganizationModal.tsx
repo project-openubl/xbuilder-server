@@ -103,25 +103,6 @@ class ManageOrganizationModal extends React.Component<Props, State> {
     const { saving, organizationFormData } = this.state;
     const { organizationId, organization } = this.props;
 
-    // let form;
-    // if (organization) {
-    //   form = (
-    //     <div id={organization.id}>
-    //       <OrganizationForm
-    //         organization={organization}
-    //         onChange={this.handleOnFormChange}
-    //       />
-    //     </div>
-    //   );
-    // } else {
-    //   form = (
-    //     <OrganizationForm
-    //       organization={undefined}
-    //       onChange={this.handleOnFormChange}
-    //     />
-    //   );
-    // }
-
     return (
       <React.Fragment>
         <Modal
@@ -143,8 +124,8 @@ class ManageOrganizationModal extends React.Component<Props, State> {
             </Button>
           ]}
         >
-          {/* {form} */}
-          <OrganizationForm key={organization ? organization.id : 'create-organization'}
+          <OrganizationForm
+            key={organization ? organization.id : "create-organization"}
             organization={organization}
             onChange={this.handleOnFormChange}
           />

@@ -1,5 +1,5 @@
 import React from "react";
-import ManageOrganization from "../../SmartComponents/ManageOrganizationModal";
+import ManageOrganizationModal from "../../SmartComponents/ManageOrganizationModal";
 
 interface Props {
   match: any;
@@ -15,7 +15,7 @@ class OrganizationPage extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <ManageOrganization organizationId={match.params.organizationId} />
+        <ManageOrganizationModal organizationId={match.params.organizationId} />
       </React.Fragment>
     );
   }

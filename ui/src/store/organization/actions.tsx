@@ -5,6 +5,7 @@ import { createAction } from "typesafe-actions";
 import { OrganizationRepresentation } from "../../models/xml-builder";
 import { getById, create, update, getIdByName } from "../../api/organizations";
 import { RootState } from "../rootReducer";
+import { fetchOrganizations } from "../organizationContext/actions";
 
 interface OrganizationActionMeta {
   organizationId: string;
@@ -81,11 +82,11 @@ export const createOrganization = (
 ): ThunkAction<void, RootState, void, any> => {
   return (dispatch: Dispatch) => {
     dispatch(createOrganizationRequest());
-
     return create(organization)
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
         const data: OrganizationRepresentation = res.data;
         dispatch(createOrganizationSuccess(data));
+        fetchOrganizations()(dispatch);
         return data;
       })
       .catch((err: AxiosError) => {
@@ -109,6 +110,7 @@ export const updateOrganization = (
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
         const data: OrganizationRepresentation = res.data;
         dispatch(updateOrganizationSuccess(data, meta));
+        fetchOrganizations()(dispatch);
         return data;
       })
       .catch((err: AxiosError) => {

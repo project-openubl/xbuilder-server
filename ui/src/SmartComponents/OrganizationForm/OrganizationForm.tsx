@@ -74,7 +74,7 @@ const OrganizationForm: React.FC<Props> = ({
     <React.Fragment>
       <Form onSubmit={() => {}} onChange={handleOnFormChange}>
         <FormGroup
-          label="Name"
+          label="Nombre"
           isRequired
           fieldId="name"
           helperText="Nombre de la organización"

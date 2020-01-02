@@ -20,12 +20,7 @@ export const selectOrganizationContext = createAction(
   "organizationContext/organizations/select"
 )<OrganizationRepresentation>();
 
-export const fetchOrganizations = (): ThunkAction<
-  void,
-  RootState,
-  void,
-  any
-> => {
+export const fetchOrganizations = () => {
   return (dispatch: Dispatch) => {
     dispatch(fetchOrganizationsRequest());
 
