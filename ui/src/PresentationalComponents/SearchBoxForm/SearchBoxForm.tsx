@@ -38,7 +38,7 @@ const SearchBoxForm: React.FC<Props> = ({ handleOnSubmit }) => {
         <InputGroup>
           <TextInput
             type="search"
-            placeholder="Filter by name..."
+            placeholder="Filtrar por nombre..."
             id="filterText"
             name="filterText"
             aria-describedby="Filter text"

@@ -9,7 +9,7 @@ import {
 const mapStateToProps = createMapStateToProps(state => ({
   organizations: organizationListSelectors.organizations(state),
   error: organizationListSelectors.error(state),
-  status: organizationListSelectors.status(state)
+  fetchStatus: organizationListSelectors.status(state)
 }));
 
 const mapDispatchToProps = {

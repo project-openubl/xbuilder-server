@@ -1,3 +1,3 @@
-import SearchBoxForm from "./OrganizationForm";
+import SearchBoxForm from "./SearchBoxForm";
 
 export default SearchBoxForm;

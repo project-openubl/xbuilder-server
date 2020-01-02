@@ -4,6 +4,8 @@
   "private": true,
   "homepage": "https://project-openubl.github.io/xml-builder-ui/",
   "dependencies": {
+    "@material-ui/core": "^4.8.2",
+    "@material-ui/lab": "^4.0.0-alpha.38",
     "@patternfly/patternfly": "^2.43.1",
     "@patternfly/react-core": "3.129.3",
     "@patternfly/react-inline-edit-extension": "2.14.20",

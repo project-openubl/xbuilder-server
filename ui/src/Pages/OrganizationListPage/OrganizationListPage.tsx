@@ -7,17 +7,10 @@ import {
   Toolbar,
   ToolbarGroup,
   ToolbarItem,
-  Bullseye,
-  EmptyState,
-  EmptyStateIcon,
-  Title,
-  EmptyStateBody,
-  EmptyStateSecondaryActions,
   PageSectionVariants,
   TextContent,
   Text,
   Card,
-  CardBody,
   CardHeader,
   Pagination
 } from "@patternfly/react-core";
@@ -30,23 +23,32 @@ import {
   cellWidth,
   IAction
 } from "@patternfly/react-table";
-import { SearchIcon } from "@patternfly/react-icons";
 import {
   OrganizationRepresentation,
   SearchResultsRepresentation
 } from "../../models/xml-builder";
 import { FetchStatus } from "../../store/common";
 import SearchBoxForm from "../../PresentationalComponents/SearchBoxForm";
+import { XmlBuilderRouterProps } from "../../models/routerProps";
+import SkeletonTable from "../../PresentationalComponents/SkeletonTable";
+import ErrorTable from "../../PresentationalComponents/ErrorTable";
+import EmptyTable from "../../PresentationalComponents/EmptyTable";
 
-interface Props {
-  match: any;
-  history: any;
-  location: any;
-  fetchOrganizations: any;
+interface StateToProps {
   organizations: SearchResultsRepresentation<OrganizationRepresentation>;
   error: AxiosError<any> | null;
-  status: FetchStatus;
+  fetchStatus: FetchStatus;
 }
+
+interface DispatchToProps {
+  fetchOrganizations: (
+    filterText: string,
+    page: number,
+    pageSize: number
+  ) => any;
+}
+
+interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
 
 interface State {
   filterText: string;
@@ -95,11 +97,11 @@ class OrganizationListPage extends React.Component<Props, State> {
   ) => {
     const { fetchOrganizations } = this.props;
     fetchOrganizations(filterText, page, pageSize).then(() => {
-      this.processRows();
+      this.filtersInRowsAndCells();
     });
   };
 
-  processRows = (
+  filtersInRowsAndCells = (
     data: SearchResultsRepresentation<OrganizationRepresentation> = this.props
       .organizations
   ) => {
@@ -129,10 +131,10 @@ class OrganizationListPage extends React.Component<Props, State> {
       }
     );
 
-    this.setState({
-      rows
-    });
+    this.setState({ rows });
   };
+
+  // handlers
 
   handleEditar = (event: React.MouseEvent, rowIndex: number): void => {
     const { history, organizations } = this.props;
@@ -201,7 +203,24 @@ class OrganizationListPage extends React.Component<Props, State> {
   };
 
   renderTable = () => {
-    const { columns, rows, actions } = this.state;
+    const { error, fetchStatus } = this.props;
+    const { columns, rows, actions, pageSize } = this.state;
+
+    if (fetchStatus !== "complete") {
+      return <SkeletonTable columns={columns} rowSize={pageSize} />;
+    }
+
+    if (error) {
+      const retry = () => {
+        this.refreshData();
+      };
+      return <ErrorTable columns={columns} retry={retry} />;
+    }
+
+    if (rows.length === 0) {
+      return <EmptyTable columns={columns} />;
+    }
+
     return (
       <React.Fragment>
         <Table
@@ -220,29 +239,6 @@ class OrganizationListPage extends React.Component<Props, State> {
             </tfoot>
           )}
         </Table>
-        {rows.length === 0 && (
-          <Card>
-            <CardBody>
-              <Bullseye>
-                <EmptyState>
-                  <EmptyStateIcon icon={SearchIcon} />
-                  <Title headingLevel="h5" size="lg">
-                    No results found
-                  </Title>
-                  <EmptyStateBody>
-                    No results match this filter criteria. Remove all filters or
-                    clear all filters to show results.
-                  </EmptyStateBody>
-                  <EmptyStateSecondaryActions>
-                    <Button variant="link" onClick={() => {}}>
-                      Clear all filters
-                    </Button>
-                  </EmptyStateSecondaryActions>
-                </EmptyState>
-              </Bullseye>
-            </CardBody>
-          </Card>
-        )}
       </React.Fragment>
     );
   };
