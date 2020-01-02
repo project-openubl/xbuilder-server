@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import {
   Form,
@@ -10,7 +10,6 @@ import {
   SelectOption,
   Select
 } from "@patternfly/react-core";
-import { CubeIcon } from "@patternfly/react-icons";
 import {
   ComponentRepresentation,
   ComponentTypeRepresentation,
@@ -45,7 +44,7 @@ const ProviderForm: React.FC<Props> = ({ provider, component }) => {
       .min(1, "El valor minimo es 1")
   });
 
-  const { register, errors, triggerValidation, getValues, setValue } = useForm<
+  const { register, errors, triggerValidation, setValue } = useForm<
     FormData
   >({
     mode: "onSubmit",

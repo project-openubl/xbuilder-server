@@ -1,10 +1,8 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch } from "redux";
-import { ThunkAction } from "redux-thunk";
 import { createAction } from "typesafe-actions";
 import { OrganizationRepresentation } from "../../models/xml-builder";
 import { getAll } from "../../api/organizations";
-import { RootState } from "../rootReducer";
 
 export const fetchOrganizationsRequest = createAction(
   "organizationContext/organizations/fetch/request"

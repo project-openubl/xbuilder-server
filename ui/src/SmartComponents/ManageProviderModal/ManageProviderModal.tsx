@@ -2,7 +2,6 @@ import React from "react";
 import { Button, Modal } from "@patternfly/react-core";
 import {
   ComponentRepresentation,
-  ServerInfoRepresentation,
   ComponentTypeRepresentation
 } from "../../models/xml-builder";
 import { XmlBuilderRouterProps } from "../../models/routerProps";

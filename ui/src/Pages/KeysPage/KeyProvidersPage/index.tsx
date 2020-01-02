@@ -3,10 +3,6 @@ import KeyProvidersPage from "./KeyProvidersPage";
 
 import { createMapStateToProps } from "../../../store/common";
 import {
-  organizationKeysActions,
-  organizationKeysSelectors
-} from "../../../store/organizationKeys";
-import {
   organizationComponentsActions,
   organizationComponentsSelectors
 } from "../../../store/organizationComponents";
