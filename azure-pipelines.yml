@@ -25,8 +25,20 @@ stages:
   - stage: test
     displayName: Test
     jobs:
+      - job: maven_install
+        displayName: Install
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'install'
+              options: '-DskipTests'
+              javaHomeOption: 'JDKVersion'
       - job: unit_test
         displayName: Unit tests
+        dependsOn: maven_install
         strategy:
           maxParallel: 2
           matrix:
@@ -65,6 +77,7 @@ stages:
               sonarQubeRunAnalysis: false
       - job: test_sunat
         displayName: Tests SUNAT
+        dependsOn: maven_install
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
