@@ -1,7 +1,6 @@
 # Table of contents
 
 * [Home](README.md)
-* [Levantar servidor](docs/LEVANTAR_SERVIDOR.md)
-* [Levantar servidor para desarrolladores](docs/DEVELOPERS.md)
+* [Instalación y configuración del servidor](docs/INSTALACION_CONFIGURACION_SERVIDOR.md)
 * [Crear comprobante electrónico](docs/CREAR_COMPROBANTE.md)
 
