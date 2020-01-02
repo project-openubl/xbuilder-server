@@ -1,8 +1,8 @@
 {
   "name": "xml-builder-ui",
   "version": "0.1.0",
+  "homepage": ".",
   "private": true,
-  "homepage": "https://project-openubl.github.io/xml-builder-ui/",
   "dependencies": {
     "@material-ui/core": "^4.8.2",
     "@material-ui/lab": "^4.0.0-alpha.38",
