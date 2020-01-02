@@ -9,9 +9,7 @@ import {
   TableBody,
   expandable
 } from "@patternfly/react-table";
-import { Button, ClipboardCopy } from "@patternfly/react-core";
-import {
-  AngleDoubleRightIcon} from "@patternfly/react-icons";
+import { ClipboardCopy } from "@patternfly/react-core";
 import KeysPageTabs from "../../../PresentationalComponents/KeysPageTabs";
 import { FetchStatus } from "../../../store/common";
 import {
@@ -19,6 +17,7 @@ import {
   KeysMetadataRepresentation,
   KeyMetadataRepresentation
 } from "../../../models/xml-builder";
+import KeyButtonModal from "../../../PresentationalComponents/KeyButtonModal";
 
 interface Props {
   match: any;
@@ -157,16 +156,20 @@ class KeyListPage extends React.Component<Props, State> {
             },
             {
               title: (
-                <Button variant="link" icon={<AngleDoubleRightIcon />}>
-                  Ver
-                </Button>
+                <KeyButtonModal
+                  buttonLabel="Ver"
+                  title="Llave público"
+                  keyValue={key.publicKey}
+                />
               )
             },
             {
               title: (
-                <Button variant="link" icon={<AngleDoubleRightIcon />}>
-                  Ver
-                </Button>
+                <KeyButtonModal
+                  buttonLabel="Ver"
+                  title="Certificado"
+                  keyValue={key.certificate}
+                />
               )
             }
           ]

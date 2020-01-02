@@ -9,9 +9,7 @@ import {
   TableBody,
   expandable
 } from "@patternfly/react-table";
-import { Button, ClipboardCopy } from "@patternfly/react-core";
-import {
-  AngleDoubleRightIcon} from "@patternfly/react-icons";
+import { ClipboardCopy } from "@patternfly/react-core";
 import KeysPageTabs from "../../../PresentationalComponents/KeysPageTabs";
 import { FetchStatus } from "../../../store/common";
 import {
@@ -19,23 +17,24 @@ import {
   KeysMetadataRepresentation,
   KeyMetadataRepresentation
 } from "../../../models/xml-builder";
+import { XmlBuilderRouterProps } from "../../../models/routerProps";
+import KeyButtonModal from "../../../PresentationalComponents/KeyButtonModal";
 
-interface Props {
-  match: any;
-  history: any;
-  location: any;
-
+interface StateToProps {
   organizationKeys: KeysMetadataRepresentation | undefined;
   organizationKeysFetchStatus: FetchStatus | undefined;
   organizationKeysError: AxiosError<any> | undefined;
-
   organizationComponents: ComponentRepresentation[];
   organizationComponentsFetchStatus: FetchStatus | undefined;
   organizationComponentsError: AxiosError<any> | undefined;
+}
 
+interface DispatchToProps {
   fetchOrganizationKeys: (organizationId: string) => any;
   fetchOrganizationComponents: (organizationId: string) => any;
 }
+
+interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
 
 interface State {
   activeMap: Map<string, KeyMetadataRepresentation>;
@@ -149,16 +148,20 @@ class ActiveKeysPage extends React.Component<Props, State> {
             },
             {
               title: (
-                <Button variant="link" icon={<AngleDoubleRightIcon />}>
-                  Ver
-                </Button>
+                <KeyButtonModal
+                  buttonLabel="Ver"
+                  title="Llave público"
+                  keyValue={key.publicKey}
+                />
               )
             },
             {
               title: (
-                <Button variant="link" icon={<AngleDoubleRightIcon />}>
-                  Ver
-                </Button>
+                <KeyButtonModal
+                  buttonLabel="Ver"
+                  title="Certificado"
+                  keyValue={key.certificate}
+                />
               )
             }
           ]

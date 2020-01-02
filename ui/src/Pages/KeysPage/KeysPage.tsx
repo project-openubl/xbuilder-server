@@ -6,21 +6,24 @@ import KeyListPage from "./KeyListPage";
 import { organizationContextActions } from "../../store/organizationContext";
 import { OrganizationRepresentation } from "../../models/xml-builder";
 import ManageProviderPage from "./ManageProviderPage";
+import { XmlBuilderRouterProps } from "../../models/routerProps";
 
-interface Props {
-  match: any;
-  history: any;
-  location: any;
-
+interface StateToProps {
   organizations: OrganizationRepresentation[];
+}
+
+interface DispatchToProps {
   selectOrganizationContext: typeof organizationContextActions.selectOrganizationContext;
 }
+
+interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
 
 const KeysPage: React.FC<Props> = ({
   match,
   organizations,
   selectOrganizationContext
 }) => {
+  // Select organization context
   const organizationId = match.params.organizationId;
   if (match.params.organizationId) {
     const organization = organizations.find(p => p.id === organizationId);
