@@ -23,15 +23,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @QuarkusTestResource(H2DatabaseTestResource.class)
 public class OrganizationsResourceTest {
 
+    static final String ORGANIZATIONS_URL = "/api/organizations";
+
     @Test
-     void testGetOrganizations() throws Exception {
+    void testGetOrganizations() throws Exception {
         // GIVEN
 
         // WHEN
         Response response = given()
                 .header("Content-Type", "application/json")
                 .when()
-                .get("/organizations")
+                .get(ORGANIZATIONS_URL)
                 .thenReturn();
 
         // THEN
@@ -43,14 +45,14 @@ public class OrganizationsResourceTest {
     }
 
     @Test
-     void testGetOrganization() throws Exception {
+    void testGetOrganization() throws Exception {
         // GIVEN
 
         // WHEN
         Response response = given()
                 .header("Content-Type", "application/json")
                 .when()
-                .get("/organizations/master")
+                .get(ORGANIZATIONS_URL + "/master")
                 .thenReturn();
 
         // THEN
@@ -63,12 +65,12 @@ public class OrganizationsResourceTest {
     }
 
     @Test
-     void testCreateOrganization() throws Exception {
+    void testCreateOrganization() throws Exception {
         // GIVEN
         OrganizationRepresentation organization = new OrganizationRepresentation();
         organization.setName("myCompanyNamae");
         organization.setDescription("myCompanyDescription");
-        organization.setUseCustomCertificates(false);
+        organization.setUseMasterKeys(false);
         organization.setType("master"); // this field should be used, check asserts
 
         String body = new ObjectMapper().writeValueAsString(organization);
@@ -78,7 +80,7 @@ public class OrganizationsResourceTest {
                 .body(body)
                 .header("Content-Type", "application/json")
                 .when()
-                .post("/organizations")
+                .post(ORGANIZATIONS_URL)
                 .thenReturn();
 
         // THEN
@@ -88,19 +90,19 @@ public class OrganizationsResourceTest {
         OrganizationRepresentation output = new ObjectMapper().readValue(responseBody.asInputStream(), OrganizationRepresentation.class);
         assertEquals(organization.getName(), output.getName());
         assertEquals(organization.getDescription(), output.getDescription());
-        assertEquals(organization.getUseCustomCertificates(), output.getUseCustomCertificates());
+        assertEquals(organization.getUseMasterKeys(), output.getUseMasterKeys());
         assertEquals(OrganizationType.common.toString(), output.getType());
     }
 
     @Test
-     void testUpdateOrganization() throws Exception {
+    void testUpdateOrganization() throws Exception {
         // GIVEN
         String organizationId = "master";
 
         OrganizationRepresentation organization = new OrganizationRepresentation();
         organization.setName("myNewMasterName");
         organization.setDescription("myNewMasterDescription");
-        organization.setUseCustomCertificates(false);
+        organization.setUseMasterKeys(false);
         organization.setType("common"); // this field should never change, check asserts
 
         String body = new ObjectMapper().writeValueAsString(organization);
@@ -110,7 +112,7 @@ public class OrganizationsResourceTest {
                 .body(body)
                 .header("Content-Type", "application/json")
                 .when()
-                .put("/organizations/" + organizationId)
+                .put(ORGANIZATIONS_URL + "/" + organizationId)
                 .thenReturn();
 
         // THEN
@@ -120,12 +122,12 @@ public class OrganizationsResourceTest {
         OrganizationRepresentation output = new ObjectMapper().readValue(responseBody.asInputStream(), OrganizationRepresentation.class);
         assertEquals(organization.getName(), output.getName());
         assertEquals(organization.getDescription(), output.getDescription());
-        assertEquals(organization.getUseCustomCertificates(), output.getUseCustomCertificates());
+        assertEquals(organization.getUseMasterKeys(), output.getUseMasterKeys());
         assertEquals(OrganizationType.master.toString(), output.getType());
     }
 
     @Test
-     void testGetKeyMetadata() throws Exception {
+    void testGetKeyMetadata() throws Exception {
         // GIVEN
         String organizationId = "master";
 
@@ -133,7 +135,7 @@ public class OrganizationsResourceTest {
         Response response = given()
                 .header("Content-Type", "application/json")
                 .when()
-                .get("/organizations/" + organizationId + "/keys")
+                .get(ORGANIZATIONS_URL + "/" + organizationId + "/keys")
                 .thenReturn();
 
         // THEN
@@ -147,7 +149,7 @@ public class OrganizationsResourceTest {
     }
 
     @Test
-     void testGetComponents() throws Exception {
+    void testGetComponents() throws Exception {
         // GIVEN
         String organizationId = "master";
 
@@ -155,7 +157,7 @@ public class OrganizationsResourceTest {
         Response response = given()
                 .header("Content-Type", "application/json")
                 .when()
-                .get("/organizations/" + organizationId + "/components")
+                .get(ORGANIZATIONS_URL + "/" + organizationId + "/components")
                 .thenReturn();
 
         // THEN

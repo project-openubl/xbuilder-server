@@ -12,15 +12,18 @@ import org.openublpe.xmlbuilder.apisigner.models.KeyManager;
 import org.openublpe.xmlbuilder.apisigner.models.ModelException;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationModel;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationProvider;
+import org.openublpe.xmlbuilder.apisigner.models.SearchResultsModel;
 import org.openublpe.xmlbuilder.apisigner.models.utils.ModelToRepresentation;
 import org.openublpe.xmlbuilder.apisigner.models.utils.RepresentationToModel;
 import org.openublpe.xmlbuilder.apisigner.representations.idm.ComponentRepresentation;
 import org.openublpe.xmlbuilder.apisigner.representations.idm.OrganizationRepresentation;
+import org.openublpe.xmlbuilder.apisigner.representations.idm.SearchResultsRepresentation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -42,6 +45,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -72,6 +76,9 @@ public class OrganizationsResource {
     @POST
     @Path("/")
     public OrganizationRepresentation createOrganization(@Valid OrganizationRepresentation representation) {
+        if (organizationProvider.getOrganizationByName(representation.getName()).isPresent()) {
+            throw new BadRequestException("Organization with name=" + representation.getName() + " already exists");
+        }
         OrganizationModel organization = organizationManager.createOrganization(representation);
         return ModelToRepresentation.toRepresentation(organization, true);
     }
@@ -85,22 +92,63 @@ public class OrganizationsResource {
             @QueryParam("limit") @DefaultValue("10") int limit
     ) {
         if (organizationId != null) {
-            return organizationProvider.getOrganization(organizationId)
-                    .map(organizationModel -> Collections.singletonList(ModelToRepresentation.toRepresentation(organizationModel, false)))
+            return organizationProvider.getOrganizationById(organizationId)
+                    .map(organizationModel -> Collections.singletonList(ModelToRepresentation.toRepresentation(organizationModel, true)))
                     .orElseGet(Collections::emptyList);
         }
 
         if (filterText != null) {
             return organizationProvider.getOrganizations(filterText, offset, limit)
                     .stream()
-                    .map(model -> ModelToRepresentation.toRepresentation(model, false))
+                    .map(model -> ModelToRepresentation.toRepresentation(model, true))
                     .collect(Collectors.toList());
         } else {
             return organizationProvider.getOrganizations(offset, limit)
                     .stream()
-                    .map(model -> ModelToRepresentation.toRepresentation(model, false))
+                    .map(model -> ModelToRepresentation.toRepresentation(model, true))
                     .collect(Collectors.toList());
         }
+    }
+
+    @GET
+    @Path("/search")
+    public SearchResultsRepresentation<OrganizationRepresentation> searchOrganizations(
+            @QueryParam("filterText") String filterText,
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("pageSize") @DefaultValue("10") int pageSize
+    ) {
+        SearchResultsModel<OrganizationModel> results;
+        if (filterText != null && !filterText.trim().isEmpty()) {
+            results = organizationProvider.searchOrganizations(filterText, page, pageSize);
+        } else {
+            results = organizationProvider.searchOrganizations(page, pageSize);
+        }
+
+        return new SearchResultsRepresentation<>(
+                results.getTotalSize(),
+                results.getModels().stream()
+                        .map(model -> ModelToRepresentation.toRepresentation(model, true))
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @GET
+    @Path("/all")
+    public List<OrganizationRepresentation> getAllOrganizations() {
+        return organizationProvider.getOrganizations(-1, -1)
+                .stream()
+                .map(model -> ModelToRepresentation.toRepresentation(model, true))
+                .collect(Collectors.toList());
+    }
+
+    @GET
+    @Path("/id-by-name/{organizationName}")
+    public String getOrganizationIdByName(
+            @PathParam("organizationName") String organizationName
+    ) {
+        return organizationProvider.getOrganizationByName(organizationName)
+                .map(OrganizationModel::getId)
+                .orElse(null);
     }
 
     @GET
@@ -108,7 +156,7 @@ public class OrganizationsResource {
     public OrganizationRepresentation getOrganization(
             @PathParam("organizationId") String organizationId
     ) {
-        return organizationProvider.getOrganization(organizationId)
+        return organizationProvider.getOrganizationById(organizationId)
                 .map(organizationModel -> ModelToRepresentation.toRepresentation(organizationModel, true))
                 .orElseThrow(() -> new NotFoundException("Organization not found"));
     }
@@ -119,7 +167,7 @@ public class OrganizationsResource {
             @PathParam("organizationId") String organizationId,
             OrganizationRepresentation rep
     ) {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
         RepresentationToModel.updateOrganization(rep, organization);
         return ModelToRepresentation.toRepresentation(organization, true);
     }
@@ -138,7 +186,7 @@ public class OrganizationsResource {
     public KeysMetadataRepresentation getKeyMetadata(
             @PathParam("organizationId") final String organizationId
     ) {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
 
         KeysMetadataRepresentation keys = new KeysMetadataRepresentation();
 
@@ -172,7 +220,7 @@ public class OrganizationsResource {
             @QueryParam("parent") String parent,
             @QueryParam("type") String type
     ) {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
 
         List<ComponentModel> components;
         if (parent == null && type == null) {
@@ -198,7 +246,7 @@ public class OrganizationsResource {
     public Response createComponent(
             @PathParam("organizationId") final String organizationId, ComponentRepresentation rep
     ) {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
 
         try {
             ComponentModel model = RepresentationToModel.toModel(rep);
@@ -219,7 +267,7 @@ public class OrganizationsResource {
             @PathParam("organizationId") final String organizationId,
             @PathParam("componentId") String componentId
     ) {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
 
         ComponentModel model = componentProvider.getComponent(organization, componentId);
         if (model == null) {
@@ -236,7 +284,7 @@ public class OrganizationsResource {
             @PathParam("organizationId") final String organizationId,
             @PathParam("componentId") String componentId, ComponentRepresentation rep
     ) {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
 
         try {
             ComponentModel model = componentProvider.getComponent(organization, componentId);
@@ -258,7 +306,7 @@ public class OrganizationsResource {
             @PathParam("organizationId") final String organizationId,
             @PathParam("componentId") String componentId
     ) {
-        OrganizationModel organization = organizationProvider.getOrganization(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organization not found"));
 
         ComponentModel model = componentProvider.getComponent(organization, componentId);
         if (model == null) {

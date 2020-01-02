@@ -1,12 +1,12 @@
 package org.openublpe.xmlbuilder.apisigner.models.utils;
 
 import org.keycloak.common.util.MultivaluedHashMap;
-import org.keycloak.representations.idm.ConfigPropertyRepresentation;
 import org.openublpe.xmlbuilder.apisigner.keys.component.ComponentModel;
 import org.openublpe.xmlbuilder.apisigner.keys.component.utils.ComponentUtil;
 import org.openublpe.xmlbuilder.apisigner.keys.provider.ProviderConfigProperty;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationModel;
 import org.openublpe.xmlbuilder.apisigner.representations.idm.ComponentRepresentation;
+import org.openublpe.xmlbuilder.apisigner.representations.idm.ConfigPropertyRepresentation;
 import org.openublpe.xmlbuilder.apisigner.representations.idm.OrganizationRepresentation;
 
 import java.util.LinkedList;
@@ -27,7 +27,7 @@ public class ModelToRepresentation {
 
         if (fullInfo) {
             rep.setDescription(model.getDescription());
-            rep.setUseCustomCertificates(model.getUseCustomCertificates());
+            rep.setUseMasterKeys(model.getUseCustomCertificates());
         }
 
         return rep;

@@ -16,8 +16,8 @@
 
         <quarkus.platform.artifact-id>quarkus-universe-bom</quarkus.platform.artifact-id>
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
-        <quarkus-plugin.version>1.0.1.Final</quarkus-plugin.version>
-        <quarkus.platform.version>1.0.1.Final</quarkus.platform.version>
+        <quarkus-plugin.version>1.1.0.Final</quarkus-plugin.version>
+        <quarkus.platform.version>1.1.0.Final</quarkus.platform.version>
 
         <jandex.version>1.0.6</jandex.version>
         <camel.quarkus.version>0.2.0</camel.quarkus.version>
@@ -123,6 +123,11 @@
                 <artifactId>xml-builder-api-signer</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-ui</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modules>
@@ -133,6 +138,7 @@
         <module>rules</module>
         <module>api</module>
         <module>api-signer</module>
+        <module>ui</module>
     </modules>
 
     <profiles>

@@ -44,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @QuarkusTestResource(H2DatabaseTestResource.class)
 public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest {
 
+    static final String ORGANIZATIONS_URL = "/api/organizations";
     static final String ORGANIZATION_ID = "master";
 
     static final String SUNAT_BETA_URL = "https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService";
@@ -200,7 +201,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/organizations/" + ORGANIZATION_ID + "/documents/invoice/create")
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/invoice/create")
                     .thenReturn();
 
             // Then
@@ -223,7 +224,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/organizations/" + ORGANIZATION_ID + "/documents/credit-note/create")
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/credit-note/create")
                     .thenReturn();
 
             // Then
@@ -246,7 +247,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/organizations/" + ORGANIZATION_ID + "/documents/debit-note/create")
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/debit-note/create")
                     .thenReturn();
 
             // Then
@@ -269,7 +270,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/organizations/" + ORGANIZATION_ID + "/documents/voided-document/create")
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/voided-document/create")
                     .thenReturn();
 
             // Then
@@ -292,7 +293,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/organizations/" + ORGANIZATION_ID + "/documents/summary-document/create")
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/summary-document/create")
                     .thenReturn();
 
             // Then
