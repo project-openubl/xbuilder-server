@@ -26,10 +26,10 @@
             <groupId>org.openublpe</groupId>
             <artifactId>xml-builder-rules</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-ui</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.openublpe</groupId>-->
+<!--            <artifactId>xml-builder-ui</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.openublpe</groupId>
@@ -181,29 +181,29 @@
 
     <build>
         <plugins>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.openublpe</groupId>
-                                    <artifactId>xml-builder-ui</artifactId>
-                                    <classifier>distribution</classifier>
-                                    <type>zip</type>
-                                    <outputDirectory>${project.build.outputDirectory}/META-INF/resources</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>unpack</id>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>unpack</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <artifactItems>-->
+<!--                                <artifactItem>-->
+<!--                                    <groupId>org.openublpe</groupId>-->
+<!--                                    <artifactId>xml-builder-ui</artifactId>-->
+<!--                                    <classifier>distribution</classifier>-->
+<!--                                    <type>zip</type>-->
+<!--                                    <outputDirectory>${project.build.outputDirectory}/META-INF/resources</outputDirectory>-->
+<!--                                </artifactItem>-->
+<!--                            </artifactItems>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>${maven-resources-plugin.version}</version>
