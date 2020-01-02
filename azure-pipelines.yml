@@ -39,30 +39,36 @@ stages:
         pool:
           vmImage: $(imageName)
         steps:
-          - task: SonarCloudPrepare@1
-            displayName: 'Prepare SonarCloud analysis'
-            condition: and(eq(variables['jdk_version'], '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
-            inputs:
-              SonarCloud: 'project-openubl/xml-builder'
-              organization: 'project-openubl'
-              scannerMode: 'CLI'
-              configMode: 'file'
           - task: Maven@3
-            displayName: Maven with SonarQube analysis
-            condition: and(eq(variables['jdk_version'], '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
+            displayName: Maven
             inputs:
               mavenPomFile: 'pom.xml'
               goals: verify
               jdkVersionOption: $(jdk_version)
-              sonarQubeRunAnalysis: true
-          - task: Maven@3
-            displayName: Maven without SonarQube analysis
-            condition: eq(variables['System.PullRequest.IsFork'], 'True')
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: verify
-              jdkVersionOption: $(jdk_version)
-              sonarQubeRunAnalysis: false
+#          - task: SonarCloudPrepare@1
+#            displayName: 'Prepare SonarCloud analysis'
+#            condition: and(eq(variables['jdk_version'], '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
+#            inputs:
+#              SonarCloud: 'project-openubl/xml-builder'
+#              organization: 'project-openubl'
+#              scannerMode: 'CLI'
+#              configMode: 'file'
+#          - task: Maven@3
+#            displayName: Maven with SonarQube analysis
+#            condition: and(eq(variables['jdk_version'], '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
+#            inputs:
+#              mavenPomFile: 'pom.xml'
+#              goals: verify
+#              jdkVersionOption: $(jdk_version)
+#              sonarQubeRunAnalysis: true
+#          - task: Maven@3
+#            displayName: Maven without SonarQube analysis
+#            condition: eq(variables['System.PullRequest.IsFork'], 'True')
+#            inputs:
+#              mavenPomFile: 'pom.xml'
+#              goals: verify
+#              jdkVersionOption: $(jdk_version)
+#              sonarQubeRunAnalysis: false
       - job: test_sunat
         displayName: Tests SUNAT
         pool:
