@@ -25,8 +25,8 @@ stages:
   - stage: test
     displayName: Test
     jobs:
-      - job: install
-        displayName: Install
+      - job: install_ui
+        displayName: Install UI
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
@@ -34,11 +34,11 @@ stages:
             inputs:
               mavenPomFile: 'pom.xml'
               goals: 'install'
-              options: '-DskipTests'
+              options: '-DskipTests -f ui/pom.xml'
               javaHomeOption: 'JDKVersion'
       - job: unit_test
         displayName: Unit tests
-        dependsOn: install
+        dependsOn: install_ui
         strategy:
           maxParallel: 2
           matrix:
@@ -83,7 +83,7 @@ stages:
 #              sonarQubeRunAnalysis: false
       - job: test_sunat
         displayName: Tests SUNAT
-        dependsOn: install
+        dependsOn: install_ui
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
