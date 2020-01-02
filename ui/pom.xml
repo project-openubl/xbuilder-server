@@ -27,6 +27,9 @@
                     <skip>${skipFrontendBuild}</skip>
                     <installDirectory>target/frontend</installDirectory>
                     <workingDirectory>target/frontend</workingDirectory>
+                    <environmentVariables>
+                        <CI>true</CI>
+                    </environmentVariables>
                 </configuration>
                 <executions>
                     <execution>
