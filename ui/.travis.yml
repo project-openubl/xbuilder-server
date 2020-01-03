@@ -1,0 +1,21 @@
+language: node_js
+node_js:
+- 'stable'
+install:
+- yarn install
+jobs:
+  include:
+  - stage: Test
+    script:
+      - yarn test && npx codecov
+  - stage: GithubPage
+    script:
+      - yarn build
+    deploy:
+      provider: pages
+      skip_cleanup: true
+      github_token: $GITHUB_TOKEN
+      keep_history: true
+      local_dir: build
+      on:
+        branch: master
