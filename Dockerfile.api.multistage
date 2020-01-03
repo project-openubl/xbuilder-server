@@ -8,6 +8,7 @@ COPY extensions /usr/src/app/extensions
 COPY input-test-data /usr/src/app/input-test-data
 COPY rules /usr/src/app/rules
 COPY templates /usr/src/app/templates
+COPY ui /usr/src/app/ui
 COPY pom.xml /usr/src/app
 
 USER root
