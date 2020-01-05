@@ -9,7 +9,7 @@ import ManageProviderPage from "./ManageProviderPage";
 import { XmlBuilderRouterProps } from "../../models/routerProps";
 
 interface StateToProps {
-  organizations: OrganizationRepresentation[];
+  contextOrganizations: OrganizationRepresentation[];
 }
 
 interface DispatchToProps {
@@ -20,13 +20,13 @@ interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
 
 const KeysPage: React.FC<Props> = ({
   match,
-  organizations,
+  contextOrganizations,
   selectOrganizationContext
 }) => {
   // Select organization context
   const organizationId = match.params.organizationId;
   if (match.params.organizationId) {
-    const organization = organizations.find(p => p.id === organizationId);
+    const organization = contextOrganizations.find(p => p.id === organizationId);
     if (organization) {
       selectOrganizationContext(organization);
     }

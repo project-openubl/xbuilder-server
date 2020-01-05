@@ -16,7 +16,7 @@ import {
   ToolbarGroup,
   ToolbarItem
 } from "@patternfly/react-core";
-import { PlusCircleIcon, InfoAltIcon } from "@patternfly/react-icons";
+import { PlusCircleIcon } from "@patternfly/react-icons";
 import KeysPageTabs from "../../../PresentationalComponents/KeysPageTabs";
 import { FetchStatus } from "../../../store/common";
 import {
@@ -25,23 +25,26 @@ import {
   ComponentTypeRepresentation
 } from "../../../models/xml-builder";
 import { Link } from "react-router-dom";
+import SkeletonTable from "../../../PresentationalComponents/SkeletonTable";
+import ErrorTable from "../../../PresentationalComponents/ErrorTable";
+import EmptyTable from "../../../PresentationalComponents/EmptyTable";
+import { XmlBuilderRouterProps } from "../../../models/routerProps";
 
-interface Props {
-  match: any;
-  history: any;
-  location: any;
-
+interface StateToProps {
   serverInfo: ServerInfoRepresentation | undefined;
   serverInfoFetchStatus: FetchStatus | undefined;
   serverInfoError: AxiosError<any> | undefined;
-
   organizationComponents: ComponentRepresentation[];
   organizationComponentsFetchStatus: FetchStatus | undefined;
   organizationComponentsError: AxiosError<any> | undefined;
+}
 
+interface DispatchToProps {
   fetchServerInfo: () => any;
   fetchOrganizationComponents: (organizationId: string) => any;
 }
+
+interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
 
 interface State {
   rows: IRow[];
@@ -55,10 +58,10 @@ class KeyProvidersPage extends React.Component<Props, State> {
     this.state = {
       rows: [],
       columns: [
-        { title: "Tipo", transforms: [] },
-        { title: "Id", transforms: [] },
-        { title: "Proveedor", transforms: [] },
-        { title: "Prioridad", transforms: [] }
+        { title: "Tipo" },
+        { title: "Kid" },
+        { title: "Proveedor" },
+        { title: "Prioridad" }
       ],
       actions: [
         {
@@ -75,20 +78,29 @@ class KeyProvidersPage extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    this.loadSystemInfoAndComponents();
+  }
+
+  componentDidUpdate(_prevProps: Props, prevState: State) {
+    if (_prevProps.organizationComponents !== this.props.organizationComponents) {
+      this.filtersInRowsAndCells();
+    }
+  }
+
+  loadSystemInfoAndComponents = () => {
     const { fetchServerInfo, fetchOrganizationComponents } = this.props;
     fetchServerInfo();
-    fetchOrganizationComponents(this.getOrganizationId()).then(() => {
-      this.processRows();
-    });
-  }
+    fetchOrganizationComponents(this.getOrganizationId());
+  };
 
   getOrganizationId = () => {
     return this.props.match.params.organizationId;
   };
 
-  processRows = (
+  filtersInRowsAndCells = (
     components: ComponentRepresentation[] = this.props.organizationComponents
   ) => {
+    const { match } = this.props;
     const rows: (IRow | string[])[] = components.map(
       (component: ComponentRepresentation) => ({
         cells: [
@@ -96,7 +108,14 @@ class KeyProvidersPage extends React.Component<Props, State> {
             title: component.name
           },
           {
-            title: component.id
+            title: (
+              <Link
+                key={component.id}
+                to={`${match.url}/${component.providerId}/${component.id}`}
+              >
+                {component.id}
+              </Link>
+            )
           },
           {
             title: component.providerId
@@ -119,6 +138,31 @@ class KeyProvidersPage extends React.Component<Props, State> {
 
   renderTable = () => {
     const { columns, rows, actions } = this.state;
+    const {
+      serverInfoError,
+      organizationComponentsError,
+      serverInfoFetchStatus,
+      organizationComponentsFetchStatus
+    } = this.props;
+
+    if (
+      serverInfoFetchStatus !== "complete" ||
+      organizationComponentsFetchStatus !== "complete"
+    ) {
+      return <SkeletonTable columns={columns} rowSize={5} />;
+    }
+
+    if (serverInfoError || organizationComponentsError) {
+      const retry = () => {
+        this.loadSystemInfoAndComponents();
+      };
+      return <ErrorTable columns={columns} retry={retry} />;
+    }
+
+    if (rows.length === 0) {
+      return <EmptyTable columns={columns} />;
+    }
+
     return (
       <React.Fragment>
         <Table
@@ -144,11 +188,7 @@ class KeyProvidersPage extends React.Component<Props, State> {
             <CardHeader>
               <Toolbar className="pf-l-toolbar pf-u-justify-content-space-between pf-u-mx-xl pf-u-my-md">
                 <ToolbarGroup>
-                  <ToolbarItem className="pf-u-mr-xl">
-                    <Button variant="link" icon={<InfoAltIcon />} isDisabled>
-                      Crear certificado digital
-                    </Button>
-                  </ToolbarItem>
+                  <ToolbarItem className="pf-u-mr-xl"></ToolbarItem>
                 </ToolbarGroup>
                 <ToolbarGroup>
                   {serverInfo && (

@@ -19,6 +19,9 @@ import {
 } from "../../../models/xml-builder";
 import { XmlBuilderRouterProps } from "../../../models/routerProps";
 import KeyButtonModal from "../../../PresentationalComponents/KeyButtonModal";
+import SkeletonTable from "../../../PresentationalComponents/SkeletonTable";
+import ErrorTable from "../../../PresentationalComponents/ErrorTable";
+import EmptyTable from "../../../PresentationalComponents/EmptyTable";
 
 interface StateToProps {
   organizationKeys: KeysMetadataRepresentation | undefined;
@@ -59,9 +62,7 @@ class ActiveKeysPage extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    const { fetchOrganizationKeys, fetchOrganizationComponents } = this.props;
-    fetchOrganizationKeys(this.getOrganizationId());
-    fetchOrganizationComponents(this.getOrganizationId());
+    this.loadKeysAndComponents();
   }
 
   componentDidUpdate(_prevProps: Props, prevState: State) {
@@ -76,10 +77,26 @@ class ActiveKeysPage extends React.Component<Props, State> {
     ) {
       this.processKeysAndComponents();
     }
+
+    // Refresh keys and components when route changed
+    const currentOrganizationId = this.getOrganizationId();
+    const prevOrganizationId = this.getOrganizationId(_prevProps.match);
+    if (prevOrganizationId !== currentOrganizationId) {
+      this.loadKeysAndComponents();
+    }
   }
 
-  getOrganizationId = () => {
-    return this.props.match.params.organizationId;
+  loadKeysAndComponents = () => {
+    const { fetchOrganizationKeys, fetchOrganizationComponents } = this.props;
+
+    this.setState({ activeMap: new Map() }, () => {
+      fetchOrganizationKeys(this.getOrganizationId());
+      fetchOrganizationComponents(this.getOrganizationId());
+    });
+  };
+
+  getOrganizationId = (match: any = this.props.match) => {
+    return match.params.organizationId;
   };
 
   processKeysAndComponents = () => {
@@ -115,12 +132,12 @@ class ActiveKeysPage extends React.Component<Props, State> {
       }
 
       this.setState({ activeMap: activeMap }, () => {
-        this.processRows();
+        this.filtersInRowsAndCells();
       });
     }
   };
 
-  processRows = (
+  filtersInRowsAndCells = (
     map: Map<string, KeyMetadataRepresentation> = this.state.activeMap
   ) => {
     const rows: (IRow | string[])[] = [];
@@ -150,7 +167,7 @@ class ActiveKeysPage extends React.Component<Props, State> {
               title: (
                 <KeyButtonModal
                   buttonLabel="Ver"
-                  title="Llave público"
+                  title="Llave pública"
                   keyValue={key.publicKey}
                 />
               )
@@ -211,6 +228,31 @@ class ActiveKeysPage extends React.Component<Props, State> {
 
   renderTable = () => {
     const { columns, rows } = this.state;
+    const {
+      organizationKeysError,
+      organizationComponentsError,
+      organizationKeysFetchStatus,
+      organizationComponentsFetchStatus
+    } = this.props;
+
+    if (
+      organizationKeysFetchStatus !== "complete" ||
+      organizationComponentsFetchStatus !== "complete"
+    ) {
+      return <SkeletonTable columns={columns} rowSize={5} />;
+    }
+
+    if (organizationKeysError || organizationComponentsError) {
+      const retry = () => {
+        this.loadKeysAndComponents();
+      };
+      return <ErrorTable columns={columns} retry={retry} />;
+    }
+
+    if (rows.length === 0) {
+      return <EmptyTable columns={columns} />;
+    }
+
     return (
       <React.Fragment>
         <Table
