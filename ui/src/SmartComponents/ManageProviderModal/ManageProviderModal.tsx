@@ -6,20 +6,29 @@ import {
 } from "../../models/xml-builder";
 import { XmlBuilderRouterProps } from "../../models/routerProps";
 import ProviderForm from "../../PresentationalComponents/ProviderForm";
+import { ETIME } from "constants";
 
 interface StateToProps {}
 
-interface DispatchToProps {}
+interface DispatchToProps {
+  requestCreateComponent: (
+    organizationId: string,
+    component: ComponentRepresentation
+  ) => any;
+  requestUpdateComponent: (
+    organizationId: string,
+    component: ComponentRepresentation
+  ) => any;
+}
 
 interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {
   component: ComponentRepresentation | undefined;
   provider: ComponentTypeRepresentation | undefined;
-  redirectTo: string | undefined;
 }
 
 interface State {
   saving: boolean;
-  formData: FormData | null;
+  formData: any | null;
 }
 
 class ManageProviderModal extends React.Component<Props, State> {
@@ -31,16 +40,54 @@ class ManageProviderModal extends React.Component<Props, State> {
     };
   }
 
-  create = () => {};
-  update = () => {};
+  getRedirectTo = (): string => {
+    return `/organizations/manage/${this.getOrganizationId()}/keys/providers`;
+  };
+
+  getOrganizationId = (): string => {
+    const { match } = this.props;
+    return match.params.organizationId;
+  };
+
+  getPayload = () => {
+    const { component } = this.props;
+    const { formData } = this.state;
+
+    const { id, name, ...config } = formData;
+    const configPayload: any = {};
+    Object.keys(config).forEach((key: string) => {
+      configPayload[key] = [config[key].toString()];
+    });
+
+    return {
+      ...component,
+      name: name,
+      config: configPayload
+    };
+  };
+
+  create = () => {
+    const { requestCreateComponent, provider } = this.props;
+    const payload: any = {
+      ...this.getPayload(),
+      providerId: provider ? provider.id : undefined
+    };
+    requestCreateComponent(this.getOrganizationId(), payload);
+  };
+
+  update = () => {
+    const { requestUpdateComponent } = this.props;
+    const payload: any = {
+      ...this.getPayload()
+    };
+    requestUpdateComponent(this.getOrganizationId(), payload);
+  };
 
   // Handlers
 
   handleModalClose = () => {
-    const { redirectTo, history } = this.props;
-    if (redirectTo) {
-      history.push(redirectTo);
-    }
+    const { history } = this.props;
+    history.push(this.getRedirectTo());
   };
 
   handleModalSave = () => {

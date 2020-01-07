@@ -8,6 +8,7 @@ import {
 import { FetchStatus } from "../../../store/common";
 import { XmlBuilderRouterProps } from "../../../models/routerProps";
 import ManageProviderModal from "../../../SmartComponents/ManageProviderModal";
+import { requestUpdateComponent } from "../../../store/component/actions";
 
 interface StateToProps {
   serverInfo: ServerInfoRepresentation | undefined;
@@ -73,20 +74,12 @@ class ManageProviderPage extends React.Component<Props, State> {
   };
 
   render() {
-    const { component, match } = this.props;
-
-    const organizationId = match.params.organizationId;
-    const redirectTo = `/organizations/manage/${organizationId}/keys/providers`;
-
+    const { component } = this.props;
     const provider = this.getProvider();
 
     return (
       <React.Fragment>
-        <ManageProviderModal
-          component={component}
-          provider={provider}
-          redirectTo={redirectTo}
-        />
+        <ManageProviderModal component={component} provider={provider} />
       </React.Fragment>
     );
   }
