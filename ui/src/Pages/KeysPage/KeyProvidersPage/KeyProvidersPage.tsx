@@ -58,7 +58,7 @@ class KeyProvidersPage extends React.Component<Props, State> {
     this.state = {
       rows: [],
       columns: [
-        { title: "Tipo" },
+        { title: "Nombre" },
         { title: "Kid" },
         { title: "Proveedor" },
         { title: "Prioridad" }
@@ -66,7 +66,10 @@ class KeyProvidersPage extends React.Component<Props, State> {
       actions: [
         {
           title: "Editar",
-          onClick: () => {}
+          onClick: (event, rowId) => {
+            const component = this.props.organizationComponents[rowId];
+            this.handleEditar(component);
+          }
         },
         {
           title: "Eliminar",
@@ -82,7 +85,9 @@ class KeyProvidersPage extends React.Component<Props, State> {
   }
 
   componentDidUpdate(_prevProps: Props, prevState: State) {
-    if (_prevProps.organizationComponents !== this.props.organizationComponents) {
+    if (
+      _prevProps.organizationComponents !== this.props.organizationComponents
+    ) {
       this.filtersInRowsAndCells();
     }
   }
@@ -100,7 +105,6 @@ class KeyProvidersPage extends React.Component<Props, State> {
   filtersInRowsAndCells = (
     components: ComponentRepresentation[] = this.props.organizationComponents
   ) => {
-    const { match } = this.props;
     const rows: (IRow | string[])[] = components.map(
       (component: ComponentRepresentation) => ({
         cells: [
@@ -109,10 +113,7 @@ class KeyProvidersPage extends React.Component<Props, State> {
           },
           {
             title: (
-              <Link
-                key={component.id}
-                to={`${match.url}/${component.providerId}/${component.id}`}
-              >
+              <Link key={component.id} to={this.getComponentEditUrl(component)}>
                 {component.id}
               </Link>
             )
@@ -133,6 +134,16 @@ class KeyProvidersPage extends React.Component<Props, State> {
   };
 
   // handle
+
+  getComponentEditUrl = (component: ComponentRepresentation) => {
+    const { match } = this.props;
+    return `${match.url}/${component.providerId}/${component.id}`;
+  };
+
+  handleEditar = (component: ComponentRepresentation) => {
+    const { history } = this.props;
+    history.push(this.getComponentEditUrl(component));
+  };
 
   // render
 

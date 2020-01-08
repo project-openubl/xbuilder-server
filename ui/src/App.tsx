@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import { AppRoutes } from "./Routes";
 
 import "./App.css";
@@ -10,13 +10,13 @@ import OrganizationContextLoader from "./SmartComponents/OrganizationContextLoad
 const App: React.FC = () => {
   return (
     <React.Fragment>
-      <BrowserRouter>
+      <HashRouter>
         <OrganizationContextLoader>
           <BasicLayout>
             <AppRoutes />
           </BasicLayout>
         </OrganizationContextLoader>
-      </BrowserRouter>
+      </HashRouter>
     </React.Fragment>
   );
 };

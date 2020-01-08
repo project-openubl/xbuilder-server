@@ -8,7 +8,6 @@ import {
 import { FetchStatus } from "../../../store/common";
 import { XmlBuilderRouterProps } from "../../../models/routerProps";
 import ManageProviderModal from "../../../SmartComponents/ManageProviderModal";
-import { requestUpdateComponent } from "../../../store/component/actions";
 
 interface StateToProps {
   serverInfo: ServerInfoRepresentation | undefined;

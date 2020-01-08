@@ -45,7 +45,7 @@ interface DispatchToProps {
     filterText: string,
     page: number,
     pageSize: number
-  ) => any;
+  ) => Promise<void>;
 }
 
 interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
@@ -90,15 +90,15 @@ class OrganizationListPage extends React.Component<Props, State> {
     this.refreshData();
   }
 
-  refreshData = (
+  refreshData = async (
     page: number = this.state.page,
     pageSize: number = this.state.pageSize,
     filterText: string = this.state.filterText
   ) => {
     const { fetchOrganizations } = this.props;
-    fetchOrganizations(filterText, page, pageSize).then(() => {
-      this.filtersInRowsAndCells();
-    });
+
+    await fetchOrganizations(filterText, page, pageSize);
+    this.filtersInRowsAndCells();
   };
 
   filtersInRowsAndCells = (

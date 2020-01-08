@@ -18,9 +18,7 @@ export const fetchServerInfo = () => {
 
     return get()
       .then((res: AxiosResponse<ServerInfoRepresentation>) => {
-        const data: ServerInfoRepresentation = res.data;
-        dispatch(fetchServerInfoSuccess(data));
-        return data;
+        dispatch(fetchServerInfoSuccess(res.data));
       })
       .catch((err: AxiosError) => {
         dispatch(fetchServerInfoFailure(err));

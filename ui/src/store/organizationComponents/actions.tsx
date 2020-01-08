@@ -28,9 +28,7 @@ export const fetchOrganizationComponents = (organizationId: string) => {
 
     return getOrganizationComponents(organizationId)
       .then((res: AxiosResponse<ComponentRepresentation[]>) => {
-        const data: ComponentRepresentation[] = res.data;
-        dispatch(fetchOrganizationComponentsSuccess(data, meta));
-        return data;
+        dispatch(fetchOrganizationComponentsSuccess(res.data, meta));
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationComponentsFailure(err, meta));

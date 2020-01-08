@@ -6,7 +6,6 @@ import {
 } from "../../models/xml-builder";
 import { XmlBuilderRouterProps } from "../../models/routerProps";
 import ProviderForm from "../../PresentationalComponents/ProviderForm";
-import { ETIME } from "constants";
 
 interface StateToProps {}
 
@@ -67,20 +66,24 @@ class ManageProviderModal extends React.Component<Props, State> {
   };
 
   create = () => {
-    const { requestCreateComponent, provider } = this.props;
+    const { requestCreateComponent, provider, history } = this.props;
     const payload: any = {
       ...this.getPayload(),
       providerId: provider ? provider.id : undefined
     };
-    requestCreateComponent(this.getOrganizationId(), payload);
+    requestCreateComponent(this.getOrganizationId(), payload).then(() => {
+      history.push(this.getRedirectTo());
+    });
   };
 
   update = () => {
-    const { requestUpdateComponent } = this.props;
+    const { requestUpdateComponent, history } = this.props;
     const payload: any = {
       ...this.getPayload()
     };
-    requestUpdateComponent(this.getOrganizationId(), payload);
+    requestUpdateComponent(this.getOrganizationId(), payload).then(() => {
+      history.push(this.getRedirectTo());
+    });
   };
 
   // Handlers

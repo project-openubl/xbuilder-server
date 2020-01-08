@@ -63,9 +63,7 @@ export const fetchComponent = (organizationId: string, componentId: string) => {
 
     return getComponent(organizationId, componentId)
       .then((res: AxiosResponse<ComponentRepresentation>) => {
-        const data: ComponentRepresentation = res.data;
-        dispatch(fetchComponentSuccess(data, meta));
-        return data;
+        dispatch(fetchComponentSuccess(res.data, meta));
       })
       .catch((err: AxiosError) => {
         dispatch(fetchComponentFailure(err, meta));
@@ -85,9 +83,7 @@ export const requestCreateComponent = (
     dispatch(createComponentRequest(meta));
     return createComponent(organizationId, component)
       .then((res: AxiosResponse<ComponentRepresentation>) => {
-        const data: ComponentRepresentation = res.data;
-        dispatch(createComponentSuccess(data, meta));
-        return data;
+        dispatch(createComponentSuccess(res.data, meta));
       })
       .catch((err: AxiosError) => {
         dispatch(createComponentFailure(err, meta));
@@ -108,9 +104,7 @@ export const requestUpdateComponent = (
     dispatch(updateComponentRequest(meta));
     return updateComponent(organizationId, component)
       .then((res: AxiosResponse<ComponentRepresentation>) => {
-        const data: ComponentRepresentation = res.data;
-        dispatch(updateComponentSuccess(data, meta));
-        return data;
+        dispatch(updateComponentSuccess(res.data, meta));
       })
       .catch((err: AxiosError) => {
         dispatch(updateComponentFailure(err, meta));
