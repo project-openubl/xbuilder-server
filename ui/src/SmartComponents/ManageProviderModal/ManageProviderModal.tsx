@@ -28,6 +28,7 @@ interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {
 interface State {
   saving: boolean;
   formData: any | null;
+  componentUUID: string;
 }
 
 class ManageProviderModal extends React.Component<Props, State> {
@@ -35,8 +36,17 @@ class ManageProviderModal extends React.Component<Props, State> {
     super(props);
     this.state = {
       saving: false,
-      formData: null
+      formData: null,
+      componentUUID: "component-uuid-key"
     };
+  }
+
+  componentDidUpdate(_prevProps: Props, prevState: State) {
+    if (_prevProps.component !== this.props.component && this.props.component) {
+      this.setState({
+        componentUUID: this.props.component.id + Math.random()
+      });
+    }
   }
 
   getRedirectTo = (): string => {
@@ -114,7 +124,7 @@ class ManageProviderModal extends React.Component<Props, State> {
 
   render() {
     const { component, provider } = this.props;
-    const { saving, formData } = this.state;
+    const { saving, formData, componentUUID } = this.state;
 
     return (
       <React.Fragment>
@@ -138,7 +148,7 @@ class ManageProviderModal extends React.Component<Props, State> {
           ]}
         >
           <ProviderForm
-            key={component ? component.id : "create-component-modal-id"}
+            key={componentUUID}
             component={component}
             provider={provider}
             onChange={this.handleOnFormChange}

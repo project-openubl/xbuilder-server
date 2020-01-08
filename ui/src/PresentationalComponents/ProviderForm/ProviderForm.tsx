@@ -9,6 +9,7 @@ import {
 } from "../../models/xml-builder";
 import PropertySwitch from "../PropertySwitch";
 import PropertySelect from "../PropertySelect";
+import PropertyFile from "../PropertyFile";
 
 // export type FormData = {
 //   id: string;
@@ -147,6 +148,18 @@ const ProviderForm: React.FC<Props> = ({ provider, component, onChange }) => {
           <PropertySelect
             property={property}
             onChange={handleSelectChange}
+            defaultValue={defaultValues[property.name]}
+          />
+        );
+      case "File":
+        const handleFileChange = (fileData: string): void => {
+          setValue(property.name, fileData);
+          handleOnFormChange();
+        };
+        return (
+          <PropertyFile
+            property={property}
+            onChange={handleFileChange}
             defaultValue={defaultValues[property.name]}
           />
         );
