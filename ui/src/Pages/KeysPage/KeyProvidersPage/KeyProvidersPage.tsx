@@ -29,6 +29,7 @@ import SkeletonTable from "../../../PresentationalComponents/SkeletonTable";
 import ErrorTable from "../../../PresentationalComponents/ErrorTable";
 import EmptyTable from "../../../PresentationalComponents/EmptyTable";
 import { XmlBuilderRouterProps } from "../../../models/routerProps";
+import { deleteDialogActions } from "../../../store/deleteDialog";
 
 interface StateToProps {
   serverInfo: ServerInfoRepresentation | undefined;
@@ -42,6 +43,9 @@ interface StateToProps {
 interface DispatchToProps {
   fetchServerInfo: () => any;
   fetchOrganizationComponents: (organizationId: string) => any;
+  requestDeleteComponent: (organizationId: string, componentId: string) => any;
+  showDeleteDialog: typeof deleteDialogActions.openModal;
+  closeDeleteDialog: typeof deleteDialogActions.closeModal;
 }
 
 interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
@@ -73,8 +77,10 @@ class KeyProvidersPage extends React.Component<Props, State> {
         },
         {
           title: "Eliminar",
-          onClick: (event, rowId) =>
-            console.log("clicked on Third action, on row: ", rowId)
+          onClick: (event, rowId) => {
+            const component = this.props.organizationComponents[rowId];
+            this.handleDelete(component);
+          }
         }
       ]
     };
@@ -143,6 +149,30 @@ class KeyProvidersPage extends React.Component<Props, State> {
   handleEditar = (component: ComponentRepresentation) => {
     const { history } = this.props;
     history.push(this.getComponentEditUrl(component));
+  };
+
+  handleDelete = (component: ComponentRepresentation) => {
+    const {
+      showDeleteDialog,
+      closeDeleteDialog,
+      requestDeleteComponent
+    } = this.props;
+
+    showDeleteDialog({
+      name: component.name,
+      type: "component",
+      onDelete: () => {
+        requestDeleteComponent(this.getOrganizationId(), component.id).then(
+          () => {
+            closeDeleteDialog();
+            this.loadSystemInfoAndComponents();
+          }
+        );
+      },
+      onCancel: () => {
+        closeDeleteDialog();
+      }
+    });
   };
 
   // render

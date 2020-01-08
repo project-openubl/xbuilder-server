@@ -122,3 +122,15 @@ export const updateComponent = (
     component
   );
 };
+
+export const deleteComponent = (
+  organizationId: string,
+  componentId: string
+): AxiosPromise => {
+  return ApiClient.delete(
+    GET_ORGANIZATION_COMPONENT_URL.replace(
+      "{organizationId}",
+      organizationId
+    ).replace("{componentId}", componentId)
+  );
+};

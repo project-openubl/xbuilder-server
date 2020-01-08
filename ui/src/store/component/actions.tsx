@@ -5,7 +5,8 @@ import { ComponentRepresentation } from "../../models/xml-builder";
 import {
   getComponent,
   createComponent,
-  updateComponent
+  updateComponent,
+  deleteComponent
 } from "../../api/organizations";
 
 interface OrganizationComponentActionMeta {
@@ -48,6 +49,18 @@ export const updateComponentSuccess = createAction("component/update/success")<
   ComponentItemActionMeta
 >();
 export const updateComponentFailure = createAction("component/update/failure")<
+  AxiosError,
+  ComponentItemActionMeta
+>();
+
+export const deleteComponentRequest = createAction("component/delete/request")<
+  ComponentItemActionMeta
+>();
+export const deleteComponentSuccess = createAction("component/delete/success")<
+  string,
+  ComponentItemActionMeta
+>();
+export const deleteComponentFailure = createAction("component/delete/failure")<
   AxiosError,
   ComponentItemActionMeta
 >();
@@ -105,6 +118,27 @@ export const requestUpdateComponent = (
     return updateComponent(organizationId, component)
       .then((res: AxiosResponse<ComponentRepresentation>) => {
         dispatch(updateComponentSuccess(res.data, meta));
+      })
+      .catch((err: AxiosError) => {
+        dispatch(updateComponentFailure(err, meta));
+      });
+  };
+};
+
+export const requestDeleteComponent = (
+  organizationId: string,
+  componentId: string
+) => {
+  return (dispatch: Dispatch) => {
+    const meta: ComponentItemActionMeta = {
+      organizationId: organizationId,
+      componentId: componentId
+    };
+
+    dispatch(deleteComponentRequest(meta));
+    return deleteComponent(organizationId, componentId)
+      .then((res: AxiosResponse) => {
+        dispatch(deleteComponentSuccess(res.data, meta));
       })
       .catch((err: AxiosError) => {
         dispatch(updateComponentFailure(err, meta));

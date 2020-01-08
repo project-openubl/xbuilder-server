@@ -6,6 +6,7 @@ import "./App.css";
 import "./App.scss";
 import BasicLayout from "./Pages/Layout/BasicLayout";
 import OrganizationContextLoader from "./SmartComponents/OrganizationContextLoader";
+import DeleteMessageDialog from "./SmartComponents/DeleteDialog";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         <OrganizationContextLoader>
           <BasicLayout>
             <AppRoutes />
+            <DeleteMessageDialog />
           </BasicLayout>
         </OrganizationContextLoader>
       </HashRouter>
