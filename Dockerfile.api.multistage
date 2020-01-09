@@ -1,7 +1,7 @@
 ## Stage 1 : build with maven builder image with native capabilities
 FROM quay.io/quarkus/centos-quarkus-maven:19.2.1 AS build
 
-COPY api /usr/src/app/api-core
+COPY api-core /usr/src/app/api-core
 COPY api /usr/src/app/api
 COPY api-signer /usr/src/app/api-signer
 COPY core /usr/src/app/core
