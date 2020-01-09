@@ -11,15 +11,15 @@ mvn versions:set -DnewVersion="$releaseVersion"
 
 git add .
 git commit -m "Release $releaseVersion"
-git push "https://$username:$password@github.com/project-openubl/xml-builder.git" upstream master
+git push "https://$username:$password@github.com/project-openubl/xml-builder.git"
 
 # Create tag and push
 git tag "$releaseVersion"
-git push "https://$username:$password@github.com/project-openubl/xml-builder.git" --tags upstream
+git push "https://$username:$password@github.com/project-openubl/xml-builder.git" --tags
 
 # Create next snapshot
 mvn versions:set -DnewVersion="$nextVersion-SNAPSHOT"
 
 git add .
 git commit -m "Prepare next release $nextVersion-SNAPSHOT"
-git push "https://$username:$password@github.com/project-openubl/xml-builder.git" upstream master
+git push "https://$username:$password@github.com/project-openubl/xml-builder.git"
