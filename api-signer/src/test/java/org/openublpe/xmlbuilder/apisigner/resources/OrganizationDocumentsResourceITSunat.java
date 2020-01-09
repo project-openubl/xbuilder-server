@@ -10,6 +10,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import org.junit.jupiter.api.Test;
+import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
@@ -44,7 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @QuarkusTestResource(H2DatabaseTestResource.class)
 public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest {
 
-    static final String ORGANIZATIONS_URL = "/api/organizations";
+    static final String ORGANIZATIONS_URL = ApiApplication.API_BASE + "/organizations";
     static final String ORGANIZATION_ID = "master";
 
     static final String SUNAT_BETA_URL = "https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService";

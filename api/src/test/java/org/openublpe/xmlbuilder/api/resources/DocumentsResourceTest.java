@@ -10,6 +10,7 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -83,7 +84,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/invoice/create")
+                    .post(ApiApplication.API_BASE + "/documents/invoice/create")
                     .thenReturn();
 
             // THEN
@@ -108,7 +109,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/credit-note/create")
+                    .post(ApiApplication.API_BASE + "/documents/credit-note/create")
                     .thenReturn();
 
             // Then
@@ -132,7 +133,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/debit-note/create")
+                    .post(ApiApplication.API_BASE + "/documents/debit-note/create")
                     .thenReturn();
 
             // Then
@@ -157,7 +158,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/voided-document/create")
+                    .post(ApiApplication.API_BASE + "/documents/voided-document/create")
                     .thenReturn();
 
             // THEN
@@ -181,7 +182,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/summary-document/create")
+                    .post(ApiApplication.API_BASE + "/documents/summary-document/create")
                     .thenReturn();
 
             // THEN

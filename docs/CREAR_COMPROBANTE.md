@@ -42,10 +42,10 @@ curl -X POST \
       }
     ]
   }' \
-http://localhost:8080/documents/invoice/create
+http://localhost:8080/api/documents/invoice/create
 ```
 
-- Debes de cambiar `http://localhost:8080` por ubicación de tu servidor.
+- Debes de cambiar `http://localhost:8080` por la ubicación de tu servidor.
 - Si deseas creear otro tipo de documento debes de cambiar `/invoice` por credit-note, debit-note, etc. Vea el [API](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder) para más información.
 
 El ejemplo anterior creará un comprobante con los datos mínimos. **XML Builder** se encargará de generar todos los datos por ti.

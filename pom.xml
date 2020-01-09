@@ -115,6 +115,11 @@
             </dependency>
             <dependency>
                 <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-api-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
                 <artifactId>xml-builder-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -136,6 +141,7 @@
         <module>extensions</module>
         <module>templates</module>
         <module>rules</module>
+        <module>api-core</module>
         <module>api</module>
         <module>api-signer</module>
         <module>ui</module>

@@ -15,6 +15,7 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -36,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @QuarkusTestResource(H2DatabaseTestResource.class)
 class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
 
-    static final String ORGANIZATIONS_URL = "/api/organizations";
+    static final String ORGANIZATIONS_URL = ApiApplication.API_BASE + "/organizations";
     static final String ORGANIZATION_ID = "master";
 
     static final String SIGNATURE_XPATH = "//ext:UBLExtensions/ext:UBLExtension/ext:ExtensionContent/ds:Signature";

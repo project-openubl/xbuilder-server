@@ -1,9 +1,10 @@
-package org.openublpe.xmlbuilder.apisigner.resources;
+package org.openublpe.xmlbuilder.apicore.resources;
 
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.spi.Failure;
 import org.jboss.resteasy.spi.HttpResponse;
-import org.openublpe.xmlbuilder.apisigner.representations.idm.ErrorRepresentation;
+import org.openublpe.xmlbuilder.apicore.representations.idm.ErrorRepresentation;
+import org.openublpe.xmlbuilder.apicore.utils.MediaTypeMatcher;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
@@ -13,9 +14,9 @@ import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class ErrorHandler implements ExceptionMapper<Throwable> {
+public class ApiErrorHandler implements ExceptionMapper<Throwable> {
 
-    private static final Logger LOGGER = Logger.getLogger(ErrorHandler.class);
+    private static final Logger LOGGER = Logger.getLogger(ApiErrorHandler.class);
 
     public static final String UNCAUGHT_SERVER_ERROR_TEXT = "Uncaught server error";
 

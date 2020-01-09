@@ -1,4 +1,4 @@
-package org.openublpe.xmlbuilder.apisigner.resources;
+package org.openublpe.xmlbuilder.apicore.utils;
 
 import javax.ws.rs.core.HttpHeaders;
 
