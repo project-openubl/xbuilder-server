@@ -5,6 +5,7 @@ import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,7 +29,7 @@ public class ComponentConfigEntity {
     protected String id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "component_id")
+    @JoinColumn(name = "component_id", foreignKey = @ForeignKey)
     protected ComponentEntity component;
 
     @Column(name = "name")

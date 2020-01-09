@@ -3,6 +3,7 @@ package org.openublpe.xmlbuilder.apisigner.resources;
 import org.keycloak.common.util.PemUtils;
 import org.keycloak.jose.jws.AlgorithmType;
 import org.keycloak.representations.idm.KeysMetadataRepresentation;
+import org.openublpe.xmlbuilder.apisigner.keys.KeyProvider;
 import org.openublpe.xmlbuilder.apisigner.keys.RsaKeyMetadata;
 import org.openublpe.xmlbuilder.apisigner.keys.component.ComponentModel;
 import org.openublpe.xmlbuilder.apisigner.keys.component.utils.ComponentUtil;
@@ -251,6 +252,7 @@ public class OrganizationsResource {
         try {
             ComponentModel model = RepresentationToModel.toModel(rep);
             if (model.getParentId() == null) model.setParentId(organization.getId());
+            if (model.getProviderType() == null) model.setProviderType(KeyProvider.class.getName());
 
             model = componentProvider.addComponentModel(organization, model);
 

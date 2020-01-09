@@ -12,7 +12,7 @@ const ORGANIZATIONS_SEARCH_URL = "/organizations/search";
 const ALL_ORGANIZATIONS_URL = "/organizations/all";
 const GET_ID_BY_NAME_URL = "/organizations/id-by-name";
 const GET_ORGANIZATION_KEYS_URL = "/organizations/{organizationId}/keys";
-const GET_ORGANIZATION_COMPONENTS_URL =
+const ORGANIZATION_COMPONENTS_URL =
   "/organizations/{organizationId}/components";
 const GET_ORGANIZATION_COMPONENT_URL =
   "/organizations/{organizationId}/components/{componentId}";
@@ -84,7 +84,7 @@ export const getOrganizationComponents = (
   organizationId: string
 ): AxiosPromise<ComponentRepresentation[]> => {
   return ApiClient.get<ComponentRepresentation[]>(
-    GET_ORGANIZATION_COMPONENTS_URL.replace("{organizationId}", organizationId)
+    ORGANIZATION_COMPONENTS_URL.replace("{organizationId}", organizationId)
   );
 };
 
@@ -93,6 +93,41 @@ export const getComponent = (
   componentId: string
 ): AxiosPromise<ComponentRepresentation> => {
   return ApiClient.get<ComponentRepresentation>(
+    GET_ORGANIZATION_COMPONENT_URL.replace(
+      "{organizationId}",
+      organizationId
+    ).replace("{componentId}", componentId)
+  );
+};
+
+export const createComponent = (
+  organizationId: string,
+  component: ComponentRepresentation
+): AxiosPromise<ComponentRepresentation> => {
+  return ApiClient.post<ComponentRepresentation>(
+    ORGANIZATION_COMPONENTS_URL.replace("{organizationId}", organizationId),
+    component
+  );
+};
+
+export const updateComponent = (
+  organizationId: string,
+  component: ComponentRepresentation
+): AxiosPromise<ComponentRepresentation> => {
+  return ApiClient.put<ComponentRepresentation>(
+    GET_ORGANIZATION_COMPONENT_URL.replace(
+      "{organizationId}",
+      organizationId
+    ).replace("{componentId}", component.id),
+    component
+  );
+};
+
+export const deleteComponent = (
+  organizationId: string,
+  componentId: string
+): AxiosPromise => {
+  return ApiClient.delete(
     GET_ORGANIZATION_COMPONENT_URL.replace(
       "{organizationId}",
       organizationId

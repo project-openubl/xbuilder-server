@@ -16,7 +16,7 @@ import {
   ToolbarGroup,
   ToolbarItem
 } from "@patternfly/react-core";
-import { PlusCircleIcon, InfoAltIcon } from "@patternfly/react-icons";
+import { PlusCircleIcon } from "@patternfly/react-icons";
 import KeysPageTabs from "../../../PresentationalComponents/KeysPageTabs";
 import { FetchStatus } from "../../../store/common";
 import {
@@ -25,23 +25,30 @@ import {
   ComponentTypeRepresentation
 } from "../../../models/xml-builder";
 import { Link } from "react-router-dom";
+import SkeletonTable from "../../../PresentationalComponents/SkeletonTable";
+import ErrorTable from "../../../PresentationalComponents/ErrorTable";
+import EmptyTable from "../../../PresentationalComponents/EmptyTable";
+import { XmlBuilderRouterProps } from "../../../models/routerProps";
+import { deleteDialogActions } from "../../../store/deleteDialog";
 
-interface Props {
-  match: any;
-  history: any;
-  location: any;
-
+interface StateToProps {
   serverInfo: ServerInfoRepresentation | undefined;
   serverInfoFetchStatus: FetchStatus | undefined;
   serverInfoError: AxiosError<any> | undefined;
-
   organizationComponents: ComponentRepresentation[];
   organizationComponentsFetchStatus: FetchStatus | undefined;
   organizationComponentsError: AxiosError<any> | undefined;
+}
 
+interface DispatchToProps {
   fetchServerInfo: () => any;
   fetchOrganizationComponents: (organizationId: string) => any;
+  requestDeleteComponent: (organizationId: string, componentId: string) => any;
+  showDeleteDialog: typeof deleteDialogActions.openModal;
+  closeDeleteDialog: typeof deleteDialogActions.closeModal;
 }
+
+interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
 
 interface State {
   rows: IRow[];
@@ -55,38 +62,53 @@ class KeyProvidersPage extends React.Component<Props, State> {
     this.state = {
       rows: [],
       columns: [
-        { title: "Tipo", transforms: [] },
-        { title: "Id", transforms: [] },
-        { title: "Proveedor", transforms: [] },
-        { title: "Prioridad", transforms: [] }
+        { title: "Nombre" },
+        { title: "Kid" },
+        { title: "Proveedor" },
+        { title: "Prioridad" }
       ],
       actions: [
         {
           title: "Editar",
-          onClick: () => {}
+          onClick: (event, rowId) => {
+            const component = this.props.organizationComponents[rowId];
+            this.handleEditar(component);
+          }
         },
         {
           title: "Eliminar",
-          onClick: (event, rowId) =>
-            console.log("clicked on Third action, on row: ", rowId)
+          onClick: (event, rowId) => {
+            const component = this.props.organizationComponents[rowId];
+            this.handleDelete(component);
+          }
         }
       ]
     };
   }
 
   componentDidMount() {
+    this.loadSystemInfoAndComponents();
+  }
+
+  componentDidUpdate(_prevProps: Props, prevState: State) {
+    if (
+      _prevProps.organizationComponents !== this.props.organizationComponents
+    ) {
+      this.filtersInRowsAndCells();
+    }
+  }
+
+  loadSystemInfoAndComponents = () => {
     const { fetchServerInfo, fetchOrganizationComponents } = this.props;
     fetchServerInfo();
-    fetchOrganizationComponents(this.getOrganizationId()).then(() => {
-      this.processRows();
-    });
-  }
+    fetchOrganizationComponents(this.getOrganizationId());
+  };
 
   getOrganizationId = () => {
     return this.props.match.params.organizationId;
   };
 
-  processRows = (
+  filtersInRowsAndCells = (
     components: ComponentRepresentation[] = this.props.organizationComponents
   ) => {
     const rows: (IRow | string[])[] = components.map(
@@ -96,7 +118,11 @@ class KeyProvidersPage extends React.Component<Props, State> {
             title: component.name
           },
           {
-            title: component.id
+            title: (
+              <Link key={component.id} to={this.getComponentEditUrl(component)}>
+                {component.id}
+              </Link>
+            )
           },
           {
             title: component.providerId
@@ -115,10 +141,69 @@ class KeyProvidersPage extends React.Component<Props, State> {
 
   // handle
 
+  getComponentEditUrl = (component: ComponentRepresentation) => {
+    const { match } = this.props;
+    return `${match.url}/${component.providerId}/${component.id}`;
+  };
+
+  handleEditar = (component: ComponentRepresentation) => {
+    const { history } = this.props;
+    history.push(this.getComponentEditUrl(component));
+  };
+
+  handleDelete = (component: ComponentRepresentation) => {
+    const {
+      showDeleteDialog,
+      closeDeleteDialog,
+      requestDeleteComponent
+    } = this.props;
+
+    showDeleteDialog({
+      name: component.name,
+      type: "component",
+      onDelete: () => {
+        requestDeleteComponent(this.getOrganizationId(), component.id).then(
+          () => {
+            closeDeleteDialog();
+            this.loadSystemInfoAndComponents();
+          }
+        );
+      },
+      onCancel: () => {
+        closeDeleteDialog();
+      }
+    });
+  };
+
   // render
 
   renderTable = () => {
     const { columns, rows, actions } = this.state;
+    const {
+      serverInfoError,
+      organizationComponentsError,
+      serverInfoFetchStatus,
+      organizationComponentsFetchStatus
+    } = this.props;
+
+    if (
+      serverInfoFetchStatus !== "complete" ||
+      organizationComponentsFetchStatus !== "complete"
+    ) {
+      return <SkeletonTable columns={columns} rowSize={5} />;
+    }
+
+    if (serverInfoError || organizationComponentsError) {
+      const retry = () => {
+        this.loadSystemInfoAndComponents();
+      };
+      return <ErrorTable columns={columns} retry={retry} />;
+    }
+
+    if (rows.length === 0) {
+      return <EmptyTable columns={columns} />;
+    }
+
     return (
       <React.Fragment>
         <Table
@@ -144,11 +229,7 @@ class KeyProvidersPage extends React.Component<Props, State> {
             <CardHeader>
               <Toolbar className="pf-l-toolbar pf-u-justify-content-space-between pf-u-mx-xl pf-u-my-md">
                 <ToolbarGroup>
-                  <ToolbarItem className="pf-u-mr-xl">
-                    <Button variant="link" icon={<InfoAltIcon />} isDisabled>
-                      Crear certificado digital
-                    </Button>
-                  </ToolbarItem>
+                  <ToolbarItem className="pf-u-mr-xl"></ToolbarItem>
                 </ToolbarGroup>
                 <ToolbarGroup>
                   {serverInfo && (

@@ -1,11 +1,11 @@
 import React from "react";
-import { Table, TableHeader, TableBody } from "@patternfly/react-table";
+import { Table, TableHeader, TableBody, ICell } from "@patternfly/react-table";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 export interface Props {
   colSize?: number;
   rowSize: number;
-  columns?: any[];
+  columns?: ICell[];
 }
 
 export interface State {}

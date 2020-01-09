@@ -120,7 +120,7 @@ public class JpaComponentProvider implements ComponentProvider {
         if (c == null) return;
         removeComponents(organization, component.getId());
         em.createNamedQuery("deleteComponentConfigByComponent").setParameter("component", c).executeUpdate();
-        em.remove(c);
+        em.createNamedQuery("deleteComponent").setParameter("component", c).executeUpdate();
     }
 
     @Override

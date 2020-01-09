@@ -1,10 +1,8 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch } from "redux";
-import { ThunkAction } from "redux-thunk";
 import { createAction } from "typesafe-actions";
 import { OrganizationRepresentation } from "../../models/xml-builder";
 import { getById, create, update, getIdByName } from "../../api/organizations";
-import { RootState } from "../rootReducer";
 import { fetchOrganizations } from "../organizationContext/actions";
 
 interface OrganizationActionMeta {
@@ -55,9 +53,7 @@ export const fetchOrganizationIdByNameFailure = createAction(
   "organizationIdByName/fetch/failure"
 )<AxiosError, OrganizationNameActionMeta>();
 
-export const fetchOrganization = (
-  organizationId: string
-): ThunkAction<void, RootState, void, any> => {
+export const fetchOrganization = (organizationId: string) => {
   return (dispatch: Dispatch) => {
     const meta: OrganizationActionMeta = {
       organizationId
@@ -67,9 +63,7 @@ export const fetchOrganization = (
 
     return getById(organizationId)
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
-        const data: OrganizationRepresentation = res.data;
-        dispatch(fetchOrganizationSuccess(data, meta));
-        return data;
+        dispatch(fetchOrganizationSuccess(res.data, meta));
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationFailure(err, meta));
@@ -79,15 +73,13 @@ export const fetchOrganization = (
 
 export const createOrganization = (
   organization: OrganizationRepresentation
-): ThunkAction<void, RootState, void, any> => {
+) => {
   return (dispatch: Dispatch) => {
     dispatch(createOrganizationRequest());
     return create(organization)
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
-        const data: OrganizationRepresentation = res.data;
-        dispatch(createOrganizationSuccess(data));
+        dispatch(createOrganizationSuccess(res.data));
         fetchOrganizations()(dispatch);
-        return data;
       })
       .catch((err: AxiosError) => {
         dispatch(createOrganizationFailure(err));
@@ -98,7 +90,7 @@ export const createOrganization = (
 export const updateOrganization = (
   organizationId: string,
   organization: OrganizationRepresentation
-): ThunkAction<void, RootState, void, any> => {
+) => {
   return (dispatch: Dispatch) => {
     const meta: OrganizationActionMeta = {
       organizationId
@@ -108,10 +100,8 @@ export const updateOrganization = (
 
     return update(organizationId, organization)
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
-        const data: OrganizationRepresentation = res.data;
-        dispatch(updateOrganizationSuccess(data, meta));
+        dispatch(updateOrganizationSuccess(res.data, meta));
         fetchOrganizations()(dispatch);
-        return data;
       })
       .catch((err: AxiosError) => {
         dispatch(updateOrganizationFailure(err, meta));

@@ -8,7 +8,7 @@ import {
 } from "../../store/organizationContext";
 
 const mapStateToProps = createMapStateToProps(state => ({
-  organizations: organizationContextSelectors.organizations(state)
+  contextOrganizations: organizationContextSelectors.organizations(state)
 }));
 
 const mapDispatchToProps = {

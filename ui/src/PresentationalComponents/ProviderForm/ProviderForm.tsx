@@ -1,20 +1,15 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
-import {
-  Form,
-  FormGroup,
-  TextInput,
-  Switch,
-  SelectVariant,
-  SelectOption,
-  Select
-} from "@patternfly/react-core";
+import { Form, FormGroup, TextInput } from "@patternfly/react-core";
 import {
   ComponentRepresentation,
   ComponentTypeRepresentation,
   ConfigPropertyRepresentation
 } from "../../models/xml-builder";
+import PropertySwitch from "../PropertySwitch";
+import PropertySelect from "../PropertySelect";
+import PropertyFile from "../PropertyFile";
 
 // export type FormData = {
 //   id: string;
@@ -30,43 +25,82 @@ interface Props {
   onChange: (isValid: boolean, value: FormData) => void;
 }
 
-const ProviderForm: React.FC<Props> = ({ provider, component }) => {
-  const validationSchema = yup.object().shape({
+const ProviderForm: React.FC<Props> = ({ provider, component, onChange }) => {
+  const schema: any = {
+    id: yup
+      .string()
+      .trim()
+      .required("Este dato es requerido.")
+      .max(250, "Este campo debe de contener menos de 250 caracteres."),
     name: yup
       .string()
       .trim()
-      .required("Este dato es obligatorio.")
+      .required("Este dato es requerido.")
       .min(3, "Este campo debe de contener al menos 3 caracteres.")
-      .max(250, "Este campo debe de contener menos de 250 caracteres."),
-    priority: yup
-      .number()
-      .required("Este campo es requerido")
-      .min(1, "El valor minimo es 1")
-  });
+      .max(250, "Este campo debe de contener menos de 250 caracteres.")
+  };
+  if (provider) {
+    provider.properties.forEach((property: ConfigPropertyRepresentation) => {
+      switch (property.type) {
+        case "boolean":
+          schema[property.name] = yup
+            .boolean()
+            .typeError("Este dato debe de ser true/false")
+            .required("Este dato es requerido.");
+          break;
+        default:
+          schema[property.name] = yup
+            .string()
+            .trim()
+            .required("Este dato es requerido.");
+          break;
+      }
+    });
+  }
+  const validationSchema = yup.object().shape(schema);
 
-  const { register, errors, triggerValidation, setValue } = useForm<
+  const defaultValues: any = {
+    priority: 0,
+    active: true,
+    enabled: true,
+    keySize: 2048
+  };
+
+  if (component) {
+    defaultValues.id = component.id;
+    defaultValues.name = component.name;
+    Object.keys(component.config).forEach(key => {
+      defaultValues[key] = component.config[key][0];
+    });
+  }
+
+  const { register, errors, triggerValidation, setValue, getValues } = useForm<
     FormData
   >({
     mode: "onSubmit",
-    defaultValues: undefined,
+    defaultValues,
     validationSchema
   });
 
-  //
+  // Lyfe cycle
 
   React.useEffect(() => {
-    register({ name: "AntdInput" });
-  }, [register])
+    if (provider) {
+      provider.properties.forEach((property: ConfigPropertyRepresentation) => {
+        register({ name: property.name });
+      });
+    }
+  }, [register, provider]);
 
   // Handlers
 
   const handleOnFormChange = () => {
-    triggerValidation().then(() => {
-      // onChange(isValid, getValues());
+    triggerValidation().then((isValid: boolean) => {
+      onChange(isValid, getValues());
     });
   };
 
-  // renders
+  // Render
 
   const renderConfigProperty = (property: ConfigPropertyRepresentation) => {
     switch (property.type) {
@@ -95,40 +129,39 @@ const ProviderForm: React.FC<Props> = ({ provider, component }) => {
           />
         );
       case "boolean":
-        const handleSwitchChange = (checked: boolean): void => {
-          setValue(property.name, checked);
+        const handleSwitchChange = (isChecked: boolean): void => {
+          setValue(property.name, isChecked);
         };
-
         return (
-          <Switch
-            id={property.name}
-            key={property.name}
-            name={property.name}
-            aria-describedby={property.helpText}
-            label="Activated"
-            labelOff="Desactivated"
-            // isChecked={isChecked}
+          <PropertySwitch
+            property={property}
             onChange={handleSwitchChange}
+            defaultValue={defaultValues[property.name]}
           />
         );
       case "List":
+        const handleSelectChange = (selected: string): void => {
+          setValue(property.name, selected);
+          handleOnFormChange();
+        };
         return (
-          <Select
-            // toggleIcon={isToggleIcon && <CubeIcon />}
-            variant={SelectVariant.single}
-            aria-label={property.label}
-            onToggle={() => {}}
-            // onSelect={this.onSelect}
-            // selections={selected}
-            // isExpanded={isExpanded}
-            // ariaLabelledBy={titleId}
-            // isDisabled={isDisabled}
-            // direction={direction}
-          >
-            {property.options.map((option: string, index) => (
-              <SelectOption key={index} value={option} />
-            ))}
-          </Select>
+          <PropertySelect
+            property={property}
+            onChange={handleSelectChange}
+            defaultValue={defaultValues[property.name]}
+          />
+        );
+      case "File":
+        const handleFileChange = (fileData: string): void => {
+          setValue(property.name, fileData);
+          handleOnFormChange();
+        };
+        return (
+          <PropertyFile
+            property={property}
+            onChange={handleFileChange}
+            defaultValue={defaultValues[property.name]}
+          />
         );
     }
   };
@@ -150,6 +183,7 @@ const ProviderForm: React.FC<Props> = ({ provider, component }) => {
               aria-describedby="id"
               ref={register}
               isValid={!errors.id}
+              isReadOnly
             />
           </FormGroup>
         )}

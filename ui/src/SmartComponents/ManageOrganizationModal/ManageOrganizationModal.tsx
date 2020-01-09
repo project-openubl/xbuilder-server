@@ -28,18 +28,34 @@ interface Props {
 interface State {
   saving: boolean;
   organizationFormData: FormData | null;
+  organizationUUID: string;
 }
 
 class ManageOrganizationModal extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { saving: false, organizationFormData: null };
+    this.state = {
+      saving: false,
+      organizationFormData: null,
+      organizationUUID: "organization-key-uuid"
+    };
   }
 
   componentDidMount() {
     const { organizationId, fetchOrganization } = this.props;
     if (organizationId) {
       fetchOrganization(organizationId);
+    }
+  }
+
+  componentDidUpdate(_prevProps: Props, prevState: State) {
+    if (
+      _prevProps.organization !== this.props.organization &&
+      this.props.organization
+    ) {
+      this.setState({
+        organizationUUID: this.props.organization.id + Math.random()
+      });
     }
   }
 
@@ -55,7 +71,7 @@ class ManageOrganizationModal extends React.Component<Props, State> {
       if (organizationId) {
         const { updateOrganization, history } = this.props;
 
-        const payload: OrganizationRepresentation = {
+        const payload: any = {
           name: organizationFormData.name,
           description: organizationFormData.description,
           type: "",
@@ -68,7 +84,7 @@ class ManageOrganizationModal extends React.Component<Props, State> {
       } else {
         const { createOrganization, history } = this.props;
 
-        const payload: OrganizationRepresentation = {
+        const payload: any = {
           name: organizationFormData.name,
           description: organizationFormData.description,
           type: "",
@@ -100,7 +116,7 @@ class ManageOrganizationModal extends React.Component<Props, State> {
   };
 
   render() {
-    const { saving, organizationFormData } = this.state;
+    const { saving, organizationFormData, organizationUUID } = this.state;
     const { organizationId, organization } = this.props;
 
     return (
@@ -125,7 +141,7 @@ class ManageOrganizationModal extends React.Component<Props, State> {
           ]}
         >
           <OrganizationForm
-            key={organization ? organization.id : "create-organization"}
+            key={organizationUUID}
             organization={organization}
             onChange={this.handleOnFormChange}
           />
