@@ -234,8 +234,9 @@ class KeyProvidersPage extends React.Component<Props, State> {
                 <ToolbarGroup>
                   {serverInfo && (
                     <React.Fragment>
-                      {serverInfo.componentTypes.keyProviders.map(
-                        (provider: ComponentTypeRepresentation) => (
+                      {serverInfo.componentTypes.keyProviders
+                        .sort((a, b) => a.id.localeCompare(b.id))
+                        .map((provider: ComponentTypeRepresentation) => (
                           <ToolbarItem key={provider.id} className="pf-u-mx-md">
                             <Link to={`${match.url}/${provider.id}`}>
                               <Button variant="link" icon={<PlusCircleIcon />}>
@@ -243,8 +244,7 @@ class KeyProvidersPage extends React.Component<Props, State> {
                               </Button>
                             </Link>
                           </ToolbarItem>
-                        )
-                      )}
+                        ))}
                     </React.Fragment>
                   )}
                 </ToolbarGroup>

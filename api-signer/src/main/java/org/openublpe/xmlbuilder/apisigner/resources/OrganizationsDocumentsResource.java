@@ -1,5 +1,6 @@
 package org.openublpe.xmlbuilder.apisigner.resources;
 
+import org.openublpe.xmlbuilder.api.resources.utils.ResourceUtils;
 import org.openublpe.xmlbuilder.apisigner.models.KeyManager;
 import org.openublpe.xmlbuilder.apisigner.models.ModelRuntimeException;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationModel;

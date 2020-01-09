@@ -57,7 +57,7 @@ curl -X POST \
       }
     ]
   }' \
-http://localhost:8080/documents/invoice/create
+http://localhost:8080/api/documents/invoice/create
 ```
 
 Ejemplo:

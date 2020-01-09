@@ -8,6 +8,7 @@ import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.keycloak.representations.idm.KeysMetadataRepresentation;
+import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationType;
 import org.openublpe.xmlbuilder.apisigner.representations.idm.ComponentRepresentation;
 import org.openublpe.xmlbuilder.apisigner.representations.idm.OrganizationRepresentation;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @QuarkusTestResource(H2DatabaseTestResource.class)
 public class OrganizationsResourceTest {
 
-    static final String ORGANIZATIONS_URL = "/api/organizations";
+    static final String ORGANIZATIONS_URL = ApiApplication.API_BASE + "/organizations";
 
     @Test
     void testGetOrganizations() throws Exception {

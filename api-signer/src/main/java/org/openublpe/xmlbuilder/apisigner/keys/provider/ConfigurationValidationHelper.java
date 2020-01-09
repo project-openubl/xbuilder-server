@@ -3,6 +3,7 @@ package org.openublpe.xmlbuilder.apisigner.keys.provider;
 import org.openublpe.xmlbuilder.apisigner.keys.component.ComponentModel;
 import org.openublpe.xmlbuilder.apisigner.keys.component.ComponentValidationException;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 public class ConfigurationValidationHelper {
@@ -37,7 +38,11 @@ public class ConfigurationValidationHelper {
                 options.append(o);
                 i++;
             }
-            throw new ComponentValidationException("''{0}'' should be {1}", property.getLabel(), options.toString());
+            throw new ComponentValidationException(
+                    MessageFormat.format("''{0}'' should be {1}", property.getLabel(), options.toString()),
+                    property.getLabel(),
+                    options.toString()
+            );
         }
 
         return this;
@@ -51,7 +56,10 @@ public class ConfigurationValidationHelper {
             try {
                 Integer.parseInt(val);
             } catch (NumberFormatException e) {
-                throw new ComponentValidationException("''{0}'' should be a number", label);
+                throw new ComponentValidationException(
+                        MessageFormat.format("''{0}'' should be a number", label),
+                        label
+                );
             }
         }
 
@@ -70,7 +78,10 @@ public class ConfigurationValidationHelper {
             try {
                 Long.parseLong(val);
             } catch (NumberFormatException e) {
-                throw new ComponentValidationException("''{0}'' should be a number", label);
+                throw new ComponentValidationException(
+                        MessageFormat.format("''{0}'' should be a number", label),
+                        label
+                );
             }
         }
 
@@ -83,7 +94,10 @@ public class ConfigurationValidationHelper {
 
     public ConfigurationValidationHelper checkSingle(String key, String label, boolean required) throws ComponentValidationException {
         if (model.getConfig().containsKey(key) && model.getConfig().get(key).size() > 1) {
-            throw new ComponentValidationException("''{0}'' should be a single entry", label);
+            throw new ComponentValidationException(
+                    MessageFormat.format("''{0}'' should be a single entry", label),
+                    label
+            );
         }
 
         if (required) {
@@ -100,7 +114,10 @@ public class ConfigurationValidationHelper {
     public ConfigurationValidationHelper checkRequired(String key, String label) throws ComponentValidationException {
         List<String> values = model.getConfig().get(key);
         if (values == null) {
-            throw new ComponentValidationException("''{0}'' is required", label);
+            throw new ComponentValidationException(
+                    MessageFormat.format("''{0}'' is required", label),
+                    label
+            );
         }
 
         return this;
@@ -115,7 +132,10 @@ public class ConfigurationValidationHelper {
 
         String val = model.getConfig().getFirst(key);
         if (val != null && !(val.equals("true") || val.equals("false"))) {
-            throw new ComponentValidationException("''{0}'' should be ''true'' or ''false''", label);
+            throw new ComponentValidationException(
+                    MessageFormat.format("''{0}'' should be ''true'' or ''false''", label),
+                    label
+            );
         }
 
         return this;

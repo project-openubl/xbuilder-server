@@ -5,6 +5,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import org.junit.jupiter.api.Test;
+import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -48,7 +49,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/invoice/enrich")
+                    .post(ApiApplication.API_BASE + "/documents/invoice/enrich")
                     .thenReturn();
 
             // THEN
@@ -84,7 +85,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/credit-note/enrich")
+                    .post(ApiApplication.API_BASE + "/documents/credit-note/enrich")
                     .thenReturn();
 
             // THEN
@@ -120,7 +121,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/debit-note/enrich")
+                    .post(ApiApplication.API_BASE + "/documents/debit-note/enrich")
                     .thenReturn();
 
             // THEN
@@ -156,7 +157,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/voided-document/enrich")
+                    .post(ApiApplication.API_BASE + "/documents/voided-document/enrich")
                     .thenReturn();
 
             // THEN
@@ -192,7 +193,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
                     .body(body)
                     .header("Content-Type", "application/json")
                     .when()
-                    .post("/documents/summary-document/enrich")
+                    .post(ApiApplication.API_BASE + "/documents/summary-document/enrich")
                     .thenReturn();
 
             // THEN
