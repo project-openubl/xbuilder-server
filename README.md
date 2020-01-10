@@ -23,7 +23,7 @@ docker run -p 8080:8080 projectopenubl/xml-builder
 
 Podrás ver el servidor en: http://localhost:8080 
 
-Para más información puedes leer: [Instalación y configuration del servidor](docs/api/INSTALAR_CONFIGURAR.md)
+Para más información puedes leer: [Instalación y configuration del servidor](docs/XB_INSTALAR_CONFIGURAR.md)
 
 ## Crear Factura electrónica
 Para crear comprobantes debes de tener levantantado el servidor localmente, puedes seguir las instrucciones del paso anterior.
@@ -91,7 +91,7 @@ docker run --name xml-builder --net xml-builder-network -p 8080:8080 -e QUARKUS_
 
 Podrás ver el servidor en: http://localhost:8080 
 
-Para más información puedes leer: [Instalación y configuration del servidor](docs/api/INSTALAR_CONFIGURAR.md)
+Para más información puedes leer: [Instalación y configuration del servidor](docs/XB_INSTALAR_CONFIGURAR.md)
 
 ![Swagger](docs/images/api_signer_screenshot.png)
 
