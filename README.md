@@ -13,7 +13,8 @@ El proyecto XML Builder distribuye dos versiones:
 - ***XML Builder***.- Crea XMLs sin firma digital. Útil para empresas que ya cuentan con algun software para firmar sus XMLs.
 - ***XML Builder Signer***.- Incluye todas las funcionalidades de ***XML Builder*** pero además permite firmar electrónicamente los archivos XMLs; permite administrar los certificados digitales de varias empresas en un solo lugar.
 
-# XML Builder - empezar
+# XML Builder
+## Empezar
 El método más fácil de iniciar el servidor localmente es usando Docker:
 
 ```
@@ -24,7 +25,7 @@ Podrás ver el servidor en: http://localhost:8080
 
 Para más información puedes leer: [Instalación y configuration del servidor](docs/api/INSTALAR_CONFIGURAR.md)
 
-## XML Builder - crear Factura electrónica
+## Crear Factura electrónica
 Para crear comprobantes debes de tener levantantado el servidor localmente, puedes seguir las instrucciones del paso anterior.
 
 Pasos para crear factura electrónica:
@@ -69,7 +70,8 @@ Ejemplo:
 
 ![Swagger](docs/images/curl.gif)
 
-# XML Builder Signer - empezar
+# XML Builder Signer
+## Empezar
 El método más fácil de iniciar el servidor localmente es usando Docker:
 
 Crear un network:
@@ -93,7 +95,7 @@ Para más información puedes leer: [Instalación y configuration del servidor](
 
 ![Swagger](docs/images/api_signer_screenshot.png)
 
-## XML Builder Signer - crear Factura electrónica
+## Crear Factura electrónica
 Para crear comprobantes debes de tener levantantado el servidor localmente, puedes seguir las instrucciones del paso anterior.
 
 XML Builder Signer crea por defecto una organización llamada `master`; para el presente ejemplo vamos a utilizar la organización `master`.
