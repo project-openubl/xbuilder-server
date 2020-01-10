@@ -1,6 +1,6 @@
 # Crear Comprobante Electrónico
 ## Requisitos
-- Tener el servidor XML Builder Signer levantado. Puedes leer [Levantar servidor](INSTALAR_CONFIGURAR.md) para aprender cómo.
+- Tener el servidor XML Builder Signer levantado. Puedes leer [Levantar servidor](XBS_INSTALAR_CONFIGURAR.md) para aprender cómo.
 
 **XML Builder Signer** está hecho para recibir peticiones HTTP por lo que podemos utilizar varios métodos para consumir sus servicios.
 Veamos algunos de ellos
@@ -51,7 +51,7 @@ http://localhost:8080/api/organizations/master/documents/invoice/create
 
 El ejemplo anterior creará un comprobante con los datos mínimos. **XML Builder Signer** se encargará de generar todos los datos por ti.
 
-![terminal](../images/curl.gif)
+![terminal](images/curl.gif)
 
 
 ## 2. Utilizando [Postman](https://www.getpostman.com/)
@@ -62,9 +62,9 @@ El ejemplo anterior creará un comprobante con los datos mínimos. **XML Builder
 
 ***NOTA: Utilize la URL http://localhost:8080/api/organizations/master/documents/invoice/create y no la URL de la imagen***
 
-![Postman Headers](../images/postman_headers.png)
+![Postman Headers](images/postman_headers.png)
 
-![Postman Body](../images/postman_body.png)
+![Postman Body](images/postman_body.png)
 
 Deberá utilizar el siguiente body:
 

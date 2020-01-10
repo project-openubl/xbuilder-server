@@ -84,7 +84,7 @@ Luego debes de abrir un navegador y dirigirte a http://localhost:8080
 
 Despues de seguir cualquiera de los métodos anteriores, deberás ser capaz de ver la siguiente página:
 
-![XML Builder](../images/api_signer_screenshot.png)
+![XML Builder](images/api_signer_screenshot.png)
 
 # Container Registry
 Las imágenes de **XML Builder** se encuentran en el registry de Docker:
