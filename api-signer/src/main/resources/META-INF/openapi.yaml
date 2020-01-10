@@ -1,0 +1,9 @@
+openapi: 3.0.1
+info:
+  title: OpenUBL XML Builder Signer
+  version: "1.0"
+
+servers:
+  - url: http://localhost:8080/api
+    description: Local server
+
