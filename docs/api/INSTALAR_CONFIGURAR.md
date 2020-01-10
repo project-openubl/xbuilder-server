@@ -34,14 +34,14 @@ Pasos para levantar el servidor
 1. Ejecutar el siguiente comando: 
 
 ```
-java -jar *-runner.jar
+java -jar xml-builder-api-*-runner.jar
 ```
 
 Luego debes de abrir un navegador y dirigirte a http://localhost:8080
 
 Despues de seguir cualquiera de los métodos anteriores, deberás ser capaz de ver la siguiente página:
 
-![XML Builder](images/welcome.png)
+![XML Builder](../images/welcome.png)
 
 # Container Registry
 Las imágenes de **XML Builder** se encuentran en el registry de Docker:

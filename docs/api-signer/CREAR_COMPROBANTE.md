@@ -1,8 +1,8 @@
 # Crear Comprobante Electrónico
 ## Requisitos
-- Tener el servidor XML Builder levantado. Puedes leer [Levantar servidor](INSTALACION_CONFIGURACION_SERVIDOR.md) para aprender cómo.
+- Tener el servidor XML Builder Signer levantado. Puedes leer [Levantar servidor](INSTALAR_CONFIGURAR.md) para aprender cómo.
 
-**XML Builder** está hecho para recibir peticiones HTTP por lo que podemos utilizar varios métodos para consumir sus servicios.
+**XML Builder Signer** está hecho para recibir peticiones HTTP por lo que podemos utilizar varios métodos para consumir sus servicios.
 Veamos algunos de ellos
 
 ## 1. Utilizando el comando CURL en el terminal
@@ -42,15 +42,16 @@ curl -X POST \
       }
     ]
   }' \
-http://localhost:8080/api/documents/invoice/create
+http://localhost:8080/api/organizations/master/documents/invoice/create
 ```
 
 - Debes de cambiar `http://localhost:8080` por la ubicación de tu servidor.
+- Debes de cambiar `master` por el ID de tu organización.
 - Si deseas creear otro tipo de documento debes de cambiar `/invoice` por credit-note, debit-note, etc. Vea el [API](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder) para más información.
 
-El ejemplo anterior creará un comprobante con los datos mínimos. **XML Builder** se encargará de generar todos los datos por ti.
+El ejemplo anterior creará un comprobante con los datos mínimos. **XML Builder Signer** se encargará de generar todos los datos por ti.
 
-![terminal](images/curl.gif)
+![terminal](../images/curl.gif)
 
 
 ## 2. Utilizando [Postman](https://www.getpostman.com/)
@@ -59,9 +60,11 @@ El ejemplo anterior creará un comprobante con los datos mínimos. **XML Builder
 - Instale Postman
 - Abra Postman y cree una nueva peticion HTTP. Utilize las siguientes imágenes como guía:
 
-![Postman Headers](images/postman_headers.png)
+***NOTA: Utilize la URL http://localhost:8080/api/organizations/master/documents/invoice/create y no la URL de la imagen***
 
-![Postman Body](images/postman_body.png)
+![Postman Headers](../images/postman_headers.png)
+
+![Postman Body](../images/postman_body.png)
 
 Deberá utilizar el siguiente body:
 
@@ -98,4 +101,4 @@ Deberá utilizar el siguiente body:
 Por último deberá hacer clic en el boton SEND.
 
 ## API
-Para conocer un poco más acerca del JSON que se envía a **XML Builder** vea la [documentación del API](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
+Para conocer un poco más acerca del JSON que se envía a **XML Builder Signer** vea la [documentación del API](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder-signer)

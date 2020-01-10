@@ -19,7 +19,15 @@ Para levantar el servidor en modo desarrollo necesitas:
     ./mvnw install -DskipTests
     ```
 4. Arrancar servidor
+
+    - Para XMl Builder:
     ```
-    ./mvnw quarkus:dev -f services/ -DnoDeps
+    ./mvnw quarkus:dev -f api/ -DnoDeps
     ```
+ 
+    - Para XML Builder Signer:
+     ```
+     ./mvnw quarkus:dev -f api-signer/ -DnoDeps
+     ```
+     
 5. Abrir el navegador y dirigirte a http://localhost:8080/

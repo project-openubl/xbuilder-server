@@ -1,6 +1,7 @@
 # Table of contents
 
 * [Home](README.md)
-* [Instalación y configuración del servidor](docs/INSTALACION_CONFIGURACION_SERVIDOR.md)
-* [Crear comprobante electrónico](docs/CREAR_COMPROBANTE.md)
+* [XML Builder](docs/api/INDEX.md)
+* [XML Builder Signer](docs/api-signer/INDEX.md)
+* [Desarrolladores](docs/DEVELOPERS.md)
 

@@ -8,7 +8,12 @@ Crea archivos XML basados en UBL 2.1 - Facturación electrónica Perú. Facturas
 - [Documentación](https://project-openubl.gitbook.io/xml-builder/)
 - [Videos](https://www.youtube.com/channel/UChq3xxjyDgjcU346rp0bbtA/)
 
-# Empezar
+# Distribuciones
+El proyecto XML Builder distribuye dos versiones:
+- ***XML Builder***.- Crea XMLs sin firma digital. Útil para empresas que ya cuentan con algun software para firmar sus XMLs.
+- ***XML Builder Signer***.- Incluye todas las funcionalidades de ***XML Builder*** pero además permite firmar electrónicamente los archivos XMLs; permite administrar los certificados digitales de varias empresas en un solo lugar.
+
+# XML Builder - empezar
 El método más fácil de iniciar el servidor localmente es usando Docker:
 
 ```
@@ -17,12 +22,12 @@ docker run -p 8080:8080 projectopenubl/xml-builder
 
 Podrás ver el servidor en: http://localhost:8080 
 
-Para más información puedes leer: [Instalación y configuration del servidor](docs/INSTALACION_CONFIGURACION_SERVIDOR.md)
+Para más información puedes leer: [Instalación y configuration del servidor](docs/api/INSTALAR_CONFIGURAR.md)
 
-## Crear Factura UBL 2.1.
-Para crear comprobantes debes de haber levantantado el servidor localmente.
+## XML Builder - crear Factura electrónica
+Para crear comprobantes debes de tener levantantado el servidor localmente, puedes seguir las instrucciones del paso anterior.
 
-Pasos:
+Pasos para crear factura electrónica:
 1. Abrir un terminal
 1. Ejecutar el comando:
 
@@ -64,6 +69,72 @@ Ejemplo:
 
 ![Swagger](docs/images/curl.gif)
 
+# XML Builder Signer - empezar
+El método más fácil de iniciar el servidor localmente es usando Docker:
+
+Crear un network:
+```
+docker network create xml-builder-network
+```
+
+Iniciar una instancia de PostgreSQL:
+```
+docker run -d --name postgres --net xml-builder-network -e POSTGRES_DB=db_name -e POSTGRES_USER=db_username -e POSTGRES_PASSWORD=db_password postgres
+```
+
+Iniciar una instancia de XML Builder Signer:
+```
+docker run --name xml-builder --net xml-builder-network -p 8080:8080 -e QUARKUS_DATASOURCE_URL=jdbc:postgresql://postgres:5432/db_name -e QUARKUS_DATASOURCE_USERNAME=db_username -e QUARKUS_DATASOURCE_PASSWORD=db_password -e QUARKUS_DATASOURCE_DRIVER=org.postgresql.Driver projectopenubl/xml-builder-signer
+```
+
+Podrás ver el servidor en: http://localhost:8080 
+
+Para más información puedes leer: [Instalación y configuration del servidor](docs/api/INSTALAR_CONFIGURAR.md)
+
+![Swagger](docs/images/api_signer_screenshot.png)
+
+## XML Builder Signer - crear Factura electrónica
+Para crear comprobantes debes de tener levantantado el servidor localmente, puedes seguir las instrucciones del paso anterior.
+
+XML Builder Signer crea por defecto una organización llamada `master`; para el presente ejemplo vamos a utilizar la organización `master`.
+
+Pasos para crear factura electrónica:
+1. Abrir un terminal
+1. Ejecutar el comando:
+
+```
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "serie": "F001",
+    "numero": 1,
+    "fechaEmision": 1573247709344,
+    "firmante": {
+      "ruc": "12345678912",
+      "razonSocial": "Razon Social Firmante"
+    },
+    "proveedor": {
+      "ruc": "98765432198",
+      "nombreComercial": "Nombre comercial proveedor",
+      "razonSocial": "Razon social proveedor",
+      "codigoPostal": "010101"
+    },
+    "cliente": {
+      "tipoDocumentoIdentidad": "RUC",
+      "numeroDocumentoIdentidad": "12312312312",
+      "nombre": "Nombre o razon social cliente"
+    },
+    "detalle": [
+      {
+        "descripcion": "Descripcion del item en venta",
+        "cantidad": 1,
+        "precioUnitario": 100
+      }
+    ]
+  }' \
+http://localhost:8080/api/organizations/master/documents/invoice/create
+```
+
 # API
 XML Builder está hecho para ser consumido a travéz de peticiones HTTP.
 
@@ -79,7 +150,9 @@ O simplemente puedes utilizar **XML Builder** a travéz de:
 - terminal de tu sistema operativo
 - Herramientas como Postman, etc.
 
-Para saber saber más acerca de los endpoints visita: [API Docs](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
+Para saber saber más acerca de los endpoints visita:
+- XML Builder [API Docs](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
+- XML Builder Signer: [API Docs](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder-signer)
 
 # Contribuye
 Aún hay muchas cosas por mejorar, tu ayuda es siempre bienvenida; no necesitas ser programador para contribuir ya que existen muchas formas de hacerlo:
