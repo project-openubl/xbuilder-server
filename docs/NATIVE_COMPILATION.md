@@ -64,4 +64,5 @@ En este ejemplo usé Fedora para crear el artecto y puede ser ejecutar con el co
 Este es un pequeño ejemplo de lo que podamos lograr con GraalVM y Quarkus:
 
 ![quarkus](images/quarkus_metrics_graphic_bootmem_wide.png)
+
 *Imagen tomada de la página oficial de [Quarkus](https://quarkus.io/)*
