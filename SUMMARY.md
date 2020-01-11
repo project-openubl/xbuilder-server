@@ -8,4 +8,5 @@
 * [2.1. Levantar y configurar servidor](docs/XBS_INSTALAR_CONFIGURAR.md)
 * [2.2. Crear comprobante electrónico](docs/XBS_CREAR_COMPROBANTE.md)
 * [3. Desarrolladores](docs/DEVELOPERS.md)
+* [3.1. Compilación nativa](docs/NATIVE_COMPILATION.md)
 
