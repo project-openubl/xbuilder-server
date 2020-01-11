@@ -3,6 +3,12 @@
 
 Crea archivos XML basados en UBL 2.1 - Facturación electrónica Perú. Facturas, boletas, notas de cŕedito, notas de débito, etc.
 
+# Mailing list
+Puedes hacer preguntas y recibir noticias a travéz de nuestro mailing list.
+Únete al grupo:
+- Enviando un correo a [projectopenubl+subscribe@googlegroups.com](mailto:projectopenubl+subscribe@googlegroups.com) o
+- Uniéndote al grupo [https://groups.google.com/d/forum/projectopenubl](https://groups.google.com/d/forum/projectopenubl)
+
 # Documentación y ayuda
 
 - [Documentación](https://project-openubl.gitbook.io/xml-builder/)
