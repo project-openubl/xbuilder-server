@@ -3,6 +3,7 @@ import { Dispatch } from "redux";
 import { createAction } from "typesafe-actions";
 import { ServerInfoRepresentation } from "../../models/xml-builder";
 import { get } from "../../api/serverInfo";
+import { alertFetchEndpoint } from "../alert/actions";
 
 export const fetchServerInfoRequest = createAction("serverInfoFetch/request")();
 export const fetchServerInfoSuccess = createAction("serverInfoFetch/success")<
@@ -22,6 +23,7 @@ export const fetchServerInfo = () => {
       })
       .catch((err: AxiosError) => {
         dispatch(fetchServerInfoFailure(err));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };

@@ -3,6 +3,7 @@ import { Dispatch } from "redux";
 import { createAction } from "typesafe-actions";
 import { KeysMetadataRepresentation } from "../../models/xml-builder";
 import { getOrganizationKeys } from "../../api/organizations";
+import { alertFetchEndpoint } from "../alert/actions";
 
 interface OrganizationKeysActionMeta {
   organizationId: string;
@@ -34,6 +35,7 @@ export const fetchOrganizationKeys = (organizationId: string) => {
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationKeysFailure(err, meta));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };

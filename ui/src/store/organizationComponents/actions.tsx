@@ -3,6 +3,7 @@ import { Dispatch } from "redux";
 import { createAction } from "typesafe-actions";
 import { ComponentRepresentation } from "../../models/xml-builder";
 import { getOrganizationComponents } from "../../api/organizations";
+import { alertFetchEndpoint } from "../alert/actions";
 
 interface OrganizationComponentsActionMeta {
   organizationId: string;
@@ -32,6 +33,7 @@ export const fetchOrganizationComponents = (organizationId: string) => {
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationComponentsFailure(err, meta));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };

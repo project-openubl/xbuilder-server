@@ -8,6 +8,7 @@ import {
   updateComponent,
   deleteComponent
 } from "../../api/organizations";
+import { alert, alertFetchEndpoint } from "../alert/actions";
 
 interface OrganizationComponentActionMeta {
   organizationId: string;
@@ -80,6 +81,7 @@ export const fetchComponent = (organizationId: string, componentId: string) => {
       })
       .catch((err: AxiosError) => {
         dispatch(fetchComponentFailure(err, meta));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -97,9 +99,15 @@ export const requestCreateComponent = (
     return createComponent(organizationId, component)
       .then((res: AxiosResponse<ComponentRepresentation>) => {
         dispatch(createComponentSuccess(res.data, meta));
+        alert({
+          title: `Creado satisfactoriamente`,
+          variant: "success",
+          description: `Componente ${component.name} creado`
+        })(dispatch);
       })
       .catch((err: AxiosError) => {
         dispatch(createComponentFailure(err, meta));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -118,9 +126,15 @@ export const requestUpdateComponent = (
     return updateComponent(organizationId, component)
       .then((res: AxiosResponse<ComponentRepresentation>) => {
         dispatch(updateComponentSuccess(res.data, meta));
+        alert({
+          title: `Actualizado satisfactoriamante`,
+          description: `Componente ${component.id} actualizado`,
+          variant: "success"
+        })(dispatch);
       })
       .catch((err: AxiosError) => {
         dispatch(updateComponentFailure(err, meta));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -139,9 +153,15 @@ export const requestDeleteComponent = (
     return deleteComponent(organizationId, componentId)
       .then((res: AxiosResponse) => {
         dispatch(deleteComponentSuccess(res.data, meta));
+        alert({
+          title: `Eliminado satisfactoriamente`,
+          description: `Componente ${componentId} eliminado`,
+          variant: "success"
+        })(dispatch);
       })
       .catch((err: AxiosError) => {
         dispatch(updateComponentFailure(err, meta));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
