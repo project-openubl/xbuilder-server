@@ -10,6 +10,7 @@
     "@patternfly/react-core": "3.129.3",
     "@patternfly/react-inline-edit-extension": "2.14.20",
     "@patternfly/react-table": "2.24.64",
+    "@redhat-cloud-services/frontend-components-notifications": "^0.0.7",
     "@types/jest": "24.0.23",
     "@types/node": "12.12.11",
     "@types/react": "16.9.12",

@@ -4,6 +4,7 @@ import { createAction } from "typesafe-actions";
 import { OrganizationRepresentation } from "../../models/xml-builder";
 import { getById, create, update, getIdByName } from "../../api/organizations";
 import { fetchOrganizations } from "../organizationContext/actions";
+import { alert, alertFetchEndpoint } from "../alert/actions";
 
 interface OrganizationActionMeta {
   organizationId: string;
@@ -67,6 +68,7 @@ export const fetchOrganization = (organizationId: string) => {
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationFailure(err, meta));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -80,9 +82,15 @@ export const createOrganization = (
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
         dispatch(createOrganizationSuccess(res.data));
         fetchOrganizations()(dispatch);
+        alert({
+          title: `Creado satisfactoriamente`,
+          description: `Organización ${organization.name} creada`,
+          variant: "success"
+        })(dispatch);
       })
       .catch((err: AxiosError) => {
         dispatch(createOrganizationFailure(err));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
@@ -102,9 +110,15 @@ export const updateOrganization = (
       .then((res: AxiosResponse<OrganizationRepresentation>) => {
         dispatch(updateOrganizationSuccess(res.data, meta));
         fetchOrganizations()(dispatch);
+        alert({
+          title: `Actualizado satisfactoriamente`,
+          description: `Organización ${organization.name} actualizada`,
+          variant: "success"
+        })(dispatch);
       })
       .catch((err: AxiosError) => {
         dispatch(updateOrganizationFailure(err, meta));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };

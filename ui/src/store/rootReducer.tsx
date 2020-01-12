@@ -21,10 +21,12 @@ import {
 } from "./organizationComponents";
 import { componentStateKey, componentReducer } from "./component";
 import { serverInfoStateKey, serverInfoReducer } from "./serverInfo";
+const frontendComponentsNotifications = require("@redhat-cloud-services/frontend-components-notifications");
 
 export type RootState = StateType<typeof rootReducer>;
 
 export const rootReducer = combineReducers({
+  notifications: frontendComponentsNotifications.notifications,
   [deleteDialogStateKey]: deleteDialogReducer,
   [organizationListStateKey]: organizationListReducer,
   [organizationContextStateKey]: organizationContextReducer,

@@ -6,6 +6,7 @@ import {
   SearchResultsRepresentation
 } from "../../models/xml-builder";
 import { search } from "../../api/organizations";
+import { alertFetchEndpoint } from "../alert/actions";
 
 export const {
   request: fetchOrganizationListRequest,
@@ -31,6 +32,7 @@ export const fetchOrganizations = (
       })
       .catch((err: AxiosError) => {
         dispatch(fetchOrganizationListFailure(err));
+        alertFetchEndpoint(err)(dispatch);
       });
   };
 };
