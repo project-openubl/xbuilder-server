@@ -3,12 +3,9 @@ import { AxiosError } from "axios";
 import { ContextSelector, ContextSelectorItem } from "@patternfly/react-core";
 import { OrganizationRepresentation } from "../../models/xml-builder";
 import { FetchStatus } from "../../store/common";
+import { XmlBuilderRouterProps } from "../../models/routerProps";
 
 interface StateToProps {
-  match: any;
-  history: any;
-  location: any;
-
   selectedOrganization: OrganizationRepresentation | null;
   organizations: OrganizationRepresentation[];
   error: AxiosError<any> | null;
@@ -17,12 +14,13 @@ interface StateToProps {
 
 interface DispatchToProps {}
 
-interface Props extends StateToProps, DispatchToProps {}
+interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {
+  onSelect: (organization: OrganizationRepresentation) => any;
+}
 
 interface State {
   isOpen: boolean;
   searchValue: string;
-  // selected: OrganizationRepresentation;
   filteredItems: OrganizationRepresentation[];
 }
 
@@ -32,7 +30,6 @@ class OrganizationContextSelector extends React.Component<Props, State> {
     this.state = {
       isOpen: false,
       searchValue: "",
-      // selected: props.organizations[0],
       filteredItems: props.organizations
     };
   }
@@ -45,12 +42,12 @@ class OrganizationContextSelector extends React.Component<Props, State> {
   };
 
   onSelect = (event: any, value: any) => {
-    const { organizations, history } = this.props;
+    const { organizations, onSelect } = this.props;
 
     const organization = organizations.find(p => p.name === value);
     if (organization) {
       this.setState({ isOpen: !this.state.isOpen }, () => {
-        history.push(`/organizations/manage/${organization.id}/keys`);
+        onSelect(organization);
       });
     }
   };

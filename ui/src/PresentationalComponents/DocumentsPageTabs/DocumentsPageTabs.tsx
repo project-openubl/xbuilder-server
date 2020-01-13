@@ -9,15 +9,14 @@ import {
   FormGroup
 } from "@patternfly/react-core";
 import OrganizationContextSelector from "../../SmartComponents/OrganizationContextSelector";
+import { XmlBuilderRouterProps } from "../../models/routerProps";
 import { OrganizationRepresentation } from "../../models/xml-builder";
 
-interface Props {
-  match: any;
-  history: any;
-  location: any;
+interface Props extends XmlBuilderRouterProps {
   activeKey: number;
 }
-const KeysPageTabs: React.FC<Props> = ({
+
+const DocumentsPageTabs: React.FC<Props> = ({
   match,
   history,
   activeKey,
@@ -28,20 +27,18 @@ const KeysPageTabs: React.FC<Props> = ({
     eventKey: number | string
   ) => {
     const organizationId = match.params.organizationId;
-    const url = `/organizations/manage/${organizationId}`;
+    const url = `/organizations/documents/${organizationId}/create`;
     if (eventKey === 0) {
-      history.push(url + "/keys");
+      history.push(url + "/");
     } else if (eventKey === 1) {
-      history.push(url + "/keys/list");
-    } else if (eventKey === 2) {
-      history.push(url + "/keys/providers");
+      history.push(url + "/sunat");
     }
   };
 
   const onOrganizationContextSelect = (
     organization: OrganizationRepresentation
   ) => {
-    history.push(`/organizations/manage/${organization.id}/keys`);
+    history.push(`/organizations/documents/${organization.id}/create`);
   };
 
   return (
@@ -58,17 +55,15 @@ const KeysPageTabs: React.FC<Props> = ({
         </div>
 
         <TextContent>
-          <Text component="h1">Certificados digitales</Text>
+          <Text component="h1">Comprobantes electrónicos</Text>
           <Text component="small">
-            Acá podrás configurar los certificados de seguridad que el software
-            usará para firmar los comprobantes de pago electrónicos.
+            acá podras simular la creación de comprobantes electrónicos.
           </Text>
         </TextContent>
         <br />
         <Tabs isFilled activeKey={activeKey} onSelect={handleTabClick}>
-          <Tab eventKey={0} title="Certificados activos"></Tab>
-          <Tab eventKey={1} title="Todos los certificados"></Tab>
-          <Tab eventKey={2} title="Proveeedores de certificados"></Tab>
+          <Tab eventKey={0} title="Documentos estandard"></Tab>
+          <Tab eventKey={1} title="Documentos SUNAT"></Tab>
         </Tabs>
       </PageSection>
       <PageSection>{children}</PageSection>
@@ -76,4 +71,4 @@ const KeysPageTabs: React.FC<Props> = ({
   );
 };
 
-export default KeysPageTabs;
+export default DocumentsPageTabs;

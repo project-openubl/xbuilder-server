@@ -173,6 +173,13 @@ class BasicLayout extends React.Component<Props, State> {
   renderSidebar = () => {
     const { organizations, selectedOrganization } = this.props;
 
+    let org;
+    if (selectedOrganization) {
+      org = selectedOrganization;
+    } else if (organizations.length > 0) {
+      org = organizations[0];
+    }
+
     const PageNav = (
       <Nav id="nav-primary-simple" aria-label="Nav" theme="dark">
         <NavList id="nav-list-simple" variant={NavVariants.default}>
@@ -187,25 +194,25 @@ class BasicLayout extends React.Component<Props, State> {
             </NavLink>
           </NavItem>
 
-          {selectedOrganization && (
-            <NavItem key="keys">
-              <NavLink
-                to={`/organizations/manage/${selectedOrganization.id}/keys`}
-                activeClassName="pf-m-current"
-              >
-                Certificados digitales
-              </NavLink>
-            </NavItem>
-          )}
-          {!selectedOrganization && organizations.length > 0 && (
-            <NavItem key="keys">
-              <NavLink
-                to={`/organizations/manage/${organizations[0].id}/keys`}
-                activeClassName="pf-m-current"
-              >
-                Certificados digitales
-              </NavLink>
-            </NavItem>
+          {org && (
+            <React.Fragment>
+              <NavItem key="keys">
+                <NavLink
+                  to={`/organizations/manage/${org.id}/keys`}
+                  activeClassName="pf-m-current"
+                >
+                  Certificados digitales
+                </NavLink>
+              </NavItem>
+              <NavItem key="documents">
+                <NavLink
+                  to={`/organizations/documents/${org.id}/create`}
+                  activeClassName="pf-m-current"
+                >
+                  Comprobantes electrónicos
+                </NavLink>
+              </NavItem>
+            </React.Fragment>
           )}
         </NavList>
       </Nav>
