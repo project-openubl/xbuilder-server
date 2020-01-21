@@ -1,68 +1,233 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import * as yup from "yup";
 import {
   Form,
   FormGroup,
-  TextInput,
   Grid,
-  GridItem
+  GridItem,
+  Bullseye,
+  Button,
+  TextInput
 } from "@patternfly/react-core";
+import TipoComprobanteSelect from "../TipoComprobanteSelect";
 import {
-  ComponentRepresentation,
-  ComponentTypeRepresentation,
-  ConfigPropertyRepresentation
-} from "../../models/xml-builder";
-import PropertySwitch from "../PropertySwitch";
-import PropertySelect from "../PropertySelect";
-import PropertyFile from "../PropertyFile";
+  Table,
+  TableHeader,
+  TableBody,
+  cellWidth,
+  ICell,
+  IRow
+} from "@patternfly/react-table";
+import { TimesIcon } from "@patternfly/react-icons";
+import TipoDocumentoIdentidadSelect from "../TipoDocumentoIdentidadSelect";
 
-export type FormData = { [key: string]: string | boolean };
+export type FormData = {
+  [key: string]: string | boolean | number | Array<{}>;
+};
 
 interface Props {
-  onChange: (isValid: boolean, value: FormData) => void;
+  onSubmit: (value: FormData) => void;
 }
 
-const StandardDocumentForm: React.FC<Props> = ({ onChange }) => {
+const StandardDocumentForm: React.FC<Props> = ({ onSubmit }) => {
   const validationSchema = yup.object().shape({
-    id: yup
+    tipoComprobante: yup
+      .string()
+      .trim()
+      .required("Este dato es requerido."),
+    serie: yup
       .string()
       .trim()
       .required("Este dato es requerido.")
-      .max(250, "Este campo debe de contener menos de 250 caracteres."),
-    name: yup
+      .min(1, "Este campo debe de contener al menos 1 caracteres."),
+    numero: yup
+      .number()
+      .typeError("Número inválido")
+      .required("Este dato es requerido.")
+      .min(1, "Este campo debe de contener al menos 2 caracteres."),
+    proveedorRuc: yup
+      .string()
+      .trim("Dato inválido")
+      .required("Este dato es requerido.")
+      .min(1, "Este campo debe de contener al menos 1 caracteres."),
+    proveedorNombreComercial: yup
       .string()
       .trim()
       .required("Este dato es requerido.")
-      .min(3, "Este campo debe de contener al menos 3 caracteres.")
-      .max(250, "Este campo debe de contener menos de 250 caracteres.")
+      .min(1, "Este campo debe de contener al menos 1 caracteres."),
+    proveedorCodigoPostal: yup
+      .string()
+      .trim()
+      .required("Este dato es requerido.")
+      .min(1, "Este campo debe de contener al menos 1 caracteres."),
+    clienteTipoDocumento: yup
+      .string()
+      .trim("Dato inválido")
+      .required("Este dato es requerido.")
+      .min(1, "Este campo debe de contener al menos 1 caracteres."),
+    clienteNumeroDocumento: yup
+      .string()
+      .trim("Dato inválido")
+      .required("Este dato es requerido.")
+      .min(1, "Este campo debe de contener al menos 1 caracteres."),
+    clienteNombre: yup
+      .string()
+      .trim("Dato inválido")
+      .required("Este dato es requerido.")
+      .min(1, "Este campo debe de contener al menos 1 caracteres."),
+    detalle: yup
+      .array()
+      .of(
+        yup.object().shape({
+          cantidad: yup
+            .number()
+            .required("Este dato es requerido.")
+            .min(0, "Este campo debe de ser mayor a 0."),
+          descripcion: yup
+            .string()
+            .trim()
+            .required("Este dato es requerido.")
+            .min(1, "Este campo debe de tener al menos 1 caracter."),
+          precioUnitario: yup
+            .number()
+            .required("Este dato es requerido.")
+            .min(0, "Este campo debe de ser mayor a 0.")
+        })
+      )
+      .required("Este dato es requerido.")
+      .min(1, "Este campo debe de contener al menos 1 elemento.")
   });
 
-  const { register, errors, triggerValidation, setValue, getValues } = useForm<
-    FormData
-  >({
+  const defaultDetalleValues = {
+    cantidad: 1,
+    descripcion: "Nombre de producto o servicio",
+    precioUnitario: 1
+  };
+  const defaultValues = {
+    tipoComprobante: "FACTURA",
+    serie: "F001",
+    numero: 1,
+    proveedorRuc: "12345678912",
+    proveedorNombreComercial: "Project OpenUBL",
+    proveedorCodigoPostal: "050101",
+    clienteTipoDocumento: "RUC",
+    clienteNumeroDocumento: "12312312312",
+    clienteNombre: "Nombre de mi cliente",
+    detalle: [{ ...defaultDetalleValues }]
+  };
+
+  const { register, errors, control, handleSubmit } = useForm<FormData>({
     mode: "onSubmit",
-    validationSchema
+    validationSchema,
+    defaultValues
   });
 
-  // Handlers
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "detalle"
+  });
 
-  const handleOnFormChange = () => {
-    // triggerValidation().then((isValid: boolean) => {
-    //   onChange(isValid, getValues());
-    // });
+  const columns: ICell[] = [
+    { title: "Cantidad", transforms: [cellWidth("10")] },
+    { title: "Descripcion", transforms: [cellWidth("50")] },
+    { title: "Precio Unitario", transforms: [cellWidth("10")] },
+    { title: "", transforms: [cellWidth("10")] }
+  ];
+  const rows: IRow[] = fields.map((item: any, index: number) => {
+    const onRemoveClick = () => {
+      remove(index);
+    };
+
+    const detalleErrors: any[] = errors.detalle ? (errors.detalle as any) : [];
+    const detalleError = detalleErrors[index] ? detalleErrors[index] : {};
+
+    return {
+      cells: [
+        {
+          title: (
+            <TextInput
+              name={`detalle[${index}].cantidad`}
+              defaultValue={item.cantidad}
+              type="number"
+              aria-label="Cantidad"
+              ref={register}
+              isValid={!detalleError.cantidad}
+            />
+          )
+        },
+        {
+          title: (
+            <TextInput
+              name={`detalle[${index}].descripcion`}
+              defaultValue={item.descripcion}
+              type="text"
+              aria-label="Descripcion"
+              ref={register}
+              isValid={!detalleError.descripcion}
+            />
+          )
+        },
+        {
+          title: (
+            <TextInput
+              name={`detalle[${index}].precioUnitario`}
+              defaultValue={item.precioUnitario}
+              type="number"
+              aria-label="Precio unitario"
+              placeholder="Descripción del producto o servicio"
+              ref={register}
+              isValid={!detalleError.precioUnitario}
+            />
+          )
+        },
+        {
+          title: (
+            <Button variant="plain" aria-label="Action" onClick={onRemoveClick}>
+              <TimesIcon />
+            </Button>
+          )
+        }
+      ]
+    };
+  });
+
+  const handleAgregarDetalle = () => {
+    append({ ...defaultDetalleValues });
+  };
+
+  const onFormSubmit = (data: FormData) => {
+    onSubmit(data);
   };
 
   return (
     <React.Fragment>
-      <Form onSubmit={() => {}} onChange={handleOnFormChange}>
-        <div className="pf-l-grid pf-m-all-6-col-on-md pf-m-all-3-col-on-lg pf-m-gutter">
-          <div className="pf-l-grid__item">
+      <Form onSubmit={handleSubmit(onFormSubmit)}>
+        <Grid md={6} lg={3} gutter="sm">
+          <GridItem>
+            <FormGroup
+              isRequired={true}
+              label="Tipo comprobante"
+              fieldId="tipoComprobante"
+              isValid={!errors.tipoComprobante}
+              helperTextInvalid={
+                errors.tipoComprobante && errors.tipoComprobante.message
+              }
+            >
+              <Controller
+                as={<TipoComprobanteSelect error={errors.tipoComprobante} />}
+                name="tipoComprobante"
+                control={control}
+              />
+            </FormGroup>
+          </GridItem>
+        </Grid>
+        <Grid md={6} lg={3} gutter="sm">
+          <GridItem>
             <FormGroup
               isRequired={true}
               label="Serie"
               fieldId="serie"
-              helperText="Ingresa la serie del comprobante. Ej. F001"
               isValid={!errors.serie}
               helperTextInvalid={errors.serie && errors.serie.message}
             >
@@ -76,8 +241,8 @@ const StandardDocumentForm: React.FC<Props> = ({ onChange }) => {
                 isValid={!errors.serie}
               />
             </FormGroup>
-          </div>
-          <div className="pf-l-grid__item">
+          </GridItem>
+          <GridItem>
             <FormGroup
               isRequired={true}
               label="Número"
@@ -87,7 +252,7 @@ const StandardDocumentForm: React.FC<Props> = ({ onChange }) => {
             >
               <TextInput
                 isRequired
-                type="text"
+                type="number"
                 id="numero"
                 name="numero"
                 aria-describedby="numero"
@@ -95,15 +260,14 @@ const StandardDocumentForm: React.FC<Props> = ({ onChange }) => {
                 isValid={!errors.numero}
               />
             </FormGroup>
-          </div>
-        </div>
-        <Grid sm={12} md={6} gutter="sm">
+          </GridItem>
+        </Grid>
+        <Grid md={6} lg={3} gutter="sm">
           <GridItem>
             <FormGroup
               isRequired={true}
               label="Proveedor RUC"
               fieldId="proveedorRuc"
-              helperText="Ingresa el número RUC del proveedor"
               isValid={!errors.proveedorRuc}
               helperTextInvalid={
                 errors.proveedorRuc && errors.proveedorRuc.message
@@ -165,11 +329,11 @@ const StandardDocumentForm: React.FC<Props> = ({ onChange }) => {
             </FormGroup>
           </GridItem>
         </Grid>
-        <div className="pf-l-grid pf-m-all-6-col-on-md pf-m-all-3-col-on-lg pf-m-gutter">
-          <div className="pf-l-grid__item">
+        <Grid md={6} lg={3} gutter="sm">
+          <GridItem>
             <FormGroup
               isRequired={true}
-              label="Cliente tipo doc."
+              label="Cliente tipo documento"
               fieldId="clienteTipoDocumento"
               isValid={!errors.clienteTipoDocumento}
               helperTextInvalid={
@@ -177,21 +341,21 @@ const StandardDocumentForm: React.FC<Props> = ({ onChange }) => {
                 errors.clienteTipoDocumento.message
               }
             >
-              <TextInput
-                isRequired
-                type="text"
-                id="clienteTipoDocumento"
+              <Controller
+                as={
+                  <TipoDocumentoIdentidadSelect
+                    error={errors.clienteTipoDocumento}
+                  />
+                }
                 name="clienteTipoDocumento"
-                aria-describedby="clienteTipoDocumento"
-                ref={register}
-                isValid={!errors.clienteTipoDocumento}
+                control={control}
               />
             </FormGroup>
-          </div>
-          <div className="pf-l-grid__item">
+          </GridItem>
+          <GridItem>
             <FormGroup
               isRequired={true}
-              label="Número doc."
+              label="Número documento"
               fieldId="clienteNumeroDocumento"
               isValid={!errors.clienteNumeroDocumento}
               helperTextInvalid={
@@ -209,8 +373,8 @@ const StandardDocumentForm: React.FC<Props> = ({ onChange }) => {
                 isValid={!errors.clienteNumeroDocumento}
               />
             </FormGroup>
-          </div>
-          <div className="pf-l-grid__item">
+          </GridItem>
+          <GridItem>
             <FormGroup
               isRequired={true}
               label="Nombre/razón social"
@@ -230,8 +394,28 @@ const StandardDocumentForm: React.FC<Props> = ({ onChange }) => {
                 isValid={!errors.clienteNombre}
               />
             </FormGroup>
-          </div>
-        </div>
+          </GridItem>
+        </Grid>
+        <Grid md={12} lg={12} gutter="sm">
+          <GridItem>
+            <Table aria-label="Document Line Table" cells={columns} rows={rows}>
+              <TableHeader />
+              <TableBody />
+              <tfoot>
+                <tr>
+                  <td colSpan={4}>
+                    <Bullseye>
+                      <Button variant="primary" onClick={handleAgregarDetalle}>
+                        Agregar
+                      </Button>
+                    </Bullseye>
+                  </td>
+                </tr>
+              </tfoot>
+            </Table>
+          </GridItem>
+        </Grid>
+        <Button type="submit">Guardar</Button>
       </Form>
     </React.Fragment>
   );

@@ -4,7 +4,8 @@ import {
   OrganizationRepresentation,
   SearchResultsRepresentation,
   KeysMetadataRepresentation,
-  ComponentRepresentation
+  ComponentRepresentation,
+  DocumentType
 } from "../models/xml-builder";
 
 const ORGANIZATIONS_URL = "/organizations";
@@ -16,6 +17,8 @@ const ORGANIZATION_COMPONENTS_URL =
   "/organizations/{organizationId}/components";
 const GET_ORGANIZATION_COMPONENT_URL =
   "/organizations/{organizationId}/components/{componentId}";
+const ORGANIZATION_ENRICH_DOCUMENTS_URL =
+  "/organizations/{organizationId}/documents/{documentType}/enrich";
 
 export const search = (
   filterText: string,
@@ -132,5 +135,19 @@ export const deleteComponent = (
       "{organizationId}",
       organizationId
     ).replace("{componentId}", componentId)
+  );
+};
+
+export const enrichDocument = (
+  organizationId: string,
+  documentType: DocumentType,
+  document: any
+): AxiosPromise<any> => {
+  return ApiClient.post<any>(
+    ORGANIZATION_ENRICH_DOCUMENTS_URL.replace(
+      "{organizationId}",
+      organizationId
+    ).replace("{documentType}", documentType),
+    document
   );
 };

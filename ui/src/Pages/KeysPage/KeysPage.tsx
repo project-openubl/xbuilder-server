@@ -32,7 +32,6 @@ const KeysPage: React.FC<Props> = ({
     }
   }
 
-  console.log(match);
   return (
     <React.Fragment>
       <Switch>

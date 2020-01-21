@@ -1,10 +1,16 @@
 import { connect } from "react-redux";
 import StandardDocumentPage from "./StandardDocumentPage";
+import { documentActions } from "../../../store/document";
 
 import { createMapStateToProps } from "../../../store/common";
 
-const mapStateToProps = createMapStateToProps(() => ({}));
+const mapStateToProps = createMapStateToProps(state => ({}));
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  requestEnrichDocument: documentActions.requestEnrichDocument
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(StandardDocumentPage);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(StandardDocumentPage);
