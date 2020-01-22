@@ -7,7 +7,8 @@ import { createMapStateToProps } from "../../../store/common";
 const mapStateToProps = createMapStateToProps(state => ({}));
 
 const mapDispatchToProps = {
-  requestEnrichDocument: documentActions.requestEnrichDocument
+  requestEnrichDocument: documentActions.requestEnrichDocument,
+  requestCreateDocument: documentActions.requestCreateDocument
 };
 
 export default connect(

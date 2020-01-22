@@ -13,9 +13,15 @@ import {
   GridItem,
   Toolbar,
   ToolbarGroup,
-  ToolbarItem
-} from "@patternfly/react-core";
-import { JsIcon, FileIcon } from "@patternfly/react-icons";
+  ToolbarItem,
+  Tabs,
+  Tab} from "@patternfly/react-core";
+import { FileIcon } from "@patternfly/react-icons";
+import ReactJson from "react-json-view";
+import AceEditor from "react-ace";
+import "ace-builds/src-noconflict/mode-xml";
+import "ace-builds/src-noconflict/theme-xcode";
+
 import StandardDocumentForm from "../../../PresentationalComponents/StandardDocumentForm";
 import { DocumentType } from "../../../models/xml-builder";
 
@@ -27,13 +33,21 @@ interface DispatchToProps {
     documentType: DocumentType,
     document: any
   ) => Promise<any>;
+  requestCreateDocument: (
+    organizationId: string,
+    documentType: DocumentType,
+    document: any
+  ) => Promise<any>;
 }
 
 interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
 
 interface State {
   formData: any;
+  xmlData: any;
+  xmlFileName: string;
   enrichData: any;
+  activeRequestResponseKey: number | string;
 }
 
 class StandardDocumentPage extends React.Component<Props, State> {
@@ -41,13 +55,15 @@ class StandardDocumentPage extends React.Component<Props, State> {
     super(props);
     this.state = {
       formData: null,
-      enrichData: null
+      xmlData: null,
+      xmlFileName: "",
+      enrichData: null,
+      activeRequestResponseKey: 0
     };
   }
 
   renderToolbar = () => {
-    const { formData } = this.state;
-
+    const { formData, enrichData, xmlData } = this.state;
     return (
       <Card>
         {/* <CardHeader>Toolbar</CardHeader> */}
@@ -58,13 +74,11 @@ class StandardDocumentPage extends React.Component<Props, State> {
                 <Toolbar>
                   <ToolbarGroup>
                     <ToolbarItem>
-                      <Button variant="plain">
-                        <JsIcon /> JSON
-                      </Button>
-                    </ToolbarItem>
-                    <ToolbarItem>
-                      <Button variant="plain">
-                        <FileIcon /> XML
+                      <Button
+                        variant="plain"
+                        onClick={this.handleOnDownloadXML}
+                      >
+                        <FileIcon /> Descargar XML
                       </Button>
                     </ToolbarItem>
                   </ToolbarGroup>
@@ -72,31 +86,29 @@ class StandardDocumentPage extends React.Component<Props, State> {
               </StackItem>
             )}
             <StackItem>
-              {formData && (
-                <div className="pf-c-content">
-                  <dl>
-                    <dt>T. Comprobante</dt>
-                    <dd>{formData.tipoComprobante}</dd>
-                    <dt>Serie/número</dt>
-                    <dd>
-                      {formData.serie}-{formData.numero}
-                    </dd>
-                    <dt>Proveedor</dt>
-                    <dd>
-                      {formData.proveedorRuc} /{" "}
-                      {formData.proveedorNombreComercial} /{" "}
-                      {formData.proveedorCodigoPostal}
-                    </dd>
-                    <dt>Cliente</dt>
-                    <dd>
-                      {formData.clienteTipoDocumento} /{" "}
-                      {formData.clienteNumeroDocumento} /{" "}
-                      {formData.clienteNombre}
-                    </dd>
-                  </dl>
-                </div>
-              )}
-              {!formData && <small>No hay datos que mostrar</small>}
+              <Tabs
+                isFilled
+                activeKey={this.state.activeRequestResponseKey}
+                onSelect={this.handleRequestResponseTabClick}
+              >
+                <Tab eventKey={0} title="JSON Request">
+                  <ReactJson src={formData || {}} name={null} />
+                </Tab>
+                <Tab eventKey={1} title="JSON Response">
+                  <ReactJson src={enrichData || {}} name={null} />
+                </Tab>
+                <Tab eventKey={2} title="XML Response">
+                  <AceEditor
+                    mode="xml"
+                    theme="xcode"
+                    onChange={() => {}}
+                    name="xmlResponse"
+                    editorProps={{ $blockScrolling: true }}
+                    readOnly={true}
+                    value={xmlData || ""}
+                  />
+                </Tab>
+              </Tabs>
             </StackItem>
           </Stack>
         </CardBody>
@@ -104,10 +116,13 @@ class StandardDocumentPage extends React.Component<Props, State> {
     );
   };
 
-  handleOnFormSubmit = (formData: any) => {
-    // this.setState({ formData });
-    const { match, requestEnrichDocument } = this.props;
-    const organizationId = match.params.organizationId;
+  getOrganizationId = () => {
+    const { match } = this.props;
+    return match.params.organizationId;
+  };
+
+  getPayload = () => {
+    const { formData } = this.state;
 
     const payload = {
       serie: formData.serie,
@@ -129,11 +144,75 @@ class StandardDocumentPage extends React.Component<Props, State> {
       }))
     };
 
-    requestEnrichDocument(organizationId, "invoice", payload).then(
-      (response: any) => {
-        this.setState({ enrichData: response });
+    return payload;
+  };
+
+  extractFilenameFromContentDispositionHeaderValue = (headers: any) => {
+    const contentDisposition = headers["content-disposition"];
+
+    let filename = "";
+    if (contentDisposition && contentDisposition.indexOf("attachment") !== -1) {
+      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+      const matches = filenameRegex.exec(contentDisposition);
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, "");
       }
-    );
+    }
+
+    return filename;
+  };
+
+  downloadXml = () => {
+    const { formData } = this.state;
+    const { requestCreateDocument } = this.props;
+    if (formData) {
+      requestCreateDocument(
+        this.getOrganizationId(),
+        "invoice",
+        this.getPayload()
+      ).then((response: any) => {
+        const fileName = this.extractFilenameFromContentDispositionHeaderValue(
+          response.headers
+        );
+        this.setState({ xmlData: response.data, xmlFileName: fileName });
+      });
+    }
+  };
+
+  enrichDocument = () => {
+    const { requestEnrichDocument } = this.props;
+
+    requestEnrichDocument(
+      this.getOrganizationId(),
+      "invoice",
+      this.getPayload()
+    ).then((response: any) => {
+      this.setState({ enrichData: response });
+    });
+  };
+
+  handleOnDownloadXML = () => {
+    const { xmlFileName, xmlData } = this.state;
+    const downloadUrl = window.URL.createObjectURL(new Blob([xmlData]));
+    const link = document.createElement("a");
+    link.href = downloadUrl;
+    link.setAttribute("download", xmlFileName);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
+  handleOnFormSubmit = (formData: any) => {
+    this.setState({ formData }, () => {
+      this.enrichDocument();
+      this.downloadXml();
+    });
+  };
+
+  handleRequestResponseTabClick = (event: any, tabIndex: number | string) => {
+    this.setState({
+      activeRequestResponseKey: tabIndex
+    });
   };
 
   renderForm = () => {

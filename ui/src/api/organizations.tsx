@@ -19,6 +19,8 @@ const GET_ORGANIZATION_COMPONENT_URL =
   "/organizations/{organizationId}/components/{componentId}";
 const ORGANIZATION_ENRICH_DOCUMENTS_URL =
   "/organizations/{organizationId}/documents/{documentType}/enrich";
+const ORGANIZATION_CREATE_DOCUMENTS_URL =
+  "/organizations/{organizationId}/documents/{documentType}/create";
 
 export const search = (
   filterText: string,
@@ -145,6 +147,20 @@ export const enrichDocument = (
 ): AxiosPromise<any> => {
   return ApiClient.post<any>(
     ORGANIZATION_ENRICH_DOCUMENTS_URL.replace(
+      "{organizationId}",
+      organizationId
+    ).replace("{documentType}", documentType),
+    document
+  );
+};
+
+export const createDocument = (
+  organizationId: string,
+  documentType: DocumentType,
+  document: any
+): AxiosPromise<any> => {
+  return ApiClient.post<any>(
+    ORGANIZATION_CREATE_DOCUMENTS_URL.replace(
       "{organizationId}",
       organizationId
     ).replace("{documentType}", documentType),
