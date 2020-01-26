@@ -11,7 +11,6 @@ COPY rules /usr/src/app/rules
 COPY templates /usr/src/app/templates
 COPY ui /usr/src/app/ui
 COPY pom.xml /usr/src/app
-COPY license.txt /usr/src/app
 
 USER root
 RUN chown -R quarkus /usr/src/app
