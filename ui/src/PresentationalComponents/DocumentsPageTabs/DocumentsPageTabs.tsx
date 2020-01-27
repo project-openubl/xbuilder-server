@@ -62,7 +62,10 @@ const DocumentsPageTabs: React.FC<Props> = ({
         </TextContent>
         <br />
         <Tabs isFilled activeKey={activeKey} onSelect={handleTabClick}>
-          <Tab eventKey={0} title="Documentos estandard"></Tab>
+          <Tab
+            eventKey={0}
+            title="Boleta - factura - nota crédito/débito"
+          ></Tab>
           <Tab eventKey={1} title="Documentos SUNAT"></Tab>
         </Tabs>
       </PageSection>
