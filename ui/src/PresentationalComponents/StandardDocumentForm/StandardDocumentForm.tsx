@@ -31,6 +31,8 @@ import {
 import TipoDocumentoIdentidadSelect from "../TipoDocumentoIdentidadSelect";
 import TipoIgvSelect from "../TipoIgvSelect";
 import SwitchController from "../SwitchController";
+import TipoNotaCreditoSelect from "../TipoNotaCreditoSelect";
+import TipoNotaDebitoSelect from "../TipoNotaDebitoSelect";
 
 export type FormData = {
   [key: string]: string | boolean | number | Array<{}>;
@@ -47,7 +49,13 @@ const StandardDocumentForm: React.FC<Props> = ({ onSubmit }) => {
     tipoComprobante: yup
       .string()
       .trim()
-      .required("Este dato es requerido."),
+      .required("Este dato es requerido.")
+      .transform((v: string) => {
+        if (v === "FACTURA" || v === "BOLETA") return "invoice";
+        else if (v === "NOTA_CREDITO") return "credit-note";
+        else if (v === "NOTA_DEBITO") return "debit-note";
+        else return v;
+      }),
     serie: yup
       .string()
       .trim()
@@ -161,16 +169,16 @@ const StandardDocumentForm: React.FC<Props> = ({ onSubmit }) => {
     detalle: [{ ...defaultDetalleValues }]
   };
 
-  const { register, errors, control, handleSubmit } = useForm<FormData>({
+  const { register, errors, control, handleSubmit, watch } = useForm<FormData>({
     mode: "onSubmit",
     validationSchema,
     defaultValues
   });
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: "detalle"
   });
+  const watchTipoComprobante = watch("tipoComprobante");
 
   const columns: ICell[] = [
     { title: "Cantidad", transforms: [cellWidth("10")] },
@@ -316,64 +324,6 @@ const StandardDocumentForm: React.FC<Props> = ({ onSubmit }) => {
     return a;
   }, []);
 
-  // const rows: IRow[] = fields.map((item: any, index: number) => {
-  //   const onRemoveClick = () => {
-  //     remove(index);
-  //   };
-
-  //   const detalleErrors: any[] = errors.detalle ? (errors.detalle as any) : [];
-  //   const detalleError = detalleErrors[index] ? detalleErrors[index] : {};
-
-  //   return {
-  //     cells: [
-  //       {
-  //         title: (
-  //           <TextInput
-  //             name={`detalle[${index}].cantidad`}
-  //             defaultValue={item.cantidad}
-  //             type="number"
-  //             aria-label="Cantidad"
-  //             ref={register}
-  //             isValid={!detalleError.cantidad}
-  //           />
-  //         )
-  //       },
-  //       {
-  //         title: (
-  //           <TextInput
-  //             name={`detalle[${index}].descripcion`}
-  //             defaultValue={item.descripcion}
-  //             type="text"
-  //             aria-label="Descripcion"
-  //             ref={register}
-  //             isValid={!detalleError.descripcion}
-  //           />
-  //         )
-  //       },
-  //       {
-  //         title: (
-  //           <TextInput
-  //             name={`detalle[${index}].precioUnitario`}
-  //             defaultValue={item.precioUnitario}
-  //             type="number"
-  //             aria-label="Precio unitario"
-  //             placeholder="Descripción del producto o servicio"
-  //             ref={register}
-  //             isValid={!detalleError.precioUnitario}
-  //           />
-  //         )
-  //       },
-  //       {
-  //         title: (
-  //           <Button variant="plain" aria-label="Action" onClick={onRemoveClick}>
-  //             <TimesIcon />
-  //           </Button>
-  //         )
-  //       }
-  //     ]
-  //   };
-  // });
-
   const handleAgregarDetalle = () => {
     append({ ...defaultDetalleValues });
   };
@@ -391,6 +341,10 @@ const StandardDocumentForm: React.FC<Props> = ({ onSubmit }) => {
   const onFormSubmit = (data: FormData) => {
     onSubmit(data);
   };
+
+  const isNotaCredito = watchTipoComprobante === "NOTA_CREDITO";
+  const isNotaDebito = watchTipoComprobante === "NOTA_DEBITO";
+  const isNota = isNotaCredito || isNotaDebito;
 
   return (
     <React.Fragment>
@@ -412,6 +366,83 @@ const StandardDocumentForm: React.FC<Props> = ({ onSubmit }) => {
                 control={control}
               />
             </FormGroup>
+          </GridItem>
+          <GridItem>
+            {isNota && (
+              <FormGroup
+                isRequired={false}
+                label="Tipo nota"
+                fieldId="tipoNota"
+                isValid={!errors.tipoNota}
+                helperTextInvalid={errors.tipoNota && errors.tipoNota.message}
+              >
+                {isNotaCredito && (
+                  <Controller
+                    as={<TipoNotaCreditoSelect error={errors.tipoNota} />}
+                    name="tipoNota"
+                    control={control}
+                  />
+                )}
+                {isNotaDebito && (
+                  <Controller
+                    as={<TipoNotaDebitoSelect error={errors.tipoNota} />}
+                    name="tipoNota"
+                    control={control}
+                  />
+                )}
+              </FormGroup>
+            )}
+          </GridItem>
+
+          <GridItem>
+            {isNota && (
+              <FormGroup
+                isRequired={true}
+                label="Comprobante afectado"
+                fieldId="comprobanteAfectado"
+                isValid={!errors.comprobanteAfectado}
+                helperTextInvalid={
+                  errors.comprobanteAfectado &&
+                  errors.comprobanteAfectado.message
+                }
+              >
+                <TextInput
+                  isRequired
+                  type="text"
+                  id="comprobanteAfectado"
+                  name="comprobanteAfectado"
+                  aria-describedby="comprobanteAfectado"
+                  ref={register}
+                  isValid={!errors.comprobanteAfectado}
+                  defaultValue="F001-100"
+                />
+              </FormGroup>
+            )}
+          </GridItem>
+          <GridItem>
+            {isNota && (
+              <FormGroup
+                isRequired={true}
+                label="Comprobante afectado sustento"
+                fieldId="comprobanteAfectado"
+                isValid={!errors.comprobanteAfectadoSustento}
+                helperTextInvalid={
+                  errors.comprobanteAfectadoSustento &&
+                  errors.comprobanteAfectadoSustento.message
+                }
+              >
+                <TextInput
+                  isRequired
+                  type="text"
+                  id="comprobanteAfectadoSustento"
+                  name="comprobanteAfectadoSustento"
+                  aria-describedby="comprobanteAfectadoSustento"
+                  ref={register}
+                  isValid={!errors.comprobanteAfectadoSustento}
+                  defaultValue="Sustento de la nota"
+                />
+              </FormGroup>
+            )}
           </GridItem>
         </Grid>
         <Grid md={6} lg={3} gutter="sm">

@@ -67,7 +67,6 @@ class StandardDocumentPage extends React.Component<Props, State> {
     const { formData, enrichData, xmlData } = this.state;
     return (
       <Card>
-        {/* <CardHeader>Toolbar</CardHeader> */}
         <CardBody>
           <Stack gutter="sm">
             {formData && (
@@ -129,7 +128,7 @@ class StandardDocumentPage extends React.Component<Props, State> {
       return {};
     }
 
-    const payload = {
+    const payload: any = {
       serie: formData.serie,
       numero: formData.numero,
       fechaEmision: formData.fechaEmision
@@ -164,6 +163,17 @@ class StandardDocumentPage extends React.Component<Props, State> {
       }))
     };
 
+    if (formData.comprobanteAfectado) {
+      payload.serieNumeroInvoiceReference = formData.comprobanteAfectado;
+    }
+    if (formData.comprobanteAfectadoSustento) {
+      payload.descripcionSustentoInvoiceReference =
+        formData.comprobanteAfectadoSustento;
+    }
+    if (formData.tipoNota) {
+      payload.tipoNota = formData.tipoNota;
+    }
+
     return payload;
   };
 
@@ -188,10 +198,10 @@ class StandardDocumentPage extends React.Component<Props, State> {
     if (formData) {
       requestCreateDocument(
         this.getOrganizationId(),
-        "invoice",
+        formData.tipoComprobante,
         this.getPayload()
       ).then((response: any) => {
-        if (response.status === 200) {
+        if (response) {
           const fileName = this.extractFilenameFromContentDispositionHeaderValue(
             response.headers
           );
@@ -203,14 +213,17 @@ class StandardDocumentPage extends React.Component<Props, State> {
 
   enrichDocument = () => {
     const { requestEnrichDocument } = this.props;
+    const { formData } = this.state;
 
-    requestEnrichDocument(
-      this.getOrganizationId(),
-      "invoice",
-      this.getPayload()
-    ).then((response: any) => {
-      this.setState({ enrichData: response });
-    });
+    if (formData) {
+      requestEnrichDocument(
+        this.getOrganizationId(),
+        formData.tipoComprobante,
+        this.getPayload()
+      ).then((response: any) => {
+        this.setState({ enrichData: response });
+      });
+    }
   };
 
   handleOnDownloadXML = () => {
