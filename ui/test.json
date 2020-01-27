@@ -1,0 +1,16 @@
+[
+    {
+        "attributeFilter": {
+            "key": "key1",
+            "operation": "equal",
+            "value": "1"
+        }
+    },
+    {
+        "attributeFilter": {
+            "key": "key2",
+            "operation": "in",
+            "value": "2,3,4"
+        }
+    }
+]
