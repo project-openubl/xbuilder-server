@@ -57,7 +57,7 @@ const DocumentsPageTabs: React.FC<Props> = ({
         <TextContent>
           <Text component="h1">Comprobantes electrónicos</Text>
           <Text component="small">
-            acá podras simular la creación de comprobantes electrónicos.
+            Acá podras simular la creación de comprobantes electrónicos.
           </Text>
         </TextContent>
         <br />

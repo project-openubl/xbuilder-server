@@ -15,7 +15,8 @@ import {
   ToolbarGroup,
   ToolbarItem,
   Tabs,
-  Tab} from "@patternfly/react-core";
+  Tab
+} from "@patternfly/react-core";
 import { FileIcon } from "@patternfly/react-icons";
 import ReactJson from "react-json-view";
 import AceEditor from "react-ace";
@@ -92,7 +93,7 @@ class StandardDocumentPage extends React.Component<Props, State> {
                 onSelect={this.handleRequestResponseTabClick}
               >
                 <Tab eventKey={0} title="JSON Request">
-                  <ReactJson src={formData || {}} name={null} />
+                  <ReactJson src={this.getPayload()} name={null} />
                 </Tab>
                 <Tab eventKey={1} title="JSON Response">
                   <ReactJson src={enrichData || {}} name={null} />
@@ -124,9 +125,18 @@ class StandardDocumentPage extends React.Component<Props, State> {
   getPayload = () => {
     const { formData } = this.state;
 
+    if (!formData) {
+      return {};
+    }
+
     const payload = {
       serie: formData.serie,
       numero: formData.numero,
+      fechaEmision: formData.fechaEmision
+        ? formData.fechaEmision.getTime()
+        : undefined,
+      totalDescuentos: formData.totalDescuentos,
+      totalOtrosCargos: formData.totalOtrosCargos,
       proveedor: {
         ruc: formData.proveedorRuc,
         razonSocial: formData.proveedorNombreComercial,
@@ -137,10 +147,20 @@ class StandardDocumentPage extends React.Component<Props, State> {
         numeroDocumentoIdentidad: formData.clienteNumeroDocumento,
         nombre: formData.clienteNombre
       },
+      firmante:
+        formData.firmanteRuc && formData.firmanteRazonSocial
+          ? {
+              ruc: formData.firmanteRuc,
+              razonSocial: formData.firmanteRazonSocial
+            }
+          : undefined,
       detalle: formData.detalle.map((item: any) => ({
         descripcion: item.descripcion,
         precioUnitario: item.precioUnitario,
-        cantidad: item.cantidad
+        cantidad: item.cantidad,
+        unidadMedida: item.unidadMedida ? item.unidadMedida : undefined,
+        tipoIGV: item.tipoIgv,
+        icb: item.icb
       }))
     };
 
@@ -171,10 +191,12 @@ class StandardDocumentPage extends React.Component<Props, State> {
         "invoice",
         this.getPayload()
       ).then((response: any) => {
-        const fileName = this.extractFilenameFromContentDispositionHeaderValue(
-          response.headers
-        );
-        this.setState({ xmlData: response.data, xmlFileName: fileName });
+        if (response.status === 200) {
+          const fileName = this.extractFilenameFromContentDispositionHeaderValue(
+            response.headers
+          );
+          this.setState({ xmlData: response.data, xmlFileName: fileName });
+        }
       });
     }
   };
