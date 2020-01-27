@@ -4,6 +4,7 @@ import { XmlBuilderRouterProps } from "../../../models/routerProps";
 import GenericDocument from "../../../SmartComponents/GenericDocument";
 import DocumentsPageTabs from "../../../PresentationalComponents/DocumentsPageTabs";
 import StandardDocumentForm from "../../../PresentationalComponents/StandardDocumentForm";
+import { StandardDocumentFormData } from "../../../PresentationalComponents/StandardDocumentForm/StandardDocumentForm";
 
 interface StateToProps {}
 
@@ -12,7 +13,7 @@ interface DispatchToProps {}
 interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
 
 interface State {
-  form: any;
+  form: StandardDocumentFormData | null;
   documentType: DocumentType;
 }
 
@@ -25,11 +26,7 @@ class StandardDocumentPage extends React.Component<Props, State> {
     };
   }
 
-  processFormAndGetInputDocument = (form: any) => {
-    if (!form) {
-      return null;
-    }
-
+  processFormAndGetInputDocument = (form: StandardDocumentFormData) => {
     const result: any = {
       serie: form.serie,
       numero: form.numero,
@@ -86,7 +83,11 @@ class StandardDocumentPage extends React.Component<Props, State> {
 
   render() {
     const { documentType, form } = this.state;
-    const inputDocument = this.processFormAndGetInputDocument(form);
+
+    let inputDocument = null;
+    if (form) {
+      inputDocument = this.processFormAndGetInputDocument(form);
+    }
 
     return (
       <React.Fragment>

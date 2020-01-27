@@ -34,12 +34,39 @@ import SwitchController from "../SwitchController";
 import TipoNotaCreditoSelect from "../TipoNotaCreditoSelect";
 import TipoNotaDebitoSelect from "../TipoNotaDebitoSelect";
 
-export type FormData = {
-  [key: string]: string | boolean | number | Array<{}>;
+export type DetalleFormData = {
+  cantidad: number;
+  descripcion: string;
+  precioUnitario: number;
+  tipoIgv: string;
+  unidadMedida: string;
+  icb: boolean;
+};
+
+export type StandardDocumentFormData = {
+  tipoComprobante: string;
+  serie: string;
+  numero: number;
+  fechaEmision: Date;
+  totalDescuentos: number;
+  totalOtrosCargos: number;
+  proveedorRuc: string;
+  proveedorNombreComercial: string;
+  proveedorCodigoPostal: string;
+  clienteTipoDocumento: string;
+  clienteNumeroDocumento: string;
+  clienteNombre: string;
+  firmanteRuc: string;
+  firmanteRazonSocial: string;
+  detalle: Array<DetalleFormData>;
+
+  tipoNota: string;
+  comprobanteAfectado: string;
+  comprobanteAfectadoSustento: string;
 };
 
 interface Props {
-  onSubmit: (value: FormData) => void;
+  onSubmit: (value: StandardDocumentFormData) => void;
 }
 
 const StandardDocumentForm: React.FC<Props> = ({ onSubmit }) => {
@@ -169,7 +196,7 @@ const StandardDocumentForm: React.FC<Props> = ({ onSubmit }) => {
     detalle: [{ ...defaultDetalleValues }]
   };
 
-  const { register, errors, control, handleSubmit, watch } = useForm<FormData>({
+  const { register, errors, control, handleSubmit, watch } = useForm<StandardDocumentFormData>({
     mode: "onSubmit",
     validationSchema,
     defaultValues
@@ -338,7 +365,7 @@ const StandardDocumentForm: React.FC<Props> = ({ onSubmit }) => {
     setIsOpenRows(newValues);
   };
 
-  const onFormSubmit = (data: FormData) => {
+  const onFormSubmit = (data: StandardDocumentFormData) => {
     onSubmit(data);
   };
 
