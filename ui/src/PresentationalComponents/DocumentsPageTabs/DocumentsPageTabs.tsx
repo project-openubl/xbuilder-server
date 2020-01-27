@@ -31,7 +31,7 @@ const DocumentsPageTabs: React.FC<Props> = ({
     if (eventKey === 0) {
       history.push(url + "/");
     } else if (eventKey === 1) {
-      history.push(url + "/sunat");
+      history.push(url + "/baja");
     }
   };
 
@@ -64,9 +64,9 @@ const DocumentsPageTabs: React.FC<Props> = ({
         <Tabs isFilled activeKey={activeKey} onSelect={handleTabClick}>
           <Tab
             eventKey={0}
-            title="Boleta - factura - nota crédito/débito"
+            title="Documentos básicos (boleta, factura, nota crédito/débito)"
           ></Tab>
-          <Tab eventKey={1} title="Documentos SUNAT"></Tab>
+          <Tab eventKey={1} title="Baja"></Tab>
         </Tabs>
       </PageSection>
       <PageSection>{children}</PageSection>

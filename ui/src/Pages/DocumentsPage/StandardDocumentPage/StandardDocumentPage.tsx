@@ -1,159 +1,59 @@
 import React from "react";
-import DocumentsPageTabs from "../../../PresentationalComponents/DocumentsPageTabs";
-import { XmlBuilderRouterProps } from "../../../models/routerProps";
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  SplitItem,
-  Stack,
-  StackItem,
-  Button,
-  Grid,
-  GridItem,
-  Toolbar,
-  ToolbarGroup,
-  ToolbarItem,
-  Tabs,
-  Tab
-} from "@patternfly/react-core";
-import { FileIcon } from "@patternfly/react-icons";
-import ReactJson from "react-json-view";
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-xml";
-import "ace-builds/src-noconflict/theme-xcode";
-
-import StandardDocumentForm from "../../../PresentationalComponents/StandardDocumentForm";
 import { DocumentType } from "../../../models/xml-builder";
+import { XmlBuilderRouterProps } from "../../../models/routerProps";
+import GenericDocument from "../../../SmartComponents/GenericDocument";
+import DocumentsPageTabs from "../../../PresentationalComponents/DocumentsPageTabs";
+import StandardDocumentForm from "../../../PresentationalComponents/StandardDocumentForm";
 
 interface StateToProps {}
 
-interface DispatchToProps {
-  requestEnrichDocument: (
-    organizationId: string,
-    documentType: DocumentType,
-    document: any
-  ) => Promise<any>;
-  requestCreateDocument: (
-    organizationId: string,
-    documentType: DocumentType,
-    document: any
-  ) => Promise<any>;
-}
+interface DispatchToProps {}
 
 interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
 
 interface State {
-  formData: any;
-  xmlData: any;
-  xmlFileName: string;
-  enrichData: any;
-  activeRequestResponseKey: number | string;
+  form: any;
+  documentType: DocumentType;
 }
 
 class StandardDocumentPage extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      formData: null,
-      xmlData: null,
-      xmlFileName: "",
-      enrichData: null,
-      activeRequestResponseKey: 0
+      form: null,
+      documentType: "invoice"
     };
   }
 
-  renderToolbar = () => {
-    const { formData, enrichData, xmlData } = this.state;
-    return (
-      <Card>
-        <CardBody>
-          <Stack gutter="sm">
-            {formData && (
-              <StackItem>
-                <Toolbar>
-                  <ToolbarGroup>
-                    <ToolbarItem>
-                      <Button
-                        variant="plain"
-                        onClick={this.handleOnDownloadXML}
-                      >
-                        <FileIcon /> Descargar XML
-                      </Button>
-                    </ToolbarItem>
-                  </ToolbarGroup>
-                </Toolbar>
-              </StackItem>
-            )}
-            <StackItem>
-              <Tabs
-                isFilled
-                activeKey={this.state.activeRequestResponseKey}
-                onSelect={this.handleRequestResponseTabClick}
-              >
-                <Tab eventKey={0} title="JSON Request">
-                  <ReactJson src={this.getPayload()} name={null} />
-                </Tab>
-                <Tab eventKey={1} title="JSON Response">
-                  <ReactJson src={enrichData || {}} name={null} />
-                </Tab>
-                <Tab eventKey={2} title="XML Response">
-                  <AceEditor
-                    mode="xml"
-                    theme="xcode"
-                    onChange={() => {}}
-                    name="xmlResponse"
-                    editorProps={{ $blockScrolling: true }}
-                    readOnly={true}
-                    value={xmlData || ""}
-                  />
-                </Tab>
-              </Tabs>
-            </StackItem>
-          </Stack>
-        </CardBody>
-      </Card>
-    );
-  };
-
-  getOrganizationId = () => {
-    const { match } = this.props;
-    return match.params.organizationId;
-  };
-
-  getPayload = () => {
-    const { formData } = this.state;
-
-    if (!formData) {
-      return {};
+  processFormAndGetInputDocument = (form: any) => {
+    if (!form) {
+      return null;
     }
 
-    const payload: any = {
-      serie: formData.serie,
-      numero: formData.numero,
-      fechaEmision: formData.fechaEmision
-        ? formData.fechaEmision.getTime()
-        : undefined,
-      totalDescuentos: formData.totalDescuentos,
-      totalOtrosCargos: formData.totalOtrosCargos,
+    const result: any = {
+      serie: form.serie,
+      numero: form.numero,
+      fechaEmision: form.fechaEmision ? form.fechaEmision.getTime() : undefined,
+      totalDescuentos: form.totalDescuentos,
+      totalOtrosCargos: form.totalOtrosCargos,
       proveedor: {
-        ruc: formData.proveedorRuc,
-        razonSocial: formData.proveedorNombreComercial,
-        codigoPostal: formData.proveedorCodigoPostal
+        ruc: form.proveedorRuc,
+        razonSocial: form.proveedorNombreComercial,
+        codigoPostal: form.proveedorCodigoPostal
       },
       cliente: {
-        tipoDocumentoIdentidad: formData.clienteTipoDocumento,
-        numeroDocumentoIdentidad: formData.clienteNumeroDocumento,
-        nombre: formData.clienteNombre
+        tipoDocumentoIdentidad: form.clienteTipoDocumento,
+        numeroDocumentoIdentidad: form.clienteNumeroDocumento,
+        nombre: form.clienteNombre
       },
       firmante:
-        formData.firmanteRuc && formData.firmanteRazonSocial
+        form.firmanteRuc && form.firmanteRazonSocial
           ? {
-              ruc: formData.firmanteRuc,
-              razonSocial: formData.firmanteRazonSocial
+              ruc: form.firmanteRuc,
+              razonSocial: form.firmanteRazonSocial
             }
           : undefined,
-      detalle: formData.detalle.map((item: any) => ({
+      detalle: form.detalle.map((item: any) => ({
         descripcion: item.descripcion,
         precioUnitario: item.precioUnitario,
         cantidad: item.cantidad,
@@ -163,116 +63,40 @@ class StandardDocumentPage extends React.Component<Props, State> {
       }))
     };
 
-    if (formData.comprobanteAfectado) {
-      payload.serieNumeroInvoiceReference = formData.comprobanteAfectado;
+    if (form.comprobanteAfectado) {
+      result.serieNumeroInvoiceReference = form.comprobanteAfectado;
     }
-    if (formData.comprobanteAfectadoSustento) {
-      payload.descripcionSustentoInvoiceReference =
-        formData.comprobanteAfectadoSustento;
+    if (form.comprobanteAfectadoSustento) {
+      result.descripcionSustentoInvoiceReference =
+        form.comprobanteAfectadoSustento;
     }
-    if (formData.tipoNota) {
-      payload.tipoNota = formData.tipoNota;
-    }
-
-    return payload;
-  };
-
-  extractFilenameFromContentDispositionHeaderValue = (headers: any) => {
-    const contentDisposition = headers["content-disposition"];
-
-    let filename = "";
-    if (contentDisposition && contentDisposition.indexOf("attachment") !== -1) {
-      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-      const matches = filenameRegex.exec(contentDisposition);
-      if (matches != null && matches[1]) {
-        filename = matches[1].replace(/['"]/g, "");
-      }
+    if (form.tipoNota) {
+      result.tipoNota = form.tipoNota;
     }
 
-    return filename;
+    return result;
   };
 
-  downloadXml = () => {
-    const { formData } = this.state;
-    const { requestCreateDocument } = this.props;
-    if (formData) {
-      requestCreateDocument(
-        this.getOrganizationId(),
-        formData.tipoComprobante,
-        this.getPayload()
-      ).then((response: any) => {
-        if (response) {
-          const fileName = this.extractFilenameFromContentDispositionHeaderValue(
-            response.headers
-          );
-          this.setState({ xmlData: response.data, xmlFileName: fileName });
-        }
-      });
-    }
-  };
-
-  enrichDocument = () => {
-    const { requestEnrichDocument } = this.props;
-    const { formData } = this.state;
-
-    if (formData) {
-      requestEnrichDocument(
-        this.getOrganizationId(),
-        formData.tipoComprobante,
-        this.getPayload()
-      ).then((response: any) => {
-        this.setState({ enrichData: response });
-      });
-    }
-  };
-
-  handleOnDownloadXML = () => {
-    const { xmlFileName, xmlData } = this.state;
-    const downloadUrl = window.URL.createObjectURL(new Blob([xmlData]));
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.setAttribute("download", xmlFileName);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-  };
-
-  handleOnFormSubmit = (formData: any) => {
-    this.setState({ formData }, () => {
-      this.enrichDocument();
-      this.downloadXml();
-    });
-  };
-
-  handleRequestResponseTabClick = (event: any, tabIndex: number | string) => {
+  onSubmit = (form: any) => {
     this.setState({
-      activeRequestResponseKey: tabIndex
+      form,
+      documentType: form.tipoComprobante
     });
-  };
-
-  renderForm = () => {
-    return (
-      <Card>
-        <CardHeader>Datos del comprobante de pago</CardHeader>
-        <CardBody>
-          <StandardDocumentForm onSubmit={this.handleOnFormSubmit} />
-        </CardBody>
-      </Card>
-    );
   };
 
   render() {
+    const { documentType, form } = this.state;
+    const inputDocument = this.processFormAndGetInputDocument(form);
+
     return (
       <React.Fragment>
         <DocumentsPageTabs activeKey={0}>
-          <Grid lg={2} gutter="sm">
-            <GridItem span={8}>
-              <SplitItem>{this.renderForm()}</SplitItem>
-            </GridItem>
-            <GridItem span={4}>
-              <SplitItem>{this.renderToolbar()}</SplitItem>
-            </GridItem>
-          </Grid>
+          <GenericDocument
+            documentType={documentType}
+            inputDocument={inputDocument}
+          >
+            <StandardDocumentForm onSubmit={this.onSubmit} />
+          </GenericDocument>
         </DocumentsPageTabs>
       </React.Fragment>
     );

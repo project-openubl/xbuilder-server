@@ -4,7 +4,7 @@ import { organizationContextActions } from "../../store/organizationContext";
 import { OrganizationRepresentation } from "../../models/xml-builder";
 import { XmlBuilderRouterProps } from "../../models/routerProps";
 import StandardDocumentPage from "./StandardDocumentPage";
-import SunatDocumentPage from "./SunatDocumentPage";
+import BajaDocumentPage from "./BajaDocumentPage";
 
 interface StateToProps {
   contextOrganizations: OrganizationRepresentation[];
@@ -41,8 +41,8 @@ const DocumentsPage: React.FC<Props> = ({
           exact={true}
         />
         <Route
-          path={`${match.path}/sunat`}
-          component={SunatDocumentPage}
+          path={`${match.path}/baja`}
+          component={BajaDocumentPage}
           exact={true}
         />
       </Switch>
