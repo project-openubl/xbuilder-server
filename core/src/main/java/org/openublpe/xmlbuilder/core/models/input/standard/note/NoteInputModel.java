@@ -20,11 +20,13 @@ import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public abstract class NoteInputModel extends DocumentInputModel {
 
     @NotNull
     @NotBlank
+    @Pattern(regexp = "^[F|f|B|b].*$")
     private String serieNumeroInvoiceReference;
 
     @NotNull
