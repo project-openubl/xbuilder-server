@@ -2,7 +2,13 @@ import { AxiosError, AxiosResponse } from "axios";
 import { Dispatch } from "redux";
 import { createAction } from "typesafe-actions";
 import { OrganizationRepresentation } from "../../models/xml-builder";
-import { getById, create, update, getIdByName } from "../../api/organizations";
+import {
+  getById,
+  create,
+  update,
+  getIdByName,
+  remove
+} from "../../api/organizations";
 import { fetchOrganizations } from "../organizationContext/actions";
 import { alert, alertFetchEndpoint } from "../alert/actions";
 
@@ -25,33 +31,43 @@ export const fetchOrganizationFailure = createAction(
 )<AxiosError, OrganizationActionMeta>();
 
 export const createOrganizationRequest = createAction(
-  "createOrganization/fetch/request"
+  "organization/create/request"
 )();
 export const createOrganizationSuccess = createAction(
-  "createOrganization/fetch/success"
+  "organization/create/success"
 )<OrganizationRepresentation>();
 export const createOrganizationFailure = createAction(
-  "createOrganization/fetch/failure"
+  "organization/create/failure"
 )<AxiosError>();
 
 export const updateOrganizationRequest = createAction(
-  "updateOrganization/fetch/request"
+  "organization/update/request"
 )<OrganizationActionMeta>();
 export const updateOrganizationSuccess = createAction(
-  "updateOrganization/fetch/success"
+  "organization/update/success"
 )<OrganizationRepresentation, OrganizationActionMeta>();
 export const updateOrganizationFailure = createAction(
-  "updateOrganization/fetch/failure"
+  "organization/update/failure"
+)<AxiosError, OrganizationActionMeta>();
+
+export const deleteOrganizationRequest = createAction(
+  "organization/delete/request"
+)<OrganizationActionMeta>();
+export const deleteOrganizationSuccess = createAction(
+  "organization/delete/success"
+)<OrganizationRepresentation, OrganizationActionMeta>();
+export const deleteOrganizationFailure = createAction(
+  "organization/delete/failure"
 )<AxiosError, OrganizationActionMeta>();
 
 export const fetchOrganizationIdByNameRequest = createAction(
-  "organizationIdByName/fetch/request"
+  "organization/fetchIdByName/request"
 )<OrganizationNameActionMeta>();
 export const fetchOrganizationIdByNameSuccess = createAction(
-  "organizationIdByName/fetch/success"
+  "organization/fetchIdByName/success"
 )<string | null, OrganizationNameActionMeta>();
 export const fetchOrganizationIdByNameFailure = createAction(
-  "organizationIdByName/fetch/failure"
+  "organization/fetchIdByName/failure"
 )<AxiosError, OrganizationNameActionMeta>();
 
 export const fetchOrganization = (organizationId: string) => {
@@ -118,6 +134,31 @@ export const updateOrganization = (
       })
       .catch((err: AxiosError) => {
         dispatch(updateOrganizationFailure(err, meta));
+        alertFetchEndpoint(err)(dispatch);
+      });
+  };
+};
+
+export const deleteOrganization = (organizationId: string) => {
+  return (dispatch: Dispatch) => {
+    const meta: OrganizationActionMeta = {
+      organizationId
+    };
+
+    dispatch(deleteOrganizationRequest(meta));
+
+    return remove(organizationId)
+      .then((res: AxiosResponse) => {
+        dispatch(deleteOrganizationSuccess(res.data, meta));
+        fetchOrganizations()(dispatch);
+        alert({
+          title: `Eliminado satisfactoriamente`,
+          description: `Organización ${organizationId} eliminada`,
+          variant: "success"
+        })(dispatch);
+      })
+      .catch((err: AxiosError) => {
+        dispatch(deleteOrganizationFailure(err, meta));
         alertFetchEndpoint(err)(dispatch);
       });
   };

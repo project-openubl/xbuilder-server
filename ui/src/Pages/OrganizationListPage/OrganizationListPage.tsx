@@ -33,6 +33,7 @@ import { XmlBuilderRouterProps } from "../../models/routerProps";
 import SkeletonTable from "../../PresentationalComponents/SkeletonTable";
 import ErrorTable from "../../PresentationalComponents/ErrorTable";
 import EmptyTable from "../../PresentationalComponents/EmptyTable";
+import { deleteDialogActions } from "../../store/deleteDialog";
 
 interface StateToProps {
   organizations: SearchResultsRepresentation<OrganizationRepresentation>;
@@ -46,6 +47,9 @@ interface DispatchToProps {
     page: number,
     pageSize: number
   ) => Promise<void>;
+  deleteOrganization: (organizationId: string) => Promise<void>;
+  showDeleteDialog: typeof deleteDialogActions.openModal;
+  closeDeleteDialog: typeof deleteDialogActions.closeModal;
 }
 
 interface Props extends StateToProps, DispatchToProps, XmlBuilderRouterProps {}
@@ -79,8 +83,7 @@ class OrganizationListPage extends React.Component<Props, State> {
         },
         {
           title: "Eliminar",
-          onClick: (event, rowId) =>
-            console.log("clicked on Third action, on row: ", rowId)
+          onClick: this.handleEliminar
         }
       ]
     };
@@ -139,6 +142,30 @@ class OrganizationListPage extends React.Component<Props, State> {
   handleEditar = (event: React.MouseEvent, rowIndex: number): void => {
     const { history, organizations } = this.props;
     history.push("/organizations/edit/" + organizations.items[rowIndex].id);
+  };
+
+  handleEliminar = (event: React.MouseEvent, rowIndex: number) => {
+    const {
+      showDeleteDialog,
+      closeDeleteDialog,
+      deleteOrganization
+    } = this.props;
+
+    const { organizations } = this.props;
+    const organization = organizations.items[rowIndex];
+
+    showDeleteDialog({
+      name: organization.name,
+      type: "organización",
+      onDelete: () => {
+        deleteOrganization(organization.id).then(() => {
+          closeDeleteDialog();
+        });
+      },
+      onCancel: () => {
+        closeDeleteDialog();
+      }
+    });
   };
 
   handleSearchSubmit = (values: any) => {

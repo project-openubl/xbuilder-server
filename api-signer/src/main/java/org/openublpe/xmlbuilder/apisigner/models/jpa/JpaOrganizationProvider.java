@@ -148,4 +148,13 @@ public class JpaOrganizationProvider implements OrganizationProvider {
         return new SearchResultsModel<>(count, list);
     }
 
+    @Override
+    public void deleteOrganization(OrganizationModel model) {
+        OrganizationEntity organization = OrganizationEntity.findById(model.getId());
+
+        em.createNamedQuery("deleteComponentConfigByOrganization").setParameter("organization", organization).executeUpdate();
+        em.createNamedQuery("deleteComponentByOrganization").setParameter("organization", organization).executeUpdate();
+        em.createNamedQuery("DeleteOrganization").setParameter("organization", organization).executeUpdate();
+    }
+
 }

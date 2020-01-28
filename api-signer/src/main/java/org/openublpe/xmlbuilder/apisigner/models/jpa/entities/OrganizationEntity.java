@@ -41,6 +41,7 @@ import javax.validation.constraints.NotNull;
         @NamedQuery(name = "FindByName", query = "select o from OrganizationEntity o where o.name = :name"),
         @NamedQuery(name = "ListOrganizations", query = "select o from OrganizationEntity o"),
         @NamedQuery(name = "FilterOrganizations", query = "select o from OrganizationEntity o where lower(o.name) like :filterText"),
+        @NamedQuery(name = "DeleteOrganization", query = "delete from OrganizationEntity o where o=:organization"),
 })
 public class OrganizationEntity extends PanacheEntityBase {
 
