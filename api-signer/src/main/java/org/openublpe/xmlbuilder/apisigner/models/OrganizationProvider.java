@@ -39,4 +39,6 @@ public interface OrganizationProvider {
     SearchResultsModel<OrganizationModel> searchOrganizations(int page, int pageSize);
 
     SearchResultsModel<OrganizationModel> searchOrganizations(String filterText, int page, int pageSize);
+
+    void deleteOrganization(OrganizationModel organization);
 }

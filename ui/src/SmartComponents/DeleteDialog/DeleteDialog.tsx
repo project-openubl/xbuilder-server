@@ -58,7 +58,7 @@ class DeleteDialogBase extends React.Component<Props, State> {
       >
         {isError
           ? `Ops! There was a problem while deleting the ${type}.`
-          : `Are you sure you want to delete this ${type}? This action will remove any data related to this ${type} permanently.`}
+          : `¿Estas seguro de querer eliminar este ${type}? Esta acción eliminará todos los datos asociados a esta ${type} permanentemente.`}
       </Modal>
     );
   }

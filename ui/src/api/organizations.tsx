@@ -73,6 +73,10 @@ export const update = (
   );
 };
 
+export const remove = (organizationId: string) => {
+  return ApiClient.delete(`${ORGANIZATIONS_URL}/${organizationId}`);
+};
+
 export const getIdByName = (name: string): AxiosPromise<string | null> => {
   return ApiClient.get(GET_ID_BY_NAME_URL + "/" + encodeURIComponent(name));
 };
