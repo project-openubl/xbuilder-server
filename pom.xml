@@ -23,7 +23,7 @@
         <camel.quarkus.version>0.2.0</camel.quarkus.version>
         <jacoco.version>0.8.5</jacoco.version>
 
-        <freemarker.version>2.3.28</freemarker.version>
+        <freemarker.version>2.3.29</freemarker.version>
         <bouncycastle.version>1.64</bouncycastle.version>
         <keycloak.version>8.0.1</keycloak.version>
 
