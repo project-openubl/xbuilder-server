@@ -23,7 +23,7 @@ import {
 import { css } from "@patternfly/react-styles";
 import accessibleStyles from "@patternfly/react-styles/css/utilities/Accessibility/accessibility";
 import { HelpIcon } from "@patternfly/react-icons";
-import imgBrand from "../../../logo.png";
+import imgBrandNavBar from "../../../logo-navbar.svg";
 import { OrganizationRepresentation } from "../../../models/xml-builder";
 import brandImg from "../../../logo.png";
 
@@ -160,8 +160,7 @@ class BasicLayout extends React.Component<Props, State> {
       <PageHeader
         logo={
           <React.Fragment>
-            <Brand src={imgBrand} alt="Project OpenUBL" />
-            <span>PROJECT OPENUBL</span>
+            <Brand src={imgBrandNavBar} alt="Project OpenUBL" />
           </React.Fragment>
         }
         toolbar={PageToolbar}
