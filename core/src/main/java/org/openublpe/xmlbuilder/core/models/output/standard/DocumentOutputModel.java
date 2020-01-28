@@ -49,6 +49,7 @@ public class DocumentOutputModel {
     private ClienteOutputModel cliente;
 
     @Valid
+    @NotNull
     private FirmanteOutputModel firmante;
 
     @Valid

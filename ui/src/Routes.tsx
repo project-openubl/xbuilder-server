@@ -7,6 +7,7 @@ import WelcomePage from "./Pages/WelcomePage";
 import KeysPage from "./Pages/KeysPage";
 import OrganizationListPage from "./Pages/OrganizationListPage";
 import OrganizationPage from "./Pages/OrganizationPage";
+import DocumentsPage from "./Pages/DocumentsPage";
 
 export const AppRoutes = () => {
   return (
@@ -21,6 +22,10 @@ export const AppRoutes = () => {
       <Route
         path="/organizations/manage/:organizationId/keys"
         component={KeysPage}
+      />
+      <Route
+        path="/organizations/documents/:organizationId/create"
+        component={DocumentsPage}
       />
       <Route path="/error/403" component={NotFound403} />
       <Route path="/error/404" component={NotFound404} />
