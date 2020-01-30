@@ -12,6 +12,7 @@ links son válidos:
     ![Descargar artefacto](./images/windows0.png)
 
 2. Descomprimir el archivo `.zip` descargado
+
     ![Descomprimir1 artefacto](./images/windows1.png)
     
     El contenido del archivo `.zip` debe de ser parecido a:
@@ -27,10 +28,10 @@ java -jar xml-builder-signer-*-runner.jar
 Nota: recuerda cambiar el comando anterior y utilizar el nombre del archivo `.jar` según
 la version que descargaste.
 
-
 ![Descomprimir artefacto](./images/windows3.png)
 
 Debes de esperar unos segundos y deberías de ver el siguiente resultado:
+
 ![Descomprimir artefacto](./images/windows4.png)
 
-Abrir el navegador y dirigirte a http://localhost:8080/
+***Abrir el navegador y dirigirte a http://localhost:8080/***
