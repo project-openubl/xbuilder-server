@@ -25,8 +25,8 @@ stages:
   - stage: test
     displayName: Test
     jobs:
-      - job: unit_test
-        displayName: Unit tests
+      - job: linux_unit_test
+        displayName: Linux Unit tests
         strategy:
           maxParallel: 2
           matrix:
@@ -69,6 +69,26 @@ stages:
 #              goals: verify
 #              jdkVersionOption: $(jdk_version)
 #              sonarQubeRunAnalysis: false
+      - job: windows_unit_test
+        displayName: Windows Unit tests
+        strategy:
+          maxParallel: 2
+          matrix:
+            jdk8_linux:
+              imageName: 'vs2017-win2016'
+              jdk_version: '1.8'
+            jdk11_linux:
+              imageName: 'vs2017-win2016'
+              jdk_version: '1.11'
+        pool:
+          vmImage: $(imageName)
+        steps:
+          - task: Maven@3
+            displayName: Maven
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: verify
+              jdkVersionOption: $(jdk_version)
       - job: test_sunat
         displayName: Tests SUNAT
         pool:
