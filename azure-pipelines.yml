@@ -74,12 +74,9 @@ stages:
         strategy:
           maxParallel: 2
           matrix:
-            jdk8_linux:
+            jdk8_windows:
               imageName: 'vs2017-win2016'
               jdk_version: '1.8'
-            jdk11_linux:
-              imageName: 'vs2017-win2016'
-              jdk_version: '1.11'
         pool:
           vmImage: $(imageName)
         steps:
