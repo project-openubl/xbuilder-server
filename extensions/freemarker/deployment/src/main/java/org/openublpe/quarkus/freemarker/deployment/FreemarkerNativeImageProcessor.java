@@ -20,6 +20,7 @@ import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.GeneratedResourceBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
+import org.apache.commons.io.FilenameUtils;
 import org.jboss.logging.Logger;
 import org.openublpe.quarkus.freemarker.FreemarkerBuildConfig;
 import org.openublpe.quarkus.freemarker.QuarkusPathLocationScanner;
@@ -127,10 +128,10 @@ class FreemarkerNativeImageProcessor {
             return pathStream.filter(Files::isRegularFile)
                     .filter(p -> p.getFileName().toString().endsWith(".ftl"))
                     .map(it -> {
-                        String file = it.toString();
+                        String file = FilenameUtils.separatorsToUnix(it.toString());
                         int indexOf = file.lastIndexOf(location);
-                        String substring = file.substring(indexOf, file.length());
-                        return Paths.get(substring).toString();
+                        String substring = file.substring(indexOf);
+                        return FilenameUtils.separatorsToUnix(substring);
                     })
                     .peek(it -> LOGGER.debug("Discovered: " + it))
                     .collect(Collectors.toSet());
