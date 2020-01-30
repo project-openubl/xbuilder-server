@@ -9,4 +9,4 @@
 * [2.2. Crear comprobante electrónico](docs/XBS_CREAR_COMPROBANTE.md)
 * [3. Desarrolladores](docs/DEVELOPERS.md)
 * [3.1. Compilación nativa](docs/NATIVE_COMPILATION.md)
-* [3. Para usuarios Windows](docs/WINDOWS.md)
+* [4. Para usuarios Windows](docs/WINDOWS.md)
