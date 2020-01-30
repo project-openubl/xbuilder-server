@@ -131,7 +131,7 @@ class FreemarkerNativeImageProcessor {
                         String file = FilenameUtils.separatorsToUnix(it.toString());
                         int indexOf = file.lastIndexOf(location);
                         String substring = file.substring(indexOf);
-                        return Paths.get(substring).toString();
+                        return FilenameUtils.separatorsToUnix(substring);
                     })
                     .peek(it -> LOGGER.debug("Discovered: " + it))
                     .collect(Collectors.toSet());
