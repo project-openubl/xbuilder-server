@@ -1,0 +1,80 @@
+---
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: "v1"
+    kind: "ServiceAccount"
+    metadata:
+      labels:
+        app: "xml-builder"
+        group: "project-openubl"
+      name: "xml-builder"
+  - apiVersion: "v1"
+    kind: "Service"
+    metadata:
+      labels:
+        app: "xml-builder"
+        group: "project-openubl"
+      name: "xml-builder"
+    spec:
+      ports:
+        - name: "http"
+          port: 8080
+          targetPort: 8080
+      selector:
+        app: "xml-builder"
+        group: "project-openubl"
+      type: "ClusterIP"
+  - apiVersion: "apps/v1"
+    kind: "Deployment"
+    metadata:
+      labels:
+        app: "xml-builder"
+        group: "project-openubl"
+      name: "xml-builder"
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: "xml-builder"
+          group: "project-openubl"
+      template:
+        metadata:
+          labels:
+            app: "xml-builder"
+            group: "project-openubl"
+        spec:
+          containers:
+            - env:
+                - name: "KUBERNETES_NAMESPACE"
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: "metadata.namespace"
+              image: "project-openubl/xml-builder:latest"
+              imagePullPolicy: "IfNotPresent"
+              livenessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: "/api/health/live"
+                  port: 8080
+                  scheme: "HTTP"
+                initialDelaySeconds: 0
+                periodSeconds: 30
+                successThreshold: 1
+                timeoutSeconds: 10
+              name: "xml-builder"
+              ports:
+                - containerPort: 8080
+                  name: "http"
+                  protocol: "TCP"
+              readinessProbe:
+                failureThreshold: 3
+                httpGet:
+                  path: "/api/health/ready"
+                  port: 8080
+                  scheme: "HTTP"
+                initialDelaySeconds: 0
+                periodSeconds: 30
+                successThreshold: 1
+                timeoutSeconds: 10
+          serviceAccount: "xml-builder"
