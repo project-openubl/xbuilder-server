@@ -18,11 +18,12 @@ import {
   AboutModal,
   TextContent,
   TextList,
-  TextListItem
+  TextListItem,
+  NavGroup
 } from "@patternfly/react-core";
 import { css } from "@patternfly/react-styles";
 import accessibleStyles from "@patternfly/react-styles/css/utilities/Accessibility/accessibility";
-import { HelpIcon } from "@patternfly/react-icons";
+import { HelpIcon, HomeIcon } from "@patternfly/react-icons";
 import imgBrandNavBar from "../../../logo-navbar.svg";
 import { OrganizationRepresentation } from "../../../models/xml-builder";
 import brandImg from "../../../logo.png";
@@ -181,12 +182,15 @@ class BasicLayout extends React.Component<Props, State> {
 
     const PageNav = (
       <Nav id="nav-primary-simple" aria-label="Nav" theme="dark">
-        <NavList id="nav-list-simple" variant={NavVariants.default}>
-          {/* <NavItem key="home">
+        <NavGroup title="">
+          <NavItem>
             <NavLink to="/home" activeClassName="pf-m-current">
-              Home
+              <HomeIcon />
+              &nbsp;Home
             </NavLink>
-          </NavItem> */}
+          </NavItem>
+        </NavGroup>
+        <NavGroup title="Consola administración">
           <NavItem key="organizations">
             <NavLink to="/organizations/list" activeClassName="pf-m-current">
               Organizaciones
@@ -213,7 +217,7 @@ class BasicLayout extends React.Component<Props, State> {
               </NavItem>
             </React.Fragment>
           )}
-        </NavList>
+        </NavGroup>
       </Nav>
     );
 

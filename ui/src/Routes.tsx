@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import NotFound403 from "./Pages/Layout/Forbidden403";
 import NotFound404 from "./Pages/Layout/NotFound404";
 import ServiceUnavailable503 from "./Pages/Layout/ServiceUnavailable503";
-import WelcomePage from "./Pages/WelcomePage";
+import HomePage from "./Pages/HomePage";
 import KeysPage from "./Pages/KeysPage";
 import OrganizationListPage from "./Pages/OrganizationListPage";
 import OrganizationPage from "./Pages/OrganizationPage";
@@ -12,7 +12,7 @@ import DocumentsPage from "./Pages/DocumentsPage";
 export const AppRoutes = () => {
   return (
     <Switch>
-      <Route path="/home" component={WelcomePage} />
+      <Route path="/home" component={HomePage} />
       <Route path="/organizations/list" component={OrganizationListPage} />
       <Route path="/organizations/create" component={OrganizationPage} />
       <Route
