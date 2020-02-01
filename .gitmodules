@@ -1,0 +1,6 @@
+[submodule "ui/api-signer/web-console"]
+	path = ui/api-signer/web-console
+	url = https://github.com/project-openubl/xml-builder-ui.git
+[submodule "ui/api/web-console"]
+	path = ui/api/web-console
+	url = https://github.com/project-openubl/xml-builder-ui.git
