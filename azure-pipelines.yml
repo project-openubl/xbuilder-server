@@ -104,7 +104,7 @@ stages:
         steps:
           - script: |
               git submodule update --init --recursive
-              displayName: Configure git submodules
+            displayName: Configure git submodules
           - task: Docker@2
             displayName: Docker native build
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
@@ -126,7 +126,7 @@ stages:
         steps:
           - script: |
               git submodule update --init --recursive
-              displayName: Configure git submodules
+            displayName: Configure git submodules
           - task: Docker@2
             displayName: Docker native build
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
@@ -153,7 +153,7 @@ stages:
         steps:
           - script: |
               git submodule update --init --recursive
-              displayName: Configure git submodules
+            displayName: Configure git submodules
           - task: Docker@2
             inputs:
               containerRegistry: 'Docker Hub'
@@ -178,7 +178,7 @@ stages:
         steps:
           - script: |
               git submodule update --init --recursive
-              displayName: Configure git submodules
+            displayName: Configure git submodules
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
