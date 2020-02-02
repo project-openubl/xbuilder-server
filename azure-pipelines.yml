@@ -83,13 +83,13 @@ stages:
           vmImage: 'ubuntu-16.04'
         steps:
           - task: Maven@3
-              inputs:
-                mavenPomFile: 'pom.xml'
-                goals: 'package'
-                options: -DskipTests -Pui
-                javaHomeOption: 'JDKVersion'
-                jdkVersionOption: '1.8'
-                mavenVersionOption: 'Default'
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'package'
+              options: -DskipTests -Pui
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.8'
+              mavenVersionOption: 'Default'
 
   - stage: native_test
     displayName: Native tests
