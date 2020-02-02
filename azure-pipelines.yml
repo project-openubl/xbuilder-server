@@ -102,6 +102,9 @@ stages:
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
+          - script: |
+              git submodule update --init --recursive
+              displayName: Configure git submodules
           - task: Docker@2
             displayName: Docker native build
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
@@ -121,6 +124,9 @@ stages:
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
+          - script: |
+              git submodule update --init --recursive
+              displayName: Configure git submodules
           - task: Docker@2
             displayName: Docker native build
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
@@ -145,6 +151,9 @@ stages:
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
+          - script: |
+              git submodule update --init --recursive
+              displayName: Configure git submodules
           - task: Docker@2
             inputs:
               containerRegistry: 'Docker Hub'
@@ -167,6 +176,9 @@ stages:
         displayName: Release to Github
         condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
         steps:
+          - script: |
+              git submodule update --init --recursive
+              displayName: Configure git submodules
           - task: Maven@3
             inputs:
               mavenPomFile: 'pom.xml'
