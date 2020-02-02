@@ -132,7 +132,12 @@
             </dependency>
             <dependency>
                 <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-ui</artifactId>
+                <artifactId>xml-builder-ui-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.openublpe</groupId>
+                <artifactId>xml-builder-ui-api-signer</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
