@@ -85,7 +85,7 @@
                         <version>1.9.1</version>
                         <configuration>
                             <skip>${skipFrontendBuild}</skip>
-                            <workingDirectory>web-console</workingDirectory>
+                            <workingDirectory>xml-builder-ui</workingDirectory>
                             <installDirectory>target/frontend</installDirectory>
                             <environmentVariables>
                                 <CI>true</CI>

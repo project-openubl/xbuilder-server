@@ -8,7 +8,7 @@
     </formats>
     <fileSets>
         <fileSet>
-            <directory>${basedir}/web-console/build</directory>
+            <directory>${basedir}/xml-builder-ui/build</directory>
             <outputDirectory></outputDirectory>
         </fileSet>
     </fileSets>
