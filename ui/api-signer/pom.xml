@@ -119,7 +119,7 @@
                                 <phase>test</phase>
                             </execution>
                             <execution>
-                                <id>yarn build</id>
+                                <id>yarn build:signer</id>
                                 <goals>
                                     <goal>yarn</goal>
                                 </goals>
