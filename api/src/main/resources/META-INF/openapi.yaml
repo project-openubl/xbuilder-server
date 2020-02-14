@@ -153,7 +153,7 @@ components:
           enum:
             - INTERES_POR_MORA
             - AUMENTO_EN_EL_VALOR
-            - PENALIDAD_OTROS_CONCEPTOR
+            - PENALIDAD_OTROS_CONCEPTOS
             - 01
             - 02
             - 03
