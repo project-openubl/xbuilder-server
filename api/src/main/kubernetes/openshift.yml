@@ -5,7 +5,7 @@ metadata:
   labels:
     app: "xml-builder"
     group: "project-openubl"
-  name: "xml-signer-system"
+  name: "xml-builder-system"
 objects:
   - apiVersion: "v1"
     kind: "ServiceAccount"
