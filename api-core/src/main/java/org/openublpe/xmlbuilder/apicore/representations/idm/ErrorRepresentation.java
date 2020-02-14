@@ -16,6 +16,9 @@
  */
 package org.openublpe.xmlbuilder.apicore.representations.idm;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+@RegisterForReflection
 public class ErrorRepresentation {
 
     private String error;

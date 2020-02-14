@@ -14,35 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openublpe.xmlbuilder.apisigner.representations.idm;
+package org.openublpe.xmlbuilder.api.resources.health;
 
-public class ErrorRepresentation {
+import org.eclipse.microprofile.health.HealthCheck;
+import org.eclipse.microprofile.health.HealthCheckResponse;
+import org.eclipse.microprofile.health.Readiness;
 
-    private String error;
-    private String errorDescription;
+import javax.enterprise.context.ApplicationScoped;
 
-    public ErrorRepresentation() {
-    }
+@Readiness
+@ApplicationScoped
+public class XmlBuilderReadinessHealthCheck implements HealthCheck {
 
-    public ErrorRepresentation(String error, String errorDescription) {
-        this.error = error;
-        this.errorDescription = errorDescription;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String getErrorDescription() {
-        return errorDescription;
-    }
-
-    public void setErrorDescription(String errorDescription) {
-        this.errorDescription = errorDescription;
+    @Override
+    public HealthCheckResponse call() {
+        return HealthCheckResponse.up("Server readiness running");
     }
 
 }
