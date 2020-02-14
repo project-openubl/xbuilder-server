@@ -45,30 +45,6 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: verify
               jdkVersionOption: $(jdk_version)
-#          - task: SonarCloudPrepare@1
-#            displayName: 'Prepare SonarCloud analysis'
-#            condition: and(eq(variables['jdk_version'], '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
-#            inputs:
-#              SonarCloud: 'project-openubl/xml-builder'
-#              organization: 'project-openubl'
-#              scannerMode: 'CLI'
-#              configMode: 'file'
-#          - task: Maven@3
-#            displayName: Maven with SonarQube analysis
-#            condition: and(eq(variables['jdk_version'], '1.8'), eq(variables['System.PullRequest.IsFork'], 'False'))
-#            inputs:
-#              mavenPomFile: 'pom.xml'
-#              goals: verify
-#              jdkVersionOption: $(jdk_version)
-#              sonarQubeRunAnalysis: true
-#          - task: Maven@3
-#            displayName: Maven without SonarQube analysis
-#            condition: eq(variables['System.PullRequest.IsFork'], 'True')
-#            inputs:
-#              mavenPomFile: 'pom.xml'
-#              goals: verify
-#              jdkVersionOption: $(jdk_version)
-#              sonarQubeRunAnalysis: false
       - job: windows_unit_test
         displayName: Windows Unit tests
         strategy:
@@ -97,6 +73,24 @@ stages:
               goals: 'verify'
               options: '-Psunat'
               javaHomeOption: 'JDKVersion'
+
+  - stage: ui_integration
+    displayName: UI integration
+    jobs:
+      - job: Maven
+        displayName: Maven
+        pool:
+          vmImage: 'ubuntu-16.04'
+        steps:
+          - task: Maven@3
+            inputs:
+              mavenPomFile: 'pom.xml'
+              goals: 'package'
+              options: -DskipTests -Pui
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.8'
+              mavenVersionOption: 'Default'
+
   - stage: native_test
     displayName: Native tests
     jobs:
@@ -138,6 +132,7 @@ stages:
               repository: 'projectopenubl/xml-builder-signer'
               command: 'buildAndPush'
               Dockerfile: '**/Dockerfile.apisigner.multistage'
+
   - stage: release
     displayName: Release
     jobs:
@@ -173,7 +168,7 @@ stages:
             inputs:
               mavenPomFile: 'pom.xml'
               goals: 'package'
-              options: -DskipTests
+              options: -DskipTests -Pui
               javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.8'
               mavenVersionOption: 'Default'
