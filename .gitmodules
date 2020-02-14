@@ -1,6 +1,0 @@
-[submodule "ui/api/xml-builder-ui"]
-	path = ui/api/xml-builder-ui
-	url = https://github.com/project-openubl/xml-builder-ui.git
-[submodule "ui/api-signer/xml-builder-ui"]
-	path = ui/api-signer/xml-builder-ui
-	url = https://github.com/project-openubl/xml-builder-ui.git
