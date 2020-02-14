@@ -128,6 +128,7 @@
                             <installDirectory>target/frontend</installDirectory>
                             <environmentVariables>
                                 <CI>true</CI>
+                                <REACT_APP_VERSION>${project.version}</REACT_APP_VERSION>
                             </environmentVariables>
                         </configuration>
                         <executions>
