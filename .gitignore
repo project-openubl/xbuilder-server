@@ -37,3 +37,6 @@ bin/
 /api/src/main/resources/org/openublpe/xmlbuilder/rules/files/
 /api-signer/src/main/resources/META-INF/kmodule.xml
 /api-signer/src/main/resources/org/openublpe/xmlbuilder/rules/files/
+
+xml-builder-ui
+xml-builder-ee-ui

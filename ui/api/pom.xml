@@ -80,6 +80,45 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <filesets>
+                                <fileset>
+                                    <directory>target</directory>
+                                </fileset>
+                                <fileset>
+                                    <directory>xml-builder-ui</directory>
+                                </fileset>
+                            </filesets>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <phase>initialize</phase>
+                                <id>ui_clone</id>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>git</executable>
+                            <arguments>
+                                <argument>clone</argument>
+                                <argument>--branch</argument>
+                                <argument>${xml-builder-ui.version}</argument>
+                                <argument>https://github.com/project-openubl/xml-builder-ui.git</argument>
+                            </arguments>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
                         <version>1.9.1</version>

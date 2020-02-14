@@ -8,7 +8,7 @@
     </formats>
     <fileSets>
         <fileSet>
-            <directory>${basedir}/xml-builder-ui/build</directory>
+            <directory>${basedir}/xml-builder-ee-ui/build</directory>
             <outputDirectory></outputDirectory>
         </fileSet>
     </fileSets>
