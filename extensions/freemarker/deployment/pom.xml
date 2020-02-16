@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.openublpe</groupId>
         <artifactId>quarkus-extensions-freemarker-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>1.0.0.RC3</version>
     </parent>
 
     <artifactId>quarkus-freemarker-deployment</artifactId>
