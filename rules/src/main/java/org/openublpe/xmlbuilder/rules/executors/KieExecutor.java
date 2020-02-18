@@ -20,7 +20,9 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.kie.api.runtime.KieSession;
 import org.kie.kogito.rules.KieRuntimeBuilder;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -46,14 +48,20 @@ public class KieExecutor {
     @ConfigProperty(name = UBLConstants.ICB_KEY)
     BigDecimal icb;
 
-    @ConfigProperty(name = UBLConstants.MONEDA)
-    String moneda;
+    @ConfigProperty(name = UBLConstants.DEFAULT_MONEDA)
+    String defaultMoneda;
 
-    @ConfigProperty(name = UBLConstants.UNIDAD_MEDIDA)
-    String unidadMedida;
+    @ConfigProperty(name = UBLConstants.DEFAULT_UNIDAD_MEDIDA)
+    String defaultUnidadMedida;
 
-    @ConfigProperty(name = UBLConstants.TIPO_IGV)
-    String tipoIgv;
+    @ConfigProperty(name = UBLConstants.DEFAULT_TIPO_IGV)
+    String defaultTipoIgv;
+
+    @ConfigProperty(name = UBLConstants.DEFAULT_TIPO_NOTA_CREDITO)
+    String defaultTipoNotaCredito;
+
+    @ConfigProperty(name = UBLConstants.DEFAULT_TIPO_NOTA_DEBITO)
+    String defaultTipoNotaDebito;
 
     @Inject
     KieRuntimeBuilder runtimeBuilder;
@@ -61,10 +69,16 @@ public class KieExecutor {
     private void setGlobalVariables(KieSession kSession) {
         kSession.setGlobal("IGV", igv);
         kSession.setGlobal("ICB", icb);
-        kSession.setGlobal("MONEDA", moneda);
-        kSession.setGlobal("UNIDAD_MEDIDA", unidadMedida);
-        kSession.setGlobal("TIPO_IGV", Catalog.valueOfCode(Catalog7.class, tipoIgv)
-                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for TIPO_IGV"))
+        kSession.setGlobal("DEFAULT_MONEDA", defaultMoneda);
+        kSession.setGlobal("DEFAULT_UNIDAD_MEDIDA", defaultUnidadMedida);
+        kSession.setGlobal("DEFAULT_TIPO_IGV", Catalog.valueOfCode(Catalog7.class, defaultTipoIgv)
+                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_TIPO_IGV"))
+        );
+        kSession.setGlobal("DEFAULT_TIPO_NOTA_CREDITO", Catalog.valueOfCode(Catalog9.class, defaultTipoNotaCredito)
+                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_TIPO_NOTA_CREDITO"))
+        );
+        kSession.setGlobal("DEFAULT_TIPO_NOTA_DEBITO", Catalog.valueOfCode(Catalog10.class, defaultTipoNotaDebito)
+                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_TIPO_NOTA_DEBITO"))
         );
     }
 

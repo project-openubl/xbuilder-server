@@ -24,8 +24,8 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
 
 global java.math.BigDecimal IGV;
 global java.math.BigDecimal ICB;
-global java.lang.String UNIDAD_MEDIDA;
-global org.openublpe.xmlbuilder.core.models.catalogs.Catalog7 TIPO_IGV;
+global java.lang.String DEFAULT_UNIDAD_MEDIDA;
+global org.openublpe.xmlbuilder.core.models.catalogs.Catalog7 DEFAULT_TIPO_IGV;
 
 dialect "java"
 
@@ -40,7 +40,7 @@ then
 
     // Descripcion, unidad de medida
     outputDetalle.setDescripcion($inputDetalle.getDescripcion());
-    outputDetalle.setUnidadMedida($inputDetalle.getUnidadMedida() != null ? $inputDetalle.getUnidadMedida() : UNIDAD_MEDIDA);
+    outputDetalle.setUnidadMedida($inputDetalle.getUnidadMedida() != null ? $inputDetalle.getUnidadMedida() : DEFAULT_UNIDAD_MEDIDA);
 
     // Cantidad
     BigDecimal cantidad = $inputDetalle.getCantidad();
@@ -53,7 +53,7 @@ then
     // Tipo IGV
     Catalog7 tipoIgv = $inputDetalle.getTipoIGV() != null
         ? Catalog.valueOfCode(Catalog7.class, $inputDetalle.getTipoIGV()).get()
-        : TIPO_IGV;
+        : DEFAULT_TIPO_IGV;
 
     // IGV a usar
     BigDecimal IGV_TO_USE = tipoIgv.getGrupo().equals(Catalog7_1.GRAVADO)

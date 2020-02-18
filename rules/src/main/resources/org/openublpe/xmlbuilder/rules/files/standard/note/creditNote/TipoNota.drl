@@ -3,9 +3,9 @@ package org.openublpe.xmlbuilder.rules.files.standard.note.creditNote;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9;
+
+global org.openublpe.xmlbuilder.core.models.catalogs.Catalog9 DEFAULT_TIPO_NOTA_CREDITO;
 
 dialect "java"
 
@@ -14,9 +14,6 @@ when
     $input : CreditNoteInputModel()
     $output : CreditNoteOutputModel()
 then
-    // Default values
-    Catalog9 DEFAULT_TIPO_NOTA = Catalog9.ANULACION_DE_LA_OPERACION;
-
-    Catalog9 tipoNota = $input.getTipoNota() != null ? Catalog.valueOfCode(Catalog9.class, $input.getTipoNota()).get() : DEFAULT_TIPO_NOTA;
+    Catalog9 tipoNota = $input.getTipoNota() != null ? Catalog.valueOfCode(Catalog9.class, $input.getTipoNota()).get() : DEFAULT_TIPO_NOTA_CREDITO;
     $output.setTipoNota(tipoNota);
 end
