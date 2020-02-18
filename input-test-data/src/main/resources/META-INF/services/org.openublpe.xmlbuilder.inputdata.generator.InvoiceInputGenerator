@@ -32,3 +32,4 @@ org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso53_InvoiceG
 org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso54_InvoiceGenerator
 org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso55_InvoiceGenerator
 org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso56_InvoiceGenerator
+org.openublpe.xmlbuilder.inputdata.generator.cases.proveedorsincodigopostal.Invoice_ProveedorSinCodigoPostalGenerator

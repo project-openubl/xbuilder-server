@@ -33,6 +33,7 @@ import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitN
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
+import org.openublpe.xmlbuilder.inputdata.generator.InputGenerator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -89,7 +90,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testCreateInvoice() throws Exception {
-        assertFalse(INVOICES.isEmpty(), "No invoices to test");
+        assertEquals(InputGenerator.NUMBER_TEST_INVOICES, INVOICES.size(), "The number of test cases is not the expected one");
 
         for (InvoiceInputModel input : INVOICES) {
             // GIVEN
@@ -114,7 +115,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testCreateCreditNote() throws Exception {
-        assertFalse(CREDIT_NOTES.isEmpty(), "No credit notes to test");
+        assertEquals(InputGenerator.NUMBER_TEST_CREDIT_NOTES, CREDIT_NOTES.size(), "The number of test cases is not the expected one");
 
         for (CreditNoteInputModel input : CREDIT_NOTES) {
             // Given
@@ -139,7 +140,8 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testCreateDebitNote() throws Exception {
-        assertFalse(DEBIT_NOTES.isEmpty(), "No debit notes to test");
+        assertEquals(InputGenerator.NUMBER_TEST_DEBIT_NOTES, DEBIT_NOTES.size(), "The number of test cases is not the expected one");
+
         for (DebitNoteInputModel input : DEBIT_NOTES) {
             // Given
             String body = new ObjectMapper().writeValueAsString(input);
@@ -163,7 +165,7 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testCreateVoidedDocument() throws Exception {
-        assertFalse(VOIDED_DOCUMENTS.isEmpty(), "No voided documents to test");
+        assertEquals(InputGenerator.NUMBER_TEST_VOIDED_DOCUMENTS, VOIDED_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (VoidedDocumentInputModel input : VOIDED_DOCUMENTS) {
             // GIVEN
@@ -188,7 +190,8 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testCreateSummaryDocument() throws Exception {
-        assertFalse(SUMMARY_DOCUMENTS.isEmpty(), "No summary documents to test");
+        assertEquals(InputGenerator.NUMBER_TEST_SUMMARY_DOCUMENTS, SUMMARY_DOCUMENTS.size(), "The number of test cases is not the expected one");
+
         for (SummaryDocumentInputModel input : SUMMARY_DOCUMENTS) {
             // GIVEN
             String body = new ObjectMapper().writeValueAsString(input);

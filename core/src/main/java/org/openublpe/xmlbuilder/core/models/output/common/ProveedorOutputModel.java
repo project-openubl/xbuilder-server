@@ -17,6 +17,7 @@
 package org.openublpe.xmlbuilder.core.models.output.common;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 public class ProveedorOutputModel {
 
@@ -28,7 +29,7 @@ public class ProveedorOutputModel {
     @NotBlank
     private String razonSocial;
 
-    @NotBlank
+    @Size(min = 6, max = 6)
     private String codigoPostal;
 
     public String getRuc() {

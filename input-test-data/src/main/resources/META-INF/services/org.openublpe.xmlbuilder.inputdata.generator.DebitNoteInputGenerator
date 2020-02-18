@@ -13,3 +13,4 @@ org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo4.Caso42_DebitNot
 #org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso60_DebitNoteGenerator
 #org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso61_DebitNoteGenerator
 #org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso62_DebitNoteGenerator
+org.openublpe.xmlbuilder.inputdata.generator.cases.proveedorsincodigopostal.DebitNote_ProveedorSinCodigoPostalGenerator

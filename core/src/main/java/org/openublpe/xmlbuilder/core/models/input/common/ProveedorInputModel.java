@@ -33,7 +33,7 @@ public class ProveedorInputModel {
     @NotBlank
     private String razonSocial;
 
-    @NotBlank
+    @Size(min = 6, max = 6)
     private String codigoPostal;
 
     public String getRuc() {
