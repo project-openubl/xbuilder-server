@@ -7,3 +7,339 @@ servers:
   - url: http://localhost:8080/api
     description: Local server
 
+paths:
+  /organizations/{organizationId}/documents/invoice/create:
+    post:
+      summary: Crea una Boleta o Factura
+      description: Crea una Boleta o Factura
+      tags:
+        - Documentos generales
+      responses:
+        200:
+          description: OK - created
+        500:
+          description: Error del sistema
+  /organizations/{organizationId}/documents/credit-note/create:
+    post:
+      summary: Crea una nota de crédito
+      description: Crea una nota de crédito
+      tags:
+        - Documentos generales
+      responses:
+        200:
+          description: OK - created
+        500:
+          description: Error del sistema
+  /organizations/{organizationId}/documents/debit-note/create:
+    post:
+      summary: Crea nota de débito
+      description: Crea nota de débito
+      tags:
+        - Documentos generales
+      responses:
+        200:
+          description: OK - created
+        500:
+          description: Error del sistema
+  /organizations/{organizationId}/documents/voided-document/create:
+    post:
+      summary: Crea baja
+      description: Crea baja
+      tags:
+        - Documentos Perú
+      responses:
+        200:
+          description: OK - created
+        500:
+          description: Error del sistema
+  /organizations/{organizationId}/documents/summary-document/create:
+    post:
+      summary: Crear resumen diario
+      description: Crear resumen diario
+      tags:
+        - Documentos Perú
+      responses:
+        200:
+          description: OK - created
+        500:
+          description: Error del sistema
+components:
+  schemas:
+    InvoiceInputModel:
+      properties:
+        serie:
+          example: F001
+        numero:
+          example: 1
+        moneda:
+          default: PEN
+          example: PEN
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        totalDescuentos:
+          default: 0
+        totalOtrosCargos:
+          default: 0
+        proveedor: {}
+        cliente: {}
+        detalle: {}
+        firmante: {}
+    CreditNoteInputModel:
+      properties:
+        serie:
+          example: FC01
+        numero:
+          example: 1
+        serieNumeroInvoiceReference:
+          example: F001-1
+        descripcionSustentoInvoiceReference:
+          example: Error en la emision del documento
+        tipoNota:
+          example: ANULACION_DE_LA_OPERACION
+          default: ANULACION_DE_LA_OPERACION
+          description: Catálogo 9
+          enum:
+            - ANULACION_DE_LA_OPERACION
+            - ANULACION_POR_ERROR_EN_EL_RUC
+            - CORRECCION_POR_ERROR_EN_LA_DESCRIPCION
+            - DECUENTO_GLOBAL
+            - DESCUENTO_POR_ITEM
+            - DEVOLUCION_TOTAL
+            - DEVOLUCION_POR_ITEM
+            - BONIFICACION
+            - DISMINUCION_EN_EL_VALOR
+            - OTROS_CONCEPTOS
+            - 01
+            - 02
+            - 03
+            - 04
+            - 05
+            - 06
+            - 07
+            - 08
+            - 09
+            - 10
+        moneda:
+          default: PEN
+          example: PEN
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        totalDescuentos:
+          default: 0
+        totalOtrosCargos:
+          default: 0
+        proveedor: {}
+        cliente: {}
+        detalle: {}
+        firmante: {}
+    DebitNoteInputModel:
+      properties:
+        serie:
+          example: FD01
+        numero:
+          example: 1
+        serieNumeroInvoiceReference:
+          example: F001-1
+        descripcionSustentoInvoiceReference:
+          example: Error en la emision del documento
+        tipoNota:
+          example: AUMENTO_EN_EL_VALOR
+          default: AUMENTO_EN_EL_VALOR
+          description: Catálogo 10
+          enum:
+            - INTERES_POR_MORA
+            - AUMENTO_EN_EL_VALOR
+            - PENALIDAD_OTROS_CONCEPTOS
+            - 01
+            - 02
+            - 03
+        moneda:
+          default: PEN
+          example: PEN
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        totalDescuentos:
+          default: 0
+        totalOtrosCargos:
+          default: 0
+        proveedor: {}
+        cliente: {}
+        detalle: {}
+        firmante: {}
+    VoidedDocumentInputModel:
+      properties:
+        numero:
+          example: 1
+          description: Número de comprobante de baja. La serie será generada utilizando la 'fechaEmision'
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        fechaEmisionDocumentReference:
+          description: Fecha del documento a dar de baja en milisegundos
+          example: 1575471908438
+        serieNumeroDocumentReference:
+          description: Serie y numero del documento a dar de baja
+          example: F001-1
+        tipoDocumentReference:
+          description: Catálogo 1
+          example: FACTURA
+          enum:
+            - FACTURA
+            - BOLETA
+            - NOTA_CREDITO
+            - NOTA_DEBITO
+            - RETENCION
+            - PERCEPCION
+            - 01
+            - 03
+            - 07
+            - 08
+            - 20
+            - 40
+        proveedor: {}
+        firmante: {}
+    SummaryDocumentInputModel:
+      properties:
+        numero:
+          example: 1
+          description: Número de comprobante de resumen diario. La serie será generada utilizando la 'fechaEmision'
+        fechaEmision:
+          default: Fecha del sistema
+          description: Fecha en milisegundos
+          example: 1575471908438
+        fechaEmisionDocumentReference:
+          description: Fecha en la que fueron emitidos los documentos contenidos en el resumen diario
+          example: 1575471908438
+        moneda:
+          default: PEN
+          example: PEN
+        proveedor: {}
+        firmante: {}
+    SummaryDocumentLineInputModel:
+      properties:
+        tipoOperacion:
+          example: ADICIONAR
+          description: Catalogo 19
+          enum:
+            - ADICIONAR
+            - MODIFICAR
+            - ANULADO
+            - 1
+            - 2
+            - 3
+        tipoComprobante:
+          description: Catálogo 1
+          example: FACTURA
+          enum:
+            - FACTURA
+            - BOLETA
+            - NOTA_CREDITO
+            - NOTA_DEBITO
+            - RETENCION
+            - PERCEPCION
+            - 01
+            - 03
+            - 07
+            - 08
+            - 20
+            - 40
+    FirmanteInputModel:
+      properties:
+        ruc:
+          example: 12121212121
+        razonSocial:
+          example: CACert S.A.C.
+    ProveedorInputModel:
+      properties:
+        ruc:
+          example: 20534845147
+        razonSocial:
+          example: Softgreen S.A.C.
+        nombreComercial:
+          example: Softgreen
+    ClienteInputModel:
+      properties:
+        nombre:
+          example: Carlos Feria
+        numeroDocumentoIdentidad:
+          example: 12345678912
+        tipoDocumentoIdentidad:
+          description: Catálogo 6
+          example: RUC
+          enum:
+            - DNI
+            - RUC
+            - DOC_TRIB_NO_DOM_SIN_RUC
+            - EXTRANJERIA
+            - PASAPORTE
+            - DEC_DIPLOMATICA
+            - 0
+            - 1
+            - 4
+            - 6
+            - 7
+            - A
+    DetalleInputModel:
+      properties:
+        descripcion:
+          example: Lapicero
+        cantidad:
+          example: 1
+        precioUnitario:
+          example: 10
+          description: Precio incluye IGV
+        unidadMedida:
+          example: NIU
+          default: NIU
+        tipoIGV:
+          example: GRAVADO_OPERACION_ONEROSA
+          default: GRAVADO_OPERACION_ONEROSA
+          description: Catálogo 7
+          enum:
+            - GRAVADO_OPERACION_ONEROSA
+            - GRAVADO_RETIRO_POR_PREMIO
+            - GRAVADO_RETIRO_POR_DONACION
+            - GRAVADO_RETIRO
+            - GRAVADO_RETIRO_POR_PUBLICIDAD
+            - GRAVADO_BONIFICACIONES
+            - GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES
+            - GRAVADO_IVAP
+            - EXONERADO_OPERACION_ONEROSA
+            - EXONERADO_TRANSFERENCIA_GRATUITA
+            - INAFECTO_OPERACION_ONEROSA
+            - INAFECTO_RETIRO_POR_BONIFICACION
+            - INAFECTO_RETIRO
+            - INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS
+            - INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO
+            - INAFECTO_RETIRO_POR_PREMIO
+            - INAFECTO_RETIRO_POR_PUBLICIDAD
+            - EXPORTACION
+            - 10
+            - 11
+            - 12
+            - 13
+            - 14
+            - 15
+            - 16
+            - 17
+            - 20
+            - 21
+            - 30
+            - 31
+            - 32
+            - 33
+            - 34
+            - 35
+            - 36
+            - 40
+        icb:
+          example: false
+          default: false
+          description: Impuesto al Consumo de Bolsas

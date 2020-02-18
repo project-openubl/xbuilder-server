@@ -8,8 +8,8 @@ org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo2.Caso19_CreditNo
 org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo3.Caso28_CreditNoteGenerator
 org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo3.Caso29_CreditNoteGenerator
 org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo4.Caso37_CreditNoteGenerator
-org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo4.Caso37_CreditNoteGenerator
 org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo4.Caso38_CreditNoteGenerator
 #org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso57_CreditNoteGenerator
 #org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso58_CreditNoteGenerator
 #org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8.Caso59_CreditNoteGenerator
+org.openublpe.xmlbuilder.inputdata.generator.cases.proveedorsincodigopostal.CreditNote_ProveedorSinCodigoPostalGenerator

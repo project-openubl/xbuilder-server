@@ -10,10 +10,10 @@ servers:
 paths:
   /documents/invoice/create:
     post:
-      summary: Crear Boleta/Factura
+      summary: Crea una boleta o factura
+      description: Crea una boleta o factura
       tags:
         - Documentos generales
-      description: Crear Boleta/Factura
       responses:
         200:
           description: OK - created
@@ -21,10 +21,10 @@ paths:
           description: Error del sistema
   /documents/credit-note/create:
     post:
-      summary: Crear Nota de crédito
+      summary: Crea una nota de crédito
+      description: Crea una nota de crédito
       tags:
         - Documentos generales
-      description: Crear Nota de crédito
       responses:
         200:
           description: OK - created
@@ -32,10 +32,10 @@ paths:
           description: Error del sistema
   /documents/debit-note/create:
     post:
-      summary: Crear Nota de débito
+      summary: Crea nota de débito
+      description: Crea nota de débito
       tags:
         - Documentos generales
-      description: Crear Nota de débito
       responses:
         200:
           description: OK - created
@@ -43,10 +43,10 @@ paths:
           description: Error del sistema
   /documents/voided-document/create:
     post:
-      summary: Crear Baja
+      summary: Crea baja
+      description: Crea baja
       tags:
         - Documentos Perú
-      description: Crear Baja
       responses:
         200:
           description: OK - created
@@ -54,10 +54,10 @@ paths:
           description: Error del sistema
   /documents/summary-document/create:
     post:
-      summary: Crear Resumen diario
+      summary: Crear resumen diario
+      description: Crear resumen diario
       tags:
         - Documentos Perú
-      description: Crear Resumen diario
       responses:
         200:
           description: OK - created
@@ -264,8 +264,6 @@ components:
           example: Softgreen S.A.C.
         nombreComercial:
           example: Softgreen
-        codigoPostal:
-          example: 050101
     ClienteInputModel:
       properties:
         nombre:

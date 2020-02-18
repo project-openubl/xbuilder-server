@@ -10,9 +10,11 @@
             </#if>
             <cac:PartyLegalEntity>
                 <cbc:RegistrationName><![CDATA[${proveedor.razonSocial}]]></cbc:RegistrationName>
+                <#if proveedor.codigoPostal??>
                 <cac:RegistrationAddress>
                     <cbc:AddressTypeCode>${proveedor.codigoPostal}</cbc:AddressTypeCode>
                 </cac:RegistrationAddress>
+                </#if>
             </cac:PartyLegalEntity>
         </cac:Party>
     </cac:AccountingSupplierParty>

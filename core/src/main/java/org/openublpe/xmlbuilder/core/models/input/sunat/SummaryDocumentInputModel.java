@@ -42,7 +42,6 @@ public class SummaryDocumentInputModel {
     private ProveedorInputModel proveedor;
 
     @Valid
-    @NotNull
     private FirmanteInputModel firmante;
 
     @NotNull
