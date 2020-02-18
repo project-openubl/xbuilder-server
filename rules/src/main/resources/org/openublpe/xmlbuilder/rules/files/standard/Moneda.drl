@@ -3,7 +3,7 @@ package org.openublpe.xmlbuilder.rules.files.standard;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 
-global java.lang.String MONEDA;
+global java.lang.String DEFAULT_MONEDA;
 
 dialect "java"
 
@@ -13,5 +13,5 @@ when
     $input : DocumentInputModel()
     $output : DocumentOutputModel()
 then
-    $output.setMoneda($input.getMoneda() != null ? $input.getMoneda() : MONEDA);
+    $output.setMoneda($input.getMoneda() != null ? $input.getMoneda() : DEFAULT_MONEDA);
 end
