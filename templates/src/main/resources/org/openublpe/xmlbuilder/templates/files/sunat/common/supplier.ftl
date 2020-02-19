@@ -13,7 +13,7 @@
                 </cac:PostalAddress>
             </#if>
             <cac:PartyLegalEntity>
-                <cbc:RegistrationName>${proveedor.razonSocial}</cbc:RegistrationName>
+                <cbc:RegistrationName><![CDATA[${proveedor.razonSocial}]]></cbc:RegistrationName>
             </cac:PartyLegalEntity>
         </cac:Party>
     </cac:AccountingSupplierParty>

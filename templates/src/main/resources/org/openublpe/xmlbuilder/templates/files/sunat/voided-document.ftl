@@ -23,6 +23,6 @@
         <cbc:DocumentTypeCode>${tipoDocumentReference.code}</cbc:DocumentTypeCode>
         <sac:DocumentSerialID>${serieDocumentReference}</sac:DocumentSerialID>
         <sac:DocumentNumberID>${numeroDocumentReference}</sac:DocumentNumberID>
-        <sac:VoidReasonDescription>${motivoBajaDocumentReference}</sac:VoidReasonDescription>
+        <sac:VoidReasonDescription><![CDATA[${motivoBajaDocumentReference}]]></sac:VoidReasonDescription>
     </sac:VoidedDocumentsLine>
 </VoidedDocuments>
