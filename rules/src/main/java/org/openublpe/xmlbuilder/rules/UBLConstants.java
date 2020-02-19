@@ -19,9 +19,11 @@ package org.openublpe.xmlbuilder.rules;
 public class UBLConstants {
     public static final String IGV_KEY = "openubl.igv";
     public static final String ICB_KEY = "openubl.icb";
-    public static final String MONEDA = "openubl.moneda";
-    public static final String UNIDAD_MEDIDA = "openubl.unidadMedida";
-    public static final String TIPO_IGV = "openubl.tipoIgv";
+    public static final String DEFAULT_MONEDA = "openubl.defaultMoneda";
+    public static final String DEFAULT_UNIDAD_MEDIDA = "openubl.defaultUnidadMedida";
+    public static final String DEFAULT_TIPO_IGV = "openubl.defaultTipoIgv";
+    public static final String DEFAULT_TIPO_NOTA_CREDITO = "openubl.defaultTipoNotaCredito";
+    public static final String DEFAULT_TIPO_NOTA_DEBITO = "openubl.defaultTipoNotaDebito";
 
     private UBLConstants() {
         // Just constants
