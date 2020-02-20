@@ -100,7 +100,7 @@ stages:
     jobs:
       - job: container
         displayName: Container
-        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
         strategy:
           maxParallel: 2
           matrix:
