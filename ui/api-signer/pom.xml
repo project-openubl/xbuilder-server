@@ -76,7 +76,7 @@
 
     <profiles>
         <profile>
-            <id>ui</id>
+            <id>ui-api-signer</id>
             <build>
                 <plugins>
                     <plugin>
