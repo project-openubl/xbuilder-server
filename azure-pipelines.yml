@@ -103,7 +103,7 @@ stages:
             condition: eq(variables['System.PullRequest.IsFork'], 'False')
             inputs:
               containerRegistry: 'Docker Hub'
-              repository: ${repository}
+              repository: $(repository)
               command: 'buildAndPush'
               Dockerfile: $(dockerfile)
 
@@ -130,7 +130,7 @@ stages:
           - task: Docker@2
             inputs:
               containerRegistry: 'Docker Hub'
-              repository: ${repository}
+              repository: $(repository)
               command: 'buildAndPush'
               Dockerfile: ${dockerfile}
               tags: |
