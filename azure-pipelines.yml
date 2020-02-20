@@ -25,8 +25,8 @@ stages:
   - stage: test
     displayName: Test
     jobs:
-      - job: linux_unit_test
-        displayName: Linux Unit tests
+      - job: test
+        displayName: Test
         strategy:
           maxParallel: 2
           matrix:
@@ -35,6 +35,12 @@ stages:
               jdk_version: '1.8'
             jdk11_linux:
               imageName: 'ubuntu-16.04'
+              jdk_version: '1.11'
+            jdk18_windows:
+              imageName: 'vs2017-win2016'
+              jdk_version: '1.8'
+            jdk11_windows:
+              imageName: 'vs2017-win2016'
               jdk_version: '1.11'
         pool:
           vmImage: $(imageName)
@@ -45,25 +51,9 @@ stages:
               mavenPomFile: 'pom.xml'
               goals: verify
               jdkVersionOption: $(jdk_version)
-      - job: windows_unit_test
-        displayName: Windows Unit tests
-        strategy:
-          maxParallel: 2
-          matrix:
-            jdk8_windows:
-              imageName: 'vs2017-win2016'
-              jdk_version: '1.8'
-        pool:
-          vmImage: $(imageName)
-        steps:
-          - task: Maven@3
-            displayName: Maven
-            inputs:
-              mavenPomFile: 'pom.xml'
-              goals: verify
-              jdkVersionOption: $(jdk_version)
+
       - job: test_sunat
-        displayName: Tests SUNAT
+        displayName: Test SUNAT
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
@@ -74,11 +64,8 @@ stages:
               options: '-Psunat'
               javaHomeOption: 'JDKVersion'
 
-  - stage: ui_integration
-    displayName: UI integration
-    jobs:
-      - job: Maven
-        displayName: Maven
+      - job: test_ui
+        displayName: Test UI
         pool:
           vmImage: 'ubuntu-16.04'
         steps:
@@ -88,50 +75,37 @@ stages:
               goals: 'package'
               options: -DskipTests -Pui
               javaHomeOption: 'JDKVersion'
-              jdkVersionOption: '1.8'
-              mavenVersionOption: 'Default'
 
-  - stage: native_test
-    displayName: Native tests
-    jobs:
-      - job: api_release_snapshot_to_dockerhub
-        displayName: API Build native image and push it to DockerHub
-        pool:
-          vmImage: 'ubuntu-16.04'
-        steps:
-          - task: Docker@2
-            displayName: Docker native build
-            condition: eq(variables['System.PullRequest.IsFork'], 'True')
-            inputs:
-              command: 'build'
-              Dockerfile: '**/Dockerfile.api.multistage'
-          - task: Docker@2
-            displayName: Docker native build and push
-            condition: eq(variables['System.PullRequest.IsFork'], 'False')
-            inputs:
-              containerRegistry: 'Docker Hub'
+      - job: test_native
+        displayName: Test native
+        strategy:
+          maxParallel: 2
+          matrix:
+            api:
+              imageName: 'ubuntu-16.04'
+              dockerfile: '**/Dockerfile.api.multistage'
               repository: 'projectopenubl/xml-builder'
-              command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile.api.multistage'
-      - job: api_signer_release_snapshot_to_dockerhub
-        displayName: API Signer Build native image and push it to DockerHub
+            api_signer:
+              imageName: 'ubuntu-16.04'
+              dockerfile: '**/Dockerfile.apisigner.multistage'
+              repository: 'projectopenubl/xml-builder-signer'
         pool:
-          vmImage: 'ubuntu-16.04'
+          vmImage: $(imageName)
         steps:
           - task: Docker@2
-            displayName: Docker native build
+            displayName: Build
             condition: eq(variables['System.PullRequest.IsFork'], 'True')
             inputs:
               command: 'build'
-              Dockerfile: '**/Dockerfile.apisigner.multistage'
+              Dockerfile: $(dockerfile)
           - task: Docker@2
-            displayName: Docker native build and push
+            displayName: Build and push
             condition: eq(variables['System.PullRequest.IsFork'], 'False')
             inputs:
               containerRegistry: 'Docker Hub'
-              repository: 'projectopenubl/xml-builder-signer'
+              repository: ${repository}
               command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile.apisigner.multistage'
+              Dockerfile: $(dockerfile)
 
   - stage: release
     displayName: Release
@@ -139,27 +113,30 @@ stages:
       - job: release_to_dockerhub
         displayName: Release to Docker Hub
         condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+        strategy:
+          maxParallel: 2
+          matrix:
+            api:
+              imageName: 'ubuntu-16.04'
+              dockerfile: '**/Dockerfile.api.multistage'
+              repository: 'projectopenubl/xml-builder'
+            api_signer:
+              imageName: 'ubuntu-16.04'
+              dockerfile: '**/Dockerfile.apisigner.multistage'
+              repository: 'projectopenubl/xml-builder-signer'
         pool:
-          vmImage: 'ubuntu-16.04'
+          vmImage: $(imageName)
         steps:
           - task: Docker@2
             inputs:
               containerRegistry: 'Docker Hub'
-              repository: 'projectopenubl/xml-builder'
+              repository: ${repository}
               command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile.api.multistage'
+              Dockerfile: ${dockerfile}
               tags: |
                 $(Build.SourceBranchName)
                 latest
-          - task: Docker@2
-            inputs:
-              containerRegistry: 'Docker Hub'
-              repository: 'projectopenubl/xml-builder-signer'
-              command: 'buildAndPush'
-              Dockerfile: '**/Dockerfile.apisigner.multistage'
-              tags: |
-                $(Build.SourceBranchName)
-                latest
+
       - job: release_to_github
         displayName: Release to Github
         condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
