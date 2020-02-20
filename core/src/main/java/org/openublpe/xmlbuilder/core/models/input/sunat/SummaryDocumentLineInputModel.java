@@ -17,6 +17,7 @@
 package org.openublpe.xmlbuilder.core.models.input.sunat;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 
@@ -32,6 +33,7 @@ public class SummaryDocumentLineInputModel {
     private String serieNumero;
 
     @NotBlank
+    @CatalogConstraint(value = Catalog19.class)
     private String tipoOperacion;
 
     @NotNull
