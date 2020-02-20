@@ -255,7 +255,7 @@
 
     <profiles>
         <profile>
-            <id>native</id>
+            <id>native-api-signer</id>
             <activation>
                 <property>
                     <name>native</name>
@@ -303,7 +303,7 @@
         </profile>
 
         <profile>
-            <id>ui</id>
+            <id>ui-api-signer</id>
             <dependencies>
                 <dependency>
                     <groupId>org.openublpe</groupId>

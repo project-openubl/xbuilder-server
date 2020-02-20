@@ -15,8 +15,7 @@ COPY pom.xml /usr/src/app
 USER root
 RUN chown -R quarkus /usr/src/app
 USER quarkus
-RUN mvn -f /usr/src/app/pom.xml clean install -DskipTests -Pui
-RUN mvn -f /usr/src/app/api/pom.xml -P ui,native clean package
+RUN mvn -f /usr/src/app/pom.xml -P ui-api,native-api -DskipTests clean package
 
 ## Stage 2 : create the docker final image
 FROM registry.access.redhat.com/ubi8/ubi-minimal

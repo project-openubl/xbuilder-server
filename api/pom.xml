@@ -179,7 +179,7 @@
 
     <profiles>
         <profile>
-            <id>native</id>
+            <id>native-api</id>
             <activation>
                 <property>
                     <name>native</name>
@@ -227,7 +227,7 @@
         </profile>
 
         <profile>
-            <id>ui</id>
+            <id>ui-api</id>
             <dependencies>
                 <dependency>
                     <groupId>org.openublpe</groupId>

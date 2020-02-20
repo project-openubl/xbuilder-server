@@ -21,6 +21,14 @@ pr:
       - dco.txt
       - .github/ISSUE_TEMPLATE/*.md
 
+schedules:
+  - cron: "0 0 * * *"
+    displayName: Daily midnight build
+    branches:
+      include:
+        - master
+    always: true
+
 stages:
   - stage: test
     displayName: Test
@@ -83,6 +91,27 @@ stages:
           matrix:
             api:
               imageName: 'ubuntu-16.04'
+              dockerfile: '**/Dockerfile.test.multistage'
+        pool:
+          vmImage: $(imageName)
+        steps:
+          - task: Docker@2
+            displayName: Build
+            inputs:
+              command: 'build'
+              Dockerfile: $(dockerfile)
+
+  - stage: snapshot
+    displayName: Snapshot
+    jobs:
+      - job: container
+        displayName: Container
+        condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+        strategy:
+          maxParallel: 2
+          matrix:
+            api:
+              imageName: 'ubuntu-16.04'
               dockerfile: '**/Dockerfile.api.multistage'
               repository: 'projectopenubl/xml-builder'
             api_signer:
@@ -93,14 +122,7 @@ stages:
           vmImage: $(imageName)
         steps:
           - task: Docker@2
-            displayName: Build
-            condition: eq(variables['System.PullRequest.IsFork'], 'True')
-            inputs:
-              command: 'build'
-              Dockerfile: $(dockerfile)
-          - task: Docker@2
             displayName: Build and push
-            condition: eq(variables['System.PullRequest.IsFork'], 'False')
             inputs:
               containerRegistry: 'Docker Hub'
               repository: $(repository)
@@ -145,7 +167,7 @@ stages:
             inputs:
               mavenPomFile: 'pom.xml'
               goals: 'package'
-              options: -DskipTests -Pui
+              options: -DskipTests -P ui-api,ui-api-signer
               javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.8'
               mavenVersionOption: 'Default'

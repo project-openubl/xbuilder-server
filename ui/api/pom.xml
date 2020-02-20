@@ -76,7 +76,7 @@
 
     <profiles>
         <profile>
-            <id>ui</id>
+            <id>ui-api</id>
             <build>
                 <plugins>
                     <plugin>
