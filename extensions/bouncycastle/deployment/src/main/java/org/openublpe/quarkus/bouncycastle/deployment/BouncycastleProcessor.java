@@ -43,8 +43,10 @@ class BouncycastleProcessor {
     }
 
     @BuildStep
-    RuntimeInitializedClassBuildItem secureRandomDelayInit() {
-        return new RuntimeInitializedClassBuildItem(SP800SecureRandom.class.getCanonicalName());
+    void configure(BuildProducer<RuntimeInitializedClassBuildItem> runtimeClasses) {
+        runtimeClasses.produce(new RuntimeInitializedClassBuildItem(org.bouncycastle.crypto.prng.SP800SecureRandom.class.getCanonicalName()));
+        runtimeClasses.produce(new RuntimeInitializedClassBuildItem("org.bouncycastle.jcajce.provider.drbg.DRBG$NonceAndIV"));
+        runtimeClasses.produce(new RuntimeInitializedClassBuildItem("org.bouncycastle.jcajce.provider.drbg.DRBG$Default"));
     }
 
 }
