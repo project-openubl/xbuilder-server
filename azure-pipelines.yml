@@ -132,7 +132,7 @@ stages:
               containerRegistry: 'Docker Hub'
               repository: $(repository)
               command: 'buildAndPush'
-              Dockerfile: ${dockerfile}
+              Dockerfile: $(dockerfile)
               tags: |
                 $(Build.SourceBranchName)
                 latest
