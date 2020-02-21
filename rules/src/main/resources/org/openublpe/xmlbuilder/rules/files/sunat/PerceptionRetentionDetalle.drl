@@ -71,7 +71,7 @@ then
     outputDetalle.setFechaCobroPago(
             $inputDetalle.getFechaCobroPago() != null
                 ? toGregorianCalendarDate($inputDetalle.getFechaCobroPago())
-                : $output.getFechaEmision()
+                : toGregorianCalendarDate($output.getFechaEmision())
     );
 
     insert(outputDetalle);
