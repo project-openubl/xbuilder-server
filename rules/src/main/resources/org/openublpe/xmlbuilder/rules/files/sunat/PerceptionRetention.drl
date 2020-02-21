@@ -24,7 +24,7 @@ global org.openublpe.xmlbuilder.core.models.catalogs.Catalog23 DEFAULT_REGIMEN_R
 
 dialect "java"
 
-rule "Perception"
+rule "Perception" salience 100
 when
     $input : PerceptionInputModel()
     $output : PerceptionOutputModel()
@@ -37,7 +37,7 @@ then
     $output.setRegimen(regimen);
 end
 
-rule "Retention"
+rule "Retention" salience 100
 when
     $input : RetentionInputModel()
     $output : RetentionOutputModel()
@@ -51,7 +51,7 @@ then
 end
 
 
-rule "Perception and Retention"
+rule "Perception and Retention" salience 100
 when
     $input : PerceptionRetentionInputModel()
     $output : PerceptionRetentionOutputModel()

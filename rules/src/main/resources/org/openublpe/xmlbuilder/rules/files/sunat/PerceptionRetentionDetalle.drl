@@ -22,7 +22,7 @@ global java.lang.String DEFAULT_MONEDA;
 dialect "java"
 
 
-rule "Perception Retention Detalle"
+rule "Perception Retention Detalle" salience 90
 when
     $input : PerceptionRetentionInputModel(detalle != null)
     $output : PerceptionRetentionOutputModel()
@@ -35,7 +35,7 @@ then
 end
 
 
-rule "Perception Retention Detalle Item"
+rule "Perception Retention Detalle Item" salience 80
 when
     $input : PerceptionRetentionInputModel(detalle != null)
     $output : PerceptionRetentionOutputModel()
@@ -71,14 +71,14 @@ then
     outputDetalle.setFechaCobroPago(
             $inputDetalle.getFechaCobroPago() != null
                 ? toGregorianCalendarDate($inputDetalle.getFechaCobroPago())
-                : toGregorianCalendarDate($output.getFechaEmision())
+                : $output.getFechaEmision()
     );
 
     insert(outputDetalle);
 end
 
 
-rule "Perception Detalle Item"  salience -1
+rule "Perception Detalle Item"  salience 70
 when
     $input : PerceptionInputModel()
     $output : PerceptionOutputModel()
@@ -96,7 +96,7 @@ then
 end
 
 
-rule "Retention Detalle Item"  salience -1
+rule "Retention Detalle Item"  salience 70
 when
     $input : RetentionInputModel()
     $output : RetentionOutputModel()
@@ -115,7 +115,7 @@ end
 
 // TOTALES
 
-rule "Perception and Retention Totales" salience -1
+rule "Perception and Retention Totales" salience 60
 when
     $input : PerceptionRetentionInputModel()
     $output : PerceptionRetentionOutputModel()
