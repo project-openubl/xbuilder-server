@@ -55,7 +55,6 @@ import java.io.InputStream;
 
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @QuarkusTest
@@ -174,7 +173,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
         );
     }
 
-    void assertSendSummary(Object input, InputStream xmlInputStream, String xmlString) throws IOException, TransformerException, ParserConfigurationException, SAXException {
+    void assertSendSummary(Object input, InputStream xmlInputStream, String xmlString) throws IOException, TransformerException, ParserConfigurationException, SAXException, InterruptedException {
         Document xmlDocument = inputStreamToDocument(xmlInputStream);
 
         String proveedorRuc = null;
@@ -202,6 +201,21 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
         BillServiceModel billServiceModel = BillServiceManager.sendSummary(fileName + ".xml", documentBytes, config);
         assertNotNull(
                 billServiceModel.getTicket(),
+                messageInputDataError(input, xmlString, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]")
+        );
+
+
+        Thread.sleep(500);
+
+
+        BillServiceModel statusModel = BillServiceManager.getStatus(billServiceModel.getTicket(), config);
+        assertEquals(
+                BillServiceModel.Status.ACEPTADO,
+                statusModel.getStatus(),
+                messageInputDataError(input, xmlString, "sunat [status=" + statusModel.getStatus() + "], [descripcion=" + statusModel.getDescription() + "]")
+        );
+        assertNotNull(
+                statusModel.getCdr(),
                 messageInputDataError(input, xmlString, "sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]")
         );
     }
