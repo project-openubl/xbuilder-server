@@ -15,7 +15,7 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1
 import java.math.BigDecimal
 import java.math.RoundingMode;
 
-import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
+//import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
 
 global java.lang.String DEFAULT_MONEDA;
 
@@ -78,9 +78,9 @@ then
 end
 
 
-rule "Perception Detalle Item"
+rule "Perception Detalle Item"  salience -1
 when
-    $input : PerceptionInputModel(detalle != null)
+    $input : PerceptionInputModel()
     $output : PerceptionOutputModel()
     $outputDetalle: PerceptionRetentionLineOutputModel()
 then
@@ -96,9 +96,9 @@ then
 end
 
 
-rule "Retention Detalle Item"
+rule "Retention Detalle Item"  salience -1
 when
-    $input : RetentionInputModel(detalle != null)
+    $input : RetentionInputModel()
     $output : RetentionOutputModel()
     $outputDetalle: PerceptionRetentionLineOutputModel()
 then
