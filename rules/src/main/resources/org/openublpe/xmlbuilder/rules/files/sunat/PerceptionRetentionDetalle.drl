@@ -15,7 +15,7 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1
 import java.math.BigDecimal
 import java.math.RoundingMode;
 
-//import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
+import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
 
 global java.lang.String DEFAULT_MONEDA;
 
