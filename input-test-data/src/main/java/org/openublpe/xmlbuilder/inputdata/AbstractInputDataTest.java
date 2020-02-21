@@ -19,12 +19,16 @@ package org.openublpe.xmlbuilder.inputdata;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.inputdata.generator.CreditNoteInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.DebitNoteInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.InputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.InvoiceInputGenerator;
+import org.openublpe.xmlbuilder.inputdata.generator.PerceptionInputGenerator;
+import org.openublpe.xmlbuilder.inputdata.generator.RetentionInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.SummaryDocumentInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.VoidedDocumentInputGenerator;
 
@@ -42,6 +46,8 @@ public abstract class AbstractInputDataTest {
     protected static List<DebitNoteInputModel> DEBIT_NOTES = new ArrayList<>();
     protected static List<VoidedDocumentInputModel> VOIDED_DOCUMENTS = new ArrayList<>();
     protected static List<SummaryDocumentInputModel> SUMMARY_DOCUMENTS = new ArrayList<>();
+    protected static List<PerceptionInputModel> PERCEPTION_DOCUMENTS = new ArrayList<>();
+    protected static List<RetentionInputModel> RETENTION_DOCUMENTS = new ArrayList<>();
 
     protected static Map<Object, Optional<String>> SNAPSHOTS = new HashMap<>();
     protected static Map<Object, Class> GENERATORS_CLASSES = new HashMap<>();
@@ -72,6 +78,8 @@ public abstract class AbstractInputDataTest {
         loadGenerators(DEBIT_NOTES, DebitNoteInputGenerator.class);
         loadGenerators(VOIDED_DOCUMENTS, VoidedDocumentInputGenerator.class);
         loadGenerators(SUMMARY_DOCUMENTS, SummaryDocumentInputGenerator.class);
+        loadGenerators(PERCEPTION_DOCUMENTS, PerceptionInputGenerator.class);
+        loadGenerators(RETENTION_DOCUMENTS, RetentionInputGenerator.class);
     }
 
     protected String messageInputDataError(Object input, String errorMessage) {

@@ -5,7 +5,6 @@ import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputMo
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentLineInputModel;
 import java.util.ArrayList;
 import java.math.BigDecimal
-import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentLineInputModel;
 
 dialect "java"
 

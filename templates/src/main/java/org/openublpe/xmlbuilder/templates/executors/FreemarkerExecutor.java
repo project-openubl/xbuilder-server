@@ -21,6 +21,8 @@ import freemarker.template.TemplateException;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.PerceptionOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.RetentionOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.templates.FreemarkerConstants;
@@ -101,6 +103,36 @@ public class FreemarkerExecutor {
         StringWriter buffer;
         try {
             Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.SUMMARY_DOCUMENT_TEMPLATE_2_0);
+
+            buffer = new StringWriter();
+            template.process(output, buffer);
+            buffer.flush();
+        } catch (IOException | TemplateException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return buffer.toString();
+    }
+
+    public String createPerception(PerceptionOutputModel output) {
+        StringWriter buffer;
+        try {
+            Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.PERCEPTION_TEMPLATE_2_0);
+
+            buffer = new StringWriter();
+            template.process(output, buffer);
+            buffer.flush();
+        } catch (IOException | TemplateException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return buffer.toString();
+    }
+
+    public String createRetention(RetentionOutputModel output) {
+        StringWriter buffer;
+        try {
+            Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.RETENTION_TEMPLATE_2_0);
 
             buffer = new StringWriter();
             template.process(output, buffer);

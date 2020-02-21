@@ -35,8 +35,11 @@ import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.RetentionOutputModel;
 import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
 import org.xml.sax.SAXException;
 import sunat.names.specification.ubl.peru.schema.xsd.voideddocuments_1.VoidedDocumentsType;
@@ -192,6 +195,62 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
                     .header("Content-Type", "application/json")
                     .when()
                     .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/summary-document/create")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            assertSignatureExists(responseBody.asString());
+
+            // Validate valid XML
+//            SummaryDocumentsType summaryDocumentsType = UBLPEReader.summaryDocuments().read(xmlSignedDocument);
+//            assertNotNull(summaryDocumentsType, assertMessageError(input, "SummaryDocumentsType is no valid", xmlSignedDocument));
+        }
+    }
+
+    @Test
+    void createPerceptionXml() throws IOException, SAXException, XpathException {
+        assertFalse(PERCEPTION_DOCUMENTS.isEmpty(), "no inputs to test");
+
+        for (PerceptionInputModel input : PERCEPTION_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/perception/create")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            assertSignatureExists(responseBody.asString());
+
+            // Validate valid XML
+//            SummaryDocumentsType summaryDocumentsType = UBLPEReader.summaryDocuments().read(xmlSignedDocument);
+//            assertNotNull(summaryDocumentsType, assertMessageError(input, "SummaryDocumentsType is no valid", xmlSignedDocument));
+        }
+    }
+
+    @Test
+    void createRetentionXml() throws IOException, SAXException, XpathException {
+        assertFalse(RETENTION_DOCUMENTS.isEmpty(), "no inputs to test");
+
+        for (RetentionInputModel input : RETENTION_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/retention/create")
                     .thenReturn();
 
             // THEN

@@ -31,6 +31,8 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
@@ -65,6 +67,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
     static final String ORGANIZATION_ID = "master";
 
     static final String SUNAT_BETA_URL = "https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService";
+    static final String SUNAT_PERCEPTION_RETENTION_BETA_URL = "https://e-beta.sunat.gob.pe/ol-ti-itemision-otroscpe-gem-beta/billService";
     static final String SUNAT_BETA_USERNAME = "MODDATOS";
     static final String SUNAT_BETA_PASSWORD = "MODDATOS";
 
@@ -102,6 +105,24 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                 .toString();
     }
 
+    static String getPerceptionFileName(String ruc, String serie, Integer numero) {
+        return new StringBuilder()
+                .append(ruc).append("-")
+                .append(Catalog1.PERCEPCION.getCode()).append("-")
+                .append(serie.toUpperCase()).append("-")
+                .append(numero)
+                .toString();
+    }
+
+    static String getRetentionFileName(String ruc, String serie, Integer numero) {
+        return new StringBuilder()
+                .append(ruc).append("-")
+                .append(Catalog1.RETENCION.getCode()).append("-")
+                .append(serie.toUpperCase()).append("-")
+                .append(numero)
+                .toString();
+    }
+
     static String getVoidedDocumentFileName(String ruc, Long fechaEmision, Integer numero) {
         return ruc + "-RA-" + DateUtils.toGregorianCalendarDate(fechaEmision).replaceAll("-", "") + "-" + numero;
     }
@@ -110,7 +131,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
         return ruc + "-RC-" + DateUtils.toGregorianCalendarDate(fechaEmision).replaceAll("-", "") + "-" + numero;
     }
 
-    static String getNotaCredito(String ruc, String serie, Integer numero) {
+    static String getNotaCreditoFileName(String ruc, String serie, Integer numero) {
         Catalog1 catalog1 = Catalog1.NOTA_CREDITO;
         return new StringBuilder()
                 .append(ruc).append("-")
@@ -120,7 +141,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                 .toString();
     }
 
-    static String getNotaDebito(String ruc, String serie, Integer numero) {
+    static String getNotaDebitoFileName(String ruc, String serie, Integer numero) {
         Catalog1 catalog1 = Catalog1.NOTA_DEBITO;
         return new StringBuilder()
                 .append(ruc).append("-")
@@ -136,28 +157,52 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
         String proveedorRuc = null;
         String fileName = null;
 
+        String url = null;
+
         if (input instanceof InvoiceInputModel) {
             InvoiceInputModel invoice = (InvoiceInputModel) input;
             proveedorRuc = invoice.getProveedor().getRuc();
             String serie = invoice.getSerie();
             Integer numero = invoice.getNumero();
             fileName = getInvoiceFileName(proveedorRuc, serie, numero);
+
+            url = SUNAT_BETA_URL;
         } else if (input instanceof CreditNoteInputModel) {
             CreditNoteInputModel creditNote = (CreditNoteInputModel) input;
             proveedorRuc = creditNote.getProveedor().getRuc();
             String serie = creditNote.getSerie();
             Integer numero = creditNote.getNumero();
-            fileName = getNotaCredito(proveedorRuc, serie, numero);
+            fileName = getNotaCreditoFileName(proveedorRuc, serie, numero);
+
+            url = SUNAT_BETA_URL;
         } else if (input instanceof DebitNoteInputModel) {
             DebitNoteInputModel debitNote = (DebitNoteInputModel) input;
             proveedorRuc = debitNote.getProveedor().getRuc();
             String serie = debitNote.getSerie();
             Integer numero = debitNote.getNumero();
-            fileName = getNotaDebito(proveedorRuc, serie, numero);
+            fileName = getNotaDebitoFileName(proveedorRuc, serie, numero);
+
+            url = SUNAT_BETA_URL;
+        } else if (input instanceof PerceptionInputModel) {
+            PerceptionInputModel perception = (PerceptionInputModel) input;
+            proveedorRuc = perception.getProveedor().getRuc();
+            String serie = perception.getSerie();
+            Integer numero = perception.getNumero();
+            fileName = getPerceptionFileName(proveedorRuc, serie, numero);
+
+            url = SUNAT_PERCEPTION_RETENTION_BETA_URL;
+        } else if (input instanceof RetentionInputModel) {
+            RetentionInputModel perception = (RetentionInputModel) input;
+            proveedorRuc = perception.getProveedor().getRuc();
+            String serie = perception.getSerie();
+            Integer numero = perception.getNumero();
+            fileName = getRetentionFileName(proveedorRuc, serie, numero);
+
+            url = SUNAT_PERCEPTION_RETENTION_BETA_URL;
         }
 
         ServiceConfig config = new ServiceConfig.Builder()
-                .url(SUNAT_BETA_URL)
+                .url(url)
                 .username(proveedorRuc + SUNAT_BETA_USERNAME)
                 .password(SUNAT_BETA_PASSWORD)
                 .build();
@@ -333,6 +378,54 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
             assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
             ResponseBody responseBody = response.getBody();
             assertSendSummary(input, responseBody.asInputStream(), responseBody.asString());
+        }
+    }
+
+    @Test
+    void testPerception() throws Exception {
+        assertEquals(InputGenerator.NUMBER_TEST_PERCEPTIONS, PERCEPTION_DOCUMENTS.size(), "The number of test cases is not the expected one");
+
+        for (PerceptionInputModel input : PERCEPTION_DOCUMENTS) {
+            // Given
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // When
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/perception/create")
+                    .thenReturn();
+
+            // Then
+            String response2 = response.getBody().asString();
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+            assertSendBill(input, responseBody.asInputStream(), responseBody.asString());
+        }
+    }
+
+    @Test
+    void testRetention() throws Exception {
+        assertEquals(InputGenerator.NUMBER_TEST_RETENTIONS, RETENTION_DOCUMENTS.size(), "The number of test cases is not the expected one");
+
+        for (RetentionInputModel input : RETENTION_DOCUMENTS) {
+            // Given
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // When
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/retention/create")
+                    .thenReturn();
+
+            // Then
+            String response2 = response.getBody().asString();
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+            assertSendBill(input, responseBody.asInputStream(), responseBody.asString());
         }
     }
 }

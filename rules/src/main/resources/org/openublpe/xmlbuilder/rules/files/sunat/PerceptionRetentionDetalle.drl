@@ -1,0 +1,134 @@
+package org.openublpe.xmlbuilder.rules.files.sunat;
+
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionRetentionInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.PerceptionRetentionOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.PerceptionOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.RetentionOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionRetentionLineInputModel;
+import java.util.ArrayList;
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionRetentionLineInputModel
+import org.openublpe.xmlbuilder.core.models.output.sunat.PerceptionRetentionLineOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1
+import java.math.BigDecimal
+import java.math.RoundingMode;
+
+import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
+
+global java.lang.String DEFAULT_MONEDA;
+
+dialect "java"
+
+
+rule "Perception Retention Detalle"
+when
+    $input : PerceptionRetentionInputModel(detalle != null)
+    $output : PerceptionRetentionOutputModel()
+then
+    $output.setDetalle(new ArrayList<>());
+
+    for (PerceptionRetentionLineInputModel item : $input.getDetalle()) {
+        insert(item);
+    }
+end
+
+
+rule "Perception Retention Detalle Item"
+when
+    $input : PerceptionRetentionInputModel(detalle != null)
+    $output : PerceptionRetentionOutputModel()
+    $inputDetalle: PerceptionRetentionLineInputModel()
+then
+    PerceptionRetentionLineOutputModel outputDetalle = new PerceptionRetentionLineOutputModel();
+    $output.getDetalle().add(outputDetalle);
+
+    // Moneda
+    outputDetalle.setMonedaComprobante($inputDetalle.getMonedaComprobante() != null ? $inputDetalle.getMonedaComprobante() : DEFAULT_MONEDA);
+
+    // Serie numero
+    outputDetalle.setSerieNumeroComprobante($inputDetalle.getSerieNumeroComprobante());
+
+    // Tipo comprobante
+    Catalog1 tipoComprobante = Catalog.valueOfCode(Catalog1.class, $inputDetalle.getTipoComprobante()).get();
+    outputDetalle.setTipoComprobante(tipoComprobante);
+
+    // Fecha emision
+    String fechaEmisionString = toGregorianCalendarDate($inputDetalle.getFechaEmisionComprobante());
+    outputDetalle.setFechaEmisionComprobante(fechaEmisionString);
+
+    // Importe total
+    outputDetalle.setImporteTotalComprobante($inputDetalle.getImporteTotalComprobante());
+
+    // Cobro pago
+    outputDetalle.setNumeroCobroPago(
+            $inputDetalle.getNumeroCobroPago() != null ? $inputDetalle.getNumeroCobroPago() : 1
+    );
+    outputDetalle.setImporteCobroPago(
+            $inputDetalle.getImporteCobroPago() != null ? $inputDetalle.getImporteCobroPago() : $inputDetalle.getImporteTotalComprobante()
+    );
+    outputDetalle.setFechaCobroPago(
+            $inputDetalle.getFechaCobroPago() != null
+                ? toGregorianCalendarDate($inputDetalle.getFechaCobroPago())
+                : $output.getFechaEmision()
+    );
+
+    insert(outputDetalle);
+end
+
+
+rule "Perception Detalle Item"
+when
+    $input : PerceptionInputModel(detalle != null)
+    $output : PerceptionOutputModel()
+    $outputDetalle: PerceptionRetentionLineOutputModel()
+then
+    BigDecimal importePercibidoRetenido = $outputDetalle.getImporteTotalComprobante()
+                        .multiply($output.getRegimen().getPercent())
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN);
+
+    BigDecimal importeTotalCobradoPagado = $outputDetalle.getImporteTotalComprobante()
+                        .add(importePercibidoRetenido);
+
+    $outputDetalle.setImportePercibidoRetenido(importePercibidoRetenido);
+    $outputDetalle.setImporteTotalCobradoPagado(importeTotalCobradoPagado);
+end
+
+
+rule "Retention Detalle Item"
+when
+    $input : RetentionInputModel(detalle != null)
+    $output : RetentionOutputModel()
+    $outputDetalle: PerceptionRetentionLineOutputModel()
+then
+    BigDecimal importePercibidoRetenido = $outputDetalle.getImporteTotalComprobante()
+                        .multiply($output.getRegimen().getPercent())
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN);
+    BigDecimal importeTotalCobradoPagado = $outputDetalle.getImporteTotalComprobante()
+                        .subtract(importePercibidoRetenido);
+
+    $outputDetalle.setImportePercibidoRetenido(importePercibidoRetenido);
+    $outputDetalle.setImporteTotalCobradoPagado(importeTotalCobradoPagado);
+end
+
+
+// TOTALES
+
+rule "Perception and Retention Totales" salience -1
+when
+    $input : PerceptionRetentionInputModel()
+    $output : PerceptionRetentionOutputModel()
+then
+    BigDecimal importeTotalCobradoPagado = $output.getDetalle()
+        .stream()
+        .map(PerceptionRetentionLineOutputModel::getImporteTotalCobradoPagado)
+        .reduce(BigDecimal.ZERO, BigDecimal::add);
+    BigDecimal importeTotalPercibidoRetenido = $output.getDetalle()
+            .stream()
+            .map(PerceptionRetentionLineOutputModel::getImportePercibidoRetenido)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+    $output.setImporteTotalCobradoPagado(importeTotalCobradoPagado);
+    $output.setImporteTotalPercibidoRetenido(importeTotalPercibidoRetenido);
+end

@@ -25,11 +25,15 @@ import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.PerceptionOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.RetentionOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
@@ -220,6 +224,78 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
             assertNotNull(output, messageInputDataError(input, "Invalid output"));
 
             Set<ConstraintViolation<SummaryDocumentOutputModel>> violations = validator.validate(output);
+            assertTrue(
+                    violations.isEmpty(),
+                    messageInputDataError(
+                            input,
+                            violations.stream()
+                                    .map(f -> f.getPropertyPath() + ": " + f.getMessage())
+                                    .collect(Collectors.joining(", "))
+                    )
+            );
+        }
+    }
+
+    @Test
+    void testEnrichPerception() throws Exception {
+        assertFalse(PERCEPTION_DOCUMENTS.isEmpty(), "No inputs to test");
+
+        for (PerceptionInputModel input : PERCEPTION_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ApiApplication.API_BASE + "/documents/perception/enrich")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            PerceptionOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), PerceptionOutputModel.class);
+            assertNotNull(output, messageInputDataError(input, "Invalid output"));
+
+            Set<ConstraintViolation<PerceptionOutputModel>> violations = validator.validate(output);
+            assertTrue(
+                    violations.isEmpty(),
+                    messageInputDataError(
+                            input,
+                            violations.stream()
+                                    .map(f -> f.getPropertyPath() + ": " + f.getMessage())
+                                    .collect(Collectors.joining(", "))
+                    )
+            );
+        }
+    }
+
+    @Test
+    void testEnrichRetention() throws Exception {
+        assertFalse(RETENTION_DOCUMENTS.isEmpty(), "No inputs to test");
+
+        for (RetentionInputModel input : RETENTION_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ApiApplication.API_BASE + "/documents/retention/enrich")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            RetentionOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), RetentionOutputModel.class);
+            assertNotNull(output, messageInputDataError(input, "Invalid output"));
+
+            Set<ConstraintViolation<RetentionOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
                     messageInputDataError(

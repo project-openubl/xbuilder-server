@@ -23,6 +23,8 @@ public class FreemarkerConstants {
 
     public static final String VOIDED_DOCUMENT_TEMPLATE_2_0 = "org/openublpe/xmlbuilder/templates/files/sunat/voided-document.ftl";
     public static final String SUMMARY_DOCUMENT_TEMPLATE_2_0 = "org/openublpe/xmlbuilder/templates/files/sunat/summary-document.ftl";
+    public static final String PERCEPTION_TEMPLATE_2_0 = "org/openublpe/xmlbuilder/templates/files/sunat/perception.ftl";
+    public static final String RETENTION_TEMPLATE_2_0 = "org/openublpe/xmlbuilder/templates/files/sunat/retention.ftl";
 
     private FreemarkerConstants() {
         // Just constants
