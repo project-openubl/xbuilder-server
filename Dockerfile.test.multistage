@@ -15,4 +15,4 @@ COPY pom.xml /usr/src/app
 USER root
 RUN chown -R quarkus /usr/src/app
 USER quarkus
-RUN mvn -f /usr/src/app/pom.xml -P native-api,native-api-signer -Dquarkus.profile=native-test verify
+RUN mvn -f /usr/src/app/pom.xml -P native -Dquarkus.profile=native-test verify

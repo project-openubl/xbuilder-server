@@ -161,7 +161,7 @@ stages:
             inputs:
               mavenPomFile: 'pom.xml'
               goals: 'package'
-              options: -DskipTests -P ui-api,ui-api-signer
+              options: -DskipTests -P ui
               javaHomeOption: 'JDKVersion'
               jdkVersionOption: '1.8'
               mavenVersionOption: 'Default'
