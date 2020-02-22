@@ -4,7 +4,7 @@
         <cac:Party>
             <#if proveedor.nombreComercial??>
                 <cac:PartyName>
-                    <cbc:Name>${proveedor.nombreComercial}</cbc:Name>
+                    <cbc:Name><![CDATA[${proveedor.nombreComercial}]]></cbc:Name>
                 </cac:PartyName>
             </#if>
             <#if proveedor.codigoPostal??>

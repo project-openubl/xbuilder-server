@@ -24,6 +24,8 @@ public class UBLConstants {
     public static final String DEFAULT_TIPO_IGV = "openubl.defaultTipoIgv";
     public static final String DEFAULT_TIPO_NOTA_CREDITO = "openubl.defaultTipoNotaCredito";
     public static final String DEFAULT_TIPO_NOTA_DEBITO = "openubl.defaultTipoNotaDebito";
+    public static final String DEFAULT_REGIMEN_PERCEPCION = "openubl.defaultRegimenPercepcion";
+    public static final String DEFAULT_REGIMEN_RETENCION = "openubl.defaultRegimenRetencion";
 
     private UBLConstants() {
         // Just constants

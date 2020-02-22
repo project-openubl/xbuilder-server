@@ -30,6 +30,8 @@ import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
@@ -202,6 +204,56 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
                     .header("Content-Type", "application/json")
                     .when()
                     .post(ApiApplication.API_BASE + "/documents/summary-document/create")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), response.getBody().asString());
+            ResponseBody responseBody = response.getBody();
+
+            // snapshot
+            assertSnapshot(input, responseBody);
+        }
+    }
+
+    @Test
+    void testPerception() throws Exception {
+        assertEquals(InputGenerator.NUMBER_TEST_PERCEPTIONS, PERCEPTION_DOCUMENTS.size(), "The number of test cases is not the expected one");
+
+        for (PerceptionInputModel input : PERCEPTION_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // THEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ApiApplication.API_BASE + "/documents/perception/create")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), response.getBody().asString());
+            ResponseBody responseBody = response.getBody();
+
+            // snapshot
+            assertSnapshot(input, responseBody);
+        }
+    }
+
+    @Test
+    void testRetention() throws Exception {
+        assertEquals(InputGenerator.NUMBER_TEST_RETENTIONS, RETENTION_DOCUMENTS.size(), "The number of test cases is not the expected one");
+
+        for (RetentionInputModel input : RETENTION_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // THEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ApiApplication.API_BASE + "/documents/retention/create")
                     .thenReturn();
 
             // THEN

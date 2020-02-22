@@ -1,38 +1,36 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- *
+ * <p>
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * https://www.eclipse.org/legal/epl-2.0/
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openublpe.xmlbuilder.inputdata.generator;
+package org.openublpe.xmlbuilder.core.models.output.sunat;
 
-import java.util.Optional;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog22;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog23;
 
-public interface InputGenerator<T> {
+import javax.validation.constraints.NotNull;
 
-    // This should correspond to the number of test created
-    int NUMBER_TEST_INVOICES = 35;
-    int NUMBER_TEST_CREDIT_NOTES = 12;
-    int NUMBER_TEST_DEBIT_NOTES = 13;
-    int NUMBER_TEST_VOIDED_DOCUMENTS = 2;
-    int NUMBER_TEST_SUMMARY_DOCUMENTS = 2;
-    int NUMBER_TEST_PERCEPTIONS = 1;
-    int NUMBER_TEST_RETENTIONS = 1;
+public class PerceptionOutputModel extends PerceptionRetentionOutputModel {
 
-    T getInput();
+    @NotNull
+    private Catalog22 regimen;
 
-    default Optional<String> getSnapshot() {
-        return Optional.empty();
+    public Catalog22 getRegimen() {
+        return regimen;
     }
 
+    public void setRegimen(Catalog22 regimen) {
+        this.regimen = regimen;
+    }
 }
