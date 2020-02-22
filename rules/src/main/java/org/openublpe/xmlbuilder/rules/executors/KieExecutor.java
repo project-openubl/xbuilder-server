@@ -25,6 +25,7 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog22;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog23;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9;
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -32,6 +33,7 @@ import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
@@ -191,4 +193,16 @@ public class KieExecutor {
         return output;
     }
 
+    public DespatchAdviceOutputModel getDespatchAdviceOutputModel(DespatchAdviceInputModel input) {
+        DespatchAdviceOutputModel output = new DespatchAdviceOutputModel();
+
+        KieSession ksession = runtimeBuilder.newKieSession();
+        setGlobalVariables(ksession);
+
+        ksession.insert(output);
+        ksession.insert(input);
+        ksession.fireAllRules();
+
+        return output;
+    }
 }

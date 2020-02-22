@@ -14,26 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openublpe.xmlbuilder.inputdata.generator;
+package org.openublpe.xmlbuilder.core.models.catalogs;
 
-import java.util.Optional;
+public enum Catalog18 implements Catalog {
 
-public interface InputGenerator<T> {
+    TRANSPORTE_PUBLICO("01"),
+    TRANSPORTE_PRIVADO("02");
 
-    // This should correspond to the number of test created
-    int NUMBER_TEST_INVOICES = 35;
-    int NUMBER_TEST_CREDIT_NOTES = 12;
-    int NUMBER_TEST_DEBIT_NOTES = 13;
-    int NUMBER_TEST_VOIDED_DOCUMENTS = 2;
-    int NUMBER_TEST_SUMMARY_DOCUMENTS = 2;
-    int NUMBER_TEST_PERCEPTIONS = 1;
-    int NUMBER_TEST_RETENTIONS = 1;
-    int NUMBER_TEST_DESPATCH_ADVICES = 1;
+    private final String code;
 
-    T getInput();
-
-    default Optional<String> getSnapshot() {
-        return Optional.empty();
+    Catalog18(String code) {
+        this.code = code;
     }
 
+    @Override
+    public String getCode() {
+        return code;
+    }
 }
