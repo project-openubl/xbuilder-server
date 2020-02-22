@@ -18,6 +18,7 @@ package org.openublpe.xmlbuilder.templates.executors;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
@@ -133,6 +134,21 @@ public class FreemarkerExecutor {
         StringWriter buffer;
         try {
             Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.RETENTION_TEMPLATE_2_0);
+
+            buffer = new StringWriter();
+            template.process(output, buffer);
+            buffer.flush();
+        } catch (IOException | TemplateException e) {
+            throw new IllegalStateException(e);
+        }
+
+        return buffer.toString();
+    }
+
+    public String createDespatchAdvice(DespatchAdviceOutputModel output) {
+        StringWriter buffer;
+        try {
+            Template template = freemarkerGlobalConfiguration.getConfiguration().getTemplate(FreemarkerConstants.DESPATCH_ADVICE_TEMPLATE_2_1);
 
             buffer = new StringWriter();
             template.process(output, buffer);

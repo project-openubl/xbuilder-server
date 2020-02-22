@@ -26,12 +26,14 @@ import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import oasis.names.specification.ubl.schema.xsd.creditnote_21.CreditNoteType;
 import oasis.names.specification.ubl.schema.xsd.debitnote_21.DebitNoteType;
+import oasis.names.specification.ubl.schema.xsd.despatchadvice_21.DespatchAdviceType;
 import oasis.names.specification.ubl.schema.xsd.invoice_21.InvoiceType;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.custommonkey.xmlunit.exceptions.XpathException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -262,6 +264,34 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
             // Validate valid XML
 //            SummaryDocumentsType summaryDocumentsType = UBLPEReader.summaryDocuments().read(xmlSignedDocument);
 //            assertNotNull(summaryDocumentsType, assertMessageError(input, "SummaryDocumentsType is no valid", xmlSignedDocument));
+        }
+    }
+
+    @Test
+    void createDespatchAdviceXml() throws IOException, SAXException, XpathException {
+        assertFalse(DESPATCH_ADVICE_DOCUMENTS.isEmpty(), "no inputs to test");
+
+        for (DespatchAdviceInputModel input : DESPATCH_ADVICE_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/despatch-advice/create")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            assertSignatureExists(responseBody.asString());
+
+            // Validate valid XML
+            DespatchAdviceType despatchAdviceType = UBL21Reader.despatchAdvice().read(responseBody.asInputStream());
+            assertNotNull(despatchAdviceType, messageInputDataError(input, responseBody.asString(), "DespatchAdviceType is no valid"));
         }
     }
 }

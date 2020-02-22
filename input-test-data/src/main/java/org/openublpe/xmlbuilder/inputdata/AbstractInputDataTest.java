@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.inputdata;
 
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -25,6 +26,7 @@ import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputMode
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.inputdata.generator.CreditNoteInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.DebitNoteInputGenerator;
+import org.openublpe.xmlbuilder.inputdata.generator.DespatchAdviceInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.InputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.InvoiceInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.PerceptionInputGenerator;
@@ -48,6 +50,7 @@ public abstract class AbstractInputDataTest {
     protected static List<SummaryDocumentInputModel> SUMMARY_DOCUMENTS = new ArrayList<>();
     protected static List<PerceptionInputModel> PERCEPTION_DOCUMENTS = new ArrayList<>();
     protected static List<RetentionInputModel> RETENTION_DOCUMENTS = new ArrayList<>();
+    protected static List<DespatchAdviceInputModel> DESPATCH_ADVICE_DOCUMENTS = new ArrayList<>();
 
     protected static Map<Object, Optional<String>> SNAPSHOTS = new HashMap<>();
     protected static Map<Object, Class> GENERATORS_CLASSES = new HashMap<>();
@@ -80,6 +83,7 @@ public abstract class AbstractInputDataTest {
         loadGenerators(SUMMARY_DOCUMENTS, SummaryDocumentInputGenerator.class);
         loadGenerators(PERCEPTION_DOCUMENTS, PerceptionInputGenerator.class);
         loadGenerators(RETENTION_DOCUMENTS, RetentionInputGenerator.class);
+        loadGenerators(DESPATCH_ADVICE_DOCUMENTS, DespatchAdviceInputGenerator.class);
     }
 
     protected String messageInputDataError(Object input, String errorMessage) {

@@ -17,6 +17,7 @@
 package org.openublpe.xmlbuilder.api.resources;
 
 import org.openublpe.xmlbuilder.api.resources.utils.ResourceUtils;
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -24,6 +25,7 @@ import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
@@ -101,6 +103,13 @@ public class DocumentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public RetentionOutputModel enrichRetentionOutputModel(@Valid RetentionInputModel input) {
         return kieExecutor.getRetentionOutputModel(input);
+    }
+
+    @POST
+    @Path("/despatch-advice/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DespatchAdviceOutputModel enrichDespatchAdviceOutputModel(@Valid DespatchAdviceInputModel input) {
+        return kieExecutor.getDespatchAdviceOutputModel(input);
     }
 
 
@@ -182,6 +191,18 @@ public class DocumentsResource {
     public Response createRetention(@Valid RetentionInputModel input) {
         RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
         String xml = freemarkerExecutor.createRetention(output);
+
+        return Response.ok(xml)
+                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .build();
+    }
+
+    @POST
+    @Path("/despatch-advice/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createDespatchAdvice(@Valid DespatchAdviceInputModel input) {
+        DespatchAdviceOutputModel output = kieExecutor.getDespatchAdviceOutputModel(input);
+        String xml = freemarkerExecutor.createDespatchAdvice(output);
 
         return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))

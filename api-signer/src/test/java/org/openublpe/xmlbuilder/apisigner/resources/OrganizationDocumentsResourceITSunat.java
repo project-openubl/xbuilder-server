@@ -28,6 +28,7 @@ import io.restassured.response.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -68,6 +69,7 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
 
     static final String SUNAT_BETA_URL = "https://e-beta.sunat.gob.pe/ol-ti-itcpfegem-beta/billService";
     static final String SUNAT_PERCEPTION_RETENTION_BETA_URL = "https://e-beta.sunat.gob.pe/ol-ti-itemision-otroscpe-gem-beta/billService";
+    static final String SUNAT_DISPATCH_ADVICE_BETA_URL = "https://e-beta.sunat.gob.pe/ol-ti-itemision-guia-gem-beta/billService";
     static final String SUNAT_BETA_USERNAME = "MODDATOS";
     static final String SUNAT_BETA_PASSWORD = "MODDATOS";
 
@@ -118,6 +120,15 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
         return new StringBuilder()
                 .append(ruc).append("-")
                 .append(Catalog1.RETENCION.getCode()).append("-")
+                .append(serie.toUpperCase()).append("-")
+                .append(numero)
+                .toString();
+    }
+
+    static String getDespatchAdviceFileName(String ruc, String serie, Integer numero) {
+        return new StringBuilder()
+                .append(ruc).append("-")
+                .append(Catalog1.GUIA_REMISION_REMITENTE.getCode()).append("-")
                 .append(serie.toUpperCase()).append("-")
                 .append(numero)
                 .toString();
@@ -199,6 +210,14 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
             fileName = getRetentionFileName(proveedorRuc, serie, numero);
 
             url = SUNAT_PERCEPTION_RETENTION_BETA_URL;
+        } else if (input instanceof DespatchAdviceInputModel) {
+            DespatchAdviceInputModel despatchAdvice = (DespatchAdviceInputModel) input;
+            proveedorRuc = despatchAdvice.getRemitente().getRuc();
+            String serie = despatchAdvice.getSerie();
+            Integer numero = despatchAdvice.getNumero();
+            fileName = getDespatchAdviceFileName(proveedorRuc, serie, numero);
+
+            url = SUNAT_DISPATCH_ADVICE_BETA_URL;
         }
 
         ServiceConfig config = new ServiceConfig.Builder()
@@ -419,6 +438,30 @@ public class OrganizationDocumentsResourceITSunat extends AbstractInputDataTest 
                     .header("Content-Type", "application/json")
                     .when()
                     .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/retention/create")
+                    .thenReturn();
+
+            // Then
+            String response2 = response.getBody().asString();
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+            assertSendBill(input, responseBody.asInputStream(), responseBody.asString());
+        }
+    }
+
+    @Test
+    void testDespatchAdvice() throws Exception {
+        assertEquals(InputGenerator.NUMBER_TEST_DESPATCH_ADVICES, DESPATCH_ADVICE_DOCUMENTS.size(), "The number of test cases is not the expected one");
+
+        for (DespatchAdviceInputModel input : DESPATCH_ADVICE_DOCUMENTS) {
+            // Given
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // When
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ORGANIZATIONS_URL + "/" + ORGANIZATION_ID + "/documents/despatch-advice/create")
                     .thenReturn();
 
             // Then

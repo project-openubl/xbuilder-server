@@ -1,0 +1,164 @@
+package org.openublpe.xmlbuilder.rules.files.standard.despatchadvice;
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceOutputModel;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog21
+import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel
+import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel
+import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel
+import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceTrasladoOutputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog20
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceTrasladoInputModel
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog18
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6
+import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceLineDetalleOutputModel
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceLineDetalleInputModel
+import java.util.ArrayList
+import java.util.Calendar;
+
+import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
+
+global java.lang.String DEFAULT_UNIDAD_MEDIDA;
+
+dialect "java"
+
+rule "Despatch Advice"
+when
+    $input : DespatchAdviceInputModel()
+    $output : DespatchAdviceOutputModel()
+then
+    $output.setSerieNumero($input.getSerie() + "-" + $input.getNumero());
+
+    long fechaEmision = $input.getFechaEmision() != null
+        ? $input.getFechaEmision()
+        : Calendar.getInstance().getTimeInMillis();
+    $output.setFechaEmision(toGregorianCalendarDate(fechaEmision));
+    $output.setObservacion($input.getObservacion());
+
+    if ($input.getGuiaRemisionDadaDeBaja() != null) {
+        DespatchAdviceOutputModel.DocumentoRelacionadoOutputModel<Catalog1> guiaRemisionDadaDeBajaOutput = new DespatchAdviceOutputModel.DocumentoRelacionadoOutputModel<>();
+
+        Catalog1 catalog1 = Catalog.valueOfCode(
+                Catalog1.class,
+                $input.getGuiaRemisionDadaDeBaja().getTipoDocumento()
+        ).get();
+
+        guiaRemisionDadaDeBajaOutput.setSerieNumero($input.getGuiaRemisionDadaDeBaja().getSerieNumero());
+        guiaRemisionDadaDeBajaOutput.setTipoDocumento(catalog1);
+
+        $output.setGuiaRemisionDadaDeBaja(guiaRemisionDadaDeBajaOutput);
+    }
+
+    if ($input.getDocumentoAdicionalRelacionado() != null) {
+        DespatchAdviceOutputModel.DocumentoRelacionadoOutputModel<Catalog21> documentoAdicionalRelacionadoOutput = new DespatchAdviceOutputModel.DocumentoRelacionadoOutputModel<>();
+
+        Catalog21 catalog21 = Catalog.valueOfCode(
+                Catalog21.class,
+                $input.getDocumentoAdicionalRelacionado().getTipoDocumento()
+        ).get();
+
+        documentoAdicionalRelacionadoOutput.setSerieNumero($input.getDocumentoAdicionalRelacionado().getSerieNumero());
+        documentoAdicionalRelacionadoOutput.setTipoDocumento(catalog21);
+
+        $output.setDocumentoAdicionalRelacionado(documentoAdicionalRelacionadoOutput);
+    }
+
+    // Traslado
+    DespatchAdviceTrasladoInputModel trasladoInput = $input.getTraslado();
+    DespatchAdviceTrasladoOutputModel trasladoOutput = new DespatchAdviceTrasladoOutputModel();
+    $output.setTraslado(trasladoOutput);
+
+    trasladoOutput.setMotivo(
+             Catalog.valueOfCode(Catalog20.class, trasladoInput.getMotivo()).get()
+    );
+    trasladoOutput.setDescripcion(trasladoInput.getDescripcion());
+    trasladoOutput.setPesoBrutoUnidadMedida(trasladoInput.getPesoBrutoUnidadMedida());
+    trasladoOutput.setPesoBrutoTotal(trasladoInput.getPesoBrutoTotal());
+    trasladoOutput.setNumeroBultos(trasladoInput.getNumeroBultos());
+    trasladoOutput.setTransbordoProgramado(
+            trasladoInput.getTransbordoProgramado() != null ? trasladoInput.getTransbordoProgramado().toString() : "false"
+    );
+    trasladoOutput.setModalidad(
+                 Catalog.valueOfCode(Catalog18.class, trasladoInput.getModalidad()).get()
+    );
+
+    trasladoOutput.setFechaInicio(toGregorianCalendarDate(trasladoInput.getFechaInicio()));
+    trasladoOutput.setCodigoPuertoAeropuertoDeEmbarqueOdesembarque(trasladoInput.getCodigoPuertoAeropuertoDeEmbarqueOdesembarque());
+
+    if (trasladoInput.getPuntoPartida() != null) {
+        DespatchAdviceTrasladoOutputModel.PuntoOutputModel puntoPartidaOutput = new DespatchAdviceTrasladoOutputModel.PuntoOutputModel();
+        trasladoOutput.setPuntoPartida(puntoPartidaOutput);
+
+        puntoPartidaOutput.setCodigoPostal(trasladoInput.getPuntoPartida().getCodigoPostal());
+        puntoPartidaOutput.setDireccion(trasladoInput.getPuntoPartida().getDireccion());
+    }
+    if (trasladoInput.getPuntoLlegada() != null) {
+        DespatchAdviceTrasladoOutputModel.PuntoOutputModel puntoLlegadaOutput = new DespatchAdviceTrasladoOutputModel.PuntoOutputModel();
+        trasladoOutput.setPuntoLlegada(puntoLlegadaOutput);
+
+        puntoLlegadaOutput.setCodigoPostal(trasladoInput.getPuntoLlegada().getCodigoPostal());
+        puntoLlegadaOutput.setDireccion(trasladoInput.getPuntoLlegada().getDireccion());
+    }
+
+    // Transportista
+    if ($input.getTransportista() != null) {
+        ClienteOutputModel transportistaOutput = new ClienteOutputModel();
+        $output.setTransportista(transportistaOutput);
+
+        transportistaOutput.setNombre($input.getTransportista().getNombre());
+        transportistaOutput.setNumeroDocumentoIdentidad($input.getTransportista().getNumeroDocumentoIdentidad());
+        transportistaOutput.setTipoDocumentoIdentidad(
+                Catalog.valueOfCode(Catalog6.class, $input.getTransportista().getTipoDocumentoIdentidad()).get()
+        );
+    }
+
+    // Conductor
+    if ($input.getConductor() != null) {
+        ClienteOutputModel conductorOutput = new ClienteOutputModel();
+        $output.setConductor(conductorOutput);
+
+        conductorOutput.setNombre($input.getConductor().getNombre());
+        conductorOutput.setNumeroDocumentoIdentidad($input.getConductor().getNumeroDocumentoIdentidad());
+        conductorOutput.setTipoDocumentoIdentidad(
+                Catalog.valueOfCode(Catalog6.class, $input.getConductor().getTipoDocumentoIdentidad()).get()
+        );
+    }
+
+    // Vehiculo
+    if ($input.getVehiculo() != null) {
+        DespatchAdviceOutputModel.VehiculoOutputModel vehiculoOutput = new DespatchAdviceOutputModel.VehiculoOutputModel();
+        $output.setVehiculo(vehiculoOutput);
+
+        vehiculoOutput.setPlaca($input.getVehiculo().getPlaca());
+    }
+
+    // Detalle
+    $output.setDetalle(new ArrayList<>());
+    for (DespatchAdviceLineDetalleInputModel itemDetalle : $input.getDetalle()) {
+         DespatchAdviceLineDetalleOutputModel outputDetalle = new DespatchAdviceLineDetalleOutputModel();
+         $output.getDetalle().add(outputDetalle);
+
+         outputDetalle.setUnidadMedida(itemDetalle.getUnidadMedida() != null ? itemDetalle.getUnidadMedida() : DEFAULT_UNIDAD_MEDIDA);
+         outputDetalle.setCantidad(itemDetalle.getCantidad());
+         outputDetalle.setDescripcion(itemDetalle.getDescripcion());
+         outputDetalle.setCodigo(itemDetalle.getCodigo());
+    }
+
+
+    FirmanteOutputModel firmante = new FirmanteOutputModel();
+    $output.setFirmante(firmante);
+
+    ProveedorOutputModel remitente = new ProveedorOutputModel();
+    $output.setRemitente(remitente);
+
+    ClienteOutputModel destinatario = new ClienteOutputModel();
+    $output.setDestinatario(destinatario);
+
+    insert($input.getFirmante());
+    insert($input.getRemitente());
+    insert($input.getDestinatario());
+    insert(firmante);
+    insert(remitente);
+    insert(destinatario);
+end

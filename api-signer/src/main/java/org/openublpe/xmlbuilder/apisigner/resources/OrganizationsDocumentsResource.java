@@ -23,6 +23,7 @@ import org.openublpe.xmlbuilder.apisigner.models.OrganizationModel;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationProvider;
 import org.openublpe.xmlbuilder.apisigner.xml.XMLSigner;
 import org.openublpe.xmlbuilder.apisigner.xml.XmlSignatureHelper;
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -30,6 +31,7 @@ import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
@@ -163,6 +165,16 @@ public class OrganizationsDocumentsResource {
             @Valid RetentionInputModel input
     ) {
         return kieExecutor.getRetentionOutputModel(input);
+    }
+
+    @POST
+    @Path("/despatch-advice/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DespatchAdviceOutputModel enrichDespatchAdviceOutputModel(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid DespatchAdviceInputModel input
+    ) {
+        return kieExecutor.getDespatchAdviceOutputModel(input);
     }
 
 
@@ -328,6 +340,31 @@ public class OrganizationsDocumentsResource {
 
         RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
         String xml = freemarkerExecutor.createRetention(output);
+
+        Document xmlSignedDocument;
+        try {
+            xmlSignedDocument = signXML(activeRsaKey, xml);
+        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .build();
+    }
+
+    @POST
+    @Path("/despatch-advice/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createDespatchAdviceXml(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid DespatchAdviceInputModel input
+    ) throws Exception {
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+
+        DespatchAdviceOutputModel output = kieExecutor.getDespatchAdviceOutputModel(input);
+        String xml = freemarkerExecutor.createDespatchAdvice(output);
 
         Document xmlSignedDocument;
         try {

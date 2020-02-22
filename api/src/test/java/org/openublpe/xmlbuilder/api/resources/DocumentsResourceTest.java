@@ -27,6 +27,7 @@ import org.custommonkey.xmlunit.examples.RecursiveElementNameAndTextQualifier;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -254,6 +255,31 @@ public class DocumentsResourceTest extends AbstractInputDataTest {
                     .header("Content-Type", "application/json")
                     .when()
                     .post(ApiApplication.API_BASE + "/documents/retention/create")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), response.getBody().asString());
+            ResponseBody responseBody = response.getBody();
+
+            // snapshot
+            assertSnapshot(input, responseBody);
+        }
+    }
+
+    @Test
+    void testDespatchAdvice() throws Exception {
+        assertEquals(InputGenerator.NUMBER_TEST_DESPATCH_ADVICES, DESPATCH_ADVICE_DOCUMENTS.size(), "The number of test cases is not the expected one");
+
+        for (DespatchAdviceInputModel input : DESPATCH_ADVICE_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // THEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ApiApplication.API_BASE + "/documents/despatch-advice/create")
                     .thenReturn();
 
             // THEN

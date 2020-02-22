@@ -19,10 +19,10 @@
     <cbc:CustomizationID>1.0</cbc:CustomizationID>
     <cbc:ID>${serieNumero}</cbc:ID>
     <cbc:IssueDate>${fechaEmision}</cbc:IssueDate>
-    <cbc:IssueTime>${horaEmision}</cbc:IssueTime>
     <cbc:DespatchAdviceTypeCode>09</cbc:DespatchAdviceTypeCode>
+    <#if observacion??>
     <cbc:Note><![CDATA[${observacion}]]></cbc:Note>
-    {% if doc.docBaja %}
+    </#if>
     <#if guiaRemisionDadaDeBaja??>
     <cac:OrderReference>
         <cbc:ID>${guiaRemisionDadaDeBaja.serieNumero}</cbc:ID>
@@ -67,7 +67,7 @@
         <#if traslado.numeroBultos??>
         <cbc:TotalTransportHandlingUnitQuantity>${traslado.numeroBultos}</cbc:TotalTransportHandlingUnitQuantity>
         </#if>
-        <cbc:SplitConsignmentIndicator>${traslado.transbordorProgramado}</cbc:SplitConsignmentIndicator>
+        <cbc:SplitConsignmentIndicator>${traslado.transbordoProgramado}</cbc:SplitConsignmentIndicator>
         <cac:ShipmentStage>
             <cbc:TransportModeCode>${traslado.modalidad.code}</cbc:TransportModeCode>
             <cac:TransitPeriod>
@@ -86,7 +86,7 @@
             <#if vehiculo??>
             <cac:TransportMeans>
                 <cac:RoadTransport>
-                    <cbc:LicensePlateID>${vehiculo.placaVehiculo}</cbc:LicensePlateID>
+                    <cbc:LicensePlateID>${vehiculo.placa}</cbc:LicensePlateID>
                 </cac:RoadTransport>
             </cac:TransportMeans>
             </#if>
@@ -96,38 +96,37 @@
             </cac:DriverPerson>
             </#if>
         </cac:ShipmentStage>
-
-        // direccion de entrega
         <cac:Delivery>
             <cac:DeliveryAddress>
-                <cbc:ID>050107</cbc:ID>
-                <cbc:StreetName>direccion</cbc:StreetName>
-                <cac:Country>
-                    <cbc:IdentificationCode>PE</cbc:IdentificationCode>
-                </cac:Country>
+                <cbc:ID>${traslado.puntoLlegada.codigoPostal}</cbc:ID>
+                <cbc:StreetName>${traslado.puntoLlegada.direccion}</cbc:StreetName>
             </cac:DeliveryAddress>
         </cac:Delivery>
-
-        // Direccion origen
+        <#if traslado.puntoPartida??>
         <cac:OriginAddress>
-            <cbc:ID>050101</cbc:ID>
-            <cbc:StreetName>direccion</cbc:StreetName>
-            <cac:Country>
-                <cbc:IdentificationCode>PE</cbc:IdentificationCode>
-            </cac:Country>
+            <cbc:ID>${traslado.puntoPartida.codigoPostal}</cbc:ID>
+            <cbc:StreetName>${traslado.puntoPartida.direccion}</cbc:StreetName>
         </cac:OriginAddress>
+        </#if>
+        <#if traslado.codigoPuertoAeropuertoDeEmbarqueOdesembarque??>
+        <cac:FirstArrivalPortLocation>
+            <cbc:ID>${traslado.codigoPuertoAeropuertoDeEmbarqueOdesembarque}</cbc:ID>
+        </cac:FirstArrivalPortLocation>
+        </#if>
     </cac:Shipment>
+    <#list detalle as item>
     <cac:DespatchLine>
-        <cbc:ID>1</cbc:ID>
-        <cbc:DeliveredQuantity unitCode="NIU">10</cbc:DeliveredQuantity>
+        <cbc:ID>${item?index + 1}</cbc:ID>
+        <cbc:DeliveredQuantity unitCode="${item.unidadMedida}">${item.cantidad}</cbc:DeliveredQuantity>
         <cac:OrderLineReference>
-            <cbc:LineID>1</cbc:LineID>
+            <cbc:LineID>${item?index + 1}</cbc:LineID>
         </cac:OrderLineReference>
         <cac:Item>
-            <cbc:Name>JABON LIQUIDO AVAL</cbc:Name>
+            <cbc:Name>${item.descripcion}</cbc:Name>
             <cac:SellersItemIdentification>
-                <cbc:ID>254126</cbc:ID>
+                <cbc:ID>${item.codigo}</cbc:ID>
             </cac:SellersItemIdentification>
         </cac:Item>
     </cac:DespatchLine>
+    </#list>
 </DespatchAdvice>

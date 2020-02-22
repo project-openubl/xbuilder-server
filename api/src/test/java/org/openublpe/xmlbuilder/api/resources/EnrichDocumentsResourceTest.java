@@ -22,6 +22,7 @@ import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
+import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
@@ -29,6 +30,7 @@ import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
@@ -296,6 +298,42 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
             assertNotNull(output, messageInputDataError(input, "Invalid output"));
 
             Set<ConstraintViolation<RetentionOutputModel>> violations = validator.validate(output);
+            assertTrue(
+                    violations.isEmpty(),
+                    messageInputDataError(
+                            input,
+                            violations.stream()
+                                    .map(f -> f.getPropertyPath() + ": " + f.getMessage())
+                                    .collect(Collectors.joining(", "))
+                    )
+            );
+        }
+    }
+
+    @Test
+    void testEnrichDespatchAdvice() throws Exception {
+        assertFalse(DESPATCH_ADVICE_DOCUMENTS.isEmpty(), "No inputs to test");
+
+        for (DespatchAdviceInputModel input : DESPATCH_ADVICE_DOCUMENTS) {
+            // GIVEN
+            String body = new ObjectMapper().writeValueAsString(input);
+
+            // WHEN
+            Response response = given()
+                    .body(body)
+                    .header("Content-Type", "application/json")
+                    .when()
+                    .post(ApiApplication.API_BASE + "/documents/despatch-advice/enrich")
+                    .thenReturn();
+
+            // THEN
+            assertEquals(200, response.getStatusCode(), messageInputDataError(input, response.getBody().asString()));
+            ResponseBody responseBody = response.getBody();
+
+            DespatchAdviceOutputModel output = new ObjectMapper().readValue(responseBody.asInputStream(), DespatchAdviceOutputModel.class);
+            assertNotNull(output, messageInputDataError(input, "Invalid output"));
+
+            Set<ConstraintViolation<DespatchAdviceOutputModel>> violations = validator.validate(output);
             assertTrue(
                     violations.isEmpty(),
                     messageInputDataError(
