@@ -101,6 +101,7 @@ stages:
       - job: container
         displayName: Container
         condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+        timeoutInMinutes: 0
         strategy:
           maxParallel: 2
           matrix:
@@ -129,6 +130,7 @@ stages:
       - job: release_to_dockerhub
         displayName: Release to Docker Hub
         condition: startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+        timeoutInMinutes: 0
         strategy:
           maxParallel: 2
           matrix:
