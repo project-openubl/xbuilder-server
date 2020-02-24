@@ -86,6 +86,7 @@ stages:
 
       - job: test_native
         displayName: Test native
+        timeoutInMinutes: 0
         pool:
           vmImage: 'ubuntu-18.04'
         steps:
