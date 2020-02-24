@@ -39,10 +39,10 @@ stages:
           maxParallel: 2
           matrix:
             jdk8_linux:
-              imageName: 'ubuntu-16.04'
+              imageName: 'ubuntu-18.04'
               jdk_version: '1.8'
             jdk11_linux:
-              imageName: 'ubuntu-16.04'
+              imageName: 'ubuntu-18.04'
               jdk_version: '1.11'
             jdk18_windows:
               imageName: 'vs2017-win2016'
@@ -63,7 +63,7 @@ stages:
       - job: test_sunat
         displayName: Test SUNAT
         pool:
-          vmImage: 'ubuntu-16.04'
+          vmImage: 'ubuntu-18.04'
         steps:
           - task: Maven@3
             inputs:
@@ -75,7 +75,7 @@ stages:
       - job: test_ui
         displayName: Test UI
         pool:
-          vmImage: 'ubuntu-16.04'
+          vmImage: 'ubuntu-18.04'
         steps:
           - task: Maven@3
             inputs:
@@ -87,7 +87,7 @@ stages:
       - job: test_native
         displayName: Test native
         pool:
-          vmImage: 'ubuntu-16.04'
+          vmImage: 'ubuntu-18.04'
         steps:
           - task: Docker@2
             displayName: Build
@@ -105,11 +105,11 @@ stages:
           maxParallel: 2
           matrix:
             api:
-              imageName: 'ubuntu-16.04'
+              imageName: 'ubuntu-18.04'
               dockerfile: '**/Dockerfile.api.multistage'
               repository: 'projectopenubl/xml-builder'
             api_signer:
-              imageName: 'ubuntu-16.04'
+              imageName: 'ubuntu-18.04'
               dockerfile: '**/Dockerfile.apisigner.multistage'
               repository: 'projectopenubl/xml-builder-signer'
         pool:
@@ -133,11 +133,11 @@ stages:
           maxParallel: 2
           matrix:
             api:
-              imageName: 'ubuntu-16.04'
+              imageName: 'ubuntu-18.04'
               dockerfile: '**/Dockerfile.api.multistage'
               repository: 'projectopenubl/xml-builder'
             api_signer:
-              imageName: 'ubuntu-16.04'
+              imageName: 'ubuntu-18.04'
               dockerfile: '**/Dockerfile.apisigner.multistage'
               repository: 'projectopenubl/xml-builder-signer'
         pool:
