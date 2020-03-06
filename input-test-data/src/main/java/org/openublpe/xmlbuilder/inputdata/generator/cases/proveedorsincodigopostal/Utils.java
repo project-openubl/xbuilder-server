@@ -3,7 +3,7 @@ package org.openublpe.xmlbuilder.inputdata.generator.cases.proveedorsincodigopos
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
-import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,10 +38,10 @@ public class Utils {
         return cliente;
     }
 
-    public static List<DetalleInputModel> getDetalle() {
-        List<DetalleInputModel> detalle = new ArrayList<>();
+    public static List<DocumentLineInputModel> getDetalle() {
+        List<DocumentLineInputModel> detalle = new ArrayList<>();
 
-        DetalleInputModel item1 = new DetalleInputModel();
+        DocumentLineInputModel item1 = new DocumentLineInputModel();
         item1.setDescripcion("item");
         item1.setCantidad(new BigDecimal("1"));
         item1.setPrecioUnitario(new BigDecimal("118"));

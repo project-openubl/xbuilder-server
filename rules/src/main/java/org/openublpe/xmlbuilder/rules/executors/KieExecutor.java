@@ -88,18 +88,18 @@ public class KieExecutor {
         kSession.setGlobal("DEFAULT_TIPO_IGV", Catalog.valueOfCode(Catalog7.class, defaultTipoIgv)
                 .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_TIPO_IGV"))
         );
-        kSession.setGlobal("DEFAULT_TIPO_NOTA_CREDITO", Catalog.valueOfCode(Catalog9.class, defaultTipoNotaCredito)
-                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_TIPO_NOTA_CREDITO"))
-        );
-        kSession.setGlobal("DEFAULT_TIPO_NOTA_DEBITO", Catalog.valueOfCode(Catalog10.class, defaultTipoNotaDebito)
-                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_TIPO_NOTA_DEBITO"))
-        );
-        kSession.setGlobal("DEFAULT_REGIMEN_PERCEPCION", Catalog.valueOfCode(Catalog22.class, defaultRegimenPercepcion)
-                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_REGIMEN_PERCEPCION"))
-        );
-        kSession.setGlobal("DEFAULT_REGIMEN_RETENCION", Catalog.valueOfCode(Catalog23.class, defaultRegimenRetencion)
-                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_REGIMEN_RETENCION"))
-        );
+//        kSession.setGlobal("DEFAULT_TIPO_NOTA_CREDITO", Catalog.valueOfCode(Catalog9.class, defaultTipoNotaCredito)
+//                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_TIPO_NOTA_CREDITO"))
+//        );
+//        kSession.setGlobal("DEFAULT_TIPO_NOTA_DEBITO", Catalog.valueOfCode(Catalog10.class, defaultTipoNotaDebito)
+//                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_TIPO_NOTA_DEBITO"))
+//        );
+//        kSession.setGlobal("DEFAULT_REGIMEN_PERCEPCION", Catalog.valueOfCode(Catalog22.class, defaultRegimenPercepcion)
+//                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_REGIMEN_PERCEPCION"))
+//        );
+//        kSession.setGlobal("DEFAULT_REGIMEN_RETENCION", Catalog.valueOfCode(Catalog23.class, defaultRegimenRetencion)
+//                .orElseThrow(() -> new IllegalStateException("application.properties does not have a valid value for DEFAULT_REGIMEN_RETENCION"))
+//        );
     }
 
     public InvoiceOutputModel getInvoiceOutputModel(InvoiceInputModel input) {

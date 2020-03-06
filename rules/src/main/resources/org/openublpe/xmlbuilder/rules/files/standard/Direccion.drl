@@ -1,0 +1,39 @@
+package org.openublpe.xmlbuilder.rules.files.standard;
+
+import org.openublpe.xmlbuilder.core.models.inputoutput.ProveedorInputOutputModel;
+import org.openublpe.xmlbuilder.core.models.inputoutput.DireccionInputOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.DireccionInputModel;
+import org.openublpe.xmlbuilder.core.models.output.common.DireccionOutputModel;
+
+dialect "java"
+
+rule "PROVEEDOR_IO_DIRECCION_INIT"
+when
+    $inputOutput: ProveedorInputOutputModel(
+        $input: input,
+        $output: output,
+        $input.direccion != null,
+        $output.direccion == null
+    )
+then
+    $output.setDireccion(new DireccionOutputModel());
+
+    insert(new DireccionInputOutputModel($input.getDireccion(), $output.getDireccion()));
+end
+
+rule "DIRECCION_IO"
+when
+    $inputOutput: DireccionInputOutputModel(
+        $input : input,
+        $output : output
+    )
+then
+    $output.setUbigeo($input.getUbigeo());
+    $output.setCodigoLocal($input.getCodigoLocal());
+    $output.setUrbanizacion($input.getUrbanizacion());
+    $output.setProvincia($input.getProvincia());
+    $output.setDepartamento($input.getDepartamento());
+    $output.setDistrito($input.getDistrito());
+    $output.setDireccion($input.getDireccion());
+    $output.setCodigoPais($input.getCodigoPais());
+end

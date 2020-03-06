@@ -3,6 +3,11 @@
         <cbc:ResponseCode listAgencyName="PE:SUNAT" listName="SUNAT: Identificador de tipo de nota de debito" listURI="urn:pe:gob:sunat:cpe:see:gem:catalogos:catalogo10">${tipoNota.code}</cbc:ResponseCode>
         <cbc:Description><![CDATA[${descripcionSustentoInvoiceReference}]]></cbc:Description>
     </cac:DiscrepancyResponse>
+    <#if orderCompra??>
+        <cac:OrderReference>
+            <cbc:ID>${orderCompra}</cbc:ID>
+        </cac:OrderReference>
+    </#if>
     <cac:BillingReference>
         <cac:InvoiceDocumentReference>
             <cbc:ID>${serieNumeroInvoiceReference}</cbc:ID>

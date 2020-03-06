@@ -1,19 +1,36 @@
 package org.openublpe.xmlbuilder.rules.files.standard;
 
+import org.openublpe.xmlbuilder.core.models.inputoutput.ProveedorInputOutputModel;
+import org.openublpe.xmlbuilder.core.models.inputoutput.DireccionInputOutputModel;
+import org.openublpe.xmlbuilder.core.models.inputoutput.ContactoInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
-import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel
+import org.openublpe.xmlbuilder.core.models.output.common.DireccionOutputModel
+import org.openublpe.xmlbuilder.core.models.input.common.DireccionInputModel
+import org.openublpe.xmlbuilder.core.models.output.common.ContactoOutputModel;
 
 dialect "java"
 
-rule "Proveedor"
+rule "PROVEEDOR_IO_INIT"
 when
-    $input : ProveedorInputModel()
-    $output : ProveedorOutputModel()
+    $input : DocumentInputModel(proveedor != null)
+    $output : DocumentOutputModel(proveedor == null)
+then
+    $output.setProveedor(new ProveedorOutputModel());
+
+    insert(new ProveedorInputOutputModel($input.getProveedor(), $output.getProveedor()));
+end
+
+rule "PROVEEDOR_IO"
+when
+    $inputOutput: ProveedorInputOutputModel(
+        $input : input,
+        $output : output
+    )
 then
     $output.setRuc($input.getRuc());
     $output.setRazonSocial($input.getRazonSocial());
     $output.setNombreComercial($input.getNombreComercial());
-    $output.setCodigoPostal($input.getCodigoPostal());
 end

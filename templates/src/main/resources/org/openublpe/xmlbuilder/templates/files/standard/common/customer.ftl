@@ -5,6 +5,22 @@
             </cac:PartyIdentification>
             <cac:PartyLegalEntity>
                 <cbc:RegistrationName><![CDATA[${cliente.nombre}]]></cbc:RegistrationName>
+                <#if cliente.direccion??>
+                <cac:RegistrationAddress>
+                    <#import "./address.ftl" as adressMacro/>
+                    <@adressMacro address=cliente.direccion/>
+                </cac:RegistrationAddress>
+                </#if>
             </cac:PartyLegalEntity>
+            <#if cliente.contacto>
+            <cac:Contact>
+                <#if cliente.contacto.telefono>
+                <cbc:Telephone>${cliente.contacto.telefono}</cbc:Telephone>
+                </#if>
+                <#if cliente.contacto.email>
+                <cbc:ElectronicMail>${cliente.contacto.email}</cbc:ElectronicMail>
+                </#if>
+            </cac:Contact>
+            </#if>
         </cac:Party>
     </cac:AccountingCustomerParty>

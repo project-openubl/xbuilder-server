@@ -17,7 +17,7 @@
 package org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo8;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
-import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
 import org.openublpe.xmlbuilder.inputdata.generator.DebitNoteInputGenerator;
@@ -54,15 +54,15 @@ public class Caso60_DebitNoteGenerator implements DebitNoteInputGenerator {
                     debitNote.setDetalle(invoice.getDetalle());
 
                     // No se puede emitir una nota de debito sin tener al menos un detalle GRAVADO
-                    DetalleInputModel item = new DetalleInputModel();
+                    DocumentLineInputModel item = new DocumentLineInputModel();
                     DEBIT_NOTE.getDetalle().add(item);
                     item.setDescripcion("Item");
                     item.setCantidad(HomologacionUtils.cantidadRandom());
                     item.setPrecioUnitario(HomologacionUtils.precioUnitarioRandom());
-                    item.setTipoIGV(Catalog7.GRAVADO_OPERACION_ONEROSA.toString());
+                    item.setTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString());
 
-                    debitNote.setSerieNumeroInvoiceReference(invoice.getSerie() + "-" + invoice.getNumero());
-                    debitNote.setDescripcionSustentoInvoiceReference("mi descripcion o sustento");
+                    debitNote.setSerieNumeroComprobanteAfectado(invoice.getSerie() + "-" + invoice.getNumero());
+                    debitNote.setDescripcionSustento("mi descripcion o sustento");
                 }
             }
         }

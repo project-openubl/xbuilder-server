@@ -17,9 +17,7 @@
 package org.openublpe.xmlbuilder.inputdata.generator.cases.proveedorsincodigopostal;
 
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
-import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.inputdata.generator.CreditNoteInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.DebitNoteInputGenerator;
 
 import java.util.Calendar;
@@ -37,8 +35,8 @@ public class DebitNote_ProveedorSinCodigoPostalGenerator implements DebitNoteInp
         calendar.set(2019, Calendar.FEBRUARY, 1, 18, 30, 0);
         input.setFechaEmision(calendar.getTimeInMillis());
 
-        input.setSerieNumeroInvoiceReference("F009-9");
-        input.setDescripcionSustentoInvoiceReference("Comprobante rechazado");
+        input.setSerieNumeroComprobanteAfectado("F009-9");
+        input.setDescripcionSustento("Comprobante rechazado");
 
         // Proveedor
         input.setProveedor(Utils.getProveedor());

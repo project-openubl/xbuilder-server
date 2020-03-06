@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- *
+ * <p>
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * https://www.eclipse.org/legal/epl-2.0/
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,11 +16,13 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.standard;
 
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog52;
 import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -31,8 +33,8 @@ import java.util.List;
 
 public class DocumentOutputModel {
 
-    @Size(min = 3, max = 3)
     @NotBlank
+    @Size(min = 3, max = 3)
     private String moneda;
 
     @NotBlank
@@ -43,6 +45,13 @@ public class DocumentOutputModel {
 
     @NotBlank
     private String fechaEmision;
+
+    private String fechaVencimiento;
+
+    private String observacion;
+    private String ordenDeCompra;
+
+    private List<Catalog52> leyendas;
 
     @Valid
     @NotNull
@@ -56,36 +65,59 @@ public class DocumentOutputModel {
     @NotNull
     private ProveedorOutputModel proveedor;
 
-    @NotNull
-    @Min(1)
-    private Integer detalleSize;
+    @Valid
+    private List<GuiaRemisionRelacionadaOutputModel> guiasDeRemisionRelacionadas;
+
+    @Valid
+    private List<DocumentoTributarioRelacionadoOutputModel> documentosTributariosRelacionados;
 
     @Valid
     @NotEmpty
-    private List<DetalleOutputModel> detalle;
+    private List<DocumentLineOutputModel> detalle;
 
+    @Min(0)
     @NotNull
+    @Digits(integer = 100, fraction = 2)
     private BigDecimal importeTotalImpuestos;
 
     @Valid
     @NotEmpty
-    private List<ImpuestoTotalIGVOutputModel> totalImpuestosIgv;
+    private List<ImpuestoTotalOutputModel> totalImpuestos;
 
     @Valid
     @NotNull
     private List<ImpuestoTotalICBOutputModel> totalImpuestosIcb;
 
+    @Min(0)
+    @Digits(integer = 100, fraction = 2)
     private BigDecimal totalValorVenta;
+
+    @Min(0)
+    @Digits(integer = 100, fraction = 2)
     private BigDecimal totalPrecioVenta;
 
+    @Min(0)
     @NotNull
+    @Digits(integer = 100, fraction = 2)
     private BigDecimal totalDescuentos;
 
+    @Min(0)
     @NotNull
+    @Digits(integer = 100, fraction = 2)
     private BigDecimal totalOtrosCargos;
 
+    @Min(0)
     @NotNull
+    @Digits(integer = 100, fraction = 2)
     private BigDecimal importeTotal;
+
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
 
     public String getSerieNumero() {
         return serieNumero;
@@ -93,14 +125,6 @@ public class DocumentOutputModel {
 
     public void setSerieNumero(String serieNumero) {
         this.serieNumero = serieNumero;
-    }
-
-    public String getFechaEmision() {
-        return fechaEmision;
-    }
-
-    public void setFechaEmision(String fechaEmision) {
-        this.fechaEmision = fechaEmision;
     }
 
     public String getHoraEmision() {
@@ -111,12 +135,52 @@ public class DocumentOutputModel {
         this.horaEmision = horaEmision;
     }
 
-    public String getMoneda() {
-        return moneda;
+    public String getFechaEmision() {
+        return fechaEmision;
     }
 
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
+    public void setFechaEmision(String fechaEmision) {
+        this.fechaEmision = fechaEmision;
+    }
+
+    public String getFechaVencimiento() {
+        return fechaVencimiento;
+    }
+
+    public void setFechaVencimiento(String fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
+    }
+
+    public List<Catalog52> getLeyendas() {
+        return leyendas;
+    }
+
+    public void setLeyendas(List<Catalog52> leyendas) {
+        this.leyendas = leyendas;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public String getOrdenDeCompra() {
+        return ordenDeCompra;
+    }
+
+    public void setOrdenDeCompra(String ordenDeCompra) {
+        this.ordenDeCompra = ordenDeCompra;
+    }
+
+    public ClienteOutputModel getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(ClienteOutputModel cliente) {
+        this.cliente = cliente;
     }
 
     public FirmanteOutputModel getFirmante() {
@@ -135,12 +199,28 @@ public class DocumentOutputModel {
         this.proveedor = proveedor;
     }
 
-    public ClienteOutputModel getCliente() {
-        return cliente;
+    public List<GuiaRemisionRelacionadaOutputModel> getGuiasDeRemisionRelacionadas() {
+        return guiasDeRemisionRelacionadas;
     }
 
-    public void setCliente(ClienteOutputModel cliente) {
-        this.cliente = cliente;
+    public void setGuiasDeRemisionRelacionadas(List<GuiaRemisionRelacionadaOutputModel> guiasDeRemisionRelacionadas) {
+        this.guiasDeRemisionRelacionadas = guiasDeRemisionRelacionadas;
+    }
+
+    public List<DocumentoTributarioRelacionadoOutputModel> getDocumentosTributariosRelacionados() {
+        return documentosTributariosRelacionados;
+    }
+
+    public void setDocumentosTributariosRelacionados(List<DocumentoTributarioRelacionadoOutputModel> documentosTributariosRelacionados) {
+        this.documentosTributariosRelacionados = documentosTributariosRelacionados;
+    }
+
+    public List<DocumentLineOutputModel> getDetalle() {
+        return detalle;
+    }
+
+    public void setDetalle(List<DocumentLineOutputModel> detalle) {
+        this.detalle = detalle;
     }
 
     public BigDecimal getImporteTotalImpuestos() {
@@ -151,28 +231,20 @@ public class DocumentOutputModel {
         this.importeTotalImpuestos = importeTotalImpuestos;
     }
 
-    public List<ImpuestoTotalIGVOutputModel> getTotalImpuestosIgv() {
-        return totalImpuestosIgv;
+    public List<ImpuestoTotalOutputModel> getTotalImpuestos() {
+        return totalImpuestos;
     }
 
-    public void setTotalImpuestosIgv(List<ImpuestoTotalIGVOutputModel> totalImpuestosIgv) {
-        this.totalImpuestosIgv = totalImpuestosIgv;
+    public void setTotalImpuestos(List<ImpuestoTotalOutputModel> totalImpuestos) {
+        this.totalImpuestos = totalImpuestos;
     }
 
-    public Integer getDetalleSize() {
-        return detalleSize;
+    public List<ImpuestoTotalICBOutputModel> getTotalImpuestosIcb() {
+        return totalImpuestosIcb;
     }
 
-    public void setDetalleSize(Integer detalleSize) {
-        this.detalleSize = detalleSize;
-    }
-
-    public List<DetalleOutputModel> getDetalle() {
-        return detalle;
-    }
-
-    public void setDetalle(List<DetalleOutputModel> detalle) {
-        this.detalle = detalle;
+    public void setTotalImpuestosIcb(List<ImpuestoTotalICBOutputModel> totalImpuestosIcb) {
+        this.totalImpuestosIcb = totalImpuestosIcb;
     }
 
     public BigDecimal getTotalValorVenta() {
@@ -213,13 +285,5 @@ public class DocumentOutputModel {
 
     public void setImporteTotal(BigDecimal importeTotal) {
         this.importeTotal = importeTotal;
-    }
-
-    public List<ImpuestoTotalICBOutputModel> getTotalImpuestosIcb() {
-        return totalImpuestosIcb;
-    }
-
-    public void setTotalImpuestosIcb(List<ImpuestoTotalICBOutputModel> totalImpuestosIcb) {
-        this.totalImpuestosIcb = totalImpuestosIcb;
     }
 }

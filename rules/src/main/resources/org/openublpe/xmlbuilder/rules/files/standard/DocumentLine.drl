@@ -1,0 +1,321 @@
+package org.openublpe.xmlbuilder.rules.files.standard;
+
+import org.openublpe.xmlbuilder.core.models.inputoutput.DocumentInputOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
+
+import org.openublpe.xmlbuilder.core.models.inputoutput.DocumentLineInputOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineOutputModel;
+
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoIGVOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoICBOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DetallePrecioReferenciaOutputModel;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.math.RoundingMode;
+
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog16;
+
+import function org.openublpe.xmlbuilder.rules.utils.UBLUtils.selectIgv;
+import function org.openublpe.xmlbuilder.rules.utils.NumberUtils.format2Digists;
+
+global java.math.BigDecimal IGV;
+global java.math.BigDecimal ICB;
+global java.lang.String DEFAULT_UNIDAD_MEDIDA;
+global org.openublpe.xmlbuilder.core.models.catalogs.Catalog7 DEFAULT_TIPO_IGV;
+
+dialect "java"
+
+// General formula
+// Having Cantidad and ValorUnitario (price without taxes)
+// 1. subtotal = cantidad * valorUnitario;
+
+// ISC
+// ---------------------------------
+// tipoISC = Catalog8;
+// categoriaISC = Catalog5;
+// porcentajeISC = 17%;
+// baseImponibleISC = subtotal;
+// importeISC = porcentajeISC/100 * baseImponibleISC;
+//
+// IGV
+// ---------------------------------
+// tipoIGV = Catalog7;
+// categoriaIGV = Catalog5;
+// porcentajeIGV = 18%;
+// baseImponibleIGV = subtotal + importeISC;
+// importeIGV = porcentajeIGV/100 * baseImponibleIGV;
+//
+// OTROS
+// ---------------------------------
+// categoriaOTRO = Catalog5;
+// porcentajeOTRO = 10%;
+// baseImponibleOTRO = subtotal + importeISC + importeIGV;
+// importeOtro = porcentajeOTRO/100 * baseImponibleOTRO;
+//
+// ICBPER
+// ---------------------------------
+// categoriaICB = Catalog5;
+// icbAplicado = 0.2;
+// importeICB = cantidad * icbAplicado;
+
+
+rule "DOCUMENT_LINE_IO_INIT"
+when
+    $inputOutput : DocumentInputOutputModel(
+        $input : input,
+        $output : output,
+        $input.detalle != null
+    )
+then
+    $output.setDetalle(new ArrayList<>());
+    $input.getDetalle().forEach(detalleInput -> {
+        DocumentLineOutputModel detalleOutput = new DocumentLineOutputModel();
+        $output.getDetalle().add(detalleOutput);
+
+        insert(new DocumentLineInputOutputModel(detalleInput, detalleOutput));
+    });
+end
+
+rule "DOCUMENT_LINE_IO_COPY"
+when
+    $inputOutput : DocumentLineInputOutputModel(
+        $input: input,
+        $output: output
+    )
+then
+    $output.setDescripcion($input.getDescripcion());
+    $output.setCantidad($input.getCantidad());
+    $output.setValorUnitario($input.getValorUnitario());
+    $output.setPrecioUnitario($input.getPrecioUnitario());
+    $output.setUnidadMedida($input.getUnidadMedida() != null ? $input.getUnidadMedida() : DEFAULT_UNIDAD_MEDIDA);
+
+    // Init and copy igv
+    $output.setIgv(new ImpuestoDetalladoIGVOutputModel());
+
+    Catalog7 tipoIgv = $input.getTipoIgv() != null ? Catalog.valueOfCode(Catalog7.class, $input.getTipoIgv()).get() : DEFAULT_TIPO_IGV;
+    $output.getIgv().setTipo(tipoIgv);
+    $output.getIgv().setCategoria(tipoIgv.getTaxCategory());
+
+    // Init and copy icb
+    if ($input.isIcb()) {
+        $output.setIcb(new ImpuestoDetalladoICBOutputModel());
+        $output.getIcb().setCategoria(Catalog5.ICBPER);
+    }
+
+    // Init otros
+    if ($input.getOtrosTributos() != null) {
+        $output.setOtroTributo(new ImpuestoDetalladoOutputModel());
+    }
+
+    // Init precios de referencia
+    $output.setPrecioDeReferencia(new DetallePrecioReferenciaOutputModel());
+
+    insert($output);
+end
+
+rule "DOCUMENT_LINE_OUTPUT_CALCULATE_IGV_PROCENTUAL"
+when
+    $output : DocumentLineOutputModel(
+        $igv: igv,
+        $igv != null,
+        $igv.tipo != null,
+        $igv.porcentaje == null
+    )
+then
+    BigDecimal valorIgv = selectIgv($igv.getTipo(), IGV);
+    BigDecimal igvPorcentual = valorIgv.multiply(new BigDecimal("100"));
+
+    $output.getIgv().setPorcentaje(igvPorcentual);
+end
+
+rule "DOCUMENT_LINE_OUTPUT_CALCULATE_TOTAL"
+when
+    $output : DocumentLineOutputModel(
+        cantidad != null,
+        total == null
+    )
+then
+    BigDecimal total = format2Digists(
+            $output.getCantidad().multiply($output.getPrecioUnitario())
+    );
+    modify($output){setTotal(total)}
+end
+
+rule "DOCUMENT_LINE_OUTPUT_CALCULATE_SUBTOTAL"
+when
+    $output : DocumentLineOutputModel(
+        $igv: igv,
+        $igv != null,
+        total != null,
+        subtotal == null
+    )
+then
+    BigDecimal valorIgv = selectIgv($igv.getTipo(), IGV);
+    BigDecimal subTotal = $output.getTotal().divide(valorIgv.add(BigDecimal.ONE), 2, RoundingMode.HALF_EVEN);
+
+    modify($output){setSubtotal(subTotal)}
+end
+
+rule "DOCUMENT_LINE_OUTPUT_CALCULATE_IGV_BASE_IMPONIBLE"
+when
+    $output : DocumentLineOutputModel(
+        $igv : igv,
+        $igv != null,
+        $igv.baseImponible == null,
+        subtotal != null
+    )
+then
+    $output.getIgv().setBaseImponible($output.getSubtotal());
+end
+
+rule "DOCUMENT_LINE_OUTPUT_CALCULATE_IGV_IMPORTE"
+when
+    $output : DocumentLineOutputModel(
+        $igv : igv,
+        $igv != null,
+        $igv.importe == null,
+        total != null,
+        subtotal != null
+    )
+then
+    BigDecimal importeIgv = $output.getTotal().subtract($output.getSubtotal());
+
+    $igv.setImporte(format2Digists(importeIgv));
+end
+
+
+
+rule "DOCUMENT_LINE_OUTPUT_CALCULATE_IMPORTE_ICB"
+when
+    $output : DocumentLineOutputModel(
+        $icb : icb,
+        $icb != null,
+        cantidad != null
+    )
+then
+    BigDecimal importeIcb = $output.getCantidad().multiply(ICB);
+
+    $icb.setImporte(format2Digists(importeIcb));
+end
+
+
+//rule "DOCUMENT_LINE_OUTPUT_CALCULATE_PRECIO_REFERENCIA"
+//when
+//    $output : DocumentLineOutputModel(
+//        $igv : igv,
+//        $igv.tipo != null,
+//        $igvTipo : $igv.tipo
+//    )
+//then
+//       System.out.println("dw");
+//end
+
+//    if (tipoIgv.isOperacionOnerosa()) {
+//        outputDetalle.setSubtotal(subTotal);
+//
+//        // Valor unitario
+//        BigDecimal valorUnitario = subTotal.divide(cantidad, 2, RoundingMode.HALF_EVEN);
+//        outputDetalle.setValorUnitario(valorUnitario);
+//
+//        outputDetalle.getPreciosDeReferencia().add(new DetallePrecioReferenciaOutputModel(precioUnitario, Catalog16.PRECIO_UNITARIO_INCLUYE_IGV));
+//    } else {
+//        outputDetalle.setSubtotal(total);
+//
+//        // Valor unitario
+//        outputDetalle.setValorUnitario(BigDecimal.ZERO);
+//
+//        outputDetalle.getPreciosDeReferencia().add(new DetallePrecioReferenciaOutputModel(precioUnitario, Catalog16.VALOR_FERENCIAL_UNITARIO_EN_OPERACIONES_NO_ONEROSAS));
+//    }
+
+
+//rule "Detalle Item"
+//when
+//    $input : DocumentInputModel(detalle != null)
+//    $output : DocumentOutputModel()
+//    $inputDetalle: DocumentLineInputModel()
+//then
+//    DetalleOutputModel outputDetalle = new DetalleOutputModel();
+//    $output.getDetalle().add(outputDetalle);
+//
+//    // Descripcion, unidad de medida
+//    outputDetalle.setDescripcion($inputDetalle.getDescripcion());
+//    outputDetalle.setUnidadMedida($inputDetalle.getUnidadMedida() != null ? $inputDetalle.getUnidadMedida() : DEFAULT_UNIDAD_MEDIDA);
+//
+//    // Cantidad
+//    BigDecimal cantidad = $inputDetalle.getCantidad();
+//    outputDetalle.setCantidad(cantidad);
+//
+//    // Precio unitario
+//    BigDecimal precioUnitario = $inputDetalle.getPrecioUnitario();
+//    outputDetalle.setPrecioUnitario(precioUnitario);
+//
+//    // Tipo IGV
+//    Catalog7 tipoIgv = $inputDetalle.getTipoIGV() != null
+//        ? Catalog.valueOfCode(Catalog7.class, $inputDetalle.getTipoIGV()).get()
+//        : DEFAULT_TIPO_IGV;
+//
+//    // IGV a usar
+//    BigDecimal IGV_TO_USE = tipoIgv.getGrupo().equals(Catalog7_1.GRAVADO)
+//        ? IGV
+//        : BigDecimal.ZERO;
+//
+//    BigDecimal igvPorcentual = IGV_TO_USE.multiply(new BigDecimal("100"));
+//    outputDetalle.setIgvPorcentual(igvPorcentual);
+//
+//    // Total
+//    BigDecimal total = format2Digists(cantidad.multiply(precioUnitario));
+//    outputDetalle.setTotal(total);
+//
+//    // Subtotal
+//    BigDecimal subTotal = total.divide(IGV_TO_USE.add(BigDecimal.ONE), 2, RoundingMode.HALF_EVEN);
+//
+//    // importe igv
+//    BigDecimal importeIgv = total.subtract(subTotal);
+//
+//
+//    // IGV
+//    outputDetalle.setIgv(new ImpuestoDetalladoIGVOutputModel());
+//    outputDetalle.getIgv().setTipo(tipoIgv);
+//    outputDetalle.getIgv().setCategoria(tipoIgv.getTaxCategory());
+//    outputDetalle.getIgv().setBaseImponible(subTotal);
+//    outputDetalle.getIgv().setImporte(importeIgv);
+//
+//
+//    // ICB
+//    outputDetalle.setIcbAplicado(ICB);
+//    if ($inputDetalle.isIcb()) {
+//        outputDetalle.setIcb(new ImpuestoDetalladoICBOutputModel());
+//        BigDecimal importeICB = cantidad.multiply(ICB);
+//        outputDetalle.getIcb().setImporte(format2Digists(importeICB));
+//        outputDetalle.getIcb().setCategoria(Catalog5.ICBPER);
+//    }
+//
+//
+//    // Precios de referencia
+//    outputDetalle.setPreciosDeReferencia(new ArrayList<>());
+//
+//    if (tipoIgv.isOperacionOnerosa()) {
+//        outputDetalle.setSubtotal(subTotal);
+//
+//        // Valor unitario
+//        BigDecimal valorUnitario = subTotal.divide(cantidad, 2, RoundingMode.HALF_EVEN);
+//        outputDetalle.setValorUnitario(valorUnitario);
+//
+//        outputDetalle.getPreciosDeReferencia().add(new DetallePrecioReferenciaOutputModel(precioUnitario, Catalog16.PRECIO_UNITARIO_INCLUYE_IGV));
+//    } else {
+//        outputDetalle.setSubtotal(total);
+//
+//        // Valor unitario
+//        outputDetalle.setValorUnitario(BigDecimal.ZERO);
+//
+//        outputDetalle.getPreciosDeReferencia().add(new DetallePrecioReferenciaOutputModel(precioUnitario, Catalog16.VALOR_FERENCIAL_UNITARIO_EN_OPERACIONES_NO_ONEROSAS));
+//    }
+//end

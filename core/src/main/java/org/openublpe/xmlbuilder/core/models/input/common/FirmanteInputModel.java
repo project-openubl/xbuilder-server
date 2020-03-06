@@ -16,14 +16,14 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.common;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 public class FirmanteInputModel {
 
-    @NotNull
+    @NotBlank
     private String ruc;
 
-    @NotNull
+    @NotBlank
     private String razonSocial;
 
     public String getRuc() {

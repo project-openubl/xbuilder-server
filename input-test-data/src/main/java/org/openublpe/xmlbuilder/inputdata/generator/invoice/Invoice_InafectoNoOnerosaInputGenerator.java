@@ -17,7 +17,7 @@
 package org.openublpe.xmlbuilder.inputdata.generator.invoice;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
-import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.inputdata.generator.AbstractInvoiceInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.InvoiceInputGenerator;
@@ -31,13 +31,13 @@ public class Invoice_InafectoNoOnerosaInputGenerator extends AbstractInvoiceInpu
     public InvoiceInputModel getInput() {
         InvoiceInputModel input = getInvoiceTemplate();
 
-        DetalleInputModel item1 = new DetalleInputModel();
+        DocumentLineInputModel item1 = new DocumentLineInputModel();
         input.getDetalle().add(item1);
 
         item1.setDescripcion("item");
         item1.setCantidad(new BigDecimal("1"));
         item1.setPrecioUnitario(new BigDecimal("100"));
-        item1.setTipoIGV(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString());
+        item1.setTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString());
 
         return input;
     }

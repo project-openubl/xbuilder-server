@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- *
+ * <p>
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * https://www.eclipse.org/legal/epl-2.0/
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,35 +21,39 @@ import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.util.List;
 
 public abstract class DocumentInputModel {
 
-    @NotNull
     @NotBlank
     @Pattern(regexp = "^[F|B].*$")
     @Size(min = 4, max = 4)
     protected String serie;
 
     @Min(1)
+    @Max(99999999)
     @NotNull
     private Integer numero;
 
+    @Size(min = 3, max = 3)
     private String moneda;
+
     private Long fechaEmision;
+    private Long fechaVencimiento;
 
-    @Min(0)
-    private BigDecimal totalDescuentos;
+    private String observacion;
+    private String ordenDeCompra;
 
-    @Min(0)
-    private BigDecimal totalOtrosCargos;
+    @Valid
+    @NotNull
+    private ProveedorInputModel proveedor;
 
     @Valid
     @NotNull
@@ -59,13 +63,14 @@ public abstract class DocumentInputModel {
     private FirmanteInputModel firmante;
 
     @Valid
-    @NotNull
-    private ProveedorInputModel proveedor;
+    private List<GuiaRemisionRelacionadaInputModel> guiasDeRemisionRelacionadas;
 
     @Valid
-    @NotNull
+    private List<DocumentoTributarioRelacionadoInputModel> documentosTributariosRelacionados;
+
+    @Valid
     @NotEmpty
-    private List<DetalleInputModel> detalle;
+    private List<DocumentLineInputModel> detalle;
 
     public String getSerie() {
         return serie;
@@ -99,20 +104,28 @@ public abstract class DocumentInputModel {
         this.fechaEmision = fechaEmision;
     }
 
-    public BigDecimal getTotalDescuentos() {
-        return totalDescuentos;
+    public Long getFechaVencimiento() {
+        return fechaVencimiento;
     }
 
-    public void setTotalDescuentos(BigDecimal totalDescuentos) {
-        this.totalDescuentos = totalDescuentos;
+    public void setFechaVencimiento(Long fechaVencimiento) {
+        this.fechaVencimiento = fechaVencimiento;
     }
 
-    public BigDecimal getTotalOtrosCargos() {
-        return totalOtrosCargos;
+    public String getOrdenDeCompra() {
+        return ordenDeCompra;
     }
 
-    public void setTotalOtrosCargos(BigDecimal totalOtrosCargos) {
-        this.totalOtrosCargos = totalOtrosCargos;
+    public void setOrdenDeCompra(String ordenDeCompra) {
+        this.ordenDeCompra = ordenDeCompra;
+    }
+
+    public ProveedorInputModel getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(ProveedorInputModel proveedor) {
+        this.proveedor = proveedor;
     }
 
     public ClienteInputModel getCliente() {
@@ -131,19 +144,35 @@ public abstract class DocumentInputModel {
         this.firmante = firmante;
     }
 
-    public ProveedorInputModel getProveedor() {
-        return proveedor;
+    public List<GuiaRemisionRelacionadaInputModel> getGuiasDeRemisionRelacionadas() {
+        return guiasDeRemisionRelacionadas;
     }
 
-    public void setProveedor(ProveedorInputModel proveedor) {
-        this.proveedor = proveedor;
+    public void setGuiasDeRemisionRelacionadas(List<GuiaRemisionRelacionadaInputModel> guiasDeRemisionRelacionadas) {
+        this.guiasDeRemisionRelacionadas = guiasDeRemisionRelacionadas;
     }
 
-    public List<DetalleInputModel> getDetalle() {
+    public List<DocumentoTributarioRelacionadoInputModel> getDocumentosTributariosRelacionados() {
+        return documentosTributariosRelacionados;
+    }
+
+    public void setDocumentosTributariosRelacionados(List<DocumentoTributarioRelacionadoInputModel> documentosTributariosRelacionados) {
+        this.documentosTributariosRelacionados = documentosTributariosRelacionados;
+    }
+
+    public List<DocumentLineInputModel> getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(List<DetalleInputModel> detalle) {
+    public void setDetalle(List<DocumentLineInputModel> detalle) {
         this.detalle = detalle;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
     }
 }

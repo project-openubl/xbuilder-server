@@ -18,14 +18,16 @@ package org.openublpe.xmlbuilder.core.models.output.standard;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
 
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public abstract class ImpuestoOutputModel {
 
-    @NotNull
     @Min(0)
+    @NotNull
+    @Digits(integer = 100, fraction = 2)
     private BigDecimal importe;
 
     @NotNull

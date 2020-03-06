@@ -16,6 +16,23 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.standard;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+
 public class ImpuestoDetalladoICBOutputModel extends ImpuestoOutputModel {
 
+    @Min(0)
+    @NotNull
+    @Digits(integer = 100, fraction = 2)
+    private BigDecimal icbAplicado;
+
+    public BigDecimal getIcbAplicado() {
+        return icbAplicado;
+    }
+
+    public void setIcbAplicado(BigDecimal icbAplicado) {
+        this.icbAplicado = icbAplicado;
+    }
 }

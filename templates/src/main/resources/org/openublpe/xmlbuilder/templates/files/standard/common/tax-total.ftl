@@ -1,9 +1,9 @@
     <cac:TaxTotal>
-        <cbc:TaxAmount currencyID="PEN">${importeTotalImpuestos}</cbc:TaxAmount>
-        <#list totalImpuestosIgv as impuesto>
+        <cbc:TaxAmount currencyID="${moneda}">${importeTotalImpuestos}</cbc:TaxAmount>
+        <#list totalImpuestos as impuesto>
         <cac:TaxSubtotal>
-            <cbc:TaxableAmount currencyID="PEN">${impuesto.baseImponible}</cbc:TaxableAmount>
-            <cbc:TaxAmount currencyID="PEN">${impuesto.importe}</cbc:TaxAmount>
+            <cbc:TaxableAmount currencyID="${moneda}">${impuesto.baseImponible}</cbc:TaxableAmount>
+            <cbc:TaxAmount currencyID="${moneda}">${impuesto.importe}</cbc:TaxAmount>
             <cac:TaxCategory>
                 <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifie">${impuesto.categoria.categoria}</cbc:ID>
                 <cac:TaxScheme>
@@ -16,7 +16,7 @@
         </#list>
         <#list totalImpuestosIcb as impuesto>
             <cac:TaxSubtotal>
-                <cbc:TaxAmount currencyID="PEN">${impuesto.importe}</cbc:TaxAmount>
+                <cbc:TaxAmount currencyID="${moneda}">${impuesto.importe}</cbc:TaxAmount>
                 <cac:TaxCategory>
                     <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifie">${impuesto.categoria.categoria}</cbc:ID>
                     <cac:TaxScheme>

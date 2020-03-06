@@ -50,8 +50,8 @@ public class Caso19_CreditNoteGenerator implements CreditNoteInputGenerator {
                     creditNote.setCliente(invoice.getCliente());
                     creditNote.setDetalle(invoice.getDetalle());
 
-                    creditNote.setSerieNumeroInvoiceReference(invoice.getSerie() + "-" + invoice.getNumero());
-                    creditNote.setDescripcionSustentoInvoiceReference("mi descripcion o sustento");
+                    creditNote.setSerieNumeroComprobanteAfectado(invoice.getSerie() + "-" + invoice.getNumero());
+                    creditNote.setDescripcionSustento("mi descripcion o sustento");
                 }
             }
         }

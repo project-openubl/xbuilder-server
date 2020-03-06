@@ -21,14 +21,14 @@ import java.util.Optional;
 public interface InputGenerator<T> {
 
     // This should correspond to the number of test created
-    int NUMBER_TEST_INVOICES = 35;
-    int NUMBER_TEST_CREDIT_NOTES = 12;
-    int NUMBER_TEST_DEBIT_NOTES = 13;
-    int NUMBER_TEST_VOIDED_DOCUMENTS = 2;
-    int NUMBER_TEST_SUMMARY_DOCUMENTS = 2;
-    int NUMBER_TEST_PERCEPTIONS = 1;
-    int NUMBER_TEST_RETENTIONS = 1;
-    int NUMBER_TEST_DESPATCH_ADVICES = 1;
+    int NUMBER_TEST_INVOICES = 1;
+    int NUMBER_TEST_CREDIT_NOTES = 0;
+    int NUMBER_TEST_DEBIT_NOTES = 0;
+    int NUMBER_TEST_VOIDED_DOCUMENTS = 0;
+    int NUMBER_TEST_SUMMARY_DOCUMENTS = 0;
+    int NUMBER_TEST_PERCEPTIONS = 0;
+    int NUMBER_TEST_RETENTIONS = 0;
+    int NUMBER_TEST_DESPATCH_ADVICES = 0;
 
     T getInput();
 

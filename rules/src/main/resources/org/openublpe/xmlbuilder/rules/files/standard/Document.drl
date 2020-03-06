@@ -1,38 +1,52 @@
 package org.openublpe.xmlbuilder.rules.files.standard;
 
+import org.openublpe.xmlbuilder.core.models.inputoutput.DocumentInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
-import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel
-import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel
-import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel
-import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel
-import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel
-import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel
-import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel
-import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel
-import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
+import java.util.Calendar;
+
+import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
+import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarTime;
 
 dialect "java"
 
-rule "Document"
+global java.lang.String DEFAULT_MONEDA;
+
+rule "DOCUMENT_INIT"
 when
     $input : DocumentInputModel()
     $output : DocumentOutputModel()
 then
-    FirmanteOutputModel firmante = new FirmanteOutputModel();
-    $output.setFirmante(firmante);
+    insert(new DocumentInputOutputModel($input, $output));
+end
 
-    ProveedorOutputModel proveedor = new ProveedorOutputModel();
-    $output.setProveedor(proveedor);
+rule "IO_DOCUMENT"
+when
+    $inputOutput : DocumentInputOutputModel(
+        $input : input,
+        $output : output
+    )
+then
+    $output.setMoneda($input.getMoneda() != null ? $input.getMoneda() : DEFAULT_MONEDA);
+    $output.setSerieNumero($input.getSerie().toUpperCase() + "-" + $input.getNumero());
 
-    ClienteOutputModel cliente = new ClienteOutputModel();
-    $output.setCliente(cliente);
+    Long fechaEmision = $input.getFechaEmision() != null ? $input.getFechaEmision() : Calendar.getInstance().getTimeInMillis();
+    $output.setFechaEmision(toGregorianCalendarDate(fechaEmision));
+    $output.setHoraEmision(toGregorianCalendarTime(fechaEmision));
 
-    insert($input.getFirmante());
-    insert($input.getProveedor());
-    insert($input.getCliente());
-    insert(firmante);
-    insert(proveedor);
-    insert(cliente);
+    $output.setObservacion($input.getObservacion());
+    $output.setOrdenDeCompra($input.getOrdenDeCompra());
+end
+
+rule "IO_DOCUMENT_FECHA_VENCIMIENTO"
+when
+    $inputOutput : DocumentInputOutputModel(
+        $input : input,
+        $output : output,
+        $input.fechaEmision != null
+    )
+then
+    $output.setFechaVencimiento(
+        toGregorianCalendarTime($input.getFechaEmision())
+    );
 end

@@ -29,6 +29,7 @@ import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.Debit
 import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
+import org.openublpe.xmlbuilder.inputdata.generator.InputGenerator;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
@@ -36,6 +37,7 @@ import javax.validation.Validator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -51,7 +53,7 @@ class KieExecutorTest extends AbstractInputDataTest {
 
     @Test
     void getInvoiceOutputModel() {
-        assertFalse(INVOICES.isEmpty(), "No input invoices to test");
+        assertEquals(InputGenerator.NUMBER_TEST_INVOICES, INVOICES.size(), "The number of test cases is not the expected one");
 
         for (InvoiceInputModel input : INVOICES) {
             // GIVEN
@@ -77,7 +79,7 @@ class KieExecutorTest extends AbstractInputDataTest {
 
     @Test
     void getCreditNoteOutputModel() {
-        assertFalse(CREDIT_NOTES.isEmpty(), "No input credit notes to test");
+        assertEquals(InputGenerator.NUMBER_TEST_CREDIT_NOTES, CREDIT_NOTES.size(), "The number of test cases is not the expected one");
 
         for (CreditNoteInputModel input : CREDIT_NOTES) {
             // GIVEN
@@ -103,7 +105,7 @@ class KieExecutorTest extends AbstractInputDataTest {
 
     @Test
     void getDebitNoteOutputModel() {
-        assertFalse(DEBIT_NOTES.isEmpty(), "No input debit notes to test");
+        assertEquals(InputGenerator.NUMBER_TEST_DEBIT_NOTES, DEBIT_NOTES.size(), "The number of test cases is not the expected one");
 
         for (DebitNoteInputModel input : DEBIT_NOTES) {
             // GIVEN
@@ -129,7 +131,7 @@ class KieExecutorTest extends AbstractInputDataTest {
 
     @Test
     void getVoidedDocumentOutputModel() {
-        assertFalse(VOIDED_DOCUMENTS.isEmpty(), "No input voided documents to test");
+        assertEquals(InputGenerator.NUMBER_TEST_VOIDED_DOCUMENTS, VOIDED_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (VoidedDocumentInputModel input : VOIDED_DOCUMENTS) {
             // GIVEN
@@ -155,7 +157,7 @@ class KieExecutorTest extends AbstractInputDataTest {
 
     @Test
     void getSummaryDocumentOutputModel() {
-        assertFalse(SUMMARY_DOCUMENTS.isEmpty(), "No input summary documents to test");
+        assertEquals(InputGenerator.NUMBER_TEST_SUMMARY_DOCUMENTS, SUMMARY_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (SummaryDocumentInputModel input : SUMMARY_DOCUMENTS) {
             // GIVEN

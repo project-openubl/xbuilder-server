@@ -24,29 +24,28 @@ import javax.validation.constraints.Pattern;
 
 public abstract class NoteInputModel extends DocumentInputModel {
 
+    @NotBlank
+    @Pattern(regexp = "^[F|B].*$")
+    private String serieNumeroComprobanteAfectado;
+
     @NotNull
     @NotBlank
-    @Pattern(regexp = "^[F|f|B|b].*$")
-    private String serieNumeroInvoiceReference;
+    private String descripcionSustento;
 
-    @NotNull
-    @NotBlank
-    private String descripcionSustentoInvoiceReference;
-
-    public String getSerieNumeroInvoiceReference() {
-        return serieNumeroInvoiceReference;
+    public String getSerieNumeroComprobanteAfectado() {
+        return serieNumeroComprobanteAfectado;
     }
 
-    public void setSerieNumeroInvoiceReference(String serieNumeroInvoiceReference) {
-        this.serieNumeroInvoiceReference = serieNumeroInvoiceReference;
+    public void setSerieNumeroComprobanteAfectado(String serieNumeroComprobanteAfectado) {
+        this.serieNumeroComprobanteAfectado = serieNumeroComprobanteAfectado;
     }
 
-    public String getDescripcionSustentoInvoiceReference() {
-        return descripcionSustentoInvoiceReference;
+    public String getDescripcionSustento() {
+        return descripcionSustento;
     }
 
-    public void setDescripcionSustentoInvoiceReference(String descripcionSustentoInvoiceReference) {
-        this.descripcionSustentoInvoiceReference = descripcionSustentoInvoiceReference;
+    public void setDescripcionSustento(String descripcionSustento) {
+        this.descripcionSustento = descripcionSustento;
     }
 
 }

@@ -16,7 +16,7 @@
  */
 package org.openublpe.xmlbuilder.inputdata.generator.homologacion.grupo4;
 
-import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.inputdata.generator.GeneralData;
 import org.openublpe.xmlbuilder.inputdata.generator.InvoiceInputGenerator;
@@ -50,13 +50,13 @@ public class Caso36_InvoiceGenerator implements InvoiceInputGenerator {
                     invoice.setProveedor(GeneralData.getProveedor());
                     invoice.setCliente(GeneralData.getClienteConRUC());
 
-                    invoice.setTotalDescuentos(BigDecimal.ONE);
+//                    invoice.setTotalDescuentos(BigDecimal.ONE);
 
-                    List<DetalleInputModel> detalle = new ArrayList<>();
+                    List<DocumentLineInputModel> detalle = new ArrayList<>();
                     invoice.setDetalle(detalle);
 
                     for (int i = 0; i < 5; i++) {
-                        DetalleInputModel item = new DetalleInputModel();
+                        DocumentLineInputModel item = new DocumentLineInputModel();
                         detalle.add(item);
                         item.setDescripcion("Item" + (i + 1));
                         item.setCantidad(HomologacionUtils.cantidadRandom());

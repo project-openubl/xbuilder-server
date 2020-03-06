@@ -1,20 +1,36 @@
 package org.openublpe.xmlbuilder.rules.files.standard;
 
-import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.inputoutput.ClienteInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
 
 dialect "java"
 
-rule "Cliente"
+rule "CLIENTE_IO_INIT"
 when
-    $input : ClienteInputModel()
-    $output : ClienteOutputModel()
+    $input : DocumentInputModel(
+        cliente != null
+    )
+    $output : DocumentOutputModel(
+        cliente == null
+    )
+then
+    $output.setCliente(new ClienteOutputModel());
+    insert(new ClienteInputOutputModel($input.getCliente(), $output.getCliente()));
+end
+
+rule "CLIENTE_IO"
+when
+    $inputOutput: ClienteInputOutputModel(
+        $input : input,
+        $output : output,
+        $input != null,
+        $output != null
+    )
 then
     $output.setNombre($input.getNombre());
     $output.setNumeroDocumentoIdentidad($input.getNumeroDocumentoIdentidad());

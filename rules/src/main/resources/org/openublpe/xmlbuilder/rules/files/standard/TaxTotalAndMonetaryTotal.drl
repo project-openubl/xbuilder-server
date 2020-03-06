@@ -1,136 +1,136 @@
-package org.openublpe.xmlbuilder.rules.files.standard;
-
-import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DetalleOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalIGVOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalICBOutputModel;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.stream.Stream
-import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalICBOutputModel
-import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalIGVOutputModel
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5
-import org.openublpe.xmlbuilder.core.models.output.standard.DetalleOutputModel;
-
-dialect "java"
-
-rule "Tax Total and Monetary Total" salience -1
-when
-    $input : DocumentInputModel()
-    $output : DocumentOutputModel()
-then
-    // TOTAL IMPUESTOS
-    BigDecimal totalIGV = $output.getDetalle()
-        .stream()
-        .filter(p -> p.getIgv().getCategoria().equals(Catalog5.IGV))
-        .map(m -> m.getIgv().getImporte())
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    $output.setImporteTotalImpuestos(totalIGV);
-
-
-    // TOTAL IMPUESTOS - SUBTOTALES
-    $output.setTotalImpuestosIgv(new ArrayList<>());
-    $output.setTotalImpuestosIcb(new ArrayList<>());
-
-    // igv
-    java.util.function.Supplier<Stream<DetalleOutputModel>> totalIgvStream = () -> $output.getDetalle().stream().filter(i -> i.getIgv().getTipo().getTaxCategory().equals(Catalog5.IGV));
-    BigDecimal importeTotalGravado = totalIgvStream.get().map(s -> s.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
-    BigDecimal baseImponibleTotalGravado = totalIgvStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    if (baseImponibleTotalGravado.compareTo(BigDecimal.ZERO) > 0) {
-        ImpuestoTotalIGVOutputModel totalGravado = new ImpuestoTotalIGVOutputModel();
-        totalGravado.setImporte(importeTotalGravado);
-        totalGravado.setBaseImponible(baseImponibleTotalGravado);
-        totalGravado.setCategoria(Catalog5.IGV);
-
-        $output.getTotalImpuestosIgv().add(totalGravado);
-    }
-
-    // icb
-    java.util.function.Supplier<Stream<DetalleOutputModel>> totalIcbStream = () -> $output.getDetalle().stream().filter(c -> c.getIcb() != null);
-    BigDecimal importeTotalIcb = totalIcbStream.get().map(s -> s.getIcb().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    if (importeTotalIcb.compareTo(BigDecimal.ZERO) > 0) {
-        ImpuestoTotalICBOutputModel totalIcb = new ImpuestoTotalICBOutputModel();
-        totalIcb.setImporte(importeTotalIcb);
-        totalIcb.setCategoria(Catalog5.ICBPER);
-
-        $output.getTotalImpuestosIcb().add(totalIcb);
-    }
-
-    // exonerado
-    java.util.function.Supplier<Stream<DetalleOutputModel>> totalExoneradoStream = () -> $output.getDetalle().stream().filter(e -> e.getIgv().getTipo().getTaxCategory().equals(Catalog5.EXONERADO));
-    BigDecimal importeTotalExonerado = BigDecimal.ZERO;
-    BigDecimal baseImponibleTotalExonerado = totalExoneradoStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    if (baseImponibleTotalExonerado.compareTo(BigDecimal.ZERO) > 0) {
-        ImpuestoTotalIGVOutputModel totalExonerado = new ImpuestoTotalIGVOutputModel();
-        totalExonerado.setImporte(importeTotalExonerado);
-        totalExonerado.setBaseImponible(baseImponibleTotalExonerado);
-        totalExonerado.setCategoria(Catalog5.EXONERADO);
-
-        $output.getTotalImpuestosIgv().add(totalExonerado);
-    }
-
-    // inafecto
-    java.util.function.Supplier<Stream<DetalleOutputModel>> totalInafectoStream = () -> $output.getDetalle().stream().filter(f -> f.getIgv().getTipo().getTaxCategory().equals(Catalog5.INAFECTO));
-    BigDecimal importeTotalInafecto = BigDecimal.ZERO;
-    BigDecimal baseImponibleTotalInafecto = totalInafectoStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    if (baseImponibleTotalInafecto.compareTo(BigDecimal.ZERO) > 0) {
-        ImpuestoTotalIGVOutputModel totalInafecto = new ImpuestoTotalIGVOutputModel();
-        totalInafecto.setImporte(importeTotalInafecto);
-        totalInafecto.setBaseImponible(baseImponibleTotalInafecto);
-        totalInafecto.setCategoria(Catalog5.INAFECTO);
-
-        $output.getTotalImpuestosIgv().add(totalInafecto);
-    }
-
-    // gratuito
-    java.util.function.Supplier<Stream<DetalleOutputModel>> totalGratuitoStream = () -> $output.getDetalle().stream().filter(g -> g.getIgv().getTipo().getTaxCategory().equals(Catalog5.GRATUITO));
-//    BigDecimal importeTotalGratuito = totalGratuitoStream.get().map(f -> f.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
-    BigDecimal importeTotalGratuito = BigDecimal.ZERO;
-    BigDecimal baseImponibleTotalGratuito = totalGratuitoStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
-
-    if (baseImponibleTotalGratuito.compareTo(BigDecimal.ZERO) > 0) {
-        ImpuestoTotalIGVOutputModel totalGratuito = new ImpuestoTotalIGVOutputModel();
-        totalGratuito.setImporte(importeTotalGratuito);
-        totalGratuito.setBaseImponible(baseImponibleTotalGratuito);
-        totalGratuito.setCategoria(Catalog5.GRATUITO);
-
-        $output.getTotalImpuestosIgv().add(totalGratuito);
-    }
-
-
-    // TOTAL PAYABLE
-    BigDecimal totalDescuentos = $input.getTotalDescuentos() != null
-            ? $input.getTotalDescuentos()
-            : BigDecimal.ZERO;
-    BigDecimal totalOtrosCargos = $input.getTotalOtrosCargos() != null
-            ? $input.getTotalOtrosCargos()
-            : BigDecimal.ZERO;
-    BigDecimal importeTotal = $output.getDetalle()
-            .stream()
-            .filter(p -> !p.getIgv().getTipo().getTaxCategory().equals(Catalog5.GRATUITO))
-            .map(DetalleOutputModel::getTotal)
-            .reduce(BigDecimal.ZERO, BigDecimal::add)
-            .subtract(totalDescuentos)
-            .add(totalOtrosCargos);
-
-    BigDecimal icbTotal = $output.getDetalle()
-                 .stream()
-                 .filter(p -> p.getIcb() != null)
-                 .map(p -> p.getIcb().getImporte())
-                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    importeTotal = importeTotal.add(icbTotal);
-
-    $output.setTotalValorVenta(null);
-    $output.setTotalPrecioVenta(null);
-    $output.setTotalDescuentos(totalDescuentos);
-    $output.setTotalOtrosCargos(totalOtrosCargos);
-    $output.setImporteTotal(importeTotal);
-end
+//package org.openublpe.xmlbuilder.rules.files.standard;
+//
+//import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+//import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
+//import org.openublpe.xmlbuilder.core.models.output.standard.DetalleOutputModel;
+//import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalOutputModel;
+//import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalICBOutputModel;
+//import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
+//import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
+//import java.math.BigDecimal;
+//import java.util.ArrayList;
+//import java.util.stream.Stream
+//import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalICBOutputModel
+//import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalOutputModel
+//import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5
+//import org.openublpe.xmlbuilder.core.models.output.standard.DetalleOutputModel;
+//
+//dialect "java"
+//
+////rule "Tax Total and Monetary Total" salience -1
+////when
+////    $input : DocumentInputModel()
+////    $output : DocumentOutputModel()
+////then
+////    // TOTAL IMPUESTOS
+////    BigDecimal totalIGV = $output.getDetalle()
+////        .stream()
+////        .filter(p -> p.getIgv().getCategoria().equals(Catalog5.IGV))
+////        .map(m -> m.getIgv().getImporte())
+////        .reduce(BigDecimal.ZERO, BigDecimal::add);
+////
+////    $output.setImporteTotalImpuestos(totalIGV);
+////
+////
+////    // TOTAL IMPUESTOS - SUBTOTALES
+////    $output.setTotalImpuestosIgv(new ArrayList<>());
+////    $output.setTotalImpuestosIcb(new ArrayList<>());
+////
+////    // igv
+////    java.util.function.Supplier<Stream<DetalleOutputModel>> totalIgvStream = () -> $output.getDetalle().stream().filter(i -> i.getIgv().getTipo().getTaxCategory().equals(Catalog5.IGV));
+////    BigDecimal importeTotalGravado = totalIgvStream.get().map(s -> s.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
+////    BigDecimal baseImponibleTotalGravado = totalIgvStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+////
+////    if (baseImponibleTotalGravado.compareTo(BigDecimal.ZERO) > 0) {
+////        ImpuestoTotalOutputModel totalGravado = new ImpuestoTotalOutputModel();
+////        totalGravado.setImporte(importeTotalGravado);
+////        totalGravado.setBaseImponible(baseImponibleTotalGravado);
+////        totalGravado.setCategoria(Catalog5.IGV);
+////
+////        $output.getTotalImpuestosIgv().add(totalGravado);
+////    }
+////
+////    // icb
+////    java.util.function.Supplier<Stream<DetalleOutputModel>> totalIcbStream = () -> $output.getDetalle().stream().filter(c -> c.getIcb() != null);
+////    BigDecimal importeTotalIcb = totalIcbStream.get().map(s -> s.getIcb().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
+////
+////    if (importeTotalIcb.compareTo(BigDecimal.ZERO) > 0) {
+////        ImpuestoTotalICBOutputModel totalIcb = new ImpuestoTotalICBOutputModel();
+////        totalIcb.setImporte(importeTotalIcb);
+////        totalIcb.setCategoria(Catalog5.ICBPER);
+////
+////        $output.getTotalImpuestosIcb().add(totalIcb);
+////    }
+////
+////    // exonerado
+////    java.util.function.Supplier<Stream<DetalleOutputModel>> totalExoneradoStream = () -> $output.getDetalle().stream().filter(e -> e.getIgv().getTipo().getTaxCategory().equals(Catalog5.EXONERADO));
+////    BigDecimal importeTotalExonerado = BigDecimal.ZERO;
+////    BigDecimal baseImponibleTotalExonerado = totalExoneradoStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+////
+////    if (baseImponibleTotalExonerado.compareTo(BigDecimal.ZERO) > 0) {
+////        ImpuestoTotalOutputModel totalExonerado = new ImpuestoTotalOutputModel();
+////        totalExonerado.setImporte(importeTotalExonerado);
+////        totalExonerado.setBaseImponible(baseImponibleTotalExonerado);
+////        totalExonerado.setCategoria(Catalog5.EXONERADO);
+////
+////        $output.getTotalImpuestosIgv().add(totalExonerado);
+////    }
+////
+////    // inafecto
+////    java.util.function.Supplier<Stream<DetalleOutputModel>> totalInafectoStream = () -> $output.getDetalle().stream().filter(f -> f.getIgv().getTipo().getTaxCategory().equals(Catalog5.INAFECTO));
+////    BigDecimal importeTotalInafecto = BigDecimal.ZERO;
+////    BigDecimal baseImponibleTotalInafecto = totalInafectoStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+////
+////    if (baseImponibleTotalInafecto.compareTo(BigDecimal.ZERO) > 0) {
+////        ImpuestoTotalOutputModel totalInafecto = new ImpuestoTotalOutputModel();
+////        totalInafecto.setImporte(importeTotalInafecto);
+////        totalInafecto.setBaseImponible(baseImponibleTotalInafecto);
+////        totalInafecto.setCategoria(Catalog5.INAFECTO);
+////
+////        $output.getTotalImpuestosIgv().add(totalInafecto);
+////    }
+////
+////    // gratuito
+////    java.util.function.Supplier<Stream<DetalleOutputModel>> totalGratuitoStream = () -> $output.getDetalle().stream().filter(g -> g.getIgv().getTipo().getTaxCategory().equals(Catalog5.GRATUITO));
+//////    BigDecimal importeTotalGratuito = totalGratuitoStream.get().map(f -> f.getIgv().getImporte()).reduce(BigDecimal.ZERO, BigDecimal::add);
+////    BigDecimal importeTotalGratuito = BigDecimal.ZERO;
+////    BigDecimal baseImponibleTotalGratuito = totalGratuitoStream.get().map(DetalleOutputModel::getSubtotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+////
+////    if (baseImponibleTotalGratuito.compareTo(BigDecimal.ZERO) > 0) {
+////        ImpuestoTotalOutputModel totalGratuito = new ImpuestoTotalOutputModel();
+////        totalGratuito.setImporte(importeTotalGratuito);
+////        totalGratuito.setBaseImponible(baseImponibleTotalGratuito);
+////        totalGratuito.setCategoria(Catalog5.GRATUITO);
+////
+////        $output.getTotalImpuestosIgv().add(totalGratuito);
+////    }
+////
+////
+////    // TOTAL PAYABLE
+////    BigDecimal totalDescuentos = $input.getTotalDescuentos() != null
+////            ? $input.getTotalDescuentos()
+////            : BigDecimal.ZERO;
+////    BigDecimal totalOtrosCargos = $input.getTotalOtrosCargos() != null
+////            ? $input.getTotalOtrosCargos()
+////            : BigDecimal.ZERO;
+////    BigDecimal importeTotal = $output.getDetalle()
+////            .stream()
+////            .filter(p -> !p.getIgv().getTipo().getTaxCategory().equals(Catalog5.GRATUITO))
+////            .map(DetalleOutputModel::getTotal)
+////            .reduce(BigDecimal.ZERO, BigDecimal::add)
+////            .subtract(totalDescuentos)
+////            .add(totalOtrosCargos);
+////
+////    BigDecimal icbTotal = $output.getDetalle()
+////                 .stream()
+////                 .filter(p -> p.getIcb() != null)
+////                 .map(p -> p.getIcb().getImporte())
+////                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+////    importeTotal = importeTotal.add(icbTotal);
+////
+////    $output.setTotalValorVenta(null);
+////    $output.setTotalPrecioVenta(null);
+////    $output.setTotalDescuentos(totalDescuentos);
+////    $output.setTotalOtrosCargos(totalOtrosCargos);
+////    $output.setImporteTotal(importeTotal);
+////end

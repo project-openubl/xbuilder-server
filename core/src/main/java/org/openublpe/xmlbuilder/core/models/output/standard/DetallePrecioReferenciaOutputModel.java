@@ -18,11 +18,19 @@ package org.openublpe.xmlbuilder.core.models.output.standard;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog16;
 
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class DetallePrecioReferenciaOutputModel {
 
+    @Min(0)
+    @NotNull
+    @Digits(integer = 100, fraction = 2)
     private BigDecimal precio;
+
+    @NotNull
     private Catalog16 tipoPrecio;
 
     public DetallePrecioReferenciaOutputModel() {

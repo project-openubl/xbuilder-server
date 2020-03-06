@@ -17,7 +17,7 @@
 package org.openublpe.xmlbuilder.inputdata.generator.invoice;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
-import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.inputdata.generator.AbstractInvoiceInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.InvoiceInputGenerator;
@@ -31,40 +31,40 @@ public class Invoice_ComplexInputGenerator extends AbstractInvoiceInputGenerator
     public InvoiceInputModel getInput() {
         InvoiceInputModel input = getInvoiceTemplate();
 
-        DetalleInputModel item1 = new DetalleInputModel();
+        DocumentLineInputModel item1 = new DocumentLineInputModel();
         input.getDetalle().add(item1);
         item1.setDescripcion("item");
         item1.setCantidad(new BigDecimal("1"));
         item1.setPrecioUnitario(new BigDecimal("118"));
-        item1.setTipoIGV(Catalog7.GRAVADO_OPERACION_ONEROSA.toString());
+        item1.setTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString());
 
-        DetalleInputModel item2 = new DetalleInputModel();
+        DocumentLineInputModel item2 = new DocumentLineInputModel();
         input.getDetalle().add(item2);
         item2.setDescripcion("item");
         item2.setCantidad(new BigDecimal("1"));
         item2.setPrecioUnitario(new BigDecimal("100"));
-        item2.setTipoIGV(Catalog7.GRAVADO_RETIRO_POR_PREMIO.toString());
+        item2.setTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PREMIO.toString());
 
-        DetalleInputModel item3 = new DetalleInputModel();
+        DocumentLineInputModel item3 = new DocumentLineInputModel();
         input.getDetalle().add(item3);
         item3.setDescripcion("item");
         item3.setCantidad(new BigDecimal("1"));
         item3.setPrecioUnitario(new BigDecimal("100"));
-        item3.setTipoIGV(Catalog7.EXONERADO_OPERACION_ONEROSA.toString());
+        item3.setTipoIgv(Catalog7.EXONERADO_OPERACION_ONEROSA.toString());
 
-        DetalleInputModel item4 = new DetalleInputModel();
+        DocumentLineInputModel item4 = new DocumentLineInputModel();
         input.getDetalle().add(item4);
         item4.setDescripcion("item");
         item4.setCantidad(new BigDecimal("1"));
         item4.setPrecioUnitario(new BigDecimal("100"));
-        item4.setTipoIGV(Catalog7.INAFECTO_OPERACION_ONEROSA.toString());
+        item4.setTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString());
 
-        DetalleInputModel item5 = new DetalleInputModel();
+        DocumentLineInputModel item5 = new DocumentLineInputModel();
         input.getDetalle().add(item5);
         item5.setDescripcion("item");
         item5.setCantidad(new BigDecimal("1"));
         item5.setPrecioUnitario(new BigDecimal("100"));
-        item5.setTipoIGV(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString());
+        item5.setTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString());
 
 
         return input;

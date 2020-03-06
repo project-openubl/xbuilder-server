@@ -19,23 +19,26 @@ package org.openublpe.xmlbuilder.core.models.input.common;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 public class ClienteInputModel {
 
-    @NotNull
     @NotBlank
     @CatalogConstraint(value = Catalog6.class)
     private String tipoDocumentoIdentidad;
 
-    @NotNull
     @NotBlank
     private String numeroDocumentoIdentidad;
 
-    @NotNull
     @NotBlank
     private String nombre;
+
+    @Valid
+    private DireccionInputModel direccion;
+
+    @Valid
+    private ContactoInputModel contacto;
 
     public String getTipoDocumentoIdentidad() {
         return tipoDocumentoIdentidad;
@@ -61,4 +64,19 @@ public class ClienteInputModel {
         this.nombre = nombre;
     }
 
+    public DireccionInputModel getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(DireccionInputModel direccion) {
+        this.direccion = direccion;
+    }
+
+    public ContactoInputModel getContacto() {
+        return contacto;
+    }
+
+    public void setContacto(ContactoInputModel contacto) {
+        this.contacto = contacto;
+    }
 }

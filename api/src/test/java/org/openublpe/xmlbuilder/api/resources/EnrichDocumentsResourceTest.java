@@ -39,6 +39,7 @@ import org.openublpe.xmlbuilder.core.models.output.sunat.RetentionOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
+import org.openublpe.xmlbuilder.inputdata.generator.InputGenerator;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
@@ -60,7 +61,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichInvoice() throws Exception {
-        assertFalse(INVOICES.isEmpty(), "No inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_INVOICES, INVOICES.size(), "The number of test cases is not the expected one");
 
         for (InvoiceInputModel input : INVOICES) {
             // GIVEN
@@ -96,7 +97,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichCreditNote() throws Exception {
-        assertFalse(CREDIT_NOTES.isEmpty(), "No inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_CREDIT_NOTES, CREDIT_NOTES.size(), "The number of test cases is not the expected one");
 
         for (CreditNoteInputModel input : CREDIT_NOTES) {
             // GIVEN
@@ -132,7 +133,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichDebitNote() throws Exception {
-        assertFalse(DEBIT_NOTES.isEmpty(), "No inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_DEBIT_NOTES, DEBIT_NOTES.size(), "The number of test cases is not the expected one");
 
         for (DebitNoteInputModel input : DEBIT_NOTES) {
             // GIVEN
@@ -168,7 +169,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichVoidedDocument() throws Exception {
-        assertFalse(VOIDED_DOCUMENTS.isEmpty(), "No inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_VOIDED_DOCUMENTS, VOIDED_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (VoidedDocumentInputModel input : VOIDED_DOCUMENTS) {
             // GIVEN
@@ -204,7 +205,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichSummaryDocument() throws Exception {
-        assertFalse(SUMMARY_DOCUMENTS.isEmpty(), "No inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_SUMMARY_DOCUMENTS, SUMMARY_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (SummaryDocumentInputModel input : SUMMARY_DOCUMENTS) {
             // GIVEN
@@ -240,7 +241,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichPerception() throws Exception {
-        assertFalse(PERCEPTION_DOCUMENTS.isEmpty(), "No inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_PERCEPTIONS, PERCEPTION_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (PerceptionInputModel input : PERCEPTION_DOCUMENTS) {
             // GIVEN
@@ -276,7 +277,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichRetention() throws Exception {
-        assertFalse(RETENTION_DOCUMENTS.isEmpty(), "No inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_RETENTIONS, RETENTION_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (RetentionInputModel input : RETENTION_DOCUMENTS) {
             // GIVEN
@@ -312,7 +313,7 @@ public class EnrichDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void testEnrichDespatchAdvice() throws Exception {
-        assertFalse(DESPATCH_ADVICE_DOCUMENTS.isEmpty(), "No inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_DESPATCH_ADVICES, DESPATCH_ADVICE_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (DespatchAdviceInputModel input : DESPATCH_ADVICE_DOCUMENTS) {
             // GIVEN

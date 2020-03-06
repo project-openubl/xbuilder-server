@@ -16,7 +16,7 @@
  */
 package org.openublpe.xmlbuilder.inputdata.generator.invoice;
 
-import org.openublpe.xmlbuilder.core.models.input.standard.DetalleInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.inputdata.generator.GeneralData;
 import org.openublpe.xmlbuilder.inputdata.generator.InvoiceInputGenerator;
@@ -42,10 +42,10 @@ public class Invoice_SimpleInputGenerator implements InvoiceInputGenerator {
         input.setProveedor(GeneralData.getProveedor());
         input.setCliente(GeneralData.getClienteConRUC());
 
-        List<DetalleInputModel> detalle = new ArrayList<>();
+        List<DocumentLineInputModel> detalle = new ArrayList<>();
         input.setDetalle(detalle);
 
-        DetalleInputModel item1 = new DetalleInputModel();
+        DocumentLineInputModel item1 = new DocumentLineInputModel();
         detalle.add(item1);
         item1.setDescripcion("Item");
         item1.setCantidad(BigDecimal.ONE);

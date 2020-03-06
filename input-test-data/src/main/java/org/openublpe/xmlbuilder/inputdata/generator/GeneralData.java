@@ -38,7 +38,7 @@ public class GeneralData {
         ProveedorInputModel proveedor = new ProveedorInputModel();
         proveedor.setRuc("22222222222");
         proveedor.setRazonSocial("Proveedor");
-        proveedor.setCodigoPostal("010101");
+//        proveedor.setCodigoPostal("010101");
         return proveedor;
     }
 

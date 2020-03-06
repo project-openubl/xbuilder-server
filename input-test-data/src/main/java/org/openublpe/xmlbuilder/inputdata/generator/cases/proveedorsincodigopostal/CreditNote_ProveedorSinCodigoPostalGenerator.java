@@ -35,8 +35,8 @@ public class CreditNote_ProveedorSinCodigoPostalGenerator implements CreditNoteI
         calendar.set(2019, Calendar.FEBRUARY, 1, 18, 30, 0);
         input.setFechaEmision(calendar.getTimeInMillis());
 
-        input.setSerieNumeroInvoiceReference("F009-9");
-        input.setDescripcionSustentoInvoiceReference("Comprobante rechazado");
+        input.setSerieNumeroComprobanteAfectado("F009-9");
+        input.setDescripcionSustento("Comprobante rechazado");
 
         // Proveedor
         input.setProveedor(Utils.getProveedor());

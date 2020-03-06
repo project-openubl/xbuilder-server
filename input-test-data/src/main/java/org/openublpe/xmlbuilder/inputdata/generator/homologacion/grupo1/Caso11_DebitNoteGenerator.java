@@ -51,8 +51,8 @@ public class Caso11_DebitNoteGenerator implements DebitNoteInputGenerator {
                     debitNote.setCliente(invoice.getCliente());
                     debitNote.setDetalle(invoice.getDetalle());
 
-                    debitNote.setSerieNumeroInvoiceReference(invoice.getSerie() + "-" + invoice.getNumero());
-                    debitNote.setDescripcionSustentoInvoiceReference("mi descripcion o sustento");
+                    debitNote.setSerieNumeroComprobanteAfectado(invoice.getSerie() + "-" + invoice.getNumero());
+                    debitNote.setDescripcionSustento("mi descripcion o sustento");
                 }
             }
         }

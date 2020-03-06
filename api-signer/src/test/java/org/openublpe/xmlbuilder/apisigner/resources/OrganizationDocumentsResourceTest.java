@@ -43,6 +43,7 @@ import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputMode
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.RetentionOutputModel;
 import org.openublpe.xmlbuilder.inputdata.AbstractInputDataTest;
+import org.openublpe.xmlbuilder.inputdata.generator.InputGenerator;
 import org.xml.sax.SAXException;
 import sunat.names.specification.ubl.peru.schema.xsd.voideddocuments_1.VoidedDocumentsType;
 
@@ -74,7 +75,7 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void createInvoiceXml() throws IOException, SAXException, XpathException {
-        assertFalse(INVOICES.isEmpty(), "no inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_INVOICES, INVOICES.size(), "The number of test cases is not the expected one");
 
         for (InvoiceInputModel input : INVOICES) {
             // GIVEN
@@ -102,7 +103,7 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void createCreditNoteXml() throws IOException, SAXException, XpathException {
-        assertFalse(CREDIT_NOTES.isEmpty(), "no inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_CREDIT_NOTES, CREDIT_NOTES.size(), "The number of test cases is not the expected one");
 
         for (CreditNoteInputModel input : CREDIT_NOTES) {
             // GIVEN
@@ -130,7 +131,7 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void createDebitNoteXml() throws IOException, SAXException, XpathException {
-        assertFalse(DEBIT_NOTES.isEmpty(), "no inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_DEBIT_NOTES, DEBIT_NOTES.size(), "The number of test cases is not the expected one");
 
         for (DebitNoteInputModel input : DEBIT_NOTES) {
             // GIVEN
@@ -157,7 +158,7 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void createVoidedDocumentXml() throws IOException, SAXException, XpathException {
-        assertFalse(VOIDED_DOCUMENTS.isEmpty(), "no inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_VOIDED_DOCUMENTS, VOIDED_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (VoidedDocumentInputModel input : VOIDED_DOCUMENTS) {
             // GIVEN
@@ -185,7 +186,7 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void createSummaryDocumentXml() throws IOException, SAXException, XpathException {
-        assertFalse(SUMMARY_DOCUMENTS.isEmpty(), "no inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_SUMMARY_DOCUMENTS, SUMMARY_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (SummaryDocumentInputModel input : SUMMARY_DOCUMENTS) {
             // GIVEN
@@ -213,7 +214,7 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void createPerceptionXml() throws IOException, SAXException, XpathException {
-        assertFalse(PERCEPTION_DOCUMENTS.isEmpty(), "no inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_PERCEPTIONS, PERCEPTION_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (PerceptionInputModel input : PERCEPTION_DOCUMENTS) {
             // GIVEN
@@ -241,7 +242,7 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void createRetentionXml() throws IOException, SAXException, XpathException {
-        assertFalse(RETENTION_DOCUMENTS.isEmpty(), "no inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_RETENTIONS, RETENTION_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (RetentionInputModel input : RETENTION_DOCUMENTS) {
             // GIVEN
@@ -269,7 +270,7 @@ class OrganizationDocumentsResourceTest extends AbstractInputDataTest {
 
     @Test
     void createDespatchAdviceXml() throws IOException, SAXException, XpathException {
-        assertFalse(DESPATCH_ADVICE_DOCUMENTS.isEmpty(), "no inputs to test");
+        assertEquals(InputGenerator.NUMBER_TEST_DESPATCH_ADVICES, DESPATCH_ADVICE_DOCUMENTS.size(), "The number of test cases is not the expected one");
 
         for (DespatchAdviceInputModel input : DESPATCH_ADVICE_DOCUMENTS) {
             // GIVEN

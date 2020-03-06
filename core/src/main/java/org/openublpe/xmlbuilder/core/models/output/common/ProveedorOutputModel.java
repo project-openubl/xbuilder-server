@@ -16,12 +16,14 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.common;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class ProveedorOutputModel {
 
     @NotBlank
+    @Size(min = 11, max = 11)
     private String ruc;
 
     private String nombreComercial;
@@ -29,8 +31,11 @@ public class ProveedorOutputModel {
     @NotBlank
     private String razonSocial;
 
-    @Size(min = 6, max = 6)
-    private String codigoPostal;
+    @Valid
+    private DireccionOutputModel direccion;
+
+    @Valid
+    private ContactoOutputModel contacto;
 
     public String getRuc() {
         return ruc;
@@ -56,11 +61,19 @@ public class ProveedorOutputModel {
         this.razonSocial = razonSocial;
     }
 
-    public String getCodigoPostal() {
-        return codigoPostal;
+    public DireccionOutputModel getDireccion() {
+        return direccion;
     }
 
-    public void setCodigoPostal(String codigoPostal) {
-        this.codigoPostal = codigoPostal;
+    public void setDireccion(DireccionOutputModel direccion) {
+        this.direccion = direccion;
+    }
+
+    public ContactoOutputModel getContacto() {
+        return contacto;
+    }
+
+    public void setContacto(ContactoOutputModel contacto) {
+        this.contacto = contacto;
     }
 }
