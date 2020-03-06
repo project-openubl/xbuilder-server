@@ -1,11 +1,15 @@
 package org.openublpe.xmlbuilder.rules.files.standard;
 
-import org.openublpe.xmlbuilder.core.models.inputoutput.ProveedorInputOutputModel;
-import org.openublpe.xmlbuilder.core.models.inputoutput.DireccionInputOutputModel;
+import org.openublpe.xmlbuilder.rules.files.standard.ProveedorInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.DireccionInputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.DireccionOutputModel;
 
 dialect "java"
+
+declare DireccionInputOutputModel
+   input : DireccionInputModel
+   output : DireccionOutputModel
+end
 
 rule "PROVEEDOR_IO_DIRECCION_INIT"
 when

@@ -1,6 +1,5 @@
 package org.openublpe.xmlbuilder.rules.files.standard;
 
-import org.openublpe.xmlbuilder.core.models.inputoutput.DocumentInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 import java.util.Calendar;
@@ -8,9 +7,14 @@ import java.util.Calendar;
 import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
 import function org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarTime;
 
+global java.lang.String DEFAULT_MONEDA;
+
 dialect "java"
 
-global java.lang.String DEFAULT_MONEDA;
+declare DocumentInputOutputModel
+   input : DocumentInputModel
+   output : DocumentOutputModel
+end
 
 rule "DOCUMENT_INIT"
 when

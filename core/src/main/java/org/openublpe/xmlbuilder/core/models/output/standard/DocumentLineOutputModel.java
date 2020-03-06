@@ -22,7 +22,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
@@ -62,14 +61,14 @@ public class DocumentLineOutputModel {
     private BigDecimal total;
 
     @Valid
-    @NotNull
-    private DetallePrecioReferenciaOutputModel precioDeReferencia;
-
-    @Valid
     private List<CargoDescuentoOutputModel> cargos;
 
     @Valid
     private List<CargoDescuentoOutputModel> descuentos;
+
+    @Valid
+    @NotNull
+    private DetallePrecioReferenciaOutputModel precioDeReferencia;
 
     @Min(0)
     @NotNull
@@ -84,10 +83,10 @@ public class DocumentLineOutputModel {
     private ImpuestoDetalladoICBOutputModel icb;
 
     @Valid
-    private ImpuestoDetalladoOutputModel otroTributo;
+    private ImpuestoDetalladoISCOutputModel isc;
 
     @Valid
-    private ImpuestoDetalladoISCOutputModelImpl isc;
+    private ImpuestoDetalladoOutputModel otroTributo;
 
     public String getDescripcion() {
         return descripcion;
@@ -193,11 +192,11 @@ public class DocumentLineOutputModel {
         this.otroTributo = otroTributo;
     }
 
-    public ImpuestoDetalladoISCOutputModelImpl getIsc() {
+    public ImpuestoDetalladoISCOutputModel getIsc() {
         return isc;
     }
 
-    public void setIsc(ImpuestoDetalladoISCOutputModelImpl isc) {
+    public void setIsc(ImpuestoDetalladoISCOutputModel isc) {
         this.isc = isc;
     }
 

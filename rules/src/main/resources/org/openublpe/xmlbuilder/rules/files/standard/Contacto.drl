@@ -1,11 +1,15 @@
 package org.openublpe.xmlbuilder.rules.files.standard;
 
-import org.openublpe.xmlbuilder.core.models.inputoutput.ProveedorInputOutputModel;
-import org.openublpe.xmlbuilder.core.models.inputoutput.ContactoInputOutputModel;
+import org.openublpe.xmlbuilder.rules.files.standard.ProveedorInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ContactoInputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ContactoOutputModel;
 
 dialect "java"
+
+declare ContactoInputOutputModel
+   input : ContactoInputModel
+   output : ContactoOutputModel
+end
 
 rule "PROVEEDOR_IO_CONTACTO_INIT"
 when

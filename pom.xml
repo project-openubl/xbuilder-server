@@ -43,6 +43,9 @@
 
         <license.dir>${basedir}</license.dir>
 
+        <!-- Kogito-->
+        <version.org.kie.kogito>0.6.1</version.org.kie.kogito>
+
         <!--UI-->
         <xml-builder-ui.version>0.0.2</xml-builder-ui.version>
         <xml-builder-ee-ui.version>0.0.2</xml-builder-ee-ui.version>
@@ -57,6 +60,54 @@
                 <version>${quarkus.platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!--Kogito-->
+            <dependency>
+                <groupId>org.kie.kogito</groupId>
+                <artifactId>kogito-deps-bom</artifactId>
+                <version>${version.org.kie.kogito}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.kie.kogito</groupId>
+                <artifactId>kogito-bom</artifactId>
+                <version>${version.org.kie.kogito}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- make sure that kogito dependencies are taken from current version instead of quarkus bom-->
+            <dependency>
+                <groupId>org.kie.kogito</groupId>
+                <artifactId>kogito-api</artifactId>
+                <version>${version.org.kie.kogito}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kie.kogito</groupId>
+                <artifactId>drools-model-compiler</artifactId>
+                <version>${version.org.kie.kogito}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kie.kogito</groupId>
+                <artifactId>drools-core</artifactId>
+                <version>${version.org.kie.kogito}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kie.kogito</groupId>
+                <artifactId>drools-core-static</artifactId>
+                <version>${version.org.kie.kogito}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kie.kogito</groupId>
+                <artifactId>kogito-codegen</artifactId>
+                <version>${version.org.kie.kogito}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kie.kogito</groupId>
+                <artifactId>drools-decisiontables</artifactId>
+                <version>${version.org.kie.kogito}</version>
             </dependency>
 
             <!--XML Utils-->
@@ -153,8 +204,8 @@
         <module>templates</module>
         <module>rules</module>
         <module>api-core</module>
-        <module>api</module>
-        <module>api-signer</module>
+<!--        <module>api</module>-->
+<!--        <module>api-signer</module>-->
         <module>ui</module>
     </modules>
 

@@ -42,12 +42,12 @@ public class DocumentLineInputModel {
     private BigDecimal cantidad;
 
     /**
-     * Precio con impuestos
+     * Precio sin impuestos
      */
     @Positive
     @Digits(integer = 100, fraction = 2)
     private BigDecimal valorUnitario;
-    
+
     /**
      * Precio con impuestos
      */

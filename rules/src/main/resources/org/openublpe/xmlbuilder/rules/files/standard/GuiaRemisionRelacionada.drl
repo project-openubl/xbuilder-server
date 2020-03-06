@@ -1,7 +1,6 @@
 package org.openublpe.xmlbuilder.rules.files.standard;
 
-import org.openublpe.xmlbuilder.core.models.inputoutput.DocumentInputOutputModel;
-import org.openublpe.xmlbuilder.core.models.inputoutput.GuiaRemisionRelacionadaInputOutputModel;
+import org.openublpe.xmlbuilder.rules.files.standard.DocumentInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.GuiaRemisionRelacionadaInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.GuiaRemisionRelacionadaOutputModel;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
@@ -9,6 +8,11 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import java.util.ArrayList;
 
 dialect "java"
+
+declare GuiaRemisionRelacionadaInputOutputModel
+   input : GuiaRemisionRelacionadaInputModel
+   output : GuiaRemisionRelacionadaOutputModel
+end
 
 rule "GUIA_REMISION_RELACIONADA_IO_INIT"
 when

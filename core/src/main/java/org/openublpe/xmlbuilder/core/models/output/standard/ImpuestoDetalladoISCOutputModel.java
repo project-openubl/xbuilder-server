@@ -4,7 +4,7 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog8;
 
 import javax.validation.constraints.NotNull;
 
-public class ImpuestoDetalladoISCOutputModelImpl extends ImpuestoDetalladoOutputModel {
+public class ImpuestoDetalladoISCOutputModel extends ImpuestoDetalladoOutputModel {
 
     @NotNull
     private Catalog8 tipo;

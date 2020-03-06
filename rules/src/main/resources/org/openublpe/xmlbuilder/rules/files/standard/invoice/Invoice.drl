@@ -1,6 +1,5 @@
 package org.openublpe.xmlbuilder.rules.files.standard.invoice;
 
-import org.openublpe.xmlbuilder.core.models.inputoutput.DocumentInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;

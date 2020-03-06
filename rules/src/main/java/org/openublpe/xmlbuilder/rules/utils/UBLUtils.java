@@ -16,10 +16,6 @@
  */
 package org.openublpe.xmlbuilder.rules.utils;
 
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
-
-import java.math.BigDecimal;
 import java.util.regex.Pattern;
 
 public class UBLUtils {
@@ -31,7 +27,4 @@ public class UBLUtils {
         // Just static methods
     }
 
-    public static BigDecimal selectIgv(Catalog7 catalog7, BigDecimal igv) {
-        return catalog7.getGrupo().equals(Catalog7_1.GRAVADO) ? igv : BigDecimal.ZERO;
-    }
 }
