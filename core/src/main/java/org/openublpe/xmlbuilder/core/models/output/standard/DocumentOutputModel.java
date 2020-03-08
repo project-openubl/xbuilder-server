@@ -86,7 +86,7 @@ public class DocumentOutputModel {
 
     @Valid
     @NotNull
-    private List<ImpuestoTotalICBOutputModel> totalImpuestosIcb;
+    private ImpuestoTotalICBOutputModel totalImpuestosIcb;
 
     @Min(0)
     @Digits(integer = 100, fraction = 2)
@@ -97,12 +97,10 @@ public class DocumentOutputModel {
     private BigDecimal totalPrecioVenta;
 
     @Min(0)
-    @NotNull
     @Digits(integer = 100, fraction = 2)
     private BigDecimal totalDescuentos;
 
     @Min(0)
-    @NotNull
     @Digits(integer = 100, fraction = 2)
     private BigDecimal totalOtrosCargos;
 
@@ -239,11 +237,11 @@ public class DocumentOutputModel {
         this.totalImpuestos = totalImpuestos;
     }
 
-    public List<ImpuestoTotalICBOutputModel> getTotalImpuestosIcb() {
+    public ImpuestoTotalICBOutputModel getTotalImpuestosIcb() {
         return totalImpuestosIcb;
     }
 
-    public void setTotalImpuestosIcb(List<ImpuestoTotalICBOutputModel> totalImpuestosIcb) {
+    public void setTotalImpuestosIcb(ImpuestoTotalICBOutputModel totalImpuestosIcb) {
         this.totalImpuestosIcb = totalImpuestosIcb;
     }
 

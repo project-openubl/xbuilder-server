@@ -40,6 +40,17 @@ public class DocumentLineOutputModel {
     @Digits(integer = 100, fraction = 3)
     private BigDecimal cantidad;
 
+    /**
+     * Precio sin impuestos
+     */
+    @Min(0)
+    @NotNull
+    @Digits(integer = 100, fraction = 2)
+    private BigDecimal valorUnitario;
+
+    /**
+     * Precio con impuestos
+     */
     @Min(0)
     @NotNull
     @Digits(integer = 100, fraction = 2)
@@ -48,17 +59,7 @@ public class DocumentLineOutputModel {
     @Min(0)
     @NotNull
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal valorUnitario;
-
-    @Min(0)
-    @NotNull
-    @Digits(integer = 100, fraction = 2)
-    private BigDecimal subtotal;
-
-    @Min(0)
-    @NotNull
-    @Digits(integer = 100, fraction = 2)
-    private BigDecimal total;
+    private BigDecimal valorVenta;
 
     @Valid
     private List<CargoDescuentoOutputModel> cargos;
@@ -128,22 +129,6 @@ public class DocumentLineOutputModel {
         this.precioUnitario = precioUnitario;
     }
 
-    public BigDecimal getSubtotal() {
-        return subtotal;
-    }
-
-    public void setSubtotal(BigDecimal subtotal) {
-        this.subtotal = subtotal;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
     public List<CargoDescuentoOutputModel> getCargos() {
         return cargos;
     }
@@ -206,5 +191,13 @@ public class DocumentLineOutputModel {
 
     public void setPrecioDeReferencia(DetallePrecioReferenciaOutputModel precioDeReferencia) {
         this.precioDeReferencia = precioDeReferencia;
+    }
+
+    public BigDecimal getValorVenta() {
+        return valorVenta;
+    }
+
+    public void setValorVenta(BigDecimal valorVenta) {
+        this.valorVenta = valorVenta;
     }
 }

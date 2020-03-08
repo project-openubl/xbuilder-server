@@ -177,4 +177,23 @@ public class DocumentLineInputModel {
     public void setDescuentos(List<CargoDescuentoInputModel> descuentos) {
         this.descuentos = descuentos;
     }
+
+    @Override
+    public String toString() {
+        return "DocumentLineInputModel{" +
+                "descripcion='" + descripcion + '\'' +
+                ", unidadMedida='" + unidadMedida + '\'' +
+                ", cantidad=" + cantidad +
+                ", valorUnitario=" + valorUnitario +
+                ", precioUnitario=" + precioUnitario +
+                ", tipoIgv='" + tipoIgv + '\'' +
+                ", tipoIsc='" + tipoIsc + '\'' +
+                ", icb=" + icb +
+                ", otrosTributos=" + otrosTributos +
+                ", codigoProducto='" + codigoProducto + '\'' +
+                ", codigoProductoSunat='" + codigoProductoSunat + '\'' +
+                ", cargos=" + cargos +
+                ", descuentos=" + descuentos +
+                '}';
+    }
 }
