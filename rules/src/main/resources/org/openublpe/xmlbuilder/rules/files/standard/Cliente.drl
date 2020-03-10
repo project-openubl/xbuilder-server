@@ -1,5 +1,6 @@
 package org.openublpe.xmlbuilder.rules.files.standard;
 
+import org.openublpe.xmlbuilder.rules.files.standard.DocumentInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
@@ -14,13 +15,13 @@ declare ClienteInputOutputModel
    output : ClienteOutputModel
 end
 
-rule "CLIENTE_IO_INIT"
+rule "DOCUMENT_CLIENTE_IO_INIT"
 when
-    $input : DocumentInputModel(
-        cliente != null
-    )
-    $output : DocumentOutputModel(
-        cliente == null
+    $inputOutput : DocumentInputOutputModel(
+        $input : input,
+        $output : output,
+        $input.cliente != null,
+        $output.cliente == null
     )
 then
     $output.setCliente(new ClienteOutputModel());
@@ -31,9 +32,7 @@ rule "CLIENTE_IO"
 when
     $inputOutput: ClienteInputOutputModel(
         $input : input,
-        $output : output,
-        $input != null,
-        $output != null
+        $output : output
     )
 then
     $output.setNombre($input.getNombre());

@@ -1,14 +1,18 @@
 package org.openublpe.xmlbuilder.rules.files.standard.invoice;
 
-import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.rules.files.standard.DocumentInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.rules.utils.UBLUtils;
 
 dialect "java"
 
-rule "Codigo tipo comprobante - Factura/Boleta"
+declare InvoiceInputOutputModel
+    input : InvoiceInputModel
+    output : InvoiceOutputModel
+end
+
+rule "INVOICE_IO_INIT"
 when
     $inputOutput : DocumentInputOutputModel(
         input instanceof InvoiceInputModel,
@@ -20,9 +24,29 @@ then
     InvoiceInputModel invoiceInput = (InvoiceInputModel) $input;
     InvoiceOutputModel invoiceOutput = (InvoiceOutputModel) $output;
 
-    if (UBLUtils.FACTURA_SERIE_REGEX.matcher(invoiceInput.getSerie()).find()) {
-        invoiceOutput.setTipoInvoice(Catalog1.FACTURA);
-    } else if (UBLUtils.BOLETA_SERIE_REGEX.matcher(invoiceInput.getSerie()).find()) {
-       invoiceOutput.setTipoInvoice(Catalog1.BOLETA);
-    }
+    insert(new InvoiceInputOutputModel(invoiceInput, invoiceOutput));
+end
+
+rule "INVOICE_IO_TIPO_DOCUMENTO_FACTURA"
+when
+    $inputOutput : InvoiceInputOutputModel(
+        $input: input,
+        $output: output,
+        $input.serie matches "^[F|f].*$",
+        $output.tipoInvoice == null
+    )
+then
+    $output.setTipoInvoice(Catalog1.FACTURA);
+end
+
+rule "INVOICE_IO_TIPO_DOCUMENTO_BOLETA"
+when
+    $inputOutput : InvoiceInputOutputModel(
+        $input: input,
+        $output: output,
+        $input.serie matches "^[B|b].*$",
+        $output.tipoInvoice == null
+    )
+then
+    $output.setTipoInvoice(Catalog1.BOLETA);
 end

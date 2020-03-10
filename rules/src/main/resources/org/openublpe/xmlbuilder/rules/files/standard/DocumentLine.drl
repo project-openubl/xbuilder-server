@@ -21,8 +21,8 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog16
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog8;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog16;
 
 global java.math.BigDecimal IGV;
 global java.math.BigDecimal ICB;
@@ -32,8 +32,13 @@ global org.openublpe.xmlbuilder.core.models.catalogs.Catalog7 DEFAULT_TIPO_IGV;
 dialect "java"
 
 declare DocumentLineInputOutputModel
+    @Traitable
     input : DocumentLineInputModel
     output : DocumentLineOutputModel
+end
+
+declare trait DocumentLineInputOutputModelReady
+    ready: boolean
 end
 
 declare DocumentLineProcessorModel
@@ -139,7 +144,8 @@ when
     $inputOutput : DocumentInputOutputModel(
         $input : input,
         $output : output,
-        $input.detalle != null
+        $input.detalle != null,
+        $output.detalle == null
     )
 then
     $output.setDetalle(new ArrayList<>());
@@ -402,4 +408,7 @@ then
 
 
     output.setImporteTotalImpuestos(importeTotalImpuestos);
+
+//    DocumentLineInputOutputModelReady kf = don($inputOutput, DocumentLineInputOutputModelReady.class);
+//    kf.setReady(true);
 end
