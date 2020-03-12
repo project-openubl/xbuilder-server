@@ -1,0 +1,64 @@
+package org.openublpe.xmlbuilder.rules.files.standard.invoice;
+
+import org.openublpe.xmlbuilder.rules.files.standard.DocumentLineInputOutputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.invoice.CargoDescuentoInputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.invoice.CargoDescuentoOutputModel;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog53;
+
+import java.util.ArrayList;
+
+dialect "java"
+
+declare CargoDescuentoInputOutputModel
+    input : CargoDescuentoInputModel
+    output : CargoDescuentoOutputModel
+end
+
+rule "DOCUMENT_LINE_CARGOS_IO_INIT"
+when
+    $inputOutput : DocumentLineInputOutputModel(
+        $input: input,
+        $output: output,
+        $input.cargos != null,
+        $output.cargos == null
+    )
+then
+    $output.setCargos(new ArrayList<>());
+    $input.getCargos().forEach(cargoInput -> {
+        CargoDescuentoOutputModel cargoOutput = new CargoDescuentoOutputModel();
+        $output.getCargos().add(cargoOutput);
+
+        insert(new CargoDescuentoInputOutputModel(cargoInput, cargoOutput));
+    });
+end
+
+rule "DOCUMENT_LINE_DESCUENTOS_IO_INIT"
+when
+    $inputOutput : DocumentLineInputOutputModel(
+        $input: input,
+        $output: output,
+        $input.descuentos != null,
+        $output.descuentos == null
+    )
+then
+    $output.setDescuentos(new ArrayList<>());
+    $input.getDescuentos().forEach(descuentoInput -> {
+        CargoDescuentoOutputModel descuentoOutput = new CargoDescuentoOutputModel();
+        $output.getCargos().add(descuentoOutput);
+
+        insert(new CargoDescuentoInputOutputModel(descuentoInput, descuentoOutput));
+    });
+end
+
+
+rule "CARGO_DESCUENTO_IO"
+when
+    $inputOutput : CargoDescuentoInputOutputModel(
+        $input: input,
+        $output: output
+    )
+then
+    $output.setTipo(Catalog.valueOfCode(Catalog53.class, $input.getTipo()).get());
+end

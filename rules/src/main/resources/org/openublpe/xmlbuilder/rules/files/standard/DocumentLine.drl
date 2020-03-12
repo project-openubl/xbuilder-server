@@ -6,7 +6,7 @@ import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineOutputModel;
 
-import org.openublpe.xmlbuilder.rules.files.standard.DocumentInputOutputModel;
+import org.openublpe.xmlbuilder.core.models.inputoutput.DocumentInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoIGVOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoISCOutputModel;
@@ -32,13 +32,8 @@ global org.openublpe.xmlbuilder.core.models.catalogs.Catalog7 DEFAULT_TIPO_IGV;
 dialect "java"
 
 declare DocumentLineInputOutputModel
-    @Traitable
     input : DocumentLineInputModel
     output : DocumentLineOutputModel
-end
-
-declare trait DocumentLineInputOutputModelReady
-    ready: boolean
 end
 
 declare DocumentLineProcessorModel
@@ -166,10 +161,11 @@ when
     )
 then
     $output.setDescripcion($input.getDescripcion());
+    $output.setUnidadMedida($input.getUnidadMedida() != null ? $input.getUnidadMedida() : DEFAULT_UNIDAD_MEDIDA);
+
     $output.setCantidad($input.getCantidad());
     $output.setValorUnitario($input.getValorUnitario());
     $output.setPrecioUnitario($input.getPrecioUnitario());
-    $output.setUnidadMedida($input.getUnidadMedida() != null ? $input.getUnidadMedida() : DEFAULT_UNIDAD_MEDIDA);
 
     //
     if ($output.getValorUnitario() != null) {
@@ -408,7 +404,4 @@ then
 
 
     output.setImporteTotalImpuestos(importeTotalImpuestos);
-
-//    DocumentLineInputOutputModelReady kf = don($inputOutput, DocumentLineInputOutputModelReady.class);
-//    kf.setReady(true);
 end

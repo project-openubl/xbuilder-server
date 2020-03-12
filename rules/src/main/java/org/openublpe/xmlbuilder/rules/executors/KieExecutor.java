@@ -33,6 +33,7 @@ import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.inputoutput.DocumentInputOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
@@ -108,8 +109,7 @@ public class KieExecutor {
         KieSession ksession = runtimeBuilder.newKieSession();
         setGlobalVariables(ksession);
 
-        ksession.insert(output);
-        ksession.insert(input);
+        ksession.insert(new DocumentInputOutputModel(input, output));
         ksession.fireAllRules();
 
         return output;
