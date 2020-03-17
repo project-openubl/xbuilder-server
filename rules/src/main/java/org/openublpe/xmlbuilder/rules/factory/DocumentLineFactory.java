@@ -88,7 +88,8 @@ public class DocumentLineFactory {
         );
 
         // Valor de venta (sin impuestos)
-        BigDecimal valorVenta = input.getCantidad().multiply(precioConImpuestos).setScale(2, RoundingMode.HALF_EVEN);;
+        BigDecimal valorVenta = input.getCantidad().multiply(precioConImpuestos).setScale(2, RoundingMode.HALF_EVEN);
+        ;
         if (impuestosOutput.getIgv().getTipo().isOperacionOnerosa()) {
             valorVenta = valorVenta.subtract(impuestosOutput.getImporteTotal());
         }
@@ -108,7 +109,7 @@ public class DocumentLineFactory {
         BigDecimal igvValor;
         if (igvTipo.getGrupo().equals(Catalog7_1.GRAVADO)) {
             igvValor = igvTipo.equals(Catalog7.GRAVADO_IVAP) ? ivap : igv;
-        } else  {
+        } else {
             igvValor = BigDecimal.ZERO;
         }
 
@@ -135,17 +136,24 @@ public class DocumentLineFactory {
         Catalog7 igvTipo = input.getTipoIgv() != null
                 ? Catalog.valueOfCode(Catalog7.class, input.getTipoIgv()).orElseThrow(Catalog.invalidCatalogValue)
                 : Catalog.valueOfCode(Catalog7.class, defaultTipoIgv).orElseThrow(Catalog.invalidCatalogValue);
-        BigDecimal igvValor = igvTipo.getGrupo().equals(Catalog7_1.GRAVADO) ? igv : BigDecimal.ZERO;
+
+        BigDecimal igvValor;
+        if (igvTipo.getGrupo().equals(Catalog7_1.GRAVADO)) {
+            igvValor = igvTipo.equals(Catalog7.GRAVADO_IVAP) ? ivap : igv;
+        } else {
+            igvValor = BigDecimal.ZERO;
+        }
+
         BigDecimal igvBaseImponible = total.divide(igvValor.add(BigDecimal.ONE), 2, RoundingMode.HALF_EVEN);
         BigDecimal igvImporte = total.subtract(igvBaseImponible);
 
         return DocumentLineImpuestosOutputModel.Builder.aDocumentLineImpuestosOutputModel()
                 .withIgv(ImpuestoDetalladoIGVOutputModel.Builder.anImpuestoDetalladoIGVOutputModel()
                         .withTipo(igvTipo)
-                        .withCategoria(Catalog5.IGV)
+                        .withCategoria(igvTipo.getTaxCategory())
                         .withBaseImponible(igvBaseImponible)
                         .withImporte(igvImporte)
-                        .withPorcentaje(igv.multiply(new BigDecimal("100")))
+                        .withPorcentaje(igvValor.multiply(new BigDecimal("100")))
                         .build())
                 .withImporteTotal(igvImporte)
                 .build();
