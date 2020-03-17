@@ -48,13 +48,13 @@ public class CreditNote_SimpleInputGenerator implements CreditNoteInputGenerator
         detalle.add(item1);
         item1.setDescripcion("Item1");
         item1.setCantidad(BigDecimal.ONE);
-        item1.setPrecioUnitario(BigDecimal.TEN);
+        item1.setPrecioConImpuestos(BigDecimal.TEN);
 
         DocumentLineInputModel item2 = new DocumentLineInputModel();
         detalle.add(item2);
         item2.setDescripcion("item2");
         item2.setCantidad(BigDecimal.TEN);
-        item2.setPrecioUnitario(BigDecimal.ONE);
+        item2.setPrecioConImpuestos(BigDecimal.ONE);
 
 
         input.setSerieNumeroComprobanteAfectado("F009-9");

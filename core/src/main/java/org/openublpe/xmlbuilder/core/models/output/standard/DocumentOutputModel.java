@@ -16,21 +16,19 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.standard;
 
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog52;
 import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.constraints.DocumentOutputModelConstraint;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.util.List;
 
+@DocumentOutputModelConstraint
 public class DocumentOutputModel {
 
     @NotBlank
@@ -46,13 +44,6 @@ public class DocumentOutputModel {
     @NotBlank
     private String fechaEmision;
 
-    private String fechaVencimiento;
-
-    private String observacion;
-    private String ordenDeCompra;
-
-    private List<Catalog52> leyendas;
-
     @Valid
     @NotNull
     private ClienteOutputModel cliente;
@@ -66,48 +57,15 @@ public class DocumentOutputModel {
     private ProveedorOutputModel proveedor;
 
     @Valid
-    private List<GuiaRemisionRelacionadaOutputModel> guiasDeRemisionRelacionadas;
+    @NotNull DocumentMonetaryTotalOutputModel totales;
 
     @Valid
-    private List<DocumentoTributarioRelacionadoOutputModel> documentosTributariosRelacionados;
+    @NotNull
+    private DocumentImpuestosOutputModel impuestos;
 
     @Valid
     @NotEmpty
     private List<DocumentLineOutputModel> detalle;
-
-    @Min(0)
-    @NotNull
-    @Digits(integer = 100, fraction = 2)
-    private BigDecimal importeTotalImpuestos;
-
-    @Valid
-    @NotEmpty
-    private List<ImpuestoTotalOutputModel> totalImpuestos;
-
-    @Valid
-    @NotNull
-    private ImpuestoTotalICBOutputModel totalImpuestosIcb;
-
-    @Min(0)
-    @Digits(integer = 100, fraction = 2)
-    private BigDecimal totalValorVenta;
-
-    @Min(0)
-    @Digits(integer = 100, fraction = 2)
-    private BigDecimal totalPrecioVenta;
-
-    @Min(0)
-    @Digits(integer = 100, fraction = 2)
-    private BigDecimal totalDescuentos;
-
-    @Min(0)
-    @Digits(integer = 100, fraction = 2)
-    private BigDecimal totalOtrosCargos;
-
-    @Min(0)
-    @NotNull
-    @Digits(integer = 100, fraction = 2)
-    private BigDecimal importeTotal;
 
     public String getMoneda() {
         return moneda;
@@ -141,38 +99,6 @@ public class DocumentOutputModel {
         this.fechaEmision = fechaEmision;
     }
 
-    public String getFechaVencimiento() {
-        return fechaVencimiento;
-    }
-
-    public void setFechaVencimiento(String fechaVencimiento) {
-        this.fechaVencimiento = fechaVencimiento;
-    }
-
-    public List<Catalog52> getLeyendas() {
-        return leyendas;
-    }
-
-    public void setLeyendas(List<Catalog52> leyendas) {
-        this.leyendas = leyendas;
-    }
-
-    public String getObservacion() {
-        return observacion;
-    }
-
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
-    }
-
-    public String getOrdenDeCompra() {
-        return ordenDeCompra;
-    }
-
-    public void setOrdenDeCompra(String ordenDeCompra) {
-        this.ordenDeCompra = ordenDeCompra;
-    }
-
     public ClienteOutputModel getCliente() {
         return cliente;
     }
@@ -197,20 +123,20 @@ public class DocumentOutputModel {
         this.proveedor = proveedor;
     }
 
-    public List<GuiaRemisionRelacionadaOutputModel> getGuiasDeRemisionRelacionadas() {
-        return guiasDeRemisionRelacionadas;
+    public DocumentMonetaryTotalOutputModel getTotales() {
+        return totales;
     }
 
-    public void setGuiasDeRemisionRelacionadas(List<GuiaRemisionRelacionadaOutputModel> guiasDeRemisionRelacionadas) {
-        this.guiasDeRemisionRelacionadas = guiasDeRemisionRelacionadas;
+    public void setTotales(DocumentMonetaryTotalOutputModel totales) {
+        this.totales = totales;
     }
 
-    public List<DocumentoTributarioRelacionadoOutputModel> getDocumentosTributariosRelacionados() {
-        return documentosTributariosRelacionados;
+    public DocumentImpuestosOutputModel getImpuestos() {
+        return impuestos;
     }
 
-    public void setDocumentosTributariosRelacionados(List<DocumentoTributarioRelacionadoOutputModel> documentosTributariosRelacionados) {
-        this.documentosTributariosRelacionados = documentosTributariosRelacionados;
+    public void setImpuestos(DocumentImpuestosOutputModel impuestos) {
+        this.impuestos = impuestos;
     }
 
     public List<DocumentLineOutputModel> getDetalle() {
@@ -221,67 +147,4 @@ public class DocumentOutputModel {
         this.detalle = detalle;
     }
 
-    public BigDecimal getImporteTotalImpuestos() {
-        return importeTotalImpuestos;
-    }
-
-    public void setImporteTotalImpuestos(BigDecimal importeTotalImpuestos) {
-        this.importeTotalImpuestos = importeTotalImpuestos;
-    }
-
-    public List<ImpuestoTotalOutputModel> getTotalImpuestos() {
-        return totalImpuestos;
-    }
-
-    public void setTotalImpuestos(List<ImpuestoTotalOutputModel> totalImpuestos) {
-        this.totalImpuestos = totalImpuestos;
-    }
-
-    public ImpuestoTotalICBOutputModel getTotalImpuestosIcb() {
-        return totalImpuestosIcb;
-    }
-
-    public void setTotalImpuestosIcb(ImpuestoTotalICBOutputModel totalImpuestosIcb) {
-        this.totalImpuestosIcb = totalImpuestosIcb;
-    }
-
-    public BigDecimal getTotalValorVenta() {
-        return totalValorVenta;
-    }
-
-    public void setTotalValorVenta(BigDecimal totalValorVenta) {
-        this.totalValorVenta = totalValorVenta;
-    }
-
-    public BigDecimal getTotalPrecioVenta() {
-        return totalPrecioVenta;
-    }
-
-    public void setTotalPrecioVenta(BigDecimal totalPrecioVenta) {
-        this.totalPrecioVenta = totalPrecioVenta;
-    }
-
-    public BigDecimal getTotalDescuentos() {
-        return totalDescuentos;
-    }
-
-    public void setTotalDescuentos(BigDecimal totalDescuentos) {
-        this.totalDescuentos = totalDescuentos;
-    }
-
-    public BigDecimal getTotalOtrosCargos() {
-        return totalOtrosCargos;
-    }
-
-    public void setTotalOtrosCargos(BigDecimal totalOtrosCargos) {
-        this.totalOtrosCargos = totalOtrosCargos;
-    }
-
-    public BigDecimal getImporteTotal() {
-        return importeTotal;
-    }
-
-    public void setImporteTotal(BigDecimal importeTotal) {
-        this.importeTotal = importeTotal;
-    }
 }

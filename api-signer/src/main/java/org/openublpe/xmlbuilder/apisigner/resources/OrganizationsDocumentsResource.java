@@ -107,75 +107,75 @@ public class OrganizationsDocumentsResource {
         return kieExecutor.getInvoiceOutputModel(input);
     }
 
-    @POST
-    @Path("/credit-note/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CreditNoteOutputModel enrichCreditNoteModel(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid CreditNoteInputModel input
-    ) {
-        return kieExecutor.getCreditNoteOutputModel(input);
-    }
-
-    @POST
-    @Path("/debit-note/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public DebitNoteOutputModel enrichDebitNoteModel(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid DebitNoteInputModel input
-    ) {
-        return kieExecutor.getDebitNoteOutputModel(input);
-    }
-
-    @POST
-    @Path("/voided-document/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public VoidedDocumentOutputModel enrichVoidedDocumentModel(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid VoidedDocumentInputModel input
-    ) {
-        return kieExecutor.getVoidedDocumentOutputModel(input);
-    }
-
-    @POST
-    @Path("/summary-document/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public SummaryDocumentOutputModel enrichSummaryDocumentModel(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid SummaryDocumentInputModel input
-    ) {
-        return kieExecutor.getSummaryDocumentOutputModel(input);
-    }
-
-    @POST
-    @Path("/perception/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public PerceptionOutputModel enrichPerceptionOutputModel(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid PerceptionInputModel input
-    ) {
-        return kieExecutor.getPerceptionOutputModel(input);
-    }
-
-    @POST
-    @Path("/retention/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public RetentionOutputModel enrichRetentionOutputModel(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid RetentionInputModel input
-    ) {
-        return kieExecutor.getRetentionOutputModel(input);
-    }
-
-    @POST
-    @Path("/despatch-advice/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public DespatchAdviceOutputModel enrichDespatchAdviceOutputModel(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid DespatchAdviceInputModel input
-    ) {
-        return kieExecutor.getDespatchAdviceOutputModel(input);
-    }
+//    @POST
+//    @Path("/credit-note/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public CreditNoteOutputModel enrichCreditNoteModel(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid CreditNoteInputModel input
+//    ) {
+//        return kieExecutor.getCreditNoteOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/debit-note/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public DebitNoteOutputModel enrichDebitNoteModel(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid DebitNoteInputModel input
+//    ) {
+//        return kieExecutor.getDebitNoteOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/voided-document/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public VoidedDocumentOutputModel enrichVoidedDocumentModel(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid VoidedDocumentInputModel input
+//    ) {
+//        return kieExecutor.getVoidedDocumentOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/summary-document/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public SummaryDocumentOutputModel enrichSummaryDocumentModel(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid SummaryDocumentInputModel input
+//    ) {
+//        return kieExecutor.getSummaryDocumentOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/perception/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public PerceptionOutputModel enrichPerceptionOutputModel(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid PerceptionInputModel input
+//    ) {
+//        return kieExecutor.getPerceptionOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/retention/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public RetentionOutputModel enrichRetentionOutputModel(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid RetentionInputModel input
+//    ) {
+//        return kieExecutor.getRetentionOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/despatch-advice/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public DespatchAdviceOutputModel enrichDespatchAdviceOutputModel(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid DespatchAdviceInputModel input
+//    ) {
+//        return kieExecutor.getDespatchAdviceOutputModel(input);
+//    }
 
 
     @POST
@@ -203,179 +203,179 @@ public class OrganizationsDocumentsResource {
                 .build();
     }
 
-    @POST
-    @Path("/credit-note/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createCreditNoteXml(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid CreditNoteInputModel input
-    ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-
-        CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
-        String xml = freemarkerExecutor.createCreditNote(output);
-
-        Document xmlSignedDocument;
-        try {
-            xmlSignedDocument = signXML(activeRsaKey, xml);
-        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-            throw new InternalServerErrorException(e);
-        }
-
-        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/debit-note/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createDebitNoteXml(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid DebitNoteInputModel input
-    ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-
-        DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
-        String xml = freemarkerExecutor.createDebitNote(output);
-
-        Document xmlSignedDocument;
-        try {
-            xmlSignedDocument = signXML(activeRsaKey, xml);
-        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-            throw new InternalServerErrorException(e);
-        }
-
-        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/voided-document/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createVoidedDocumentXml(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid VoidedDocumentInputModel input
-    ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-
-        VoidedDocumentOutputModel output = kieExecutor.getVoidedDocumentOutputModel(input);
-        String xml = freemarkerExecutor.createVoidedDocument(output);
-
-        Document xmlSignedDocument;
-        try {
-            xmlSignedDocument = signXML(activeRsaKey, xml);
-        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-            throw new InternalServerErrorException(e);
-        }
-
-        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/summary-document/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createSummaryDocumentXml(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid SummaryDocumentInputModel input
-    ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-
-        SummaryDocumentOutputModel output = kieExecutor.getSummaryDocumentOutputModel(input);
-        String xml = freemarkerExecutor.createSummaryDocument(output);
-
-        Document xmlSignedDocument;
-        try {
-            xmlSignedDocument = signXML(activeRsaKey, xml);
-        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-            throw new InternalServerErrorException(e);
-        }
-
-        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/perception/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createPerceptionXml(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid PerceptionInputModel input
-    ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-
-        PerceptionOutputModel output = kieExecutor.getPerceptionOutputModel(input);
-        String xml = freemarkerExecutor.createPerception(output);
-
-        Document xmlSignedDocument;
-        try {
-            xmlSignedDocument = signXML(activeRsaKey, xml);
-        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-            throw new InternalServerErrorException(e);
-        }
-
-        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/retention/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createRetentionXml(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid RetentionInputModel input
-    ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-
-        RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
-        String xml = freemarkerExecutor.createRetention(output);
-
-        Document xmlSignedDocument;
-        try {
-            xmlSignedDocument = signXML(activeRsaKey, xml);
-        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-            throw new InternalServerErrorException(e);
-        }
-
-        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/despatch-advice/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createDespatchAdviceXml(
-            @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid DespatchAdviceInputModel input
-    ) throws Exception {
-        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-
-        DespatchAdviceOutputModel output = kieExecutor.getDespatchAdviceOutputModel(input);
-        String xml = freemarkerExecutor.createDespatchAdvice(output);
-
-        Document xmlSignedDocument;
-        try {
-            xmlSignedDocument = signXML(activeRsaKey, xml);
-        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-            throw new InternalServerErrorException(e);
-        }
-
-        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
+//    @POST
+//    @Path("/credit-note/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createCreditNoteXml(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid CreditNoteInputModel input
+//    ) throws Exception {
+//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+//
+//        CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
+//        String xml = freemarkerExecutor.createCreditNote(output);
+//
+//        Document xmlSignedDocument;
+//        try {
+//            xmlSignedDocument = signXML(activeRsaKey, xml);
+//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+//            throw new InternalServerErrorException(e);
+//        }
+//
+//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/debit-note/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createDebitNoteXml(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid DebitNoteInputModel input
+//    ) throws Exception {
+//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+//
+//        DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
+//        String xml = freemarkerExecutor.createDebitNote(output);
+//
+//        Document xmlSignedDocument;
+//        try {
+//            xmlSignedDocument = signXML(activeRsaKey, xml);
+//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+//            throw new InternalServerErrorException(e);
+//        }
+//
+//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/voided-document/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createVoidedDocumentXml(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid VoidedDocumentInputModel input
+//    ) throws Exception {
+//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+//
+//        VoidedDocumentOutputModel output = kieExecutor.getVoidedDocumentOutputModel(input);
+//        String xml = freemarkerExecutor.createVoidedDocument(output);
+//
+//        Document xmlSignedDocument;
+//        try {
+//            xmlSignedDocument = signXML(activeRsaKey, xml);
+//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+//            throw new InternalServerErrorException(e);
+//        }
+//
+//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/summary-document/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createSummaryDocumentXml(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid SummaryDocumentInputModel input
+//    ) throws Exception {
+//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+//
+//        SummaryDocumentOutputModel output = kieExecutor.getSummaryDocumentOutputModel(input);
+//        String xml = freemarkerExecutor.createSummaryDocument(output);
+//
+//        Document xmlSignedDocument;
+//        try {
+//            xmlSignedDocument = signXML(activeRsaKey, xml);
+//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+//            throw new InternalServerErrorException(e);
+//        }
+//
+//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/perception/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createPerceptionXml(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid PerceptionInputModel input
+//    ) throws Exception {
+//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+//
+//        PerceptionOutputModel output = kieExecutor.getPerceptionOutputModel(input);
+//        String xml = freemarkerExecutor.createPerception(output);
+//
+//        Document xmlSignedDocument;
+//        try {
+//            xmlSignedDocument = signXML(activeRsaKey, xml);
+//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+//            throw new InternalServerErrorException(e);
+//        }
+//
+//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/retention/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createRetentionXml(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid RetentionInputModel input
+//    ) throws Exception {
+//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+//
+//        RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
+//        String xml = freemarkerExecutor.createRetention(output);
+//
+//        Document xmlSignedDocument;
+//        try {
+//            xmlSignedDocument = signXML(activeRsaKey, xml);
+//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+//            throw new InternalServerErrorException(e);
+//        }
+//
+//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/despatch-advice/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createDespatchAdviceXml(
+//            @PathParam(ORGANIZATION_ID) String organizationId,
+//            @Valid DespatchAdviceInputModel input
+//    ) throws Exception {
+//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+//
+//        DespatchAdviceOutputModel output = kieExecutor.getDespatchAdviceOutputModel(input);
+//        String xml = freemarkerExecutor.createDespatchAdvice(output);
+//
+//        Document xmlSignedDocument;
+//        try {
+//            xmlSignedDocument = signXML(activeRsaKey, xml);
+//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+//            throw new InternalServerErrorException(e);
+//        }
+//
+//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
 
 }

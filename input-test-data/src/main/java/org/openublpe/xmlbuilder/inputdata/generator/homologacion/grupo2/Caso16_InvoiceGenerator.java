@@ -57,7 +57,7 @@ public class Caso16_InvoiceGenerator implements InvoiceInputGenerator {
                         detalle.add(item);
                         item.setDescripcion("Item" + (i + 1));
                         item.setCantidad(HomologacionUtils.cantidadRandom());
-                        item.setPrecioUnitario(HomologacionUtils.precioUnitarioRandom());
+                        item.setPrecioConImpuestos(HomologacionUtils.precioUnitarioRandom());
                         item.setTipoIgv(HomologacionUtils.tipoIGVInafectaExoneradaRandom());
                     }
                 }

@@ -77,4 +77,54 @@ public class ProveedorInputModel {
     public void setContacto(ContactoInputModel contacto) {
         this.contacto = contacto;
     }
+
+    public static final class Builder {
+        private String ruc;
+        private String nombreComercial;
+        private String razonSocial;
+        private DireccionInputModel direccion;
+        private ContactoInputModel contacto;
+
+        private Builder() {
+        }
+
+        public static Builder aProveedorInputModel() {
+            return new Builder();
+        }
+
+        public Builder withRuc(String ruc) {
+            this.ruc = ruc;
+            return this;
+        }
+
+        public Builder withNombreComercial(String nombreComercial) {
+            this.nombreComercial = nombreComercial;
+            return this;
+        }
+
+        public Builder withRazonSocial(String razonSocial) {
+            this.razonSocial = razonSocial;
+            return this;
+        }
+
+        public Builder withDireccion(DireccionInputModel direccion) {
+            this.direccion = direccion;
+            return this;
+        }
+
+        public Builder withContacto(ContactoInputModel contacto) {
+            this.contacto = contacto;
+            return this;
+        }
+
+        public ProveedorInputModel build() {
+            ProveedorInputModel proveedorInputModel = new ProveedorInputModel();
+            proveedorInputModel.setRuc(ruc);
+            proveedorInputModel.setNombreComercial(nombreComercial);
+            proveedorInputModel.setRazonSocial(razonSocial);
+            proveedorInputModel.setDireccion(direccion);
+            proveedorInputModel.setContacto(contacto);
+            return proveedorInputModel;
+        }
+    }
 }

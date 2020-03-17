@@ -79,4 +79,54 @@ public class ClienteInputModel {
     public void setContacto(ContactoInputModel contacto) {
         this.contacto = contacto;
     }
+
+    public static final class Builder {
+        private String tipoDocumentoIdentidad;
+        private String numeroDocumentoIdentidad;
+        private String nombre;
+        private DireccionInputModel direccion;
+        private ContactoInputModel contacto;
+
+        private Builder() {
+        }
+
+        public static Builder aClienteInputModel() {
+            return new Builder();
+        }
+
+        public Builder withTipoDocumentoIdentidad(String tipoDocumentoIdentidad) {
+            this.tipoDocumentoIdentidad = tipoDocumentoIdentidad;
+            return this;
+        }
+
+        public Builder withNumeroDocumentoIdentidad(String numeroDocumentoIdentidad) {
+            this.numeroDocumentoIdentidad = numeroDocumentoIdentidad;
+            return this;
+        }
+
+        public Builder withNombre(String nombre) {
+            this.nombre = nombre;
+            return this;
+        }
+
+        public Builder withDireccion(DireccionInputModel direccion) {
+            this.direccion = direccion;
+            return this;
+        }
+
+        public Builder withContacto(ContactoInputModel contacto) {
+            this.contacto = contacto;
+            return this;
+        }
+
+        public ClienteInputModel build() {
+            ClienteInputModel clienteInputModel = new ClienteInputModel();
+            clienteInputModel.setTipoDocumentoIdentidad(tipoDocumentoIdentidad);
+            clienteInputModel.setNumeroDocumentoIdentidad(numeroDocumentoIdentidad);
+            clienteInputModel.setNombre(nombre);
+            clienteInputModel.setDireccion(direccion);
+            clienteInputModel.setContacto(contacto);
+            return clienteInputModel;
+        }
+    }
 }

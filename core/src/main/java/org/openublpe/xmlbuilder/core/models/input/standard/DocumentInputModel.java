@@ -33,7 +33,7 @@ import java.util.List;
 public abstract class DocumentInputModel {
 
     @NotBlank
-    @Pattern(regexp = "^[F|B].*$")
+    @Pattern(regexp = "^[F|f|B|b].*$")
     @Size(min = 4, max = 4)
     protected String serie;
 
@@ -42,31 +42,18 @@ public abstract class DocumentInputModel {
     @NotNull
     private Integer numero;
 
-    @Size(min = 3, max = 3)
-    private String moneda;
-
     private Long fechaEmision;
-    private Long fechaVencimiento;
-
-    private String observacion;
-    private String ordenDeCompra;
-
-    @Valid
-    @NotNull
-    private ProveedorInputModel proveedor;
 
     @Valid
     @NotNull
     private ClienteInputModel cliente;
 
     @Valid
+    @NotNull
+    private ProveedorInputModel proveedor;
+
+    @Valid
     private FirmanteInputModel firmante;
-
-    @Valid
-    private List<GuiaRemisionRelacionadaInputModel> guiasDeRemisionRelacionadas;
-
-    @Valid
-    private List<DocumentoTributarioRelacionadoInputModel> documentosTributariosRelacionados;
 
     @Valid
     @NotEmpty
@@ -88,44 +75,12 @@ public abstract class DocumentInputModel {
         this.numero = numero;
     }
 
-    public String getMoneda() {
-        return moneda;
-    }
-
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
-    }
-
     public Long getFechaEmision() {
         return fechaEmision;
     }
 
     public void setFechaEmision(Long fechaEmision) {
         this.fechaEmision = fechaEmision;
-    }
-
-    public Long getFechaVencimiento() {
-        return fechaVencimiento;
-    }
-
-    public void setFechaVencimiento(Long fechaVencimiento) {
-        this.fechaVencimiento = fechaVencimiento;
-    }
-
-    public String getOrdenDeCompra() {
-        return ordenDeCompra;
-    }
-
-    public void setOrdenDeCompra(String ordenDeCompra) {
-        this.ordenDeCompra = ordenDeCompra;
-    }
-
-    public ProveedorInputModel getProveedor() {
-        return proveedor;
-    }
-
-    public void setProveedor(ProveedorInputModel proveedor) {
-        this.proveedor = proveedor;
     }
 
     public ClienteInputModel getCliente() {
@@ -136,6 +91,14 @@ public abstract class DocumentInputModel {
         this.cliente = cliente;
     }
 
+    public ProveedorInputModel getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(ProveedorInputModel proveedor) {
+        this.proveedor = proveedor;
+    }
+
     public FirmanteInputModel getFirmante() {
         return firmante;
     }
@@ -144,35 +107,11 @@ public abstract class DocumentInputModel {
         this.firmante = firmante;
     }
 
-    public List<GuiaRemisionRelacionadaInputModel> getGuiasDeRemisionRelacionadas() {
-        return guiasDeRemisionRelacionadas;
-    }
-
-    public void setGuiasDeRemisionRelacionadas(List<GuiaRemisionRelacionadaInputModel> guiasDeRemisionRelacionadas) {
-        this.guiasDeRemisionRelacionadas = guiasDeRemisionRelacionadas;
-    }
-
-    public List<DocumentoTributarioRelacionadoInputModel> getDocumentosTributariosRelacionados() {
-        return documentosTributariosRelacionados;
-    }
-
-    public void setDocumentosTributariosRelacionados(List<DocumentoTributarioRelacionadoInputModel> documentosTributariosRelacionados) {
-        this.documentosTributariosRelacionados = documentosTributariosRelacionados;
-    }
-
     public List<DocumentLineInputModel> getDetalle() {
         return detalle;
     }
 
     public void setDetalle(List<DocumentLineInputModel> detalle) {
         this.detalle = detalle;
-    }
-
-    public String getObservacion() {
-        return observacion;
-    }
-
-    public void setObservacion(String observacion) {
-        this.observacion = observacion;
     }
 }

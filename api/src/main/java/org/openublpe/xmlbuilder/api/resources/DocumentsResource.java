@@ -63,54 +63,54 @@ public class DocumentsResource {
         return kieExecutor.getInvoiceOutputModel(input);
     }
 
-    @POST
-    @Path("/credit-note/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public CreditNoteOutputModel enrichCreditNoteModel(@Valid CreditNoteInputModel input) {
-        return kieExecutor.getCreditNoteOutputModel(input);
-    }
-
-    @POST
-    @Path("/debit-note/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public DebitNoteOutputModel enrichDebitNoteModel(@Valid DebitNoteInputModel input) {
-        return kieExecutor.getDebitNoteOutputModel(input);
-    }
-
-    @POST
-    @Path("/voided-document/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public VoidedDocumentOutputModel enrichVoidedDocumentModel(@Valid VoidedDocumentInputModel input) {
-        return kieExecutor.getVoidedDocumentOutputModel(input);
-    }
-
-    @POST
-    @Path("/summary-document/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public SummaryDocumentOutputModel enrichSummaryDocumentModel(@Valid SummaryDocumentInputModel input) {
-        return kieExecutor.getSummaryDocumentOutputModel(input);
-    }
-
-    @POST
-    @Path("/perception/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public PerceptionOutputModel enrichPerceptionOutputModel(@Valid PerceptionInputModel input) {
-        return kieExecutor.getPerceptionOutputModel(input);
-    }
-
-    @POST
-    @Path("/retention/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public RetentionOutputModel enrichRetentionOutputModel(@Valid RetentionInputModel input) {
-        return kieExecutor.getRetentionOutputModel(input);
-    }
-
-    @POST
-    @Path("/despatch-advice/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public DespatchAdviceOutputModel enrichDespatchAdviceOutputModel(@Valid DespatchAdviceInputModel input) {
-        return kieExecutor.getDespatchAdviceOutputModel(input);
-    }
+//    @POST
+//    @Path("/credit-note/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public CreditNoteOutputModel enrichCreditNoteModel(@Valid CreditNoteInputModel input) {
+//        return kieExecutor.getCreditNoteOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/debit-note/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public DebitNoteOutputModel enrichDebitNoteModel(@Valid DebitNoteInputModel input) {
+//        return kieExecutor.getDebitNoteOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/voided-document/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public VoidedDocumentOutputModel enrichVoidedDocumentModel(@Valid VoidedDocumentInputModel input) {
+//        return kieExecutor.getVoidedDocumentOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/summary-document/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public SummaryDocumentOutputModel enrichSummaryDocumentModel(@Valid SummaryDocumentInputModel input) {
+//        return kieExecutor.getSummaryDocumentOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/perception/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public PerceptionOutputModel enrichPerceptionOutputModel(@Valid PerceptionInputModel input) {
+//        return kieExecutor.getPerceptionOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/retention/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public RetentionOutputModel enrichRetentionOutputModel(@Valid RetentionInputModel input) {
+//        return kieExecutor.getRetentionOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/despatch-advice/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public DespatchAdviceOutputModel enrichDespatchAdviceOutputModel(@Valid DespatchAdviceInputModel input) {
+//        return kieExecutor.getDespatchAdviceOutputModel(input);
+//    }
 
 
     @POST
@@ -125,87 +125,87 @@ public class DocumentsResource {
                 .build();
     }
 
-    @POST
-    @Path("/credit-note/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createCreditNote(@Valid CreditNoteInputModel input) {
-        CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
-        String xml = freemarkerExecutor.createCreditNote(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/debit-note/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createDebitNote(@Valid DebitNoteInputModel input) {
-        DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
-        String xml = freemarkerExecutor.createDebitNote(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/voided-document/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createVoidedDocument(@Valid VoidedDocumentInputModel input) {
-        VoidedDocumentOutputModel output = kieExecutor.getVoidedDocumentOutputModel(input);
-        String xml = freemarkerExecutor.createVoidedDocument(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/summary-document/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createSummaryDocument(@Valid SummaryDocumentInputModel input) {
-        SummaryDocumentOutputModel output = kieExecutor.getSummaryDocumentOutputModel(input);
-        String xml = freemarkerExecutor.createSummaryDocument(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/perception/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createPerception(@Valid PerceptionInputModel input) {
-        PerceptionOutputModel output = kieExecutor.getPerceptionOutputModel(input);
-        String xml = freemarkerExecutor.createPerception(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/retention/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createRetention(@Valid RetentionInputModel input) {
-        RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
-        String xml = freemarkerExecutor.createRetention(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/despatch-advice/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createDespatchAdvice(@Valid DespatchAdviceInputModel input) {
-        DespatchAdviceOutputModel output = kieExecutor.getDespatchAdviceOutputModel(input);
-        String xml = freemarkerExecutor.createDespatchAdvice(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
+//    @POST
+//    @Path("/credit-note/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createCreditNote(@Valid CreditNoteInputModel input) {
+//        CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
+//        String xml = freemarkerExecutor.createCreditNote(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/debit-note/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createDebitNote(@Valid DebitNoteInputModel input) {
+//        DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
+//        String xml = freemarkerExecutor.createDebitNote(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/voided-document/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createVoidedDocument(@Valid VoidedDocumentInputModel input) {
+//        VoidedDocumentOutputModel output = kieExecutor.getVoidedDocumentOutputModel(input);
+//        String xml = freemarkerExecutor.createVoidedDocument(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/summary-document/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createSummaryDocument(@Valid SummaryDocumentInputModel input) {
+//        SummaryDocumentOutputModel output = kieExecutor.getSummaryDocumentOutputModel(input);
+//        String xml = freemarkerExecutor.createSummaryDocument(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/perception/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createPerception(@Valid PerceptionInputModel input) {
+//        PerceptionOutputModel output = kieExecutor.getPerceptionOutputModel(input);
+//        String xml = freemarkerExecutor.createPerception(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/retention/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createRetention(@Valid RetentionInputModel input) {
+//        RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
+//        String xml = freemarkerExecutor.createRetention(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/despatch-advice/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createDespatchAdvice(@Valid DespatchAdviceInputModel input) {
+//        DespatchAdviceOutputModel output = kieExecutor.getDespatchAdviceOutputModel(input);
+//        String xml = freemarkerExecutor.createDespatchAdvice(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
 }

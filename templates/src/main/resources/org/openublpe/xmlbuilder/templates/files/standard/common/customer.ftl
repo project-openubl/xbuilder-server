@@ -12,12 +12,12 @@
                 </cac:RegistrationAddress>
                 </#if>
             </cac:PartyLegalEntity>
-            <#if cliente.contacto>
+            <#if cliente.contacto??>
             <cac:Contact>
-                <#if cliente.contacto.telefono>
+                <#if cliente.contacto.telefono??>
                 <cbc:Telephone>${cliente.contacto.telefono}</cbc:Telephone>
                 </#if>
-                <#if cliente.contacto.email>
+                <#if cliente.contacto.email??>
                 <cbc:ElectronicMail>${cliente.contacto.email}</cbc:ElectronicMail>
                 </#if>
             </cac:Contact>

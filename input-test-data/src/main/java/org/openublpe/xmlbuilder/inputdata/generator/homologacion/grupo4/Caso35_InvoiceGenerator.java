@@ -22,7 +22,6 @@ import org.openublpe.xmlbuilder.inputdata.generator.GeneralData;
 import org.openublpe.xmlbuilder.inputdata.generator.InvoiceInputGenerator;
 import org.openublpe.xmlbuilder.inputdata.generator.homologacion.HomologacionUtils;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -60,7 +59,7 @@ public class Caso35_InvoiceGenerator implements InvoiceInputGenerator {
                         detalle.add(item);
                         item.setDescripcion("Item" + (i + 1));
                         item.setCantidad(HomologacionUtils.cantidadRandom());
-                        item.setPrecioUnitario(HomologacionUtils.precioUnitarioRandom());
+                        item.setPrecioConImpuestos(HomologacionUtils.precioUnitarioRandom());
                     }
                 }
             }

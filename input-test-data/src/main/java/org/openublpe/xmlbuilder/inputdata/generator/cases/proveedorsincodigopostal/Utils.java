@@ -44,7 +44,7 @@ public class Utils {
         DocumentLineInputModel item1 = new DocumentLineInputModel();
         item1.setDescripcion("item");
         item1.setCantidad(new BigDecimal("1"));
-        item1.setPrecioUnitario(new BigDecimal("118"));
+        item1.setPrecioConImpuestos(new BigDecimal("118"));
 
         detalle.add(item1);
         return detalle;

@@ -41,4 +41,33 @@ public class FirmanteOutputModel {
     public void setRazonSocial(String razonSocial) {
         this.razonSocial = razonSocial;
     }
+
+    public static final class Builder {
+        private String ruc;
+        private String razonSocial;
+
+        private Builder() {
+        }
+
+        public static Builder aFirmanteOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withRuc(String ruc) {
+            this.ruc = ruc;
+            return this;
+        }
+
+        public Builder withRazonSocial(String razonSocial) {
+            this.razonSocial = razonSocial;
+            return this;
+        }
+
+        public FirmanteOutputModel build() {
+            FirmanteOutputModel firmanteOutputModel = new FirmanteOutputModel();
+            firmanteOutputModel.setRuc(ruc);
+            firmanteOutputModel.setRazonSocial(razonSocial);
+            return firmanteOutputModel;
+        }
+    }
 }

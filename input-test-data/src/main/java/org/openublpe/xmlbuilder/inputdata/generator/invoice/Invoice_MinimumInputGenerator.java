@@ -26,7 +26,6 @@ import org.openublpe.xmlbuilder.inputdata.generator.InvoiceInputGenerator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 public class Invoice_MinimumInputGenerator implements InvoiceInputGenerator {
@@ -60,13 +59,13 @@ public class Invoice_MinimumInputGenerator implements InvoiceInputGenerator {
         detalle.add(item1);
         item1.setDescripcion("Item");
         item1.setCantidad(BigDecimal.ONE);
-        item1.setPrecioUnitario(new BigDecimal("100"));
+        item1.setPrecioConImpuestos(new BigDecimal("100"));
 
         DocumentLineInputModel item2 = new DocumentLineInputModel();
         detalle.add(item2);
         item2.setDescripcion("Item");
         item2.setCantidad(BigDecimal.ONE);
-        item2.setPrecioUnitario(new BigDecimal("100"));
+        item2.setPrecioConImpuestos(new BigDecimal("100"));
 
         return input;
     }

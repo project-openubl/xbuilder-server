@@ -16,11 +16,11 @@
     <dependencies>
         <dependency>
             <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-api-core</artifactId>
+            <artifactId>xml-builder-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-core</artifactId>
+            <artifactId>xml-builder-api-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openublpe</groupId>
@@ -83,10 +83,6 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-kogito</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jaxb</artifactId>
         </dependency>
         <dependency>
@@ -134,76 +130,10 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-test-h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
-            <version>${xmlunit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit4.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-input-test-data</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-ubl21</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-ublpe</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.carlosthe19916</groupId>
-            <artifactId>sunat-web-services</artifactId>
-            <version>${sunat-web-services.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>copy-to-output-directory</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/rules/src/main/resources/</directory>
-                                    <includes>
-                                        <include>**/*.drl</include>
-                                        <include>**/*.xml</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <outputDirectory>${project.basedir}/src/main/resources/</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.jboss.jandex</groupId>
                 <artifactId>jandex-maven-plugin</artifactId>
@@ -287,60 +217,60 @@
             </properties>
         </profile>
 
-        <profile>
-            <id>ui</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.openublpe</groupId>
-                    <artifactId>xml-builder-ui-api-signer</artifactId>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <version>3.1.1</version>
-                        <executions>
-                            <execution>
-                                <id>unpack</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.openublpe</groupId>
-                                            <artifactId>xml-builder-ui-api-signer</artifactId>
-                                            <version>${project.version}</version>
-                                            <classifier>distribution</classifier>
-                                            <type>zip</type>
-                                            <outputDirectory>${project.build.outputDirectory}/META-INF/resources/
-                                            </outputDirectory>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
+<!--        <profile>-->
+<!--            <id>ui</id>-->
+<!--            <dependencies>-->
+<!--                <dependency>-->
+<!--                    <groupId>org.openublpe</groupId>-->
+<!--                    <artifactId>xml-builder-ui-api-signer</artifactId>-->
+<!--                </dependency>-->
+<!--            </dependencies>-->
+<!--            <build>-->
+<!--                <plugins>-->
+<!--                    <plugin>-->
+<!--                        <groupId>org.apache.maven.plugins</groupId>-->
+<!--                        <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                        <version>3.1.1</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>unpack</id>-->
+<!--                                <phase>package</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>unpack</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <artifactItems>-->
+<!--                                        <artifactItem>-->
+<!--                                            <groupId>org.openublpe</groupId>-->
+<!--                                            <artifactId>xml-builder-ui-api-signer</artifactId>-->
+<!--                                            <version>${project.version}</version>-->
+<!--                                            <classifier>distribution</classifier>-->
+<!--                                            <type>zip</type>-->
+<!--                                            <outputDirectory>${project.build.outputDirectory}/META-INF/resources/-->
+<!--                                            </outputDirectory>-->
+<!--                                        </artifactItem>-->
+<!--                                    </artifactItems>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
 
-                    <!--Without this ui resources are not included in the final .jar-->
-                    <plugin>
-                        <!-- This is what injects the magic Quarkus bytecode -->
-                        <groupId>io.quarkus</groupId>
-                        <artifactId>quarkus-maven-plugin</artifactId>
-                        <version>${quarkus-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
+<!--                    &lt;!&ndash;Without this ui resources are not included in the final .jar&ndash;&gt;-->
+<!--                    <plugin>-->
+<!--                        &lt;!&ndash; This is what injects the magic Quarkus bytecode &ndash;&gt;-->
+<!--                        <groupId>io.quarkus</groupId>-->
+<!--                        <artifactId>quarkus-maven-plugin</artifactId>-->
+<!--                        <version>${quarkus-plugin.version}</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <goals>-->
+<!--                                    <goal>build</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
+<!--                </plugins>-->
+<!--            </build>-->
+<!--        </profile>-->
     </profiles>
 </project>

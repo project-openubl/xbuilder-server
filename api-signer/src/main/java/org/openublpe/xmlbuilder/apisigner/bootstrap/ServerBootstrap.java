@@ -68,6 +68,7 @@ public class ServerBootstrap {
             organization.setUseCustomCertificates(true);
 
             defaultKeyProviders.createProviders(organization);
+            logger.info("Default key providers for Admin Organization " + OrganizationModel.MASTER_ID + " have been created");
         } catch (ModelException e) {
             throw new ModelRuntimeException("Could not configure master organization", e);
         }

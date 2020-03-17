@@ -35,35 +35,35 @@ public class Invoice_ComplexInputGenerator extends AbstractInvoiceInputGenerator
         input.getDetalle().add(item1);
         item1.setDescripcion("item");
         item1.setCantidad(new BigDecimal("1"));
-        item1.setPrecioUnitario(new BigDecimal("118"));
+        item1.setPrecioConImpuestos(new BigDecimal("118"));
         item1.setTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString());
 
         DocumentLineInputModel item2 = new DocumentLineInputModel();
         input.getDetalle().add(item2);
         item2.setDescripcion("item");
         item2.setCantidad(new BigDecimal("1"));
-        item2.setPrecioUnitario(new BigDecimal("100"));
+        item2.setPrecioConImpuestos(new BigDecimal("100"));
         item2.setTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PREMIO.toString());
 
         DocumentLineInputModel item3 = new DocumentLineInputModel();
         input.getDetalle().add(item3);
         item3.setDescripcion("item");
         item3.setCantidad(new BigDecimal("1"));
-        item3.setPrecioUnitario(new BigDecimal("100"));
+        item3.setPrecioConImpuestos(new BigDecimal("100"));
         item3.setTipoIgv(Catalog7.EXONERADO_OPERACION_ONEROSA.toString());
 
         DocumentLineInputModel item4 = new DocumentLineInputModel();
         input.getDetalle().add(item4);
         item4.setDescripcion("item");
         item4.setCantidad(new BigDecimal("1"));
-        item4.setPrecioUnitario(new BigDecimal("100"));
+        item4.setPrecioConImpuestos(new BigDecimal("100"));
         item4.setTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString());
 
         DocumentLineInputModel item5 = new DocumentLineInputModel();
         input.getDetalle().add(item5);
         item5.setDescripcion("item");
         item5.setCantidad(new BigDecimal("1"));
-        item5.setPrecioUnitario(new BigDecimal("100"));
+        item5.setPrecioConImpuestos(new BigDecimal("100"));
         item5.setTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString());
 
 

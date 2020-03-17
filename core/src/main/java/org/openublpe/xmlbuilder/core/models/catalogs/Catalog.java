@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- *
+ * <p>
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * https://www.eclipse.org/legal/epl-2.0/
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,10 +17,14 @@
 package org.openublpe.xmlbuilder.core.models.catalogs;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public interface Catalog {
     String getCode();
+
+    Supplier<? extends RuntimeException> invalidCatalogValue = (Supplier<RuntimeException>) ()
+            -> new IllegalStateException("No se pudo convertir el valor del catálogo");
 
     /**
      * @return an instance of Catalog which is equal to ValueOf or contains the same code

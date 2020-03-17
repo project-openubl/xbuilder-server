@@ -11,7 +11,7 @@ import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoOut
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoIGVOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoISCOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoICBOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DetallePrecioReferenciaOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLinePrecioReferenciaOutputModel;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -164,13 +164,13 @@ then
     $output.setUnidadMedida($input.getUnidadMedida() != null ? $input.getUnidadMedida() : DEFAULT_UNIDAD_MEDIDA);
 
     $output.setCantidad($input.getCantidad());
-    $output.setValorUnitario($input.getValorUnitario());
-    $output.setPrecioUnitario($input.getPrecioUnitario());
+    $output.setPrecioSinImpuestos($input.getPrecioSinImpuestos());
+    $output.setPrecioConImpuestos($input.getPrecioConImpuestos());
 
     //
-    if ($output.getValorUnitario() != null) {
+    if ($output.getPrecioSinImpuestos() != null) {
         insert(new DocumentLineLeftToRightProcessorModel($inputOutput));
-    } else if ($output.getPrecioUnitario() != null) {
+    } else if ($output.getPrecioConImpuestos() != null) {
         insert(new DocumentLineRightToLeftProcessorModel($inputOutput));
     }
 end
@@ -186,7 +186,7 @@ then
     DocumentLineOutputModel output = $inputOutput.getOutput();
 
     // Subtotal
-    BigDecimal subtotal = input.getCantidad().multiply(input.getValorUnitario()).setScale(2, RoundingMode.HALF_EVEN);
+    BigDecimal subtotal = input.getCantidad().multiply(input.getPrecioSinImpuestos()).setScale(2, RoundingMode.HALF_EVEN);
 
     // ISC
     Catalog8 iscTipo = null;
@@ -255,7 +255,7 @@ then
     DocumentLineOutputModel output = $inputOutput.getOutput();
 
     // Total
-    BigDecimal total = input.getCantidad().multiply(input.getPrecioUnitario()).setScale(2, RoundingMode.HALF_EVEN);
+    BigDecimal total = input.getCantidad().multiply(input.getPrecioConImpuestos()).setScale(2, RoundingMode.HALF_EVEN);
 
     // IGV
     Catalog7 igvTipo = null;
@@ -310,7 +310,7 @@ then
     BigDecimal valorUnitario = valorVenta.divide(input.getCantidad(), 2, RoundingMode.HALF_EVEN);
 
     // Precio unitario (precio con impuestos)
-    BigDecimal precioUnitario = input.getPrecioUnitario();
+    BigDecimal precioUnitario = input.getPrecioConImpuestos();
 
     modify($processor){
         setReady(true),
@@ -383,17 +383,17 @@ then
     }
 
     // Valor unitario
-    output.setValorUnitario($processor.getValorUnitario());
+    output.setPrecioSinImpuestos($processor.getValorUnitario());
 
     // Precio unitario
-    output.setPrecioUnitario($processor.getPrecioUnitario());
+    output.setPrecioConImpuestos($processor.getPrecioUnitario());
 
     // Valor de venta
-    output.setValorVenta($processor.getValorVenta());
+    output.setValorVentaSinImpuestos($processor.getValorVenta());
 
 
     // Precio de referencia
-    output.setPrecioDeReferencia(new DetallePrecioReferenciaOutputModel());
+    output.setPrecioDeReferencia(new DocumentLinePrecioReferenciaOutputModel());
 
     output.getPrecioDeReferencia().setPrecio($processor.getPrecioUnitario());
     if ($processor.getIgvTipo().isOperacionOnerosa()) {

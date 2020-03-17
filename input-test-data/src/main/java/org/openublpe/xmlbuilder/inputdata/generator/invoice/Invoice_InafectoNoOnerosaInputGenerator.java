@@ -36,7 +36,7 @@ public class Invoice_InafectoNoOnerosaInputGenerator extends AbstractInvoiceInpu
 
         item1.setDescripcion("item");
         item1.setCantidad(new BigDecimal("1"));
-        item1.setPrecioUnitario(new BigDecimal("100"));
+        item1.setPrecioConImpuestos(new BigDecimal("100"));
         item1.setTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString());
 
         return input;

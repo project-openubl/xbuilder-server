@@ -24,7 +24,7 @@ import org.openublpe.xmlbuilder.core.models.output.standard.DocumentoTributarioR
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
-public class CargoDescuentoOutputModel extends DocumentoTributarioRelacionadoOutputModel {
+public class CargoDescuentoOutputModel {
 
     @NotNull
     private Catalog53 tipo;

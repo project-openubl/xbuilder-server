@@ -36,7 +36,7 @@ public class Invoice_GravadaOnerosaInputGenerator extends AbstractInvoiceInputGe
 
         item1.setDescripcion("item");
         item1.setCantidad(new BigDecimal("1"));
-        item1.setPrecioUnitario(new BigDecimal("118"));
+        item1.setPrecioConImpuestos(new BigDecimal("118"));
         item1.setTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString());
 
         return input;

@@ -80,4 +80,54 @@ public class ClienteOutputModel {
     public void setContacto(ContactoOutputModel contacto) {
         this.contacto = contacto;
     }
+
+    public static final class Builder {
+        private Catalog6 tipoDocumentoIdentidad;
+        private String numeroDocumentoIdentidad;
+        private String nombre;
+        private DireccionOutputModel direccion;
+        private ContactoOutputModel contacto;
+
+        private Builder() {
+        }
+
+        public static Builder aClienteOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withTipoDocumentoIdentidad(Catalog6 tipoDocumentoIdentidad) {
+            this.tipoDocumentoIdentidad = tipoDocumentoIdentidad;
+            return this;
+        }
+
+        public Builder withNumeroDocumentoIdentidad(String numeroDocumentoIdentidad) {
+            this.numeroDocumentoIdentidad = numeroDocumentoIdentidad;
+            return this;
+        }
+
+        public Builder withNombre(String nombre) {
+            this.nombre = nombre;
+            return this;
+        }
+
+        public Builder withDireccion(DireccionOutputModel direccion) {
+            this.direccion = direccion;
+            return this;
+        }
+
+        public Builder withContacto(ContactoOutputModel contacto) {
+            this.contacto = contacto;
+            return this;
+        }
+
+        public ClienteOutputModel build() {
+            ClienteOutputModel clienteOutputModel = new ClienteOutputModel();
+            clienteOutputModel.setTipoDocumentoIdentidad(tipoDocumentoIdentidad);
+            clienteOutputModel.setNumeroDocumentoIdentidad(numeroDocumentoIdentidad);
+            clienteOutputModel.setNombre(nombre);
+            clienteOutputModel.setDireccion(direccion);
+            clienteOutputModel.setContacto(contacto);
+            return clienteOutputModel;
+        }
+    }
 }

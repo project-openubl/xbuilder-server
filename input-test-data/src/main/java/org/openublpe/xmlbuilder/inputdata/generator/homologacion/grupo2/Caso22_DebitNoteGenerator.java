@@ -58,7 +58,7 @@ public class Caso22_DebitNoteGenerator implements DebitNoteInputGenerator {
                     DEBIT_NOTE.getDetalle().add(item);
                     item.setDescripcion("Item");
                     item.setCantidad(HomologacionUtils.cantidadRandom());
-                    item.setPrecioUnitario(HomologacionUtils.precioUnitarioRandom());
+                    item.setPrecioConImpuestos(HomologacionUtils.precioUnitarioRandom());
                     item.setTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString());
 
                     debitNote.setSerieNumeroComprobanteAfectado(invoice.getSerie() + "-" + invoice.getNumero());

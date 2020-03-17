@@ -43,7 +43,7 @@ public class ServerInfoAdminResource {
 
     @Inject
     @Any
-    private Instance<KeyProviderFactory> componentFactories;
+    Instance<KeyProviderFactory> componentFactories;
 
     /**
      * General information about the server

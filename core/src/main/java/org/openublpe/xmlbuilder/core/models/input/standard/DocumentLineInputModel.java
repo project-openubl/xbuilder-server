@@ -46,33 +46,17 @@ public class DocumentLineInputModel {
      */
     @Positive
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal valorUnitario;
+    private BigDecimal precioSinImpuestos;
 
     /**
      * Precio con impuestos
      */
     @Positive
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal precioUnitario;
+    private BigDecimal precioConImpuestos;
 
     @CatalogConstraint(value = Catalog7.class)
     private String tipoIgv;
-
-    private String tipoIsc;
-
-    private boolean icb;
-
-    @Min(0)
-    private BigDecimal otrosTributos;
-
-    private String codigoProducto;
-    private String codigoProductoSunat;
-
-    @Valid
-    private List<CargoDescuentoInputModel> cargos;
-
-    @Valid
-    private List<CargoDescuentoInputModel> descuentos;
 
     public String getDescripcion() {
         return descripcion;
@@ -98,20 +82,20 @@ public class DocumentLineInputModel {
         this.cantidad = cantidad;
     }
 
-    public BigDecimal getValorUnitario() {
-        return valorUnitario;
+    public BigDecimal getPrecioSinImpuestos() {
+        return precioSinImpuestos;
     }
 
-    public void setValorUnitario(BigDecimal valorUnitario) {
-        this.valorUnitario = valorUnitario;
+    public void setPrecioSinImpuestos(BigDecimal precioSinImpuestos) {
+        this.precioSinImpuestos = precioSinImpuestos;
     }
 
-    public BigDecimal getPrecioUnitario() {
-        return precioUnitario;
+    public BigDecimal getPrecioConImpuestos() {
+        return precioConImpuestos;
     }
 
-    public void setPrecioUnitario(BigDecimal precioUnitario) {
-        this.precioUnitario = precioUnitario;
+    public void setPrecioConImpuestos(BigDecimal precioConImpuestos) {
+        this.precioConImpuestos = precioConImpuestos;
     }
 
     public String getTipoIgv() {
@@ -122,78 +106,60 @@ public class DocumentLineInputModel {
         this.tipoIgv = tipoIgv;
     }
 
-    public String getTipoIsc() {
-        return tipoIsc;
-    }
+    public static final class Builder {
+        private String descripcion;
+        private String unidadMedida;
+        private BigDecimal cantidad;
+        private BigDecimal precioSinImpuestos;
+        private BigDecimal precioConImpuestos;
+        private String tipoIgv;
 
-    public void setTipoIsc(String tipoIsc) {
-        this.tipoIsc = tipoIsc;
-    }
+        private Builder() {
+        }
 
-    public boolean isIcb() {
-        return icb;
-    }
+        public static Builder aDocumentLineInputModel() {
+            return new Builder();
+        }
 
-    public void setIcb(boolean icb) {
-        this.icb = icb;
-    }
+        public Builder withDescripcion(String descripcion) {
+            this.descripcion = descripcion;
+            return this;
+        }
 
-    public BigDecimal getOtrosTributos() {
-        return otrosTributos;
-    }
+        public Builder withUnidadMedida(String unidadMedida) {
+            this.unidadMedida = unidadMedida;
+            return this;
+        }
 
-    public void setOtrosTributos(BigDecimal otrosTributos) {
-        this.otrosTributos = otrosTributos;
-    }
+        public Builder withCantidad(BigDecimal cantidad) {
+            this.cantidad = cantidad;
+            return this;
+        }
 
-    public String getCodigoProducto() {
-        return codigoProducto;
-    }
+        public Builder withPrecioSinImpuestos(BigDecimal precioSinImpuestos) {
+            this.precioSinImpuestos = precioSinImpuestos;
+            return this;
+        }
 
-    public void setCodigoProducto(String codigoProducto) {
-        this.codigoProducto = codigoProducto;
-    }
+        public Builder withPrecioConImpuestos(BigDecimal precioConImpuestos) {
+            this.precioConImpuestos = precioConImpuestos;
+            return this;
+        }
 
-    public String getCodigoProductoSunat() {
-        return codigoProductoSunat;
-    }
+        public Builder withTipoIgv(String tipoIgv) {
+            this.tipoIgv = tipoIgv;
+            return this;
+        }
 
-    public void setCodigoProductoSunat(String codigoProductoSunat) {
-        this.codigoProductoSunat = codigoProductoSunat;
-    }
-
-    public List<CargoDescuentoInputModel> getCargos() {
-        return cargos;
-    }
-
-    public void setCargos(List<CargoDescuentoInputModel> cargos) {
-        this.cargos = cargos;
-    }
-
-    public List<CargoDescuentoInputModel> getDescuentos() {
-        return descuentos;
-    }
-
-    public void setDescuentos(List<CargoDescuentoInputModel> descuentos) {
-        this.descuentos = descuentos;
-    }
-
-    @Override
-    public String toString() {
-        return "DocumentLineInputModel{" +
-                "descripcion='" + descripcion + '\'' +
-                ", unidadMedida='" + unidadMedida + '\'' +
-                ", cantidad=" + cantidad +
-                ", valorUnitario=" + valorUnitario +
-                ", precioUnitario=" + precioUnitario +
-                ", tipoIgv='" + tipoIgv + '\'' +
-                ", tipoIsc='" + tipoIsc + '\'' +
-                ", icb=" + icb +
-                ", otrosTributos=" + otrosTributos +
-                ", codigoProducto='" + codigoProducto + '\'' +
-                ", codigoProductoSunat='" + codigoProductoSunat + '\'' +
-                ", cargos=" + cargos +
-                ", descuentos=" + descuentos +
-                '}';
+        public DocumentLineInputModel build() {
+            DocumentLineInputModel documentLineInputModel = new DocumentLineInputModel();
+            documentLineInputModel.setDescripcion(descripcion);
+            documentLineInputModel.setUnidadMedida(unidadMedida);
+            documentLineInputModel.setCantidad(cantidad);
+            documentLineInputModel.setPrecioSinImpuestos(precioSinImpuestos);
+            documentLineInputModel.setPrecioConImpuestos(precioConImpuestos);
+            documentLineInputModel.setTipoIgv(tipoIgv);
+            return documentLineInputModel;
+        }
     }
 }

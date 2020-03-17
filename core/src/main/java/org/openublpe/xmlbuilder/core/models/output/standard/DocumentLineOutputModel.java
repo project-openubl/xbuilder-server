@@ -16,8 +16,6 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.standard;
 
-import org.openublpe.xmlbuilder.core.models.output.standard.invoice.CargoDescuentoOutputModel;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
@@ -25,7 +23,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.util.List;
 
 public class DocumentLineOutputModel {
 
@@ -46,7 +43,7 @@ public class DocumentLineOutputModel {
     @Min(0)
     @NotNull
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal valorUnitario;
+    private BigDecimal precioSinImpuestos;
 
     /**
      * Precio con impuestos
@@ -54,40 +51,20 @@ public class DocumentLineOutputModel {
     @Min(0)
     @NotNull
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal precioUnitario;
+    private BigDecimal precioConImpuestos;
+
+    @Valid
+    @NotNull
+    private DocumentLinePrecioReferenciaOutputModel precioDeReferencia;
 
     @Min(0)
     @NotNull
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal valorVenta;
+    private BigDecimal valorVentaSinImpuestos;
 
-    @Valid
-    private List<CargoDescuentoOutputModel> cargos;
-
-    @Valid
-    private List<CargoDescuentoOutputModel> descuentos;
-
-    @Valid
     @NotNull
-    private DetallePrecioReferenciaOutputModel precioDeReferencia;
-
-    @Min(0)
-    @NotNull
-    @Digits(integer = 100, fraction = 2)
-    private BigDecimal importeTotalImpuestos;
-
     @Valid
-    @NotNull
-    private ImpuestoDetalladoIGVOutputModel igv;
-
-    @Valid
-    private ImpuestoDetalladoICBOutputModel icb;
-
-    @Valid
-    private ImpuestoDetalladoISCOutputModel isc;
-
-    @Valid
-    private ImpuestoDetalladoOutputModel otroTributo;
+    private DocumentLineImpuestosOutputModel impuestos;
 
     public String getDescripcion() {
         return descripcion;
@@ -95,14 +72,6 @@ public class DocumentLineOutputModel {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public BigDecimal getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(BigDecimal cantidad) {
-        this.cantidad = cantidad;
     }
 
     public String getUnidadMedida() {
@@ -113,91 +82,122 @@ public class DocumentLineOutputModel {
         this.unidadMedida = unidadMedida;
     }
 
-    public BigDecimal getValorUnitario() {
-        return valorUnitario;
+    public BigDecimal getCantidad() {
+        return cantidad;
     }
 
-    public void setValorUnitario(BigDecimal valorUnitario) {
-        this.valorUnitario = valorUnitario;
+    public void setCantidad(BigDecimal cantidad) {
+        this.cantidad = cantidad;
     }
 
-    public BigDecimal getPrecioUnitario() {
-        return precioUnitario;
+    public BigDecimal getPrecioSinImpuestos() {
+        return precioSinImpuestos;
     }
 
-    public void setPrecioUnitario(BigDecimal precioUnitario) {
-        this.precioUnitario = precioUnitario;
+    public void setPrecioSinImpuestos(BigDecimal precioSinImpuestos) {
+        this.precioSinImpuestos = precioSinImpuestos;
     }
 
-    public List<CargoDescuentoOutputModel> getCargos() {
-        return cargos;
+    public BigDecimal getPrecioConImpuestos() {
+        return precioConImpuestos;
     }
 
-    public void setCargos(List<CargoDescuentoOutputModel> cargos) {
-        this.cargos = cargos;
+    public void setPrecioConImpuestos(BigDecimal precioConImpuestos) {
+        this.precioConImpuestos = precioConImpuestos;
     }
 
-    public List<CargoDescuentoOutputModel> getDescuentos() {
-        return descuentos;
-    }
-
-    public void setDescuentos(List<CargoDescuentoOutputModel> descuentos) {
-        this.descuentos = descuentos;
-    }
-
-    public BigDecimal getImporteTotalImpuestos() {
-        return importeTotalImpuestos;
-    }
-
-    public void setImporteTotalImpuestos(BigDecimal importeTotalImpuestos) {
-        this.importeTotalImpuestos = importeTotalImpuestos;
-    }
-
-    public ImpuestoDetalladoIGVOutputModel getIgv() {
-        return igv;
-    }
-
-    public void setIgv(ImpuestoDetalladoIGVOutputModel igv) {
-        this.igv = igv;
-    }
-
-    public ImpuestoDetalladoICBOutputModel getIcb() {
-        return icb;
-    }
-
-    public void setIcb(ImpuestoDetalladoICBOutputModel icb) {
-        this.icb = icb;
-    }
-
-    public ImpuestoDetalladoOutputModel getOtroTributo() {
-        return otroTributo;
-    }
-
-    public void setOtroTributo(ImpuestoDetalladoOutputModel otroTributo) {
-        this.otroTributo = otroTributo;
-    }
-
-    public ImpuestoDetalladoISCOutputModel getIsc() {
-        return isc;
-    }
-
-    public void setIsc(ImpuestoDetalladoISCOutputModel isc) {
-        this.isc = isc;
-    }
-
-    public DetallePrecioReferenciaOutputModel getPrecioDeReferencia() {
+    public DocumentLinePrecioReferenciaOutputModel getPrecioDeReferencia() {
         return precioDeReferencia;
     }
 
-    public void setPrecioDeReferencia(DetallePrecioReferenciaOutputModel precioDeReferencia) {
+    public void setPrecioDeReferencia(DocumentLinePrecioReferenciaOutputModel precioDeReferencia) {
         this.precioDeReferencia = precioDeReferencia;
     }
 
-    public BigDecimal getValorVenta() {
-        return valorVenta;
+    public BigDecimal getValorVentaSinImpuestos() {
+        return valorVentaSinImpuestos;
     }
 
-    public void setValorVenta(BigDecimal valorVenta) {
-        this.valorVenta = valorVenta;
+    public void setValorVentaSinImpuestos(BigDecimal valorVentaSinImpuestos) {
+        this.valorVentaSinImpuestos = valorVentaSinImpuestos;
+    }
+
+    public DocumentLineImpuestosOutputModel getImpuestos() {
+        return impuestos;
+    }
+
+    public void setImpuestos(DocumentLineImpuestosOutputModel impuestos) {
+        this.impuestos = impuestos;
+    }
+
+    public static final class Builder {
+        private String descripcion;
+        private String unidadMedida;
+        private BigDecimal cantidad;
+        private BigDecimal precioSinImpuestos;
+        private BigDecimal precioConImpuestos;
+        private DocumentLinePrecioReferenciaOutputModel precioDeReferencia;
+        private BigDecimal valorVentaSinImpuestos;
+        private DocumentLineImpuestosOutputModel impuestos;
+
+        private Builder() {
+        }
+
+        public static Builder aDocumentLineOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withDescripcion(String descripcion) {
+            this.descripcion = descripcion;
+            return this;
+        }
+
+        public Builder withUnidadMedida(String unidadMedida) {
+            this.unidadMedida = unidadMedida;
+            return this;
+        }
+
+        public Builder withCantidad(BigDecimal cantidad) {
+            this.cantidad = cantidad;
+            return this;
+        }
+
+        public Builder withPrecioSinImpuestos(BigDecimal precioSinImpuestos) {
+            this.precioSinImpuestos = precioSinImpuestos;
+            return this;
+        }
+
+        public Builder withPrecioConImpuestos(BigDecimal precioConImpuestos) {
+            this.precioConImpuestos = precioConImpuestos;
+            return this;
+        }
+
+        public Builder withPrecioDeReferencia(DocumentLinePrecioReferenciaOutputModel precioDeReferencia) {
+            this.precioDeReferencia = precioDeReferencia;
+            return this;
+        }
+
+        public Builder withValorVentaSinImpuestos(BigDecimal valorVenta) {
+            this.valorVentaSinImpuestos = valorVenta;
+            return this;
+        }
+
+        public Builder withImpuestos(DocumentLineImpuestosOutputModel impuestos) {
+            this.impuestos = impuestos;
+            return this;
+        }
+
+        public DocumentLineOutputModel build() {
+            DocumentLineOutputModel documentLineOutputModel = new DocumentLineOutputModel();
+            documentLineOutputModel.setDescripcion(descripcion);
+            documentLineOutputModel.setUnidadMedida(unidadMedida);
+            documentLineOutputModel.setCantidad(cantidad);
+            documentLineOutputModel.setPrecioSinImpuestos(precioSinImpuestos);
+            documentLineOutputModel.setPrecioConImpuestos(precioConImpuestos);
+            documentLineOutputModel.setPrecioDeReferencia(precioDeReferencia);
+            documentLineOutputModel.setValorVentaSinImpuestos(valorVentaSinImpuestos);
+            documentLineOutputModel.setImpuestos(impuestos);
+            return documentLineOutputModel;
+        }
     }
 }

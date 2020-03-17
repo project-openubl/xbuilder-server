@@ -16,78 +16,77 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.standard.invoice;
 
-import org.openublpe.xmlbuilder.core.models.input.common.DireccionInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 
-import javax.validation.Valid;
 import java.util.List;
 
 public class InvoiceInputModel extends DocumentInputModel {
 
-    @Valid
-    private List<CargoDescuentoInputModel> cargos;
+    public static final class Builder {
+        protected String serie;
+        private Integer numero;
+        private Long fechaEmision;
+        private ClienteInputModel cliente;
+        private ProveedorInputModel proveedor;
+        private FirmanteInputModel firmante;
+        private List<DocumentLineInputModel> detalle;
 
-    @Valid
-    private List<CargoDescuentoInputModel> descuentos;
+        private Builder() {
+        }
 
-    @Valid
-    private List<AnticipoInputModel> anticipos;
+        public static Builder anInvoiceInputModel() {
+            return new Builder();
+        }
 
-    @Valid
-    private PercepcionRelacionadaInputModel percepcion;
+        public Builder withSerie(String serie) {
+            this.serie = serie;
+            return this;
+        }
 
-    @Valid
-    private DetraccionRelacionadaInputModel detraccion;
+        public Builder withNumero(Integer numero) {
+            this.numero = numero;
+            return this;
+        }
 
-    @Valid
-    private DireccionInputModel direccionDeEntrega;
+        public Builder withFechaEmision(Long fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
 
-    public List<CargoDescuentoInputModel> getCargos() {
-        return cargos;
+        public Builder withCliente(ClienteInputModel cliente) {
+            this.cliente = cliente;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorInputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withFirmante(FirmanteInputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withDetalle(List<DocumentLineInputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
+
+        public InvoiceInputModel build() {
+            InvoiceInputModel invoiceInputModel = new InvoiceInputModel();
+            invoiceInputModel.setSerie(serie);
+            invoiceInputModel.setNumero(numero);
+            invoiceInputModel.setFechaEmision(fechaEmision);
+            invoiceInputModel.setCliente(cliente);
+            invoiceInputModel.setProveedor(proveedor);
+            invoiceInputModel.setFirmante(firmante);
+            invoiceInputModel.setDetalle(detalle);
+            return invoiceInputModel;
+        }
     }
-
-    public void setCargos(List<CargoDescuentoInputModel> cargos) {
-        this.cargos = cargos;
-    }
-
-    public List<CargoDescuentoInputModel> getDescuentos() {
-        return descuentos;
-    }
-
-    public void setDescuentos(List<CargoDescuentoInputModel> descuentos) {
-        this.descuentos = descuentos;
-    }
-
-    public List<AnticipoInputModel> getAnticipos() {
-        return anticipos;
-    }
-
-    public void setAnticipos(List<AnticipoInputModel> anticipos) {
-        this.anticipos = anticipos;
-    }
-
-    public PercepcionRelacionadaInputModel getPercepcion() {
-        return percepcion;
-    }
-
-    public void setPercepcion(PercepcionRelacionadaInputModel percepcion) {
-        this.percepcion = percepcion;
-    }
-
-    public DetraccionRelacionadaInputModel getDetraccion() {
-        return detraccion;
-    }
-
-    public void setDetraccion(DetraccionRelacionadaInputModel detraccion) {
-        this.detraccion = detraccion;
-    }
-
-    public DireccionInputModel getDireccionDeEntrega() {
-        return direccionDeEntrega;
-    }
-
-    public void setDireccionDeEntrega(DireccionInputModel direccionDeEntrega) {
-        this.direccionDeEntrega = direccionDeEntrega;
-    }
-
 }

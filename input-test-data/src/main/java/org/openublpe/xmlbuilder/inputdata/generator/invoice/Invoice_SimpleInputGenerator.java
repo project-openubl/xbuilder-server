@@ -49,7 +49,7 @@ public class Invoice_SimpleInputGenerator implements InvoiceInputGenerator {
         detalle.add(item1);
         item1.setDescripcion("Item");
         item1.setCantidad(BigDecimal.ONE);
-        item1.setPrecioUnitario(new BigDecimal("100"));
+        item1.setPrecioConImpuestos(new BigDecimal("100"));
 
         return input;
     }
