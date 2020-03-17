@@ -105,7 +105,13 @@ public class DocumentLineFactory {
                 ? Catalog.valueOfCode(Catalog7.class, input.getTipoIgv()).orElseThrow(Catalog.invalidCatalogValue)
                 : Catalog.valueOfCode(Catalog7.class, defaultTipoIgv).orElseThrow(Catalog.invalidCatalogValue);
 
-        BigDecimal igvValor = igvTipo.equals(Catalog7.GRAVADO_IVAP) ? ivap : igv;
+        BigDecimal igvValor;
+        if (igvTipo.getGrupo().equals(Catalog7_1.GRAVADO)) {
+            igvValor = igvTipo.equals(Catalog7.GRAVADO_IVAP) ? ivap : igv;
+        } else  {
+            igvValor = BigDecimal.ZERO;
+        }
+
         BigDecimal igvBaseImponible = subtotal.add(BigDecimal.ZERO);
         BigDecimal igvImporte = igvBaseImponible.multiply(igvValor).setScale(2, RoundingMode.HALF_EVEN);
 

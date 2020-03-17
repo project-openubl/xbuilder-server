@@ -394,4 +394,98 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
         );
         assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
     }
+
+    @Test
+    void testInvoiceTipoIgv_ExoneradoOperacionOnerosa() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.EXONERADO_OPERACION_ONEROSA.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.EXONERADO_OPERACION_ONEROSA.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/exoneradoOperacionOnerosa.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_ExoneradoTransferenciaGratuita() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.EXONERADO_TRANSFERENCIA_GRATUITA.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.EXONERADO_TRANSFERENCIA_GRATUITA.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/exoneradoTransferenciaGratuita.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
 }

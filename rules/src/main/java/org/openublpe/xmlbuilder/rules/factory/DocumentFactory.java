@@ -99,19 +99,19 @@ public class DocumentFactory {
 
         // Gravado
         ImpuestoTotalOutputModel gravado = getImpuestoTotal(lineOutput, Catalog5.IGV);
-        if (gravado.getImporte().compareTo(BigDecimal.ZERO) > 0) {
+        if (gravado.getBaseImponible().compareTo(BigDecimal.ZERO) > 0) {
             impuestosBuilder.withGravadas(gravado);
         }
 
         // Exonerado
         ImpuestoTotalOutputModel exonerado = getImpuestoTotal(lineOutput, Catalog5.EXONERADO);
-        if (exonerado.getImporte().compareTo(BigDecimal.ZERO) > 0) {
+        if (exonerado.getBaseImponible().compareTo(BigDecimal.ZERO) > 0) {
             impuestosBuilder.withExoneradas(exonerado);
         }
 
         // Inafecto
         ImpuestoTotalOutputModel inafecto = getImpuestoTotal(lineOutput, Catalog5.INAFECTO);
-        if (inafecto.getImporte().compareTo(BigDecimal.ZERO) > 0) {
+        if (inafecto.getBaseImponible().compareTo(BigDecimal.ZERO) > 0) {
             impuestosBuilder.withInafectas(inafecto);
         }
 
