@@ -98,87 +98,28 @@ public class DocumentFactory {
         impuestosBuilder.withImporteTotal(importeTotalImpuestos);
 
         // Gravado
-        java.util.function.Supplier<Stream<DocumentLineOutputModel>> gravadoStream = () -> lineOutput.stream()
-                .filter(i -> i.getImpuestos().getIgv().getTipo().getTaxCategory().equals(Catalog5.IGV));
-
-        BigDecimal gravadoImporte = gravadoStream.get()
-                .map(DocumentLineOutputModel::getImpuestos)
-                .map(DocumentLineImpuestosOutputModel::getIgv)
-                .map(ImpuestoOutputModel::getImporte)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal gravadoBaseImponible = gravadoStream.get()
-                .map(DocumentLineOutputModel::getImpuestos)
-                .map(DocumentLineImpuestosOutputModel::getIgv)
-                .map(ImpuestoDetalladoOutputModel::getBaseImponible)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        if (gravadoImporte.compareTo(BigDecimal.ZERO) > 0) {
-            impuestosBuilder.withGravadas(ImpuestoTotalOutputModel.Builder.anImpuestoTotalOutputModel()
-                    .withCategoria(Catalog5.IGV)
-                    .withImporte(gravadoImporte)
-                    .withBaseImponible(gravadoBaseImponible)
-                    .build());
+        ImpuestoTotalOutputModel gravado = getImpuestoTotal(lineOutput, Catalog5.IGV);
+        if (gravado.getImporte().compareTo(BigDecimal.ZERO) > 0) {
+            impuestosBuilder.withGravadas(gravado);
         }
 
         // Exonerado
-        java.util.function.Supplier<Stream<DocumentLineOutputModel>> exoneradoStream = () -> lineOutput.stream()
-                .filter(i -> i.getImpuestos().getIgv().getTipo().getTaxCategory().equals(Catalog5.EXONERADO));
-
-        BigDecimal exoneradoImporte = exoneradoStream.get()
-                .map(DocumentLineOutputModel::getImpuestos)
-                .map(DocumentLineImpuestosOutputModel::getIgv)
-                .map(ImpuestoOutputModel::getImporte)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal exoneradoBaseImponible = gravadoStream.get()
-                .map(DocumentLineOutputModel::getImpuestos)
-                .map(DocumentLineImpuestosOutputModel::getIgv)
-                .map(ImpuestoDetalladoOutputModel::getBaseImponible)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        if (exoneradoImporte.compareTo(BigDecimal.ZERO) > 0) {
-            impuestosBuilder.withExoneradas(ImpuestoTotalOutputModel.Builder.anImpuestoTotalOutputModel()
-                    .withCategoria(Catalog5.EXONERADO)
-                    .withImporte(exoneradoImporte)
-                    .withBaseImponible(exoneradoBaseImponible)
-                    .build());
+        ImpuestoTotalOutputModel exonerado = getImpuestoTotal(lineOutput, Catalog5.EXONERADO);
+        if (exonerado.getImporte().compareTo(BigDecimal.ZERO) > 0) {
+            impuestosBuilder.withExoneradas(exonerado);
         }
 
         // Inafecto
-        java.util.function.Supplier<Stream<DocumentLineOutputModel>> inafectoStream = () -> lineOutput.stream()
-                .filter(i -> i.getImpuestos().getIgv().getTipo().getTaxCategory().equals(Catalog5.INAFECTO));
-
-        BigDecimal inafectoImporte = inafectoStream.get()
-                .map(DocumentLineOutputModel::getImpuestos)
-                .map(DocumentLineImpuestosOutputModel::getIgv)
-                .map(ImpuestoOutputModel::getImporte)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal inafectoBaseImponible = gravadoStream.get()
-                .map(DocumentLineOutputModel::getImpuestos)
-                .map(DocumentLineImpuestosOutputModel::getIgv)
-                .map(ImpuestoDetalladoOutputModel::getBaseImponible)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        if (inafectoImporte.compareTo(BigDecimal.ZERO) > 0) {
-            impuestosBuilder.withInafectas(ImpuestoTotalOutputModel.Builder.anImpuestoTotalOutputModel()
-                    .withCategoria(Catalog5.INAFECTO)
-                    .withImporte(inafectoImporte)
-                    .withBaseImponible(inafectoBaseImponible)
-                    .build());
+        ImpuestoTotalOutputModel inafecto = getImpuestoTotal(lineOutput, Catalog5.INAFECTO);
+        if (inafecto.getImporte().compareTo(BigDecimal.ZERO) > 0) {
+            impuestosBuilder.withInafectas(inafecto);
         }
 
         // Gratuito
-        java.util.function.Supplier<Stream<DocumentLineOutputModel>> gratuitoStream = () -> lineOutput.stream()
-                .filter(i -> i.getImpuestos().getIgv().getTipo().getTaxCategory().equals(Catalog5.GRATUITO));
-
-        BigDecimal gratuitoImporte = BigDecimal.ZERO;
-        BigDecimal gratuitoBaseImponible = gratuitoStream.get()
-                .map(DocumentLineOutputModel::getImpuestos)
-                .map(DocumentLineImpuestosOutputModel::getIgv)
-                .map(ImpuestoDetalladoOutputModel::getBaseImponible)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        if (gratuitoBaseImponible.compareTo(BigDecimal.ZERO) > 0) {
-            impuestosBuilder.withGratuitas(ImpuestoTotalOutputModel.Builder.anImpuestoTotalOutputModel()
-                    .withCategoria(Catalog5.GRATUITO)
-                    .withImporte(gratuitoImporte)
-                    .withBaseImponible(gratuitoBaseImponible)
-                    .build());
+        ImpuestoTotalOutputModel gratuito = getImpuestoTotal(lineOutput, Catalog5.GRATUITO);
+        if (gratuito.getBaseImponible().compareTo(BigDecimal.ZERO) > 0) {
+            gratuito.setImporte(BigDecimal.ZERO);
+            impuestosBuilder.withInafectas(gratuito);
         }
 
         // IVAP
