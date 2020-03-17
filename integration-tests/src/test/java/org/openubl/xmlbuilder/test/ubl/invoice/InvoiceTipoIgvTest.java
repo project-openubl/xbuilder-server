@@ -958,4 +958,662 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
         );
         assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
     }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoOperacionOnerosa_precioSinImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoOperacionOnerosa.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoOperacionOnerosa_precioConImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoOperacionOnerosa.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorBonificacion_precioSinImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorBonificacion.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorBonificacion_precioConImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorBonificacion.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiro_precioSinImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiro.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiro_precioConImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiro.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorMuestrasMedicas_precioSinImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoPorMuestrasMedicas.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorMuestrasMedicas_precioConImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoPorMuestrasMedicas.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorConvenioColectivo_precioSinImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorConvenioColectivo.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorConvenioColectivo_precioConImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorConvenioColectivo.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorPremio_precioSinImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorPremio.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorPremio_precioConImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorPremio.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorPublicidad_precioSinImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PUBLICIDAD.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PUBLICIDAD.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorPublicidad.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorPublicidad_precioConImpuestos() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PUBLICIDAD.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PUBLICIDAD.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorPublicidad.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
 }
