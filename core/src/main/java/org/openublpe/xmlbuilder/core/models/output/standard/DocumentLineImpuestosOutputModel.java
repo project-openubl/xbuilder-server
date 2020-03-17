@@ -40,7 +40,7 @@ public class DocumentLineImpuestosOutputModel {
         private Builder() {
         }
 
-        public static Builder aDocumentLineImpuestos() {
+        public static Builder aDocumentLineImpuestosOutputModel() {
             return new Builder();
         }
 
@@ -55,10 +55,10 @@ public class DocumentLineImpuestosOutputModel {
         }
 
         public DocumentLineImpuestosOutputModel build() {
-            DocumentLineImpuestosOutputModel documentLineImpuestos = new DocumentLineImpuestosOutputModel();
-            documentLineImpuestos.setImporteTotal(importeTotal);
-            documentLineImpuestos.setIgv(igv);
-            return documentLineImpuestos;
+            DocumentLineImpuestosOutputModel documentLineImpuestosOutputModel = new DocumentLineImpuestosOutputModel();
+            documentLineImpuestosOutputModel.setImporteTotal(importeTotal);
+            documentLineImpuestosOutputModel.setIgv(igv);
+            return documentLineImpuestosOutputModel;
         }
     }
 }

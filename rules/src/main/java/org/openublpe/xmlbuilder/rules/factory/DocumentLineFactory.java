@@ -17,14 +17,14 @@ import javax.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarDate;
-import static org.openublpe.xmlbuilder.rules.utils.DateUtils.toGregorianCalendarTime;
-
 @ApplicationScoped
 public class DocumentLineFactory {
 
     @ConfigProperty(name = EnvironmentVariables.IGV_KEY)
     BigDecimal igv;
+
+    @ConfigProperty(name = EnvironmentVariables.IVAP_KEY)
+    BigDecimal ivap;
 
     @ConfigProperty(name = EnvironmentVariables.DEFAULT_UNIDAD_MEDIDA)
     String defaultUnidadMedida;
@@ -105,11 +105,11 @@ public class DocumentLineFactory {
                 ? Catalog.valueOfCode(Catalog7.class, input.getTipoIgv()).orElseThrow(Catalog.invalidCatalogValue)
                 : Catalog.valueOfCode(Catalog7.class, defaultTipoIgv).orElseThrow(Catalog.invalidCatalogValue);
 
-        BigDecimal igvValor = igv.add(BigDecimal.ZERO);
+        BigDecimal igvValor = igvTipo.equals(Catalog7.GRAVADO_IVAP) ? ivap : igv;
         BigDecimal igvBaseImponible = subtotal.add(BigDecimal.ZERO);
         BigDecimal igvImporte = igvBaseImponible.multiply(igvValor).setScale(2, RoundingMode.HALF_EVEN);
 
-        return DocumentLineImpuestosOutputModel.Builder.aDocumentLineImpuestos()
+        return DocumentLineImpuestosOutputModel.Builder.aDocumentLineImpuestosOutputModel()
                 .withIgv(ImpuestoDetalladoIGVOutputModel.Builder.anImpuestoDetalladoIGVOutputModel()
                         .withTipo(igvTipo)
                         .withCategoria(igvTipo.getTaxCategory())
@@ -133,7 +133,7 @@ public class DocumentLineFactory {
         BigDecimal igvBaseImponible = total.divide(igvValor.add(BigDecimal.ONE), 2, RoundingMode.HALF_EVEN);
         BigDecimal igvImporte = total.subtract(igvBaseImponible);
 
-        return DocumentLineImpuestosOutputModel.Builder.aDocumentLineImpuestos()
+        return DocumentLineImpuestosOutputModel.Builder.aDocumentLineImpuestosOutputModel()
                 .withIgv(ImpuestoDetalladoIGVOutputModel.Builder.anImpuestoDetalladoIGVOutputModel()
                         .withTipo(igvTipo)
                         .withCategoria(Catalog5.IGV)

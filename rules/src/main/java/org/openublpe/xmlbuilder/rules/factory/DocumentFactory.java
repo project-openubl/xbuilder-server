@@ -19,7 +19,6 @@ import org.openublpe.xmlbuilder.rules.datetime.DateTimeFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -91,7 +90,9 @@ public class DocumentFactory {
         // Importe total de impuestos
         BigDecimal importeTotalImpuestos = lineOutput.stream()
                 .map(DocumentLineOutputModel::getImpuestos)
-                .filter(p -> p.getIgv().getCategoria().equals(Catalog5.IGV))
+                .filter(p -> p.getIgv().getCategoria().equals(Catalog5.IGV) ||
+                        p.getIgv().getCategoria().equals(Catalog5.IMPUESTO_ARROZ_PILADO)
+                )
                 .map(m -> m.getIgv().getImporte())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         impuestosBuilder.withImporteTotal(importeTotalImpuestos);
@@ -184,7 +185,7 @@ public class DocumentFactory {
         java.util.function.Supplier<Stream<DocumentLineOutputModel>> ivapStream = () -> lineOutput.stream()
                 .filter(i -> i.getImpuestos().getIgv().getTipo().getTaxCategory().equals(Catalog5.IMPUESTO_ARROZ_PILADO));
 
-        BigDecimal ivapImporte = inafectoStream.get()
+        BigDecimal ivapImporte = ivapStream.get()
                 .map(DocumentLineOutputModel::getImpuestos)
                 .map(DocumentLineImpuestosOutputModel::getIgv)
                 .map(ImpuestoOutputModel::getImporte)
@@ -194,7 +195,7 @@ public class DocumentFactory {
                 .map(DocumentLineImpuestosOutputModel::getIgv)
                 .map(ImpuestoDetalladoOutputModel::getBaseImponible)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        if (ivapBaseImponible.compareTo(BigDecimal.ZERO) > 0) {
+        if (ivapImporte.compareTo(BigDecimal.ZERO) > 0) {
             impuestosBuilder.withIvap(ImpuestoTotalOutputModel.Builder.anImpuestoTotalOutputModel()
                     .withCategoria(Catalog5.IMPUESTO_ARROZ_PILADO)
                     .withImporte(ivapImporte)
@@ -223,5 +224,26 @@ public class DocumentFactory {
         );
     }
 
+    private ImpuestoTotalOutputModel getImpuestoTotal(List<DocumentLineOutputModel> lineOutput, Catalog5 categoria){
+        java.util.function.Supplier<Stream<DocumentLineOutputModel>> gravadoStream = () -> lineOutput.stream()
+                .filter(i -> i.getImpuestos().getIgv().getTipo().getTaxCategory().equals(categoria));
+
+        BigDecimal importe = gravadoStream.get()
+                .map(DocumentLineOutputModel::getImpuestos)
+                .map(DocumentLineImpuestosOutputModel::getIgv)
+                .map(ImpuestoOutputModel::getImporte)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal baseImponible = gravadoStream.get()
+                .map(DocumentLineOutputModel::getImpuestos)
+                .map(DocumentLineImpuestosOutputModel::getIgv)
+                .map(ImpuestoDetalladoOutputModel::getBaseImponible)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        return ImpuestoTotalOutputModel.Builder.anImpuestoTotalOutputModel()
+                .withCategoria(categoria)
+                .withImporte(importe)
+                .withBaseImponible(baseImponible)
+                .build();
+    }
 
 }
