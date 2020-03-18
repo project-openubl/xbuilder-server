@@ -37,7 +37,7 @@ public enum Catalog7 implements Catalog {
     INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO("34", false, Catalog5.GRATUITO, Catalog7_1.INAFECTO),
     INAFECTO_RETIRO_POR_PREMIO("35", false, Catalog5.GRATUITO, Catalog7_1.INAFECTO),
     INAFECTO_RETIRO_POR_PUBLICIDAD("36", false, Catalog5.GRATUITO, Catalog7_1.INAFECTO),
-    EXPORTACION("40", false, Catalog5.GRATUITO, Catalog7_1.INAFECTO);
+    EXPORTACION("40", true, Catalog5.EXPORTACION, Catalog7_1.EXPORTACION);
 
     private final String code;
     private final boolean operacionOnerosa;
