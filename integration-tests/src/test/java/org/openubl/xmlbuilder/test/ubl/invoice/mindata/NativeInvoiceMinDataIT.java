@@ -1,4 +1,4 @@
-package org.openubl.xmlbuilder.test.ubl.invoice;
+package org.openubl.xmlbuilder.test.ubl.invoice.mindata;
 
 import io.quarkus.test.junit.NativeImageTest;
 

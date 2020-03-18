@@ -1,4 +1,4 @@
-package org.openubl.xmlbuilder.test.ubl.invoice;
+package org.openubl.xmlbuilder.test.ubl.invoice.tipoigv;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;

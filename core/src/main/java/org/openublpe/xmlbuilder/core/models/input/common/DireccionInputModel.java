@@ -78,4 +78,75 @@ public class DireccionInputModel {
     public void setCodigoPais(String codigoPais) {
         this.codigoPais = codigoPais;
     }
+
+    public static final class Builder {
+        private String ubigeo;
+        private String codigoLocal;
+        private String urbanizacion;
+        private String provincia;
+        private String departamento;
+        private String distrito;
+        private String direccion;
+        private String codigoPais;
+
+        private Builder() {
+        }
+
+        public static Builder aDireccionInputModel() {
+            return new Builder();
+        }
+
+        public Builder withUbigeo(String ubigeo) {
+            this.ubigeo = ubigeo;
+            return this;
+        }
+
+        public Builder withCodigoLocal(String codigoLocal) {
+            this.codigoLocal = codigoLocal;
+            return this;
+        }
+
+        public Builder withUrbanizacion(String urbanizacion) {
+            this.urbanizacion = urbanizacion;
+            return this;
+        }
+
+        public Builder withProvincia(String provincia) {
+            this.provincia = provincia;
+            return this;
+        }
+
+        public Builder withDepartamento(String departamento) {
+            this.departamento = departamento;
+            return this;
+        }
+
+        public Builder withDistrito(String distrito) {
+            this.distrito = distrito;
+            return this;
+        }
+
+        public Builder withDireccion(String direccion) {
+            this.direccion = direccion;
+            return this;
+        }
+
+        public Builder withCodigoPais(String codigoPais) {
+            this.codigoPais = codigoPais;
+            return this;
+        }
+
+        public DireccionInputModel build() {
+            DireccionInputModel direccionInputModel = new DireccionInputModel();
+            direccionInputModel.setUbigeo(ubigeo);
+            direccionInputModel.setCodigoLocal(codigoLocal);
+            direccionInputModel.setUrbanizacion(urbanizacion);
+            direccionInputModel.setProvincia(provincia);
+            direccionInputModel.setDepartamento(departamento);
+            direccionInputModel.setDistrito(distrito);
+            direccionInputModel.setDireccion(direccion);
+            direccionInputModel.setCodigoPais(codigoPais);
+            return direccionInputModel;
+        }
+    }
 }

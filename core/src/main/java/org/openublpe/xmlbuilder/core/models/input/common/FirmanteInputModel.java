@@ -41,4 +41,33 @@ public class FirmanteInputModel {
     public void setRazonSocial(String razonSocial) {
         this.razonSocial = razonSocial;
     }
+
+    public static final class Builder {
+        private String ruc;
+        private String razonSocial;
+
+        private Builder() {
+        }
+
+        public static Builder aFirmanteInputModel() {
+            return new Builder();
+        }
+
+        public Builder withRuc(String ruc) {
+            this.ruc = ruc;
+            return this;
+        }
+
+        public Builder withRazonSocial(String razonSocial) {
+            this.razonSocial = razonSocial;
+            return this;
+        }
+
+        public FirmanteInputModel build() {
+            FirmanteInputModel firmanteInputModel = new FirmanteInputModel();
+            firmanteInputModel.setRuc(ruc);
+            firmanteInputModel.setRazonSocial(razonSocial);
+            return firmanteInputModel;
+        }
+    }
 }

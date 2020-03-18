@@ -24,4 +24,33 @@ public class ContactoInputModel {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public static final class Builder {
+        private String telefono;
+        private String email;
+
+        private Builder() {
+        }
+
+        public static Builder aContactoInputModel() {
+            return new Builder();
+        }
+
+        public Builder withTelefono(String telefono) {
+            this.telefono = telefono;
+            return this;
+        }
+
+        public Builder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public ContactoInputModel build() {
+            ContactoInputModel contactoInputModel = new ContactoInputModel();
+            contactoInputModel.setTelefono(telefono);
+            contactoInputModel.setEmail(email);
+            return contactoInputModel;
+        }
+    }
 }

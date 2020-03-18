@@ -1,3 +1,5 @@
+    <#import "./address.ftl" as adressMacro/>
+    <#import "./contact.ftl" as contactMacro/>
     <cac:AccountingSupplierParty>
         <cac:Party>
             <cac:PartyIdentification>
@@ -12,20 +14,12 @@
                 <cbc:RegistrationName><![CDATA[${proveedor.razonSocial}]]></cbc:RegistrationName>
                 <#if proveedor.direccion??>
                 <cac:RegistrationAddress>
-                    <#import "./address.ftl" as adressMacro/>
-                    <@adressMacro address=proveedor.direccion/>
+                    <@adressMacro.macroAddress address=proveedor.direccion />
                 </cac:RegistrationAddress>
                 </#if>
             </cac:PartyLegalEntity>
             <#if proveedor.contacto??>
-            <cac:Contact>
-                <#if proveedor.contacto.telefono??>
-                <cbc:Telephone>${proveedor.contacto.telefono}</cbc:Telephone>
-                </#if>
-                <#if proveedor.contacto.email??>
-                <cbc:ElectronicMail>${proveedor.contacto.email}</cbc:ElectronicMail>
-                </#if>
-            </cac:Contact>
+                <@contactMacro.macroContact contact=proveedor.contacto />
             </#if>
         </cac:Party>
     </cac:AccountingSupplierParty>
