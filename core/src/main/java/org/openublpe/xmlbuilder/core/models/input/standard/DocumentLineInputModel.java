@@ -18,17 +18,15 @@ package org.openublpe.xmlbuilder.core.models.input.standard;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
-import org.openublpe.xmlbuilder.core.models.input.standard.invoice.CargoDescuentoInputModel;
+import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentLineInputModel_PrecioConstraint;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
-import java.util.List;
 
+@DocumentLineInputModel_PrecioConstraint
 public class DocumentLineInputModel {
 
     @NotBlank

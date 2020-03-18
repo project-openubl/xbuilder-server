@@ -16,12 +16,14 @@
  */
 package org.openublpe.xmlbuilder.core.models.catalogs.constraints;
 
-
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CatalogValidator implements ConstraintValidator<CatalogConstraint, String> {
 
@@ -33,18 +35,25 @@ public class CatalogValidator implements ConstraintValidator<CatalogConstraint, 
     }
 
     @Override
-    public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+    public boolean isValid(String value, ConstraintValidatorContext context) {
         // null values are valid
         if (value == null) {
             return true;
         }
 
         Enum<? extends Catalog>[] enumConstants = catalog.getEnumConstants();
-        boolean matchEnumValues = Arrays.stream(enumConstants).map(Enum::toString).anyMatch(p -> p.equals(value));
-        if (matchEnumValues) {
-            return true;
+        List<String> validValues = Arrays.stream(enumConstants).flatMap(f -> {
+            Catalog catalog = (Catalog) f;
+            return Stream.of(f.toString(), catalog.getCode());
+        }).collect(Collectors.toList());
+
+        boolean isValid = validValues.stream().anyMatch(p -> p.equals(value));
+        if (!isValid) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate("Possible values: " + String.join(", ", validValues))
+                    .addConstraintViolation();
         }
 
-        return Arrays.stream(enumConstants).map(f -> (Catalog) f).map(Catalog::getCode).anyMatch(p -> p.equals(value));
+        return isValid;
     }
 }

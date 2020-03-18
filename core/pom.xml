@@ -17,7 +17,6 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <!--Test-->
