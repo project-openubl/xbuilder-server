@@ -23,6 +23,7 @@ import org.openublpe.xmlbuilder.apisigner.models.OrganizationModel;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationProvider;
 import org.openublpe.xmlbuilder.apisigner.xml.XMLSigner;
 import org.openublpe.xmlbuilder.apisigner.xml.XmlSignatureHelper;
+import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
@@ -46,6 +47,7 @@ import org.xml.sax.SAXException;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.groups.ConvertGroup;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
@@ -102,7 +104,7 @@ public class OrganizationsDocumentsResource {
     @Produces(MediaType.APPLICATION_JSON)
     public InvoiceOutputModel enrichInvoiceModel(
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid InvoiceInputModel input
+            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
         return kieExecutor.getInvoiceOutputModel(input);
     }
@@ -183,7 +185,7 @@ public class OrganizationsDocumentsResource {
     @Produces(MediaType.TEXT_XML)
     public Response createInvoiceXml(
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid InvoiceInputModel input
+            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);

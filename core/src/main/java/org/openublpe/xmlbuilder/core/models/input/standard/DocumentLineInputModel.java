@@ -19,6 +19,7 @@ package org.openublpe.xmlbuilder.core.models.input.standard;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentLineInputModel_PrecioConstraint;
+import org.openublpe.xmlbuilder.core.models.input.constraints.HighLevelGroupValidation;
 
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotBlank;
@@ -26,7 +27,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
-@DocumentLineInputModel_PrecioConstraint
+@DocumentLineInputModel_PrecioConstraint(groups = HighLevelGroupValidation.class)
 public class DocumentLineInputModel {
 
     @NotBlank

@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- *
+ * <p>
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * https://www.eclipse.org/legal/epl-2.0/
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,6 +17,7 @@
 package org.openublpe.xmlbuilder.api.resources;
 
 import org.openublpe.xmlbuilder.api.resources.utils.ResourceUtils;
+import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
@@ -38,6 +39,8 @@ import org.openublpe.xmlbuilder.templates.executors.FreemarkerExecutor;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -59,7 +62,9 @@ public class DocumentsResource {
     @POST
     @Path("/invoice/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    public InvoiceOutputModel enrichInvoiceModel(@Valid InvoiceInputModel input) {
+    public InvoiceOutputModel enrichInvoiceModel(
+            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
+    ) {
         return kieExecutor.getInvoiceOutputModel(input);
     }
 
@@ -116,7 +121,9 @@ public class DocumentsResource {
     @POST
     @Path("/invoice/create")
     @Produces(MediaType.TEXT_XML)
-    public Response createInvoiceXml(@Valid InvoiceInputModel input) {
+    public Response createInvoiceXml(
+            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
+    ) {
         InvoiceOutputModel output = kieExecutor.getInvoiceOutputModel(input);
         String xml = freemarkerExecutor.createInvoiceXml(output);
 

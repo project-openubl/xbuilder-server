@@ -14,26 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openublpe.xmlbuilder.api.resources;
+package org.openublpe.xmlbuilder.apicore.resources;
 
 import org.jboss.resteasy.api.validation.ResteasyConstraintViolation;
 import org.jboss.resteasy.api.validation.ResteasyViolationException;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @Provider
 public class ValidationExceptionHandler implements ExceptionMapper<ResteasyViolationException>
 {
     @Override
     public Response toResponse(ResteasyViolationException e) {
-        ArrayList<String> violationMessages = new ArrayList<>();
+        Map<String, String> violationMessages = new HashMap<>();
         for (ResteasyConstraintViolation violation : e.getViolations()) {
             String[] pathParts = violation.getPath().split("\\.");
-            violationMessages.add(pathParts[pathParts.length - 1] + " " + violation.getMessage());
+            String key = String.join(".", Arrays.copyOfRange(pathParts, 2, pathParts.length));
+            violationMessages.put(key, violation.getMessage());
         }
-        return Response.status(400).entity(String.join(", ", violationMessages)).build();
+
+        return Response.status(400)
+                .type(MediaType.APPLICATION_JSON)
+                .entity(violationMessages)
+                .build();
     }
 }

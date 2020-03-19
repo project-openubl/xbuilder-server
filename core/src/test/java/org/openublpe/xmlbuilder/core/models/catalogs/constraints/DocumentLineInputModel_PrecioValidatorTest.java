@@ -19,6 +19,7 @@ package org.openublpe.xmlbuilder.core.models.catalogs.constraints;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentLineInputModel_PrecioValidator;
+import org.openublpe.xmlbuilder.core.models.input.constraints.HighLevelGroupValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 
 import javax.inject.Inject;
@@ -39,7 +40,7 @@ class DocumentLineInputModel_PrecioValidatorTest {
         DocumentLineInputModel input = DocumentLineInputModel.Builder.aDocumentLineInputModel()
                 .build();
 
-        Set<ConstraintViolation<DocumentLineInputModel>> violations = validator.validate(input);
+        Set<ConstraintViolation<DocumentLineInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
         assertTrue(
                 violations.stream().anyMatch(p -> p.getMessage().equals(DocumentLineInputModel_PrecioValidator.message))
         );

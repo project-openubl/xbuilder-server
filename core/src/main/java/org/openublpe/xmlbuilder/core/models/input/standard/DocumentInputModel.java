@@ -37,26 +37,26 @@ public abstract class DocumentInputModel {
     @Size(min = 4, max = 4)
     protected String serie;
 
+    @NotNull
     @Min(1)
     @Max(99999999)
-    @NotNull
     private Integer numero;
 
     private Long fechaEmision;
 
-    @Valid
     @NotNull
+    @Valid
     private ClienteInputModel cliente;
 
-    @Valid
     @NotNull
+    @Valid
     private ProveedorInputModel proveedor;
 
     @Valid
     private FirmanteInputModel firmante;
 
-    @Valid
     @NotEmpty
+    @Valid
     private List<DocumentLineInputModel> detalle;
 
     public String getSerie() {
