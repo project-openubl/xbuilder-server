@@ -1,5 +1,0 @@
-si cliente DNI entonces no puede crear factura solo boleta
-si cliente DOC_TRIBUTARUI NO DOM entonces no puede crear factura solo boleta
-si cliente ENTRAN NO DOM entonces no puede crear factura solo boleta
-si cliente PASAPO NO DOM entonces no puede crear factura solo boleta
-si cliente DECLARA entonces no puede crear factura solo boleta

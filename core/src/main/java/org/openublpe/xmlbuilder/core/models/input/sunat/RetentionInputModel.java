@@ -18,18 +18,11 @@ package org.openublpe.xmlbuilder.core.models.input.sunat;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog23;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
-import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
-import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
-import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 public class RetentionInputModel extends PerceptionRetentionInputModel {
 

@@ -17,8 +17,6 @@
 package org.openublpe.xmlbuilder.core.models.output.common;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
-import org.openublpe.xmlbuilder.core.models.input.common.ContactoInputModel;
-import org.openublpe.xmlbuilder.core.models.input.common.DireccionInputModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;

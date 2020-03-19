@@ -4,28 +4,18 @@ import io.github.carlosthe19916.webservices.managers.BillServiceManager;
 import io.github.carlosthe19916.webservices.providers.BillServiceModel;
 import io.github.carlosthe19916.webservices.wrappers.ServiceConfig;
 import io.restassured.response.Response;
-import io.restassured.response.ResponseBody;
-import org.hamcrest.MatcherAssert;
 import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.rules.utils.UBLUtils;
+import org.openublpe.xmlbuilder.core.models.utils.RegexUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xmlunit.builder.DiffBuilder;
-import org.xmlunit.diff.Comparison;
-import org.xmlunit.diff.ComparisonListener;
-import org.xmlunit.diff.ComparisonResult;
-import org.xmlunit.diff.DOMDifferenceEngine;
 import org.xmlunit.diff.Diff;
-import org.xmlunit.diff.DifferenceEngine;
-import org.xmlunit.matchers.CompareMatcher;
-import org.xmlunit.matchers.HasXPathMatcher;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -41,13 +31,10 @@ import java.io.InputStream;
 import java.text.MessageFormat;
 
 import static io.restassured.RestAssured.given;
-//import static org.custommonkey.xmlunit.XMLAssert.assertXMLEqual;
-//import static org.custommonkey.xmlunit.XMLAssert.assertXpathExists;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
 
 public abstract class AbstractUBLTest {
@@ -158,9 +145,9 @@ public abstract class AbstractUBLTest {
         String codigo;
         switch (type) {
             case INVOICE:
-                if (UBLUtils.FACTURA_SERIE_REGEX.matcher(documentID).find()) {
+                if (RegexUtils.FACTURA_SERIE_REGEX.matcher(documentID).find()) {
                     codigo = Catalog1.FACTURA.getCode();
-                } else if (UBLUtils.BOLETA_SERIE_REGEX.matcher(documentID).find()) {
+                } else if (RegexUtils.BOLETA_SERIE_REGEX.matcher(documentID).find()) {
                     codigo = Catalog1.BOLETA.getCode();
                 } else {
                     throw new IllegalStateException("Invalid Serie, can not detect code");

@@ -17,7 +17,6 @@
 package org.openublpe.xmlbuilder.core.models.output.standard;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

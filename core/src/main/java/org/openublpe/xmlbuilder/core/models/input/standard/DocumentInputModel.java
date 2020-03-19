@@ -19,6 +19,8 @@ package org.openublpe.xmlbuilder.core.models.input.standard;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
+import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentInputModel_PuedeCrearFacturaConstraint;
+import org.openublpe.xmlbuilder.core.models.input.constraints.HighLevelGroupValidation;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -30,6 +32,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+@DocumentInputModel_PuedeCrearFacturaConstraint(groups = HighLevelGroupValidation.class)
 public abstract class DocumentInputModel {
 
     @NotBlank

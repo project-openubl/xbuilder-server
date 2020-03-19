@@ -17,28 +17,15 @@
 package org.openublpe.xmlbuilder.core.models.output.standard.invoice;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog52;
-import org.openublpe.xmlbuilder.core.models.input.common.DireccionInputModel;
-import org.openublpe.xmlbuilder.core.models.input.standard.invoice.CargoDescuentoInputModel;
-import org.openublpe.xmlbuilder.core.models.input.standard.invoice.DetraccionRelacionadaInputModel;
-import org.openublpe.xmlbuilder.core.models.input.standard.invoice.PercepcionRelacionadaInputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.common.DireccionOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentImpuestosOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentMonetaryTotalOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DocumentoTributarioRelacionadoOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.GuiaRemisionRelacionadaOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalOutputModel;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.util.List;
 
 public class InvoiceOutputModel extends DocumentOutputModel {

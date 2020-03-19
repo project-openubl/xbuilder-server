@@ -19,13 +19,10 @@ package org.openublpe.xmlbuilder.core.models.catalogs.constraints;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
-import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentLineInputModel_PrecioValidator;
-import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

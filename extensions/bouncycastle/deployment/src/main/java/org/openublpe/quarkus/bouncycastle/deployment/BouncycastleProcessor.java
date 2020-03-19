@@ -21,7 +21,6 @@ import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem;
-import org.bouncycastle.crypto.prng.SP800SecureRandom;
 
 class BouncycastleProcessor {
 

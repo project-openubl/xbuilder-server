@@ -3,9 +3,6 @@ package org.openublpe.xmlbuilder.core.models.output.standard;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog8;
 
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 

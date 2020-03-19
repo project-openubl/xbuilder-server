@@ -3,7 +3,6 @@ package org.openublpe.xmlbuilder.rules.factory;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog16;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;

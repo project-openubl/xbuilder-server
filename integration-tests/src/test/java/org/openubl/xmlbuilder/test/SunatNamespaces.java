@@ -1,7 +1,6 @@
 package org.openubl.xmlbuilder.test;
 
 import javax.xml.namespace.NamespaceContext;
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;

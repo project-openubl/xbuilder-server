@@ -2,13 +2,10 @@ package org.openubl.xmlbuilder.test.ubl.invoice.mindata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;
-//import org.custommonkey.xmlunit.XMLUnit;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openubl.xmlbuilder.test.AbstractUBLTest;
 import org.openubl.xmlbuilder.test.UBLDocumentType;
 import org.openubl.xmlbuilder.test.XMlBuilderOutputResponse;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;

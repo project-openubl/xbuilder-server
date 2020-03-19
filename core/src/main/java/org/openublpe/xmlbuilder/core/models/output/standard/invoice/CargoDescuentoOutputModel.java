@@ -17,9 +17,6 @@
 package org.openublpe.xmlbuilder.core.models.output.standard.invoice;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog53;
-import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
-import org.openublpe.xmlbuilder.core.models.input.standard.DocumentoTributarioRelacionadoInputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DocumentoTributarioRelacionadoOutputModel;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
