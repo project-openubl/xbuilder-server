@@ -1,4 +1,4 @@
-package org.openubl.xmlbuilder.test.ubl.creditnote;
+package org.openubl.xmlbuilder.test.ubl.debitnote.mindata;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.test.junit.QuarkusTest;
@@ -10,19 +10,19 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
-import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 
 @QuarkusTest
-public class CreditNoteMinDataTest extends AbstractUBLTest {
+public class DebitNoteMinDataTest extends AbstractUBLTest {
 
     @Test
-    void testCreditNoteWithMinDataSent_customerWithRuc() throws Exception {
+    void testDebitNoteWithMinDataSent_customerWithRuc() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
-                .withSerie("FC01")
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
+                .withSerie("FD01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("F001-1")
                 .withDescripcionSustento("mi sustento")
@@ -54,22 +54,22 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_RUC.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_RUC.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
 
     @Test
-    void testCreditNoteWithMinDataSent_customerWithDni() throws Exception {
+    void testDebitNoteWithMinDataSent_customerWithDni() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
-                .withSerie("BC01")
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
+                .withSerie("BD01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("B001-1")
                 .withDescripcionSustento("mi sustento")
@@ -101,22 +101,22 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_DNI.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_DNI.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
 
     @Test
-    void testCreditNoteWithMinDataSent_customerWithDocTribNoDomSinRuc() throws Exception {
+    void testDebitNoteWithMinDataSent_customerWithDocTribNoDomSinRuc() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
-                .withSerie("BC01")
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
+                .withSerie("BD01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("B001-1")
                 .withDescripcionSustento("mi sustento")
@@ -148,22 +148,22 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_DocTribNoDomSinRuc.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_DocTribNoDomSinRuc.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
 
     @Test
-    void testCreditNoteWithMinDataSent_customerWithExtranjeria() throws Exception {
+    void testDebitNoteWithMinDataSent_customerWithExtranjeria() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
-                .withSerie("BC01")
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
+                .withSerie("BD01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("B001-1")
                 .withDescripcionSustento("mi sustento")
@@ -195,22 +195,22 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_Extranjeria.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_Extranjeria.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
 
     @Test
-    void testCreditNoteWithMinDataSent_customerWithPasaporte() throws Exception {
+    void testDebitNoteWithMinDataSent_customerWithPasaporte() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
-                .withSerie("BC01")
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
+                .withSerie("BD01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("B001-1")
                 .withDescripcionSustento("mi sustento")
@@ -242,22 +242,22 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_Pasaporte.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_Pasaporte.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
 
     @Test
-    void testCreditNoteWithMinDataSent_customerWithDecDiplomatica() throws Exception {
+    void testDebitNoteWithMinDataSent_customerWithDecDiplomatica() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
-                .withSerie("BC01")
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
+                .withSerie("BD01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("B001-1")
                 .withDescripcionSustento("mi sustento")
@@ -289,22 +289,22 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_DecDiplomatica.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_DecDiplomatica.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
 
     @Test
-    void testCreditNoteWithMinDataSent_usePrecioSinImpuestos() throws Exception {
+    void testDebitNoteWithMinDataSent_usePrecioSinImpuestos() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
-                .withSerie("FC01")
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
+                .withSerie("FD01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("F001-1")
                 .withDescripcionSustento("mi sustento")
@@ -336,22 +336,22 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_UsePrecioConSinImpuestos.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioConSinImpuestos.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
 
     @Test
-    void testCreditNoteWithMinDataSent_usePrecioConImpuestos() throws Exception {
+    void testDebitNoteWithMinDataSent_usePrecioConImpuestos() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
-                .withSerie("FC01")
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
+                .withSerie("FD01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("F001-1")
                 .withDescripcionSustento("mi sustento")
@@ -383,21 +383,21 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_UsePrecioConSinImpuestos.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioConSinImpuestos.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
 
     @Test
-    void testCreditNoteWithMinDataSent_usePrecioSinImpuestosAndCantidadThreeDecimals() throws Exception {
+    void testDebitNoteWithMinDataSent_usePrecioSinImpuestosAndCantidadThreeDecimals() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
                 .withSerie("FC01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("F001-1")
@@ -430,21 +430,21 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_UsePrecioConSinImpuestosAndCantidadThreeDecimals.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioConSinImpuestosAndCantidadThreeDecimals.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
 
     @Test
-    void testCreditNoteWithMinDataSent_usePrecioConImpuestosAndCantidadThreeDecimals() throws Exception {
+    void testDebitNoteWithMinDataSent_usePrecioConImpuestosAndCantidadThreeDecimals() throws Exception {
         // Given
-        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
                 .withSerie("FC01")
                 .withNumero(1)
                 .withSerieNumeroComprobanteAfectado("F001-1")
@@ -477,14 +477,15 @@ public class CreditNoteMinDataTest extends AbstractUBLTest {
         String body = new ObjectMapper().writeValueAsString(input);
 
         // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.CREDIT_NOTE, body);
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/creditnote/mindata/MinData_UsePrecioConSinImpuestosAndCantidadThreeDecimals.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioConSinImpuestosAndCantidadThreeDecimals.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
         );
-        assertSendSunat(UBLDocumentType.CREDIT_NOTE, response.getApiSignerCreateResponse());
+        assertSendSunat(UBLDocumentType.DEBIT_NOTE, response.getApiSignerCreateResponse());
     }
+
 }
