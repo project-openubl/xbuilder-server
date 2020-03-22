@@ -16,7 +16,6 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.standard.note;
 
-import org.openublpe.xmlbuilder.core.models.input.constraints.HighLevelGroupValidation;
 import org.openublpe.xmlbuilder.core.models.input.constraints.NoteInputModel_SerieComprobanteAfectadoConstraint;
 import org.openublpe.xmlbuilder.core.models.input.constraints.NoteInputModel_SerieComprobanteAfectadoGroupValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;

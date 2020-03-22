@@ -16,7 +16,6 @@
  */
 package org.openublpe.xmlbuilder.api.resources;
 
-import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.openublpe.xmlbuilder.api.resources.utils.ResourceUtils;
 import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;

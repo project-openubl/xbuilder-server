@@ -24,7 +24,6 @@ import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentImpuestosOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentMonetaryTotalOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;
 
 import javax.validation.constraints.NotNull;

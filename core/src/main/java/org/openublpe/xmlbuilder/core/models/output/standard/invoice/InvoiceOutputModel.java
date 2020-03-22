@@ -17,16 +17,9 @@
 package org.openublpe.xmlbuilder.core.models.output.standard.invoice;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DocumentImpuestosOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.DocumentMonetaryTotalOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 public class InvoiceOutputModel extends DocumentOutputModel {
 

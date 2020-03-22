@@ -5,7 +5,6 @@ import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;

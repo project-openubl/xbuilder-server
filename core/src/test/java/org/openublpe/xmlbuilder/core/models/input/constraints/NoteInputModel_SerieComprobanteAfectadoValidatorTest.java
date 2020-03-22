@@ -2,18 +2,14 @@ package org.openublpe.xmlbuilder.core.models.input.constraints;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
-import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
-import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
 class NoteInputModel_SerieComprobanteAfectadoValidatorTest {

@@ -8,7 +8,6 @@ import org.openubl.xmlbuilder.test.UBLDocumentType;
 import org.openubl.xmlbuilder.test.XMlBuilderOutputResponse;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;

@@ -18,8 +18,6 @@ package org.openublpe.xmlbuilder.core.models.input.constraints;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
-import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentLineInputModel_PrecioValidator;
-import org.openublpe.xmlbuilder.core.models.input.constraints.HighLevelGroupValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 
 import javax.inject.Inject;
