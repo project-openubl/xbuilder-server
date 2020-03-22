@@ -41,17 +41,7 @@ public class InvoiceOutputModel extends DocumentOutputModel {
         this.tipoInvoice = tipoInvoice;
     }
 
-    public static final class Builder {
-        DocumentMonetaryTotalOutputModel totales;
-        private String moneda;
-        private String serieNumero;
-        private String horaEmision;
-        private String fechaEmision;
-        private ClienteOutputModel cliente;
-        private FirmanteOutputModel firmante;
-        private ProveedorOutputModel proveedor;
-        private DocumentImpuestosOutputModel impuestos;
-        private List<DocumentLineOutputModel> detalle;
+    public static final class Builder extends DocumentOutputModel.Builder {
         private Catalog1 tipoInvoice;
 
         private Builder() {
@@ -59,56 +49,6 @@ public class InvoiceOutputModel extends DocumentOutputModel {
 
         public static Builder anInvoiceOutputModel() {
             return new Builder();
-        }
-
-        public Builder withMoneda(String moneda) {
-            this.moneda = moneda;
-            return this;
-        }
-
-        public Builder withSerieNumero(String serieNumero) {
-            this.serieNumero = serieNumero;
-            return this;
-        }
-
-        public Builder withHoraEmision(String horaEmision) {
-            this.horaEmision = horaEmision;
-            return this;
-        }
-
-        public Builder withFechaEmision(String fechaEmision) {
-            this.fechaEmision = fechaEmision;
-            return this;
-        }
-
-        public Builder withCliente(ClienteOutputModel cliente) {
-            this.cliente = cliente;
-            return this;
-        }
-
-        public Builder withFirmante(FirmanteOutputModel firmante) {
-            this.firmante = firmante;
-            return this;
-        }
-
-        public Builder withProveedor(ProveedorOutputModel proveedor) {
-            this.proveedor = proveedor;
-            return this;
-        }
-
-        public Builder withTotales(DocumentMonetaryTotalOutputModel totales) {
-            this.totales = totales;
-            return this;
-        }
-
-        public Builder withImpuestos(DocumentImpuestosOutputModel impuestos) {
-            this.impuestos = impuestos;
-            return this;
-        }
-
-        public Builder withDetalle(List<DocumentLineOutputModel> detalle) {
-            this.detalle = detalle;
-            return this;
         }
 
         public Builder withTipoInvoice(Catalog1 tipoInvoice) {

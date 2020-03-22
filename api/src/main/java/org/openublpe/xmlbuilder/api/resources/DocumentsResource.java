@@ -16,10 +16,15 @@
  */
 package org.openublpe.xmlbuilder.api.resources;
 
+import org.eclipse.microprofile.openapi.annotations.OpenAPIDefinition;
 import org.openublpe.xmlbuilder.api.resources.utils.ResourceUtils;
 import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
 import org.openublpe.xmlbuilder.rules.executors.KieExecutor;
 import org.openublpe.xmlbuilder.templates.executors.FreemarkerExecutor;
 
@@ -53,20 +58,24 @@ public class DocumentsResource {
         return kieExecutor.getInvoiceOutputModel(input);
     }
 
-//    @POST
-//    @Path("/credit-note/enrich")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public CreditNoteOutputModel enrichCreditNoteModel(@Valid CreditNoteInputModel input) {
-//        return kieExecutor.getCreditNoteOutputModel(input);
-//    }
-//
-//    @POST
-//    @Path("/debit-note/enrich")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public DebitNoteOutputModel enrichDebitNoteModel(@Valid DebitNoteInputModel input) {
-//        return kieExecutor.getDebitNoteOutputModel(input);
-//    }
-//
+    @POST
+    @Path("/credit-note/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public CreditNoteOutputModel enrichCreditNoteModel(
+            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+    ) {
+        return kieExecutor.getCreditNoteOutputModel(input);
+    }
+
+    @POST
+    @Path("/debit-note/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DebitNoteOutputModel enrichDebitNoteModel(
+            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+    ) {
+        return kieExecutor.getDebitNoteOutputModel(input);
+    }
+
 //    @POST
 //    @Path("/voided-document/enrich")
 //    @Produces(MediaType.APPLICATION_JSON)
@@ -117,30 +126,34 @@ public class DocumentsResource {
                 .build();
     }
 
-//    @POST
-//    @Path("/credit-note/create")
-//    @Produces(MediaType.TEXT_XML)
-//    public Response createCreditNote(@Valid CreditNoteInputModel input) {
-//        CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
-//        String xml = freemarkerExecutor.createCreditNote(output);
-//
-//        return Response.ok(xml)
-//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-//                .build();
-//    }
-//
-//    @POST
-//    @Path("/debit-note/create")
-//    @Produces(MediaType.TEXT_XML)
-//    public Response createDebitNote(@Valid DebitNoteInputModel input) {
-//        DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
-//        String xml = freemarkerExecutor.createDebitNote(output);
-//
-//        return Response.ok(xml)
-//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-//                .build();
-//    }
-//
+    @POST
+    @Path("/credit-note/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createCreditNote(
+            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+    ) {
+        CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
+        String xml = freemarkerExecutor.createCreditNote(output);
+
+        return Response.ok(xml)
+                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .build();
+    }
+
+    @POST
+    @Path("/debit-note/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createDebitNote(
+            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+    ) {
+        DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
+        String xml = freemarkerExecutor.createDebitNote(output);
+
+        return Response.ok(xml)
+                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .build();
+    }
+
 //    @POST
 //    @Path("/voided-document/create")
 //    @Produces(MediaType.TEXT_XML)

@@ -14,14 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openublpe.xmlbuilder.core.models.catalogs.constraints;
+package org.openublpe.xmlbuilder.core.models.input.constraints;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
-import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentInputModel_PuedeCrearFacturaValidator;
-import org.openublpe.xmlbuilder.core.models.input.constraints.HighLevelGroupValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 
 import javax.inject.Inject;
@@ -32,7 +30,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
-class DocumentInputModel_PuedeCrearFacturaValidatorTest {
+class DocumentInputModel_PuedeCrearComprobanteConSerieFValidatorTest {
 
     @Inject
     Validator validator;
@@ -47,9 +45,9 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(
-                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearFacturaValidator.message))
+                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearComprobanteConSerieFValidator.message))
         );
     }
 
@@ -63,9 +61,9 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(
-                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearFacturaValidator.message))
+                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearComprobanteConSerieFValidator.message))
         );
     }
 
@@ -79,9 +77,9 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(
-                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearFacturaValidator.message))
+                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearComprobanteConSerieFValidator.message))
         );
     }
 
@@ -95,7 +93,7 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(violations.isEmpty());
     }
 
@@ -109,9 +107,9 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(
-                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearFacturaValidator.message))
+                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearComprobanteConSerieFValidator.message))
         );
     }
 
@@ -125,9 +123,9 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(
-                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearFacturaValidator.message))
+                violations.stream().anyMatch(p -> p.getMessage().equals(DocumentInputModel_PuedeCrearComprobanteConSerieFValidator.message))
         );
     }
 
@@ -141,7 +139,7 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(violations.isEmpty());
     }
 
@@ -155,7 +153,7 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(violations.isEmpty());
     }
 
@@ -169,7 +167,7 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(violations.isEmpty());
     }
 
@@ -183,7 +181,7 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(violations.isEmpty());
     }
 
@@ -197,7 +195,7 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(violations.isEmpty());
     }
 
@@ -211,7 +209,7 @@ class DocumentInputModel_PuedeCrearFacturaValidatorTest {
                 )
                 .build();
 
-        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        Set<ConstraintViolation<InvoiceInputModel>> violations = validator.validate(input, DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class);
         assertTrue(violations.isEmpty());
     }
 }

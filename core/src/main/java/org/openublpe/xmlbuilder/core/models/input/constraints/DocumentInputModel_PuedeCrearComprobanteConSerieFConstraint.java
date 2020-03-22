@@ -24,10 +24,10 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-@Constraint(validatedBy = DocumentInputModel_PuedeCrearFacturaValidator.class)
+@Constraint(validatedBy = DocumentInputModel_PuedeCrearComprobanteConSerieFValidator.class)
 @Target(TYPE)
 @Retention(RUNTIME)
-public @interface DocumentInputModel_PuedeCrearFacturaConstraint {
+public @interface DocumentInputModel_PuedeCrearComprobanteConSerieFConstraint {
     String message() default "";
     Class<?>[] groups() default { };
     Class<? extends Payload>[] payload() default { };

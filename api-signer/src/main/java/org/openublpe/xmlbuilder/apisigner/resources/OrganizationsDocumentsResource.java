@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- *
+ * <p>
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * https://www.eclipse.org/legal/epl-2.0/
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,11 @@ import org.openublpe.xmlbuilder.apisigner.xml.XMLSigner;
 import org.openublpe.xmlbuilder.apisigner.xml.XmlSignatureHelper;
 import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
 import org.openublpe.xmlbuilder.rules.executors.KieExecutor;
 import org.openublpe.xmlbuilder.templates.executors.FreemarkerExecutor;
 import org.w3c.dom.Document;
@@ -95,26 +99,26 @@ public class OrganizationsDocumentsResource {
         return kieExecutor.getInvoiceOutputModel(input);
     }
 
-//    @POST
-//    @Path("/credit-note/enrich")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public CreditNoteOutputModel enrichCreditNoteModel(
-//            @PathParam(ORGANIZATION_ID) String organizationId,
-//            @Valid CreditNoteInputModel input
-//    ) {
-//        return kieExecutor.getCreditNoteOutputModel(input);
-//    }
-//
-//    @POST
-//    @Path("/debit-note/enrich")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public DebitNoteOutputModel enrichDebitNoteModel(
-//            @PathParam(ORGANIZATION_ID) String organizationId,
-//            @Valid DebitNoteInputModel input
-//    ) {
-//        return kieExecutor.getDebitNoteOutputModel(input);
-//    }
-//
+    @POST
+    @Path("/credit-note/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public CreditNoteOutputModel enrichCreditNoteModel(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+    ) {
+        return kieExecutor.getCreditNoteOutputModel(input);
+    }
+
+    @POST
+    @Path("/debit-note/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public DebitNoteOutputModel enrichDebitNoteModel(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+    ) {
+        return kieExecutor.getDebitNoteOutputModel(input);
+    }
+
 //    @POST
 //    @Path("/voided-document/enrich")
 //    @Produces(MediaType.APPLICATION_JSON)
@@ -191,56 +195,56 @@ public class OrganizationsDocumentsResource {
                 .build();
     }
 
-//    @POST
-//    @Path("/credit-note/create")
-//    @Produces(MediaType.TEXT_XML)
-//    public Response createCreditNoteXml(
-//            @PathParam(ORGANIZATION_ID) String organizationId,
-//            @Valid CreditNoteInputModel input
-//    ) throws Exception {
-//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-//
-//        CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
-//        String xml = freemarkerExecutor.createCreditNote(output);
-//
-//        Document xmlSignedDocument;
-//        try {
-//            xmlSignedDocument = signXML(activeRsaKey, xml);
-//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-//            throw new InternalServerErrorException(e);
-//        }
-//
-//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-//                .build();
-//    }
-//
-//    @POST
-//    @Path("/debit-note/create")
-//    @Produces(MediaType.TEXT_XML)
-//    public Response createDebitNoteXml(
-//            @PathParam(ORGANIZATION_ID) String organizationId,
-//            @Valid DebitNoteInputModel input
-//    ) throws Exception {
-//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-//
-//        DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
-//        String xml = freemarkerExecutor.createDebitNote(output);
-//
-//        Document xmlSignedDocument;
-//        try {
-//            xmlSignedDocument = signXML(activeRsaKey, xml);
-//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-//            throw new InternalServerErrorException(e);
-//        }
-//
-//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-//                .build();
-//    }
-//
+    @POST
+    @Path("/credit-note/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createCreditNoteXml(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+    ) throws Exception {
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+
+        CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
+        String xml = freemarkerExecutor.createCreditNote(output);
+
+        Document xmlSignedDocument;
+        try {
+            xmlSignedDocument = signXML(activeRsaKey, xml);
+        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .build();
+    }
+
+    @POST
+    @Path("/debit-note/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createDebitNoteXml(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+    ) throws Exception {
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+
+        DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
+        String xml = freemarkerExecutor.createDebitNote(output);
+
+        Document xmlSignedDocument;
+        try {
+            xmlSignedDocument = signXML(activeRsaKey, xml);
+        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .build();
+    }
+
 //    @POST
 //    @Path("/voided-document/create")
 //    @Produces(MediaType.TEXT_XML)

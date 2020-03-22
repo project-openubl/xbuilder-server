@@ -16,41 +16,36 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.constraints;
 
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
-import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
-import org.openublpe.xmlbuilder.core.models.utils.RegexUtils;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class DocumentInputModel_PuedeCrearFacturaValidator implements ConstraintValidator<DocumentInputModel_PuedeCrearFacturaConstraint, DocumentInputModel> {
+public class NoteInputModel_SerieComprobanteAfectadoValidator implements ConstraintValidator<NoteInputModel_SerieComprobanteAfectadoConstraint, NoteInputModel> {
 
-    public static final String message = "Las Facturas sólo pueden ser creadas por clientes con RUC";
+    public static final String message = "Primera letra de Nota y Comprobante Afectado deben de coincidir. Ej. Nota: FC01-1 => Comprobante Afectado: F001-1";
 
     @Override
-    public void initialize(DocumentInputModel_PuedeCrearFacturaConstraint constraintAnnotation) {
+    public void initialize(NoteInputModel_SerieComprobanteAfectadoConstraint constraintAnnotation) {
     }
 
     @Override
-    public boolean isValid(DocumentInputModel value, ConstraintValidatorContext context) {
-        if (value.getSerie() == null || value.getCliente() == null || value.getCliente().getTipoDocumentoIdentidad() == null) {
+    public boolean isValid(NoteInputModel value, ConstraintValidatorContext context) {
+        if (value.getSerie() == null || value.getSerieNumeroComprobanteAfectado() == null) {
             throw new IllegalStateException("Values needed for validation are null. Make sure you call Default.clas validation group before calling this validator");
         }
 
-        String serie = value.getSerie();
-        Catalog6 catalog6 = Catalog.valueOfCode(Catalog6.class, value.getCliente().getTipoDocumentoIdentidad())
-                .orElseThrow(Catalog.invalidCatalogValue);
+        boolean isValid = value.getSerie().toUpperCase().startsWith(
+                value.getSerieNumeroComprobanteAfectado().toUpperCase().substring(0, 1)
+        );
 
-        boolean isInvalid = RegexUtils.FACTURA_SERIE_REGEX.matcher(serie).find() && !catalog6.equals(Catalog6.RUC);
-
-        if (isInvalid) {
+        if (!isValid) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(message)
                     .addConstraintViolation();
         }
 
-        return !isInvalid;
+        return isValid;
     }
 
 }

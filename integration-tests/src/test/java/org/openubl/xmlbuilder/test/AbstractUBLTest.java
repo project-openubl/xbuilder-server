@@ -220,7 +220,7 @@ public abstract class AbstractUBLTest {
                 .post(ApiApplication.API_BASE + "/documents/" + type.getType() + "/enrich")
                 .thenReturn();
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals(200, response.getStatusCode(), response.getBody().asString());
         assertNotNull(response.getBody().asString());
 
         return response;
@@ -234,7 +234,7 @@ public abstract class AbstractUBLTest {
                 .post(ApiApplication.API_BASE + "/documents/" + type.getType() + "/create")
                 .thenReturn();
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals(200, response.getStatusCode(), response.getBody().asString());
         assertNotNull(response.getBody().asString());
 
         return response;
@@ -248,7 +248,7 @@ public abstract class AbstractUBLTest {
                 .post(ApiApplication.API_BASE + "/organizations/" + ORGANIZATION_ID + "/documents/" + documentType.getType() + "/enrich")
                 .thenReturn();
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals(200, response.getStatusCode(), response.getBody().asString());
         assertNotNull(response.getBody().asString());
 
         return response;
@@ -262,7 +262,7 @@ public abstract class AbstractUBLTest {
                 .post(ApiApplication.API_BASE + "/organizations/" + ORGANIZATION_ID + "/documents/" + documentType.getType() + "/create")
                 .thenReturn();
 
-        assertEquals(200, response.getStatusCode());
+        assertEquals(200, response.getStatusCode(), response.getBody().asString());
         assertNotNull(response.getBody().asString());
 
         return response;

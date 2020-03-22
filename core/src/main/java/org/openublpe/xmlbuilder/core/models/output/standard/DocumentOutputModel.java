@@ -29,43 +29,44 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @DocumentOutputModelConstraint
-public class DocumentOutputModel {
+public abstract class DocumentOutputModel {
 
     @NotBlank
     @Size(min = 3, max = 3)
-    private String moneda;
+    protected String moneda;
 
     @NotBlank
-    private String serieNumero;
+    protected String serieNumero;
 
     @NotBlank
-    private String horaEmision;
+    protected String horaEmision;
 
     @NotBlank
-    private String fechaEmision;
+    protected String fechaEmision;
 
     @Valid
     @NotNull
-    private ClienteOutputModel cliente;
+    protected ClienteOutputModel cliente;
 
     @Valid
     @NotNull
-    private FirmanteOutputModel firmante;
+    protected FirmanteOutputModel firmante;
 
     @Valid
     @NotNull
-    private ProveedorOutputModel proveedor;
-
-    @Valid
-    @NotNull DocumentMonetaryTotalOutputModel totales;
+    protected ProveedorOutputModel proveedor;
 
     @Valid
     @NotNull
-    private DocumentImpuestosOutputModel impuestos;
+    protected DocumentMonetaryTotalOutputModel totales;
+
+    @Valid
+    @NotNull
+    protected DocumentImpuestosOutputModel impuestos;
 
     @Valid
     @NotEmpty
-    private List<DocumentLineOutputModel> detalle;
+    protected List<DocumentLineOutputModel> detalle;
 
     public String getMoneda() {
         return moneda;
@@ -147,4 +148,73 @@ public class DocumentOutputModel {
         this.detalle = detalle;
     }
 
+    public static class Builder {
+        protected String moneda;
+        protected String serieNumero;
+        protected String horaEmision;
+        protected String fechaEmision;
+        protected ClienteOutputModel cliente;
+        protected FirmanteOutputModel firmante;
+        protected ProveedorOutputModel proveedor;
+        protected DocumentMonetaryTotalOutputModel totales;
+        protected DocumentImpuestosOutputModel impuestos;
+        protected List<DocumentLineOutputModel> detalle;
+
+        protected Builder() {
+        }
+
+        public static Builder aDocumentOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withMoneda(String moneda) {
+            this.moneda = moneda;
+            return this;
+        }
+
+        public Builder withSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+            return this;
+        }
+
+        public Builder withHoraEmision(String horaEmision) {
+            this.horaEmision = horaEmision;
+            return this;
+        }
+
+        public Builder withFechaEmision(String fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
+
+        public Builder withCliente(ClienteOutputModel cliente) {
+            this.cliente = cliente;
+            return this;
+        }
+
+        public Builder withFirmante(FirmanteOutputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorOutputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withTotales(DocumentMonetaryTotalOutputModel totales) {
+            this.totales = totales;
+            return this;
+        }
+
+        public Builder withImpuestos(DocumentImpuestosOutputModel impuestos) {
+            this.impuestos = impuestos;
+            return this;
+        }
+
+        public Builder withDetalle(List<DocumentLineOutputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
+    }
 }

@@ -1,18 +1,29 @@
 package org.openublpe.xmlbuilder.rules.factory;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentImpuestosOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineImpuestosOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentMonetaryTotalOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
 import org.openublpe.xmlbuilder.rules.EnvironmentVariables;
 import org.openublpe.xmlbuilder.rules.datetime.DateTimeFactory;
 
@@ -35,6 +46,12 @@ public class DocumentFactory {
     @ConfigProperty(name = EnvironmentVariables.DEFAULT_MONEDA)
     String defaultMoneda;
 
+    @ConfigProperty(name = EnvironmentVariables.DEFAULT_TIPO_NOTA_CREDITO)
+    String defaultTipoNotaCredito;
+
+    @ConfigProperty(name = EnvironmentVariables.DEFAULT_TIPO_NOTA_DEBITO)
+    String defaultTipoNotaDebito;
+
     @Inject
     DocumentLineFactory documentLineFactory;
 
@@ -56,7 +73,35 @@ public class DocumentFactory {
         return builder.build();
     }
 
-    private void enrichDocument(DocumentInputModel input, InvoiceOutputModel.Builder builder) {
+    public CreditNoteOutputModel getCreditNoteOutput(CreditNoteInputModel input) {
+        CreditNoteOutputModel.Builder builder = CreditNoteOutputModel.Builder.aCreditNoteOutputModel()
+                .withTipoNota(
+                        input.getTipoNota() != null
+                                ? Catalog.valueOfCode(Catalog9.class, input.getTipoNota()).orElseThrow(Catalog.invalidCatalogValue)
+                                : Catalog.valueOfCode(Catalog9.class, defaultTipoNotaCredito).orElseThrow(Catalog.invalidCatalogValue)
+                );
+
+        enrichNote(input, builder);
+        enrichDocument(input, builder);
+        return builder.build();
+    }
+
+    public DebitNoteOutputModel getDebitNoteOutput(DebitNoteInputModel input) {
+        DebitNoteOutputModel.Builder builder = DebitNoteOutputModel.Builder.aDebitNoteOutputModel()
+                .withTipoNota(
+                        input.getTipoNota() != null
+                                ? Catalog.valueOfCode(Catalog10.class, input.getTipoNota()).orElseThrow(Catalog.invalidCatalogValue)
+                                : Catalog.valueOfCode(Catalog10.class, defaultTipoNotaDebito).orElseThrow(Catalog.invalidCatalogValue)
+                );
+
+        enrichNote(input, builder);
+        enrichDocument(input, builder);
+        return builder.build();
+    }
+
+    // Enrich
+
+    private void enrichDocument(DocumentInputModel input, DocumentOutputModel.Builder builder) {
         builder.withMoneda(defaultMoneda)
                 .withSerieNumero(input.getSerie().toUpperCase() + "-" + input.getNumero());
 
@@ -165,7 +210,20 @@ public class DocumentFactory {
         );
     }
 
-    private ImpuestoTotalOutputModel getImpuestoTotal(List<DocumentLineOutputModel> lineOutput, Catalog5 categoria){
+    private void enrichNote(NoteInputModel input, NoteOutputModel.Builder builder) {
+        builder.withSerieNumeroComprobanteAfectado(input.getSerieNumeroComprobanteAfectado())
+                .withDescripcionSustentoDeNota(input.getDescripcionSustentoDeNota());
+
+        if (input.getSerieNumeroComprobanteAfectado().matches("^[F|b].*$")) {
+            builder.withTipoDocumentoComprobanteAfectado(Catalog1.FACTURA);
+        } else if (input.getSerie().matches("^[B|b].*$")) {
+            builder.withTipoDocumentoComprobanteAfectado(Catalog1.BOLETA);
+        } else {
+            throw new IllegalStateException("Invalid Serie");
+        }
+    }
+
+    private ImpuestoTotalOutputModel getImpuestoTotal(List<DocumentLineOutputModel> lineOutput, Catalog5 categoria) {
         java.util.function.Supplier<Stream<DocumentLineOutputModel>> gravadoStream = () -> lineOutput.stream()
                 .filter(i -> i.getImpuestos().getIgv().getTipo().getTaxCategory().equals(categoria));
 

@@ -5,11 +5,11 @@
 >
     <#include "./common/ubl-extensions.ftl">
     <#include "./common/general-data.ftl">
-    <#include "./common/legends.ftl">
+<#--    <#include "./common/legends.ftl">-->
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyName="United Nations Economic Commission for Europe" listName="Currency">${moneda}</cbc:DocumentCurrencyCode>
     <#include "./common/note/invoice-reference.ftl">
-    <#include "./common/despatch-document-reference.ftl">
-    <#include "./common/additional-document-reference.ftl">
+<#--    <#include "./common/despatch-document-reference.ftl">-->
+<#--    <#include "./common/additional-document-reference.ftl">-->
     <#include "../signature.ftl">
     <#include "./common/supplier.ftl">
     <#include "./common/customer.ftl">
