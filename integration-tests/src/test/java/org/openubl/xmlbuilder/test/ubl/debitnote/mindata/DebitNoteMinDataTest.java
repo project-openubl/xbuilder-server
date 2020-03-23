@@ -41,12 +41,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -88,12 +88,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -135,12 +135,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -182,12 +182,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -229,12 +229,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -276,12 +276,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -301,7 +301,7 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
     }
 
     @Test
-    void testDebitNoteWithMinDataSent_usePrecioSinImpuestos() throws Exception {
+    void testDebitNoteWithMinDataSent_usePrecioUnitario() throws Exception {
         // Given
         DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
                 .withSerie("FD01")
@@ -323,12 +323,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -339,7 +339,7 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
         XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioConSinImpuestos.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioUnitarioOPrecioConIgv.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
@@ -348,7 +348,7 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
     }
 
     @Test
-    void testDebitNoteWithMinDataSent_usePrecioConImpuestos() throws Exception {
+    void testDebitNoteWithMinDataSent_usePrecioConIgv() throws Exception {
         // Given
         DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
                 .withSerie("FD01")
@@ -370,12 +370,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .build())
                 )
                 .build();
@@ -386,7 +386,7 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
         XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioConSinImpuestos.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioUnitarioOPrecioConIgv.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
@@ -395,7 +395,7 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
     }
 
     @Test
-    void testDebitNoteWithMinDataSent_usePrecioSinImpuestosAndCantidadThreeDecimals() throws Exception {
+    void testDebitNoteWithMinDataSent_usePrecioUnitarioAndCantidadThreeDecimals() throws Exception {
         // Given
         DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
                 .withSerie("FC01")
@@ -417,12 +417,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal("10.123"))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal("10.123"))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -433,7 +433,7 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
         XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioConSinImpuestosAndCantidadThreeDecimals.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioUnitarioOPrecioConIgvAndCantidadThreeDecimals.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()
@@ -442,7 +442,7 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
     }
 
     @Test
-    void testDebitNoteWithMinDataSent_usePrecioConImpuestosAndCantidadThreeDecimals() throws Exception {
+    void testDebitNoteWithMinDataSent_usePrecioConIgvAndCantidadThreeDecimals() throws Exception {
         // Given
         DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
                 .withSerie("FC01")
@@ -464,12 +464,12 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal("10.123"))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal("10.123"))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .build())
                 )
                 .build();
@@ -480,7 +480,7 @@ public class DebitNoteMinDataTest extends AbstractUBLTest {
         XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.DEBIT_NOTE, body);
 
         // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioConSinImpuestosAndCantidadThreeDecimals.xml");
+        assertSnapshot(response.getApiCreateResponse(), "xml/debitnote/mindata/MinData_UsePrecioUnitarioOPrecioConIgvAndCantidadThreeDecimals.xml");
         assertEqualsXMLExcerptSignature(
                 response.getApiCreateResponse(),
                 response.getApiSignerCreateResponse()

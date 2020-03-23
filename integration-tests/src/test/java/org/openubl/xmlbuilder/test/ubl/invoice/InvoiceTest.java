@@ -43,13 +43,13 @@ public class InvoiceTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withUnidadMedida("KGM")
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withUnidadMedida("KGM")
                                 .build())
                 )
@@ -94,12 +94,12 @@ public class InvoiceTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -153,12 +153,12 @@ public class InvoiceTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -212,12 +212,12 @@ public class InvoiceTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -262,12 +262,12 @@ public class InvoiceTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();
@@ -286,4 +286,107 @@ public class InvoiceTest extends AbstractUBLTest {
         assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
     }
 
+    @Test
+    void testInvoiceWithICB_precioUnitario() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withFirmante(FirmanteInputModel.Builder.aFirmanteInputModel()
+                        .withRuc("000000000000")
+                        .withRazonSocial("Wolsnut4 S.A.C.")
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .withIcb(true)
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .withIcb(true)
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/icb.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceWithICB_precioConIgv() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withFirmante(FirmanteInputModel.Builder.aFirmanteInputModel()
+                        .withRuc("000000000000")
+                        .withRazonSocial("Wolsnut4 S.A.C.")
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConIgv(new BigDecimal(118))
+                                .withIcb(true)
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConIgv(new BigDecimal(118))
+                                .withIcb(true)
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/icb.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
 }

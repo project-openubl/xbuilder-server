@@ -17,6 +17,9 @@ public class DocumentLineImpuestosOutputModel {
     @NotNull
     private ImpuestoDetalladoIGVOutputModel igv;
 
+    @Valid
+    private ImpuestoDetalladoICBOutputModel icb;
+
     public BigDecimal getImporteTotal() {
         return importeTotal;
     }
@@ -33,9 +36,18 @@ public class DocumentLineImpuestosOutputModel {
         this.igv = igv;
     }
 
+    public ImpuestoDetalladoICBOutputModel getIcb() {
+        return icb;
+    }
+
+    public void setIcb(ImpuestoDetalladoICBOutputModel icb) {
+        this.icb = icb;
+    }
+
     public static final class Builder {
         private BigDecimal importeTotal;
         private ImpuestoDetalladoIGVOutputModel igv;
+        private ImpuestoDetalladoICBOutputModel icb;
 
         private Builder() {
         }
@@ -54,10 +66,16 @@ public class DocumentLineImpuestosOutputModel {
             return this;
         }
 
+        public Builder withIcb(ImpuestoDetalladoICBOutputModel icb) {
+            this.icb = icb;
+            return this;
+        }
+
         public DocumentLineImpuestosOutputModel build() {
             DocumentLineImpuestosOutputModel documentLineImpuestosOutputModel = new DocumentLineImpuestosOutputModel();
             documentLineImpuestosOutputModel.setImporteTotal(importeTotal);
             documentLineImpuestosOutputModel.setIgv(igv);
+            documentLineImpuestosOutputModel.setIcb(icb);
             return documentLineImpuestosOutputModel;
         }
     }

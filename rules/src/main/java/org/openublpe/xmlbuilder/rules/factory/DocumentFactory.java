@@ -18,6 +18,7 @@ import org.openublpe.xmlbuilder.core.models.output.standard.DocumentMonetaryTota
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoDetalladoOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalICBOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoTotalOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;
@@ -30,6 +31,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -132,14 +134,23 @@ public class DocumentFactory {
         DocumentImpuestosOutputModel.Builder impuestosBuilder = DocumentImpuestosOutputModel.Builder.aDocumentImpuestosOutputModel();
 
         // Importe total de impuestos
-        BigDecimal importeTotalImpuestos = lineOutput.stream()
+        BigDecimal importeTotalImpuestosIgv = lineOutput.stream()
                 .map(DocumentLineOutputModel::getImpuestos)
                 .filter(p -> p.getIgv().getCategoria().equals(Catalog5.IGV) ||
                         p.getIgv().getCategoria().equals(Catalog5.IMPUESTO_ARROZ_PILADO)
                 )
                 .map(m -> m.getIgv().getImporte())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        impuestosBuilder.withImporteTotal(importeTotalImpuestos);
+        BigDecimal importeTotalImpuestosIcb = lineOutput.stream()
+                .map(DocumentLineOutputModel::getImpuestos)
+                .map(DocumentLineImpuestosOutputModel::getIcb)
+                .filter(Objects::nonNull)
+                .map(ImpuestoOutputModel::getImporte)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        impuestosBuilder.withImporteTotal(
+                importeTotalImpuestosIgv.add(importeTotalImpuestosIcb)
+        );
 
         // Gravado
         ImpuestoTotalOutputModel gravado = getImpuestoTotal(lineOutput, Catalog5.IGV);
@@ -188,7 +199,25 @@ public class DocumentFactory {
                     .build());
         }
 
+        // ICB
+        BigDecimal icbImporte = lineOutput.stream()
+                .map(DocumentLineOutputModel::getImpuestos)
+                .map(DocumentLineImpuestosOutputModel::getIcb)
+                .filter(Objects::nonNull)
+                .map(ImpuestoOutputModel::getImporte)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        if (icbImporte.compareTo(BigDecimal.ZERO) > 0) {
+            impuestosBuilder.withIcb(ImpuestoTotalICBOutputModel.Builder.anImpuestoTotalICBOutputModel()
+                    .withCategoria(Catalog5.ICBPER)
+                    .withImporte(icbImporte)
+                    .build()
+            );
+        }
+
+
         builder.withImpuestos(impuestosBuilder.build());
+
 
         // Importe total
         BigDecimal valorVentaSinImpuestos = lineOutput.stream()
@@ -223,15 +252,15 @@ public class DocumentFactory {
     }
 
     private ImpuestoTotalOutputModel getImpuestoTotal(List<DocumentLineOutputModel> lineOutput, Catalog5 categoria) {
-        java.util.function.Supplier<Stream<DocumentLineOutputModel>> gravadoStream = () -> lineOutput.stream()
+        java.util.function.Supplier<Stream<DocumentLineOutputModel>> stream = () -> lineOutput.stream()
                 .filter(i -> i.getImpuestos().getIgv().getTipo().getTaxCategory().equals(categoria));
 
-        BigDecimal importe = gravadoStream.get()
+        BigDecimal importe = stream.get()
                 .map(DocumentLineOutputModel::getImpuestos)
                 .map(DocumentLineImpuestosOutputModel::getIgv)
                 .map(ImpuestoOutputModel::getImporte)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal baseImponible = gravadoStream.get()
+        BigDecimal baseImponible = stream.get()
                 .map(DocumentLineOutputModel::getImpuestos)
                 .map(DocumentLineImpuestosOutputModel::getIgv)
                 .map(ImpuestoDetalladoOutputModel::getBaseImponible)

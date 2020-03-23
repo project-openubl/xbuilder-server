@@ -16,6 +16,38 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.standard;
 
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
+
+import java.math.BigDecimal;
+
 public class ImpuestoTotalICBOutputModel extends ImpuestoOutputModel {
 
+    public static final class Builder {
+        private BigDecimal importe;
+        private Catalog5 categoria;
+
+        private Builder() {
+        }
+
+        public static Builder anImpuestoTotalICBOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withImporte(BigDecimal importe) {
+            this.importe = importe;
+            return this;
+        }
+
+        public Builder withCategoria(Catalog5 categoria) {
+            this.categoria = categoria;
+            return this;
+        }
+
+        public ImpuestoTotalICBOutputModel build() {
+            ImpuestoTotalICBOutputModel impuestoTotalICBOutputModel = new ImpuestoTotalICBOutputModel();
+            impuestoTotalICBOutputModel.setImporte(importe);
+            impuestoTotalICBOutputModel.setCategoria(categoria);
+            return impuestoTotalICBOutputModel;
+        }
+    }
 }

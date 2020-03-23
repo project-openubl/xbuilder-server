@@ -18,6 +18,8 @@ package org.openublpe.xmlbuilder.core.models.input.standard;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
+import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentLineInputModel_CantidadValidaICBConstraint;
+import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentLineInputModel_CantidadValidaICBGroupValidation;
 import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentLineInputModel_PrecioConstraint;
 import org.openublpe.xmlbuilder.core.models.input.constraints.HighLevelGroupValidation;
 
@@ -28,6 +30,7 @@ import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @DocumentLineInputModel_PrecioConstraint(groups = HighLevelGroupValidation.class)
+@DocumentLineInputModel_CantidadValidaICBConstraint(groups = DocumentLineInputModel_CantidadValidaICBGroupValidation.class)
 public class DocumentLineInputModel {
 
     @NotBlank
@@ -45,17 +48,19 @@ public class DocumentLineInputModel {
      */
     @Positive
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal precioSinImpuestos;
+    private BigDecimal precioUnitario;
 
     /**
      * Precio con impuestos
      */
     @Positive
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal precioConImpuestos;
+    private BigDecimal precioConIgv;
 
     @CatalogConstraint(value = Catalog7.class)
     private String tipoIgv;
+
+    private boolean icb;
 
     public String getDescripcion() {
         return descripcion;
@@ -81,20 +86,20 @@ public class DocumentLineInputModel {
         this.cantidad = cantidad;
     }
 
-    public BigDecimal getPrecioSinImpuestos() {
-        return precioSinImpuestos;
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
     }
 
-    public void setPrecioSinImpuestos(BigDecimal precioSinImpuestos) {
-        this.precioSinImpuestos = precioSinImpuestos;
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
 
-    public BigDecimal getPrecioConImpuestos() {
-        return precioConImpuestos;
+    public BigDecimal getPrecioConIgv() {
+        return precioConIgv;
     }
 
-    public void setPrecioConImpuestos(BigDecimal precioConImpuestos) {
-        this.precioConImpuestos = precioConImpuestos;
+    public void setPrecioConIgv(BigDecimal precioConIgv) {
+        this.precioConIgv = precioConIgv;
     }
 
     public String getTipoIgv() {
@@ -105,13 +110,22 @@ public class DocumentLineInputModel {
         this.tipoIgv = tipoIgv;
     }
 
+    public boolean isIcb() {
+        return icb;
+    }
+
+    public void setIcb(boolean icb) {
+        this.icb = icb;
+    }
+
     public static final class Builder {
         private String descripcion;
         private String unidadMedida;
         private BigDecimal cantidad;
-        private BigDecimal precioSinImpuestos;
-        private BigDecimal precioConImpuestos;
+        private BigDecimal precioUnitario;
+        private BigDecimal precioConIgv;
         private String tipoIgv;
+        private boolean icb;
 
         private Builder() {
         }
@@ -135,13 +149,13 @@ public class DocumentLineInputModel {
             return this;
         }
 
-        public Builder withPrecioSinImpuestos(BigDecimal precioSinImpuestos) {
-            this.precioSinImpuestos = precioSinImpuestos;
+        public Builder withPrecioUnitario(BigDecimal precioUnitario) {
+            this.precioUnitario = precioUnitario;
             return this;
         }
 
-        public Builder withPrecioConImpuestos(BigDecimal precioConImpuestos) {
-            this.precioConImpuestos = precioConImpuestos;
+        public Builder withPrecioConIgv(BigDecimal precioConIgv) {
+            this.precioConIgv = precioConIgv;
             return this;
         }
 
@@ -150,15 +164,22 @@ public class DocumentLineInputModel {
             return this;
         }
 
+        public Builder withIcb(boolean icb) {
+            this.icb = icb;
+            return this;
+        }
+
         public DocumentLineInputModel build() {
             DocumentLineInputModel documentLineInputModel = new DocumentLineInputModel();
             documentLineInputModel.setDescripcion(descripcion);
             documentLineInputModel.setUnidadMedida(unidadMedida);
             documentLineInputModel.setCantidad(cantidad);
-            documentLineInputModel.setPrecioSinImpuestos(precioSinImpuestos);
-            documentLineInputModel.setPrecioConImpuestos(precioConImpuestos);
+            documentLineInputModel.setPrecioUnitario(precioUnitario);
+            documentLineInputModel.setPrecioConIgv(precioConIgv);
             documentLineInputModel.setTipoIgv(tipoIgv);
+            documentLineInputModel.setIcb(icb);
             return documentLineInputModel;
         }
     }
 }
+

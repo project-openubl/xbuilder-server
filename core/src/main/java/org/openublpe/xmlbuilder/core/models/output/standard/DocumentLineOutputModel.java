@@ -43,7 +43,7 @@ public class DocumentLineOutputModel {
     @Min(0)
     @NotNull
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal precioSinImpuestos;
+    private BigDecimal precioUnitario;
 
     /**
      * Precio con impuestos
@@ -51,7 +51,7 @@ public class DocumentLineOutputModel {
     @Min(0)
     @NotNull
     @Digits(integer = 100, fraction = 2)
-    private BigDecimal precioConImpuestos;
+    private BigDecimal precioConIgv;
 
     @Valid
     @NotNull
@@ -90,20 +90,20 @@ public class DocumentLineOutputModel {
         this.cantidad = cantidad;
     }
 
-    public BigDecimal getPrecioSinImpuestos() {
-        return precioSinImpuestos;
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
     }
 
-    public void setPrecioSinImpuestos(BigDecimal precioSinImpuestos) {
-        this.precioSinImpuestos = precioSinImpuestos;
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
 
-    public BigDecimal getPrecioConImpuestos() {
-        return precioConImpuestos;
+    public BigDecimal getPrecioConIgv() {
+        return precioConIgv;
     }
 
-    public void setPrecioConImpuestos(BigDecimal precioConImpuestos) {
-        this.precioConImpuestos = precioConImpuestos;
+    public void setPrecioConIgv(BigDecimal precioConIgv) {
+        this.precioConIgv = precioConIgv;
     }
 
     public DocumentLinePrecioReferenciaOutputModel getPrecioDeReferencia() {
@@ -134,8 +134,8 @@ public class DocumentLineOutputModel {
         private String descripcion;
         private String unidadMedida;
         private BigDecimal cantidad;
-        private BigDecimal precioSinImpuestos;
-        private BigDecimal precioConImpuestos;
+        private BigDecimal precioUnitario;
+        private BigDecimal precioConIgv;
         private DocumentLinePrecioReferenciaOutputModel precioDeReferencia;
         private BigDecimal valorVentaSinImpuestos;
         private DocumentLineImpuestosOutputModel impuestos;
@@ -162,13 +162,13 @@ public class DocumentLineOutputModel {
             return this;
         }
 
-        public Builder withPrecioSinImpuestos(BigDecimal precioSinImpuestos) {
-            this.precioSinImpuestos = precioSinImpuestos;
+        public Builder withPrecioUnitario(BigDecimal precioUnitario) {
+            this.precioUnitario = precioUnitario;
             return this;
         }
 
-        public Builder withPrecioConImpuestos(BigDecimal precioConImpuestos) {
-            this.precioConImpuestos = precioConImpuestos;
+        public Builder withPrecioConIgv(BigDecimal precioConIgv) {
+            this.precioConIgv = precioConIgv;
             return this;
         }
 
@@ -192,8 +192,8 @@ public class DocumentLineOutputModel {
             documentLineOutputModel.setDescripcion(descripcion);
             documentLineOutputModel.setUnidadMedida(unidadMedida);
             documentLineOutputModel.setCantidad(cantidad);
-            documentLineOutputModel.setPrecioSinImpuestos(precioSinImpuestos);
-            documentLineOutputModel.setPrecioConImpuestos(precioConImpuestos);
+            documentLineOutputModel.setPrecioUnitario(precioUnitario);
+            documentLineOutputModel.setPrecioConIgv(precioConIgv);
             documentLineOutputModel.setPrecioDeReferencia(precioDeReferencia);
             documentLineOutputModel.setValorVentaSinImpuestos(valorVentaSinImpuestos);
             documentLineOutputModel.setImpuestos(impuestos);

@@ -70,6 +70,19 @@
             </cac:TaxCategory>
         </cac:TaxSubtotal>
         </#if>
+        <#if impuestos.icb??>
+        <cac:TaxSubtotal>
+            <cbc:TaxAmount currencyID="${moneda}">${impuestos.icb.importe}</cbc:TaxAmount>
+            <cac:TaxCategory>
+                <cbc:ID schemeAgencyName="United Nations Economic Commission for Europe" schemeID="UN/ECE 5305" schemeName="Tax Category Identifie">${impuestos.icb.categoria.categoria}</cbc:ID>
+                <cac:TaxScheme>
+                    <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">${impuestos.icb.categoria.code}</cbc:ID>
+                    <cbc:Name>${impuestos.icb.categoria.nombre}</cbc:Name>
+                    <cbc:TaxTypeCode>${impuestos.icb.categoria.tipo}</cbc:TaxTypeCode>
+                </cac:TaxScheme>
+            </cac:TaxCategory>
+        </cac:TaxSubtotal>
+        </#if>
 <#--        <#list totalImpuestosIcb as impuesto>-->
 <#--            <cac:TaxSubtotal>-->
 <#--                <cbc:TaxAmount currencyID="${moneda}">${impuesto.importe}</cbc:TaxAmount>-->

@@ -21,25 +21,29 @@ import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputMode
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class DocumentLineInputModel_PrecioValidator implements ConstraintValidator<DocumentLineInputModel_PrecioConstraint, DocumentLineInputModel> {
+public class DocumentLineInputModel_CantidadValidaICBValidator implements ConstraintValidator<DocumentLineInputModel_CantidadValidaICBConstraint, DocumentLineInputModel> {
 
-    public static final String message = "Se requiere precioUnitario o precioConIgv";
+    public static final String message = "Si ICB=true debes de indicar un número entero en Cantidad.";
 
     @Override
-    public void initialize(DocumentLineInputModel_PrecioConstraint constraintAnnotation) {
+    public void initialize(DocumentLineInputModel_CantidadValidaICBConstraint constraintAnnotation) {
     }
 
     @Override
     public boolean isValid(DocumentLineInputModel value, ConstraintValidatorContext context) {
-        boolean isValid = value.getPrecioUnitario() != null || value.getPrecioConIgv() != null;
+        if (!value.isIcb()) {
+            return true;
+        }
 
-        if ( !isValid ) {
+        boolean isInvalid = value.getCantidad().stripTrailingZeros().scale() > 0;
+
+        if (isInvalid) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(message)
                     .addConstraintViolation();
         }
 
-        return isValid;
+        return !isInvalid;
     }
 
 }

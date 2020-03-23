@@ -14,10 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openublpe.xmlbuilder.inputdata.generator;
+package org.openublpe.xmlbuilder.core.models.input.constraints;
 
-import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-public interface VoidedDocumentInputGenerator extends InputGenerator<VoidedDocumentInputModel> {
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
+@Constraint(validatedBy = DocumentLineInputModel_CantidadValidaICBValidator.class)
+@Target(TYPE)
+@Retention(RUNTIME)
+public @interface DocumentLineInputModel_CantidadValidaICBConstraint {
+    String message() default "";
+    Class<?>[] groups() default { };
+    Class<? extends Payload>[] payload() default { };
 }

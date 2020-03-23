@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class CreditNoteTipoNotaTest extends AbstractUBLTest {
 
     @Test
-    void testCreditNoteTipoNota_GravadoOnerosa_precioSinImpuestos() throws Exception {
+    void testCreditNoteTipoNota_GravadoOnerosa_precioUnitario() throws Exception {
         // Given
         CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
                 .withSerie("FC01")
@@ -43,12 +43,12 @@ public class CreditNoteTipoNotaTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .build())
                 )
                 .build();

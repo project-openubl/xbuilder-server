@@ -28,6 +28,9 @@ public class DocumentImpuestosOutputModel {
     @Valid
     private ImpuestoTotalOutputModel gratuitas;
 
+    @Valid
+    private ImpuestoTotalICBOutputModel icb;
+
     public BigDecimal getImporteTotal() {
         return importeTotal;
     }
@@ -76,6 +79,14 @@ public class DocumentImpuestosOutputModel {
         this.gratuitas = gratuitas;
     }
 
+    public ImpuestoTotalICBOutputModel getIcb() {
+        return icb;
+    }
+
+    public void setIcb(ImpuestoTotalICBOutputModel icb) {
+        this.icb = icb;
+    }
+
     public static final class Builder {
         private BigDecimal importeTotal;
         private ImpuestoTotalOutputModel ivap;
@@ -83,6 +94,7 @@ public class DocumentImpuestosOutputModel {
         private ImpuestoTotalOutputModel inafectas;
         private ImpuestoTotalOutputModel exoneradas;
         private ImpuestoTotalOutputModel gratuitas;
+        private ImpuestoTotalICBOutputModel icb;
 
         private Builder() {
         }
@@ -121,6 +133,11 @@ public class DocumentImpuestosOutputModel {
             return this;
         }
 
+        public Builder withIcb(ImpuestoTotalICBOutputModel icb) {
+            this.icb = icb;
+            return this;
+        }
+
         public DocumentImpuestosOutputModel build() {
             DocumentImpuestosOutputModel documentImpuestosOutputModel = new DocumentImpuestosOutputModel();
             documentImpuestosOutputModel.setImporteTotal(importeTotal);
@@ -129,6 +146,7 @@ public class DocumentImpuestosOutputModel {
             documentImpuestosOutputModel.setInafectas(inafectas);
             documentImpuestosOutputModel.setExoneradas(exoneradas);
             documentImpuestosOutputModel.setGratuitas(gratuitas);
+            documentImpuestosOutputModel.setIcb(icb);
             return documentImpuestosOutputModel;
         }
     }

@@ -68,24 +68,24 @@
 <#--                </cac:TaxCategory>-->
 <#--            </cac:TaxSubtotal>-->
 <#--            </#if>-->
-<#--            <#if item.icb??>-->
-<#--            <cac:TaxSubtotal>-->
-<#--                <cbc:TaxAmount currencyID="${moneda}">${item.icb.importe}</cbc:TaxAmount>-->
-<#--                <cbc:BaseUnitMeasure unitCode="${item.unidadMedida}">${item.cantidad}</cbc:BaseUnitMeasure>-->
-<#--                <cbc:PerUnitAmount currencyID="${moneda}">${item.icbAplicado}</cbc:PerUnitAmount>-->
-<#--                <cac:TaxCategory>-->
-<#--                    <cac:TaxScheme>-->
-<#--                        <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">${item.icb.categoria.code}</cbc:ID>-->
-<#--                        <cbc:Name>${item.icb.categoria.nombre}</cbc:Name>-->
-<#--                        <cbc:TaxTypeCode>${item.icb.categoria.tipo}</cbc:TaxTypeCode>-->
-<#--                    </cac:TaxScheme>-->
-<#--                </cac:TaxCategory>-->
-<#--            </cac:TaxSubtotal>-->
-<#--            </#if>-->
+            <#if item.impuestos.icb??>
+            <cac:TaxSubtotal>
+                <cbc:TaxAmount currencyID="${moneda}">${item.impuestos.icb.importe}</cbc:TaxAmount>
+                <cbc:BaseUnitMeasure unitCode="${item.unidadMedida}">${item.cantidad}</cbc:BaseUnitMeasure>
+                <cbc:PerUnitAmount currencyID="${moneda}">${item.impuestos.icb.icbValor}</cbc:PerUnitAmount>
+                <cac:TaxCategory>
+                    <cac:TaxScheme>
+                        <cbc:ID schemeAgencyName="PE:SUNAT" schemeID="UN/ECE 5153" schemeName="Codigo de tributos">${item.impuestos.icb.categoria.code}</cbc:ID>
+                        <cbc:Name>${item.impuestos.icb.categoria.nombre}</cbc:Name>
+                        <cbc:TaxTypeCode>${item.impuestos.icb.categoria.tipo}</cbc:TaxTypeCode>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+            </#if>
         </cac:TaxTotal>
         <cac:Item>
             <cbc:Description><![CDATA[${item.descripcion}]]></cbc:Description>
         </cac:Item>
         <cac:Price>
-            <cbc:PriceAmount currencyID="${moneda}">${item.precioSinImpuestos}</cbc:PriceAmount>
+            <cbc:PriceAmount currencyID="${moneda}">${item.precioUnitario}</cbc:PriceAmount>
         </cac:Price>

@@ -23,6 +23,7 @@ import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputMode
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -34,7 +35,27 @@ class DocumentLineInputModel_PrecioValidatorTest {
     Validator validator;
 
     @Test
-    void isValid() {
+    void precioConIgv_isValid() {
+        DocumentLineInputModel input = DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                .withPrecioConIgv(BigDecimal.ONE)
+                .build();
+
+        Set<ConstraintViolation<DocumentLineInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    void precioUnitario_isValid() {
+        DocumentLineInputModel input = DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                .withPrecioUnitario(BigDecimal.ONE)
+                .build();
+
+        Set<ConstraintViolation<DocumentLineInputModel>> violations = validator.validate(input, HighLevelGroupValidation.class);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    void noPrecioConSinImpuestos_isInvalid() {
         DocumentLineInputModel input = DocumentLineInputModel.Builder.aDocumentLineInputModel()
                 .build();
 

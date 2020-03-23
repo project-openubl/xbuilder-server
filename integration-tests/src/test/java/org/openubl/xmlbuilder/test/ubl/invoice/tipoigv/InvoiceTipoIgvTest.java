@@ -20,7 +20,7 @@ import java.util.Arrays;
 public class InvoiceTipoIgvTest extends AbstractUBLTest {
 
     @Test
-    void testInvoiceTipoIgv_GravadoOnerosa_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoOnerosa_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -40,60 +40,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString())
-                                .build())
-                )
-                .build();
-
-        String body = new ObjectMapper().writeValueAsString(input);
-
-        // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
-
-        // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/gravadoOnerosa.xml");
-        assertEqualsXMLExcerptSignature(
-                response.getApiCreateResponse(),
-                response.getApiSignerCreateResponse()
-        );
-        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
-    }
-
-    @Test
-    void testInvoiceTipoIgv_GravadoOnerosa_precioConImpuestos() throws Exception {
-        // Given
-        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
-                .withSerie("F001")
-                .withNumero(1)
-                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
-                        .withRuc("12345678912")
-                        .withRazonSocial("Softgreen S.A.C.")
-                        .build()
-                )
-                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
-                        .withNombre("Carlos Feria")
-                        .withNumeroDocumentoIdentidad("12121212121")
-                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
-                        .build()
-                )
-                .withDetalle(Arrays.asList(
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item1")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
-                                .withTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString())
-                                .build(),
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item2")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString())
                                 .build())
                 )
@@ -114,7 +67,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoRetiroPorPremio_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoOnerosa_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -134,13 +87,60 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(118))
+                                .withTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConIgv(new BigDecimal(118))
+                                .withTipoIgv(Catalog7.GRAVADO_OPERACION_ONEROSA.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/gravadoOnerosa.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_GravadoRetiroPorPremio_precioUnitario() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PREMIO.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PREMIO.toString())
                                 .build())
                 )
@@ -161,7 +161,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoRetiroPorPremio_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoRetiroPorPremio_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -181,13 +181,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PREMIO.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PREMIO.toString())
                                 .build())
                 )
@@ -208,7 +208,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoRetiroPorDonacion_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoRetiroPorDonacion_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -228,60 +228,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_DONACION.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_DONACION.toString())
-                                .build())
-                )
-                .build();
-
-        String body = new ObjectMapper().writeValueAsString(input);
-
-        // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
-
-        // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/gravadoRetiroPorDonacion.xml");
-        assertEqualsXMLExcerptSignature(
-                response.getApiCreateResponse(),
-                response.getApiSignerCreateResponse()
-        );
-        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
-    }
-
-    @Test
-    void testInvoiceTipoIgv_GravadoRetiroPorDonacion_precioConImpuestos() throws Exception {
-        // Given
-        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
-                .withSerie("F001")
-                .withNumero(1)
-                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
-                        .withRuc("12345678912")
-                        .withRazonSocial("Softgreen S.A.C.")
-                        .build()
-                )
-                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
-                        .withNombre("Carlos Feria")
-                        .withNumeroDocumentoIdentidad("12121212121")
-                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
-                        .build()
-                )
-                .withDetalle(Arrays.asList(
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item1")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
-                                .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_DONACION.toString())
-                                .build(),
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item2")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_DONACION.toString())
                                 .build())
                 )
@@ -302,7 +255,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoRetiro_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoRetiroPorDonacion_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -322,13 +275,60 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(118))
+                                .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_DONACION.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConIgv(new BigDecimal(118))
+                                .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_DONACION.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/gravadoRetiroPorDonacion.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_GravadoRetiro_precioUnitario() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO.toString())
                                 .build())
                 )
@@ -349,7 +349,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoRetiro_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoRetiro_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -369,13 +369,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO.toString())
                                 .build())
                 )
@@ -396,7 +396,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoRetiroPorPublicidad_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoRetiroPorPublicidad_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -416,60 +416,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PUBLICIDAD.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PUBLICIDAD.toString())
-                                .build())
-                )
-                .build();
-
-        String body = new ObjectMapper().writeValueAsString(input);
-
-        // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
-
-        // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/gravadoRetiroPorPublicidad.xml");
-        assertEqualsXMLExcerptSignature(
-                response.getApiCreateResponse(),
-                response.getApiSignerCreateResponse()
-        );
-        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
-    }
-
-    @Test
-    void testInvoiceTipoIgv_GravadoRetiroPorPublicidad_precioConImpuestos() throws Exception {
-        // Given
-        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
-                .withSerie("F001")
-                .withNumero(1)
-                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
-                        .withRuc("12345678912")
-                        .withRazonSocial("Softgreen S.A.C.")
-                        .build()
-                )
-                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
-                        .withNombre("Carlos Feria")
-                        .withNumeroDocumentoIdentidad("12121212121")
-                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
-                        .build()
-                )
-                .withDetalle(Arrays.asList(
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item1")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
-                                .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PUBLICIDAD.toString())
-                                .build(),
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item2")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PUBLICIDAD.toString())
                                 .build())
                 )
@@ -490,7 +443,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoBonificaciones_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoRetiroPorPublicidad_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -510,13 +463,60 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(118))
+                                .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PUBLICIDAD.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConIgv(new BigDecimal(118))
+                                .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_PUBLICIDAD.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/gravadoRetiroPorPublicidad.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_GravadoBonificaciones_precioUnitario() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_BONIFICACIONES.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_BONIFICACIONES.toString())
                                 .build())
                 )
@@ -537,7 +537,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoBonificaciones_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoBonificaciones_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -557,13 +557,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .withTipoIgv(Catalog7.GRAVADO_BONIFICACIONES.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .withTipoIgv(Catalog7.GRAVADO_BONIFICACIONES.toString())
                                 .build())
                 )
@@ -584,7 +584,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoRetiroPorEntregaATrabajadores_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoRetiroPorEntregaATrabajadores_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -604,13 +604,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES.toString())
                                 .build())
                 )
@@ -631,7 +631,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoRetiroPorEntregaATrabajadores_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoRetiroPorEntregaATrabajadores_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -651,13 +651,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(118))
+                                .withPrecioConIgv(new BigDecimal(118))
                                 .withTipoIgv(Catalog7.GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES.toString())
                                 .build())
                 )
@@ -678,7 +678,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoIVAP_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoIVAP_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -698,13 +698,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_IVAP.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.GRAVADO_IVAP.toString())
                                 .build())
                 )
@@ -725,7 +725,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_GravadoIVAP_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_GravadoIVAP_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -745,13 +745,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(104))
+                                .withPrecioConIgv(new BigDecimal(104))
                                 .withTipoIgv(Catalog7.GRAVADO_IVAP.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(104))
+                                .withPrecioConIgv(new BigDecimal(104))
                                 .withTipoIgv(Catalog7.GRAVADO_IVAP.toString())
                                 .build())
                 )
@@ -792,13 +792,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXONERADO_OPERACION_ONEROSA.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXONERADO_OPERACION_ONEROSA.toString())
                                 .build())
                 )
@@ -839,13 +839,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXONERADO_OPERACION_ONEROSA.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXONERADO_OPERACION_ONEROSA.toString())
                                 .build())
                 )
@@ -866,7 +866,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_ExoneradoTransferenciaGratuita_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_ExoneradoTransferenciaGratuita_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -886,60 +886,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXONERADO_TRANSFERENCIA_GRATUITA.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.EXONERADO_TRANSFERENCIA_GRATUITA.toString())
-                                .build())
-                )
-                .build();
-
-        String body = new ObjectMapper().writeValueAsString(input);
-
-        // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
-
-        // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/exoneradoTransferenciaGratuita.xml");
-        assertEqualsXMLExcerptSignature(
-                response.getApiCreateResponse(),
-                response.getApiSignerCreateResponse()
-        );
-        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
-    }
-
-    @Test
-    void testInvoiceTipoIgv_ExoneradoTransferenciaGratuita_precioConImpuestos() throws Exception {
-        // Given
-        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
-                .withSerie("F001")
-                .withNumero(1)
-                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
-                        .withRuc("12345678912")
-                        .withRazonSocial("Softgreen S.A.C.")
-                        .build()
-                )
-                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
-                        .withNombre("Carlos Feria")
-                        .withNumeroDocumentoIdentidad("12121212121")
-                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
-                        .build()
-                )
-                .withDetalle(Arrays.asList(
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item1")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.EXONERADO_TRANSFERENCIA_GRATUITA.toString())
-                                .build(),
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item2")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXONERADO_TRANSFERENCIA_GRATUITA.toString())
                                 .build())
                 )
@@ -960,7 +913,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoOperacionOnerosa_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_ExoneradoTransferenciaGratuita_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -980,13 +933,60 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.EXONERADO_TRANSFERENCIA_GRATUITA.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConIgv(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.EXONERADO_TRANSFERENCIA_GRATUITA.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/exoneradoTransferenciaGratuita.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoOperacionOnerosa_precioUnitario() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString())
                                 .build())
                 )
@@ -1007,7 +1007,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoOperacionOnerosa_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoOperacionOnerosa_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1027,13 +1027,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_OPERACION_ONEROSA.toString())
                                 .build())
                 )
@@ -1054,7 +1054,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorBonificacion_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoRetiroPorBonificacion_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1074,60 +1074,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
-                                .build())
-                )
-                .build();
-
-        String body = new ObjectMapper().writeValueAsString(input);
-
-        // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
-
-        // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorBonificacion.xml");
-        assertEqualsXMLExcerptSignature(
-                response.getApiCreateResponse(),
-                response.getApiSignerCreateResponse()
-        );
-        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
-    }
-
-    @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorBonificacion_precioConImpuestos() throws Exception {
-        // Given
-        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
-                .withSerie("F001")
-                .withNumero(1)
-                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
-                        .withRuc("12345678912")
-                        .withRazonSocial("Softgreen S.A.C.")
-                        .build()
-                )
-                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
-                        .withNombre("Carlos Feria")
-                        .withNumeroDocumentoIdentidad("12121212121")
-                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
-                        .build()
-                )
-                .withDetalle(Arrays.asList(
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item1")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
-                                .build(),
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item2")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
                                 .build())
                 )
@@ -1148,7 +1101,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoRetiro_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoRetiroPorBonificacion_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1168,13 +1121,60 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConIgv(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_BONIFICACION.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorBonificacion.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiro_precioUnitario() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO.toString())
                                 .build())
                 )
@@ -1195,7 +1195,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoRetiro_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoRetiro_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1215,13 +1215,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO.toString())
                                 .build())
                 )
@@ -1242,7 +1242,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorMuestrasMedicas_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoRetiroPorMuestrasMedicas_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1262,60 +1262,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
-                                .build())
-                )
-                .build();
-
-        String body = new ObjectMapper().writeValueAsString(input);
-
-        // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
-
-        // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoPorMuestrasMedicas.xml");
-        assertEqualsXMLExcerptSignature(
-                response.getApiCreateResponse(),
-                response.getApiSignerCreateResponse()
-        );
-        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
-    }
-
-    @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorMuestrasMedicas_precioConImpuestos() throws Exception {
-        // Given
-        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
-                .withSerie("F001")
-                .withNumero(1)
-                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
-                        .withRuc("12345678912")
-                        .withRazonSocial("Softgreen S.A.C.")
-                        .build()
-                )
-                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
-                        .withNombre("Carlos Feria")
-                        .withNumeroDocumentoIdentidad("12121212121")
-                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
-                        .build()
-                )
-                .withDetalle(Arrays.asList(
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item1")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
-                                .build(),
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item2")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
                                 .build())
                 )
@@ -1336,7 +1289,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorConvenioColectivo_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoRetiroPorMuestrasMedicas_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1356,13 +1309,60 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioConIgv(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoPorMuestrasMedicas.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorConvenioColectivo_precioUnitario() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO.toString())
                                 .build())
                 )
@@ -1383,7 +1383,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorConvenioColectivo_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoRetiroPorConvenioColectivo_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1403,13 +1403,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO.toString())
                                 .build())
                 )
@@ -1430,7 +1430,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorPremio_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoRetiroPorPremio_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1450,60 +1450,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
-                                .build())
-                )
-                .build();
-
-        String body = new ObjectMapper().writeValueAsString(input);
-
-        // When
-        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
-
-        // Then
-        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorPremio.xml");
-        assertEqualsXMLExcerptSignature(
-                response.getApiCreateResponse(),
-                response.getApiSignerCreateResponse()
-        );
-        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
-    }
-
-    @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorPremio_precioConImpuestos() throws Exception {
-        // Given
-        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
-                .withSerie("F001")
-                .withNumero(1)
-                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
-                        .withRuc("12345678912")
-                        .withRazonSocial("Softgreen S.A.C.")
-                        .build()
-                )
-                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
-                        .withNombre("Carlos Feria")
-                        .withNumeroDocumentoIdentidad("12121212121")
-                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
-                        .build()
-                )
-                .withDetalle(Arrays.asList(
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item1")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
-                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
-                                .build(),
-                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
-                                .withDescripcion("Item2")
-                                .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
                                 .build())
                 )
@@ -1524,7 +1477,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorPublicidad_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoRetiroPorPremio_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1544,13 +1497,60 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PREMIO.toString())
+                                .build())
+                )
+                .build();
+
+        String body = new ObjectMapper().writeValueAsString(input);
+
+        // When
+        XMlBuilderOutputResponse response = requestAllEdpoints(UBLDocumentType.INVOICE, body);
+
+        // Then
+        assertSnapshot(response.getApiCreateResponse(), "xml/invoice/tipoigv/inafectoRetiroPorPremio.xml");
+        assertEqualsXMLExcerptSignature(
+                response.getApiCreateResponse(),
+                response.getApiSignerCreateResponse()
+        );
+        assertSendSunat(UBLDocumentType.INVOICE, response.getApiSignerCreateResponse());
+    }
+
+    @Test
+    void testInvoiceTipoIgv_InafectoRetiroPorPublicidad_precioUnitario() throws Exception {
+        // Given
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PUBLICIDAD.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PUBLICIDAD.toString())
                                 .build())
                 )
@@ -1571,7 +1571,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_InafectoRetiroPorPublicidad_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_InafectoRetiroPorPublicidad_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1591,13 +1591,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PUBLICIDAD.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.INAFECTO_RETIRO_POR_PUBLICIDAD.toString())
                                 .build())
                 )
@@ -1618,7 +1618,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_Exportacion_precioSinImpuestos() throws Exception {
+    void testInvoiceTipoIgv_Exportacion_precioUnitario() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1638,13 +1638,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXPORTACION.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioSinImpuestos(new BigDecimal(100))
+                                .withPrecioUnitario(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXPORTACION.toString())
                                 .build())
                 )
@@ -1665,7 +1665,7 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
     }
 
     @Test
-    void testInvoiceTipoIgv_Exportacion_precioConImpuestos() throws Exception {
+    void testInvoiceTipoIgv_Exportacion_precioConIgv() throws Exception {
         // Given
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
                 .withSerie("F001")
@@ -1685,13 +1685,13 @@ public class InvoiceTipoIgvTest extends AbstractUBLTest {
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item1")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXPORTACION.toString())
                                 .build(),
                         DocumentLineInputModel.Builder.aDocumentLineInputModel()
                                 .withDescripcion("Item2")
                                 .withCantidad(new BigDecimal(10))
-                                .withPrecioConImpuestos(new BigDecimal(100))
+                                .withPrecioConIgv(new BigDecimal(100))
                                 .withTipoIgv(Catalog7.EXPORTACION.toString())
                                 .build())
                 )
