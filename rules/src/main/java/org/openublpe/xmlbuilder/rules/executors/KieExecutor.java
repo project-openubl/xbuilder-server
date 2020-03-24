@@ -20,9 +20,11 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.rules.EnvironmentVariables;
 import org.openublpe.xmlbuilder.rules.factory.DocumentFactory;
 
@@ -76,5 +78,10 @@ public class KieExecutor {
     @OutputValidator
     public DebitNoteOutputModel getDebitNoteOutputModel(DebitNoteInputModel input) {
         return documentFactory.getDebitNoteOutput(input);
+    }
+
+    @OutputValidator
+    public VoidedDocumentOutputModel getVoidedDocumentOutputModel(VoidedDocumentInputModel input) {
+        return documentFactory.getVoidedDocument(input);
     }
 }

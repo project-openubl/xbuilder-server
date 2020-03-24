@@ -11,6 +11,8 @@ import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputM
 import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentImpuestosOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineImpuestosOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineOutputModel;
@@ -24,12 +26,16 @@ import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutpu
 import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentLineOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.rules.EnvironmentVariables;
 import org.openublpe.xmlbuilder.rules.datetime.DateTimeFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.text.MessageFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -97,6 +103,56 @@ public class DocumentFactory {
 
         enrichNote(input, builder);
         enrichDocument(input, builder);
+        return builder.build();
+    }
+
+    public VoidedDocumentOutputModel getVoidedDocument(VoidedDocumentInputModel input) {
+        VoidedDocumentOutputModel.Builder builder = VoidedDocumentOutputModel.Builder.aVoidedDocumentOutputModel();
+
+        // datos generales
+        String fechaEmision = input.getFechaEmision() != null
+                ? toGregorianCalendarDate(input.getFechaEmision())
+                : toGregorianCalendarDate(dateTimeFactory.getCurrent().getTimeInMillis());
+
+        builder.withFechaEmision(fechaEmision)
+                .withDescripcionSustento(input.getDescripcionSustento())
+                .withProveedor(ProveedorFactory.getProveedor(input.getProveedor()))
+                .withFirmante(
+                        input.getFirmante() != null
+                                ? FirmanteFactory.getFirmante(input.getFirmante())
+                                : FirmanteFactory.getFirmante(input.getProveedor())
+                );
+
+        // Comprobante
+        VoidedDocumentLineInputModel comprobanteAfectado = input.getComprobante();
+
+        String[] serieNumeroComprobanteAfectado = comprobanteAfectado.getSerieNumero().split("-");
+        Catalog1 tipoComprobanteAfectado = Catalog.valueOfCode(Catalog1.class, comprobanteAfectado.getTipoComprobante()).orElseThrow(Catalog.invalidCatalogValue);
+
+        builder.withComprobante(VoidedDocumentLineOutputModel.Builder.aVoidedDocumentLineOutputModel()
+                .withFechaEmision(toGregorianCalendarDate(comprobanteAfectado.getFechaEmision()))
+                .withTipoComprobante(tipoComprobanteAfectado)
+                .withSerie(serieNumeroComprobanteAfectado[0])
+                .withNumero(serieNumeroComprobanteAfectado[1])
+                .build()
+        );
+
+        // Serie
+        String codigo;
+        switch (tipoComprobanteAfectado) {
+            case PERCEPCION:
+            case RETENCION:
+            case GUIA_REMISION_REMITENTE:
+                codigo = "RR";
+                break;
+            default:
+                codigo = "RA";
+        }
+
+        builder.withSerieNumero(
+                MessageFormat.format("{0}-{1}-{2}", codigo, fechaEmision.replaceAll("-", ""), input.getNumero())
+        );
+
         return builder.build();
     }
 

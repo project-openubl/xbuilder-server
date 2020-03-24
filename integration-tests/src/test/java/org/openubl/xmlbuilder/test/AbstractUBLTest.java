@@ -5,6 +5,7 @@ import io.github.carlosthe19916.webservices.providers.BillServiceModel;
 import io.github.carlosthe19916.webservices.wrappers.ServiceConfig;
 import io.restassured.response.Response;
 import org.openublpe.xmlbuilder.apicore.resources.ApiApplication;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.utils.RegexUtils;
 import org.w3c.dom.Document;
@@ -94,12 +95,31 @@ public abstract class AbstractUBLTest {
     }
 
     private void sendFileToSunat(UBLDocumentType type, Response xmlWithSignature) throws TransformerException, IOException, SAXException, ParserConfigurationException, XPathExpressionException {
+        switch (type) {
+            case INVOICE:
+            case CREDIT_NOTE:
+            case DEBIT_NOTE:
+            case PERCEPTION:
+            case RETENTION:
+            case DISPATCH_ADVICE:
+                sendFileToSunat_sendBill(type, xmlWithSignature);
+                break;
+            case VOIDED_DOCUMENT:
+            case SUMMARY_DOCUMENT:
+                sendFileToSunat_sendSummary(type, xmlWithSignature);
+                break;
+            default:
+                throw new IllegalStateException("Assert unknown type of document=" + type);
+        }
+    }
+
+    private void sendFileToSunat_sendBill(UBLDocumentType type, Response xmlWithSignature) throws XPathExpressionException, IOException, SAXException, ParserConfigurationException, TransformerException {
         String ruc = getProveedorRuc(type, xmlWithSignature.asInputStream());
         String documentID = getDocumentID(type, xmlWithSignature.asInputStream());
         String xmlFileName = getFileName(type, ruc, documentID);
 
         ServiceConfig config = new ServiceConfig.Builder()
-                .url(getServerUrl(type))
+                .url(getServerUrl(type, xmlWithSignature))
                 .username(ruc + SUNAT_BETA_USERNAME)
                 .password(SUNAT_BETA_PASSWORD)
                 .build();
@@ -113,6 +133,38 @@ public abstract class AbstractUBLTest {
         );
     }
 
+    private void sendFileToSunat_sendSummary(UBLDocumentType type, Response xmlWithSignature) throws XPathExpressionException, IOException, SAXException, ParserConfigurationException, TransformerException {
+        String ruc = getProveedorRuc(type, xmlWithSignature.asInputStream());
+        String documentID = getDocumentID(type, xmlWithSignature.asInputStream());
+        String xmlFileName = getFileName(type, ruc, documentID);
+
+        ServiceConfig config = new ServiceConfig.Builder()
+                .url(getServerUrl(type, xmlWithSignature))
+                .username(ruc + SUNAT_BETA_USERNAME)
+                .password(SUNAT_BETA_PASSWORD)
+                .build();
+
+        Document xmlDocument = inputStreamToDocument(xmlWithSignature.asInputStream());
+        BillServiceModel billServiceModel = BillServiceManager.sendSummary(xmlFileName, documentToBytes(xmlDocument), config);
+        assertNotNull(
+                billServiceModel.getTicket(),
+                xmlWithSignature.asString() + " \n sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]"
+        );
+
+
+        // Check ticket
+        BillServiceModel statusModel = BillServiceManager.getStatus(billServiceModel.getTicket(), config);
+        assertEquals(
+                BillServiceModel.Status.ACEPTADO,
+                statusModel.getStatus(),
+                xmlWithSignature.asString() + " sunat [status=" + statusModel.getStatus() + "], [descripcion=" + statusModel.getDescription() + "]"
+        );
+        assertNotNull(
+                statusModel.getCdr(),
+                xmlWithSignature.asString() + " sunat [codigo=" + billServiceModel.getCode() + "], [descripcion=" + billServiceModel.getDescription() + "]"
+        );
+    }
+
     private String getProveedorRuc(UBLDocumentType type, InputStream xmlDocument) throws XPathExpressionException {
         InputSource inputSource = new InputSource(xmlDocument);
         switch (type) {
@@ -121,6 +173,10 @@ public abstract class AbstractUBLTest {
             case DEBIT_NOTE:
                 return (String) xPath
                         .compile("//cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID/text()")
+                        .evaluate(inputSource, XPathConstants.STRING);
+            case VOIDED_DOCUMENT:
+                return (String) xPath
+                        .compile("//cac:AccountingSupplierParty/cbc:CustomerAssignedAccountID/text()")
                         .evaluate(inputSource, XPathConstants.STRING);
             default:
                 throw new IllegalStateException("Invalid type of UBL Document, can not extract Proveedor RUC");
@@ -133,6 +189,7 @@ public abstract class AbstractUBLTest {
             case INVOICE:
             case CREDIT_NOTE:
             case DEBIT_NOTE:
+            case VOIDED_DOCUMENT:
                 return (String) xPath
                         .compile("//cbc:ID/text()")
                         .evaluate(inputSource, XPathConstants.STRING);
@@ -142,37 +199,51 @@ public abstract class AbstractUBLTest {
     }
 
     private String getFileName(UBLDocumentType type, String ruc, String documentID) throws XPathExpressionException {
-        String codigo;
+        String codigoDocumento;
         switch (type) {
             case INVOICE:
                 if (RegexUtils.FACTURA_SERIE_REGEX.matcher(documentID).find()) {
-                    codigo = Catalog1.FACTURA.getCode();
+                    codigoDocumento = Catalog1.FACTURA.getCode();
                 } else if (RegexUtils.BOLETA_SERIE_REGEX.matcher(documentID).find()) {
-                    codigo = Catalog1.BOLETA.getCode();
+                    codigoDocumento = Catalog1.BOLETA.getCode();
                 } else {
                     throw new IllegalStateException("Invalid Serie, can not detect code");
                 }
-                break;
+
+                return MessageFormat.format("{0}-{1}-{2}.xml", ruc, codigoDocumento, documentID);
             case CREDIT_NOTE:
-                codigo = Catalog1.NOTA_CREDITO.getCode();
-                break;
+                codigoDocumento = Catalog1.NOTA_CREDITO.getCode();
+                return MessageFormat.format("{0}-{1}-{2}.xml", ruc, codigoDocumento, documentID);
             case DEBIT_NOTE:
-                codigo = Catalog1.NOTA_DEBITO.getCode();
-                break;
+                codigoDocumento = Catalog1.NOTA_DEBITO.getCode();
+                return MessageFormat.format("{0}-{1}-{2}.xml", ruc, codigoDocumento, documentID);
+            case VOIDED_DOCUMENT:
+                return MessageFormat.format("{0}-{1}.xml", ruc, documentID);
             default:
                 throw new IllegalStateException("Invalid type of UBL Document, can not extract Serie Numero");
         }
-
-        return MessageFormat.format("{0}-{1}-{2}.xml", ruc, codigo, documentID);
     }
 
-    private String getServerUrl(UBLDocumentType type) {
+    private String getServerUrl(UBLDocumentType type, Response xmlWithSignature) throws XPathExpressionException {
         switch (type) {
             case INVOICE:
                 return SUNAT_BETA_URL;
             case CREDIT_NOTE:
                 return SUNAT_BETA_URL;
             case DEBIT_NOTE:
+                return SUNAT_BETA_URL;
+            case VOIDED_DOCUMENT:
+                String tipoDocumentoAfectado = (String) xPath
+                        .compile("//sac:VoidedDocumentsLine/cbc:DocumentTypeCode/text()")
+                        .evaluate(new InputSource(xmlWithSignature.asInputStream()), XPathConstants.STRING);
+                Catalog1 catalog1 = Catalog.valueOfCode(Catalog1.class, tipoDocumentoAfectado).orElseThrow(Catalog.invalidCatalogValue);
+                if (catalog1.equals(Catalog1.PERCEPCION) || catalog1.equals(Catalog1.RETENCION)) {
+                    return SUNAT_PERCEPTION_RETENTION_BETA_URL;
+                } else if (catalog1.equals(Catalog1.GUIA_REMISION_REMITENTE)) {
+                    return SUNAT_PERCEPTION_RETENTION_BETA_URL;
+                }
+                return SUNAT_BETA_URL;
+            case SUMMARY_DOCUMENT:
                 return SUNAT_BETA_URL;
             case PERCEPTION:
                 return SUNAT_PERCEPTION_RETENTION_BETA_URL;

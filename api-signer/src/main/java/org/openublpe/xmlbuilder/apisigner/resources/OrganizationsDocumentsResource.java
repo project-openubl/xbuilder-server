@@ -27,9 +27,11 @@ import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.rules.executors.KieExecutor;
 import org.openublpe.xmlbuilder.templates.executors.FreemarkerExecutor;
 import org.w3c.dom.Document;
@@ -119,16 +121,16 @@ public class OrganizationsDocumentsResource {
         return kieExecutor.getDebitNoteOutputModel(input);
     }
 
-//    @POST
-//    @Path("/voided-document/enrich")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public VoidedDocumentOutputModel enrichVoidedDocumentModel(
-//            @PathParam(ORGANIZATION_ID) String organizationId,
-//            @Valid VoidedDocumentInputModel input
-//    ) {
-//        return kieExecutor.getVoidedDocumentOutputModel(input);
-//    }
-//
+    @POST
+    @Path("/voided-document/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public VoidedDocumentOutputModel enrichVoidedDocumentModel(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
+    ) {
+        return kieExecutor.getVoidedDocumentOutputModel(input);
+    }
+
 //    @POST
 //    @Path("/summary-document/enrich")
 //    @Produces(MediaType.APPLICATION_JSON)
@@ -245,31 +247,31 @@ public class OrganizationsDocumentsResource {
                 .build();
     }
 
-//    @POST
-//    @Path("/voided-document/create")
-//    @Produces(MediaType.TEXT_XML)
-//    public Response createVoidedDocumentXml(
-//            @PathParam(ORGANIZATION_ID) String organizationId,
-//            @Valid VoidedDocumentInputModel input
-//    ) throws Exception {
-//        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
-//        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
-//
-//        VoidedDocumentOutputModel output = kieExecutor.getVoidedDocumentOutputModel(input);
-//        String xml = freemarkerExecutor.createVoidedDocument(output);
-//
-//        Document xmlSignedDocument;
-//        try {
-//            xmlSignedDocument = signXML(activeRsaKey, xml);
-//        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
-//            throw new InternalServerErrorException(e);
-//        }
-//
-//        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
-//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-//                .build();
-//    }
-//
+    @POST
+    @Path("/voided-document/create")
+    @Produces(MediaType.TEXT_XML)
+    public Response createVoidedDocumentXml(
+            @PathParam(ORGANIZATION_ID) String organizationId,
+            @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
+    ) throws Exception {
+        OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
+        KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
+
+        VoidedDocumentOutputModel output = kieExecutor.getVoidedDocumentOutputModel(input);
+        String xml = freemarkerExecutor.createVoidedDocument(output);
+
+        Document xmlSignedDocument;
+        try {
+            xmlSignedDocument = signXML(activeRsaKey, xml);
+        } catch (ParserConfigurationException | SAXException | IOException | NoSuchAlgorithmException | XMLSignatureException | InvalidAlgorithmParameterException | MarshalException e) {
+            throw new InternalServerErrorException(e);
+        }
+
+        return Response.ok(XmlSignatureHelper.getBytesFromDocument(xmlSignedDocument))
+                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .build();
+    }
+
 //    @POST
 //    @Path("/summary-document/create")
 //    @Produces(MediaType.TEXT_XML)
