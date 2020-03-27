@@ -44,15 +44,15 @@ public enum Catalog1 implements Catalog {
         this.code = code;
     }
 
-    @Override
-    public String getCode() {
-        return code;
-    }
-
     public static Optional<Catalog1> valueOfCode(String code) {
         return Stream.of(Catalog1.values())
                 .filter(p -> p.code.equals(code))
                 .findFirst();
+    }
+
+    @Override
+    public String getCode() {
+        return code;
     }
 
 }

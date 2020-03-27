@@ -16,37 +16,37 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.standard.note;
 
+import org.openublpe.xmlbuilder.core.models.input.constraints.NoteInputModel_SerieComprobanteAfectadoConstraint;
+import org.openublpe.xmlbuilder.core.models.input.constraints.NoteInputModel_SerieComprobanteAfectadoGroupValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+@NoteInputModel_SerieComprobanteAfectadoConstraint(groups = NoteInputModel_SerieComprobanteAfectadoGroupValidation.class)
 public abstract class NoteInputModel extends DocumentInputModel {
 
-    @NotNull
     @NotBlank
-    @Pattern(regexp = "^[F|f|B|b].*$")
-    private String serieNumeroInvoiceReference;
+    @Pattern(regexp = "^([F|B][A-Z]?[0-9]{0,3})[\\-]([0-9]{1,8})$")
+    private String serieNumeroComprobanteAfectado;
 
-    @NotNull
     @NotBlank
-    private String descripcionSustentoInvoiceReference;
+    private String descripcionSustentoDeNota;
 
-    public String getSerieNumeroInvoiceReference() {
-        return serieNumeroInvoiceReference;
+    public String getSerieNumeroComprobanteAfectado() {
+        return serieNumeroComprobanteAfectado;
     }
 
-    public void setSerieNumeroInvoiceReference(String serieNumeroInvoiceReference) {
-        this.serieNumeroInvoiceReference = serieNumeroInvoiceReference;
+    public void setSerieNumeroComprobanteAfectado(String serieNumeroComprobanteAfectado) {
+        this.serieNumeroComprobanteAfectado = serieNumeroComprobanteAfectado;
     }
 
-    public String getDescripcionSustentoInvoiceReference() {
-        return descripcionSustentoInvoiceReference;
+    public String getDescripcionSustentoDeNota() {
+        return descripcionSustentoDeNota;
     }
 
-    public void setDescripcionSustentoInvoiceReference(String descripcionSustentoInvoiceReference) {
-        this.descripcionSustentoInvoiceReference = descripcionSustentoInvoiceReference;
+    public void setDescripcionSustentoDeNota(String descripcionSustentoDeNota) {
+        this.descripcionSustentoDeNota = descripcionSustentoDeNota;
     }
 
 }

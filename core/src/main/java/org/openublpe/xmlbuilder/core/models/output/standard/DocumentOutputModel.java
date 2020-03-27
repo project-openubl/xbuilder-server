@@ -19,73 +19,62 @@ package org.openublpe.xmlbuilder.core.models.output.standard;
 import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.constraints.DocumentOutputModelConstraint;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.util.List;
 
-public class DocumentOutputModel {
+@DocumentOutputModelConstraint
+public abstract class DocumentOutputModel {
 
+    @NotBlank
     @Size(min = 3, max = 3)
-    @NotBlank
-    private String moneda;
+    protected String moneda;
 
     @NotBlank
-    private String serieNumero;
+    protected String serieNumero;
 
     @NotBlank
-    private String horaEmision;
+    protected String horaEmision;
 
     @NotBlank
-    private String fechaEmision;
+    protected String fechaEmision;
 
     @Valid
     @NotNull
-    private ClienteOutputModel cliente;
+    protected ClienteOutputModel cliente;
 
     @Valid
     @NotNull
-    private FirmanteOutputModel firmante;
+    protected FirmanteOutputModel firmante;
 
     @Valid
     @NotNull
-    private ProveedorOutputModel proveedor;
+    protected ProveedorOutputModel proveedor;
 
+    @Valid
     @NotNull
-    @Min(1)
-    private Integer detalleSize;
+    protected DocumentMonetaryTotalOutputModel totales;
+
+    @Valid
+    @NotNull
+    protected DocumentImpuestosOutputModel impuestos;
 
     @Valid
     @NotEmpty
-    private List<DetalleOutputModel> detalle;
+    protected List<DocumentLineOutputModel> detalle;
 
-    @NotNull
-    private BigDecimal importeTotalImpuestos;
+    public String getMoneda() {
+        return moneda;
+    }
 
-    @Valid
-    @NotEmpty
-    private List<ImpuestoTotalIGVOutputModel> totalImpuestosIgv;
-
-    @Valid
-    @NotNull
-    private List<ImpuestoTotalICBOutputModel> totalImpuestosIcb;
-
-    private BigDecimal totalValorVenta;
-    private BigDecimal totalPrecioVenta;
-
-    @NotNull
-    private BigDecimal totalDescuentos;
-
-    @NotNull
-    private BigDecimal totalOtrosCargos;
-
-    @NotNull
-    private BigDecimal importeTotal;
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
 
     public String getSerieNumero() {
         return serieNumero;
@@ -93,14 +82,6 @@ public class DocumentOutputModel {
 
     public void setSerieNumero(String serieNumero) {
         this.serieNumero = serieNumero;
-    }
-
-    public String getFechaEmision() {
-        return fechaEmision;
-    }
-
-    public void setFechaEmision(String fechaEmision) {
-        this.fechaEmision = fechaEmision;
     }
 
     public String getHoraEmision() {
@@ -111,12 +92,20 @@ public class DocumentOutputModel {
         this.horaEmision = horaEmision;
     }
 
-    public String getMoneda() {
-        return moneda;
+    public String getFechaEmision() {
+        return fechaEmision;
     }
 
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
+    public void setFechaEmision(String fechaEmision) {
+        this.fechaEmision = fechaEmision;
+    }
+
+    public ClienteOutputModel getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(ClienteOutputModel cliente) {
+        this.cliente = cliente;
     }
 
     public FirmanteOutputModel getFirmante() {
@@ -135,91 +124,97 @@ public class DocumentOutputModel {
         this.proveedor = proveedor;
     }
 
-    public ClienteOutputModel getCliente() {
-        return cliente;
+    public DocumentMonetaryTotalOutputModel getTotales() {
+        return totales;
     }
 
-    public void setCliente(ClienteOutputModel cliente) {
-        this.cliente = cliente;
+    public void setTotales(DocumentMonetaryTotalOutputModel totales) {
+        this.totales = totales;
     }
 
-    public BigDecimal getImporteTotalImpuestos() {
-        return importeTotalImpuestos;
+    public DocumentImpuestosOutputModel getImpuestos() {
+        return impuestos;
     }
 
-    public void setImporteTotalImpuestos(BigDecimal importeTotalImpuestos) {
-        this.importeTotalImpuestos = importeTotalImpuestos;
+    public void setImpuestos(DocumentImpuestosOutputModel impuestos) {
+        this.impuestos = impuestos;
     }
 
-    public List<ImpuestoTotalIGVOutputModel> getTotalImpuestosIgv() {
-        return totalImpuestosIgv;
-    }
-
-    public void setTotalImpuestosIgv(List<ImpuestoTotalIGVOutputModel> totalImpuestosIgv) {
-        this.totalImpuestosIgv = totalImpuestosIgv;
-    }
-
-    public Integer getDetalleSize() {
-        return detalleSize;
-    }
-
-    public void setDetalleSize(Integer detalleSize) {
-        this.detalleSize = detalleSize;
-    }
-
-    public List<DetalleOutputModel> getDetalle() {
+    public List<DocumentLineOutputModel> getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(List<DetalleOutputModel> detalle) {
+    public void setDetalle(List<DocumentLineOutputModel> detalle) {
         this.detalle = detalle;
     }
 
-    public BigDecimal getTotalValorVenta() {
-        return totalValorVenta;
-    }
+    public static class Builder {
+        protected String moneda;
+        protected String serieNumero;
+        protected String horaEmision;
+        protected String fechaEmision;
+        protected ClienteOutputModel cliente;
+        protected FirmanteOutputModel firmante;
+        protected ProveedorOutputModel proveedor;
+        protected DocumentMonetaryTotalOutputModel totales;
+        protected DocumentImpuestosOutputModel impuestos;
+        protected List<DocumentLineOutputModel> detalle;
 
-    public void setTotalValorVenta(BigDecimal totalValorVenta) {
-        this.totalValorVenta = totalValorVenta;
-    }
+        protected Builder() {
+        }
 
-    public BigDecimal getTotalPrecioVenta() {
-        return totalPrecioVenta;
-    }
+        public static Builder aDocumentOutputModel() {
+            return new Builder();
+        }
 
-    public void setTotalPrecioVenta(BigDecimal totalPrecioVenta) {
-        this.totalPrecioVenta = totalPrecioVenta;
-    }
+        public Builder withMoneda(String moneda) {
+            this.moneda = moneda;
+            return this;
+        }
 
-    public BigDecimal getTotalDescuentos() {
-        return totalDescuentos;
-    }
+        public Builder withSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+            return this;
+        }
 
-    public void setTotalDescuentos(BigDecimal totalDescuentos) {
-        this.totalDescuentos = totalDescuentos;
-    }
+        public Builder withHoraEmision(String horaEmision) {
+            this.horaEmision = horaEmision;
+            return this;
+        }
 
-    public BigDecimal getTotalOtrosCargos() {
-        return totalOtrosCargos;
-    }
+        public Builder withFechaEmision(String fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
 
-    public void setTotalOtrosCargos(BigDecimal totalOtrosCargos) {
-        this.totalOtrosCargos = totalOtrosCargos;
-    }
+        public Builder withCliente(ClienteOutputModel cliente) {
+            this.cliente = cliente;
+            return this;
+        }
 
-    public BigDecimal getImporteTotal() {
-        return importeTotal;
-    }
+        public Builder withFirmante(FirmanteOutputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
 
-    public void setImporteTotal(BigDecimal importeTotal) {
-        this.importeTotal = importeTotal;
-    }
+        public Builder withProveedor(ProveedorOutputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
 
-    public List<ImpuestoTotalICBOutputModel> getTotalImpuestosIcb() {
-        return totalImpuestosIcb;
-    }
+        public Builder withTotales(DocumentMonetaryTotalOutputModel totales) {
+            this.totales = totales;
+            return this;
+        }
 
-    public void setTotalImpuestosIcb(List<ImpuestoTotalICBOutputModel> totalImpuestosIcb) {
-        this.totalImpuestosIcb = totalImpuestosIcb;
+        public Builder withImpuestos(DocumentImpuestosOutputModel impuestos) {
+            this.impuestos = impuestos;
+            return this;
+        }
+
+        public Builder withDetalle(List<DocumentLineOutputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
     }
 }

@@ -16,13 +16,58 @@
  */
 package org.openublpe.xmlbuilder.core.models.catalogs.constraints;
 
+import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
+
+import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@QuarkusTest
 class CatalogValidatorTest {
+
+    @Inject
+    Validator validator;
+
+    @Test
+    void nullValue_isValid() {
+        MyClass myClass = new MyClass();
+
+        Set<ConstraintViolation<MyClass>> violations = validator.validate(myClass);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    void usingEnumValue_isValid() {
+        MyClass myClass = new MyClass();
+        myClass.setMyField(CatalogTest.ONE.toString());
+
+        Set<ConstraintViolation<MyClass>> violations = validator.validate(myClass);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    void usingEnumCode_isValid() {
+        MyClass myClass = new MyClass();
+        myClass.setMyField(CatalogTest.ONE.getCode());
+
+        Set<ConstraintViolation<MyClass>> violations = validator.validate(myClass);
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    void usingNoEnumValueNorCode_isInvalid() {
+        MyClass myClass = new MyClass();
+        myClass.setMyField("piet");
+
+        Set<ConstraintViolation<MyClass>> violations = validator.validate(myClass);
+        assertFalse(violations.isEmpty());
+    }
 
     enum CatalogTest implements Catalog {
         ONE("uno"),
@@ -31,7 +76,7 @@ class CatalogValidatorTest {
 
         private String code;
 
-        CatalogTest(String code){
+        CatalogTest(String code) {
             this.code = code;
         }
 
@@ -41,24 +86,16 @@ class CatalogValidatorTest {
         }
     }
 
-    @Test
-    void isValid() {
-        CatalogValidator catalogValidator = new CatalogValidator();
-        catalogValidator.catalog = CatalogTest.class;
+    public static class MyClass {
+        @CatalogConstraint(value = CatalogTest.class)
+        private String myField;
 
-        // Check enum values
-        assertTrue(catalogValidator.isValid(CatalogTest.ONE.toString(), null));
-        assertTrue(catalogValidator.isValid(CatalogTest.TWO.toString(), null));
-        assertTrue(catalogValidator.isValid(CatalogTest.THREE.toString(), null));
+        public String getMyField() {
+            return myField;
+        }
 
-        // Check codes
-        assertTrue(catalogValidator.isValid(CatalogTest.ONE.getCode(), null));
-        assertTrue(catalogValidator.isValid(CatalogTest.TWO.getCode(), null));
-        assertTrue(catalogValidator.isValid(CatalogTest.THREE.getCode(), null));
-
-        // Check white spaces and uppercase variations
-        assertFalse(catalogValidator.isValid("ONE ", null));
-        assertFalse(catalogValidator.isValid("one", null));
-        assertFalse(catalogValidator.isValid("One", null));
+        public void setMyField(String myField) {
+            this.myField = myField;
+        }
     }
 }

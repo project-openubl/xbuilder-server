@@ -18,6 +18,7 @@ package org.openublpe.xmlbuilder.core.models.output.common;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -31,6 +32,12 @@ public class ClienteOutputModel {
 
     @NotBlank
     private String nombre;
+
+    @Valid
+    private DireccionOutputModel direccion;
+
+    @Valid
+    private ContactoOutputModel contacto;
 
     public Catalog6 getTipoDocumentoIdentidad() {
         return tipoDocumentoIdentidad;
@@ -56,4 +63,69 @@ public class ClienteOutputModel {
         this.nombre = nombre;
     }
 
+    public DireccionOutputModel getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(DireccionOutputModel direccion) {
+        this.direccion = direccion;
+    }
+
+    public ContactoOutputModel getContacto() {
+        return contacto;
+    }
+
+    public void setContacto(ContactoOutputModel contacto) {
+        this.contacto = contacto;
+    }
+
+    public static final class Builder {
+        private Catalog6 tipoDocumentoIdentidad;
+        private String numeroDocumentoIdentidad;
+        private String nombre;
+        private DireccionOutputModel direccion;
+        private ContactoOutputModel contacto;
+
+        private Builder() {
+        }
+
+        public static Builder aClienteOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withTipoDocumentoIdentidad(Catalog6 tipoDocumentoIdentidad) {
+            this.tipoDocumentoIdentidad = tipoDocumentoIdentidad;
+            return this;
+        }
+
+        public Builder withNumeroDocumentoIdentidad(String numeroDocumentoIdentidad) {
+            this.numeroDocumentoIdentidad = numeroDocumentoIdentidad;
+            return this;
+        }
+
+        public Builder withNombre(String nombre) {
+            this.nombre = nombre;
+            return this;
+        }
+
+        public Builder withDireccion(DireccionOutputModel direccion) {
+            this.direccion = direccion;
+            return this;
+        }
+
+        public Builder withContacto(ContactoOutputModel contacto) {
+            this.contacto = contacto;
+            return this;
+        }
+
+        public ClienteOutputModel build() {
+            ClienteOutputModel clienteOutputModel = new ClienteOutputModel();
+            clienteOutputModel.setTipoDocumentoIdentidad(tipoDocumentoIdentidad);
+            clienteOutputModel.setNumeroDocumentoIdentidad(numeroDocumentoIdentidad);
+            clienteOutputModel.setNombre(nombre);
+            clienteOutputModel.setDireccion(direccion);
+            clienteOutputModel.setContacto(contacto);
+            return clienteOutputModel;
+        }
+    }
 }

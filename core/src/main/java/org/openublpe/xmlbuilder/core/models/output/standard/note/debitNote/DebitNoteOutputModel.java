@@ -16,15 +16,23 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote;
 
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
+import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentImpuestosOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.standard.DocumentMonetaryTotalOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 public class DebitNoteOutputModel extends NoteOutputModel {
 
     @NotNull
-    private Catalog10 tipoNota;
+    protected Catalog10 tipoNota;
 
     public Catalog10 getTipoNota() {
         return tipoNota;
@@ -32,5 +40,118 @@ public class DebitNoteOutputModel extends NoteOutputModel {
 
     public void setTipoNota(Catalog10 tipoNota) {
         this.tipoNota = tipoNota;
+    }
+
+    public static final class Builder extends NoteOutputModel.Builder {
+        protected String moneda;
+        protected String serieNumero;
+        protected String horaEmision;
+        protected String fechaEmision;
+        protected String serieNumeroComprobanteAfectado;
+        protected Catalog10 tipoNota;
+        protected ClienteOutputModel cliente;
+        protected String descripcionSustentoDeNota;
+        protected FirmanteOutputModel firmante;
+        protected Catalog1 tipoDocumentoComprobanteAfectado;
+        protected ProveedorOutputModel proveedor;
+        protected DocumentMonetaryTotalOutputModel totales;
+        protected DocumentImpuestosOutputModel impuestos;
+        protected List<DocumentLineOutputModel> detalle;
+
+        private Builder() {
+        }
+
+        public static Builder aDebitNoteOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withMoneda(String moneda) {
+            this.moneda = moneda;
+            return this;
+        }
+
+        public Builder withSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+            return this;
+        }
+
+        public Builder withHoraEmision(String horaEmision) {
+            this.horaEmision = horaEmision;
+            return this;
+        }
+
+        public Builder withFechaEmision(String fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
+
+        public Builder withSerieNumeroComprobanteAfectado(String serieNumeroComprobanteAfectado) {
+            this.serieNumeroComprobanteAfectado = serieNumeroComprobanteAfectado;
+            return this;
+        }
+
+        public Builder withTipoNota(Catalog10 tipoNota) {
+            this.tipoNota = tipoNota;
+            return this;
+        }
+
+        public Builder withCliente(ClienteOutputModel cliente) {
+            this.cliente = cliente;
+            return this;
+        }
+
+        public Builder withDescripcionSustentoDeNota(String descripcionSustentoDeNota) {
+            this.descripcionSustentoDeNota = descripcionSustentoDeNota;
+            return this;
+        }
+
+        public Builder withFirmante(FirmanteOutputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withTipoDocumentoComprobanteAfectado(Catalog1 tipoDocumentoComprobanteAfectado) {
+            this.tipoDocumentoComprobanteAfectado = tipoDocumentoComprobanteAfectado;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorOutputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withTotales(DocumentMonetaryTotalOutputModel totales) {
+            this.totales = totales;
+            return this;
+        }
+
+        public Builder withImpuestos(DocumentImpuestosOutputModel impuestos) {
+            this.impuestos = impuestos;
+            return this;
+        }
+
+        public Builder withDetalle(List<DocumentLineOutputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
+
+        public DebitNoteOutputModel build() {
+            DebitNoteOutputModel debitNoteOutputModel = new DebitNoteOutputModel();
+            debitNoteOutputModel.setMoneda(moneda);
+            debitNoteOutputModel.setSerieNumero(serieNumero);
+            debitNoteOutputModel.setHoraEmision(horaEmision);
+            debitNoteOutputModel.setFechaEmision(fechaEmision);
+            debitNoteOutputModel.setSerieNumeroComprobanteAfectado(serieNumeroComprobanteAfectado);
+            debitNoteOutputModel.setTipoNota(tipoNota);
+            debitNoteOutputModel.setCliente(cliente);
+            debitNoteOutputModel.setDescripcionSustentoDeNota(descripcionSustentoDeNota);
+            debitNoteOutputModel.setFirmante(firmante);
+            debitNoteOutputModel.setTipoDocumentoComprobanteAfectado(tipoDocumentoComprobanteAfectado);
+            debitNoteOutputModel.setProveedor(proveedor);
+            debitNoteOutputModel.setTotales(totales);
+            debitNoteOutputModel.setImpuestos(impuestos);
+            debitNoteOutputModel.setDetalle(detalle);
+            return debitNoteOutputModel;
+        }
     }
 }

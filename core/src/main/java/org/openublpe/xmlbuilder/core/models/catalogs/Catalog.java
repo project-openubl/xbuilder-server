@@ -17,10 +17,12 @@
 package org.openublpe.xmlbuilder.core.models.catalogs;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public interface Catalog {
-    String getCode();
+    Supplier<? extends RuntimeException> invalidCatalogValue = (Supplier<RuntimeException>) ()
+            -> new IllegalStateException("No se pudo convertir el valor del catálogo");
 
     /**
      * @return an instance of Catalog which is equal to ValueOf or contains the same code
@@ -30,5 +32,7 @@ public interface Catalog {
                 .filter(p -> p.toString().equalsIgnoreCase(code) || p.getCode().equals(code))
                 .findFirst();
     }
+
+    String getCode();
 }
 

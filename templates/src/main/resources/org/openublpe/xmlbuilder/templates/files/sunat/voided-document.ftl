@@ -14,15 +14,15 @@
     <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
     <cbc:CustomizationID>1.0</cbc:CustomizationID>
     <cbc:ID>${serieNumero}</cbc:ID>
-    <cbc:ReferenceDate>${fechaEmisionDocumentReference}</cbc:ReferenceDate>
+    <cbc:ReferenceDate>${comprobante.fechaEmision}</cbc:ReferenceDate>
     <cbc:IssueDate>${fechaEmision}</cbc:IssueDate>
     <#include "../signature.ftl">
     <#include "./common/supplier.ftl">
     <sac:VoidedDocumentsLine>
         <cbc:LineID>1</cbc:LineID>
-        <cbc:DocumentTypeCode>${tipoDocumentReference.code}</cbc:DocumentTypeCode>
-        <sac:DocumentSerialID>${serieDocumentReference}</sac:DocumentSerialID>
-        <sac:DocumentNumberID>${numeroDocumentReference}</sac:DocumentNumberID>
-        <sac:VoidReasonDescription><![CDATA[${motivoBajaDocumentReference}]]></sac:VoidReasonDescription>
+        <cbc:DocumentTypeCode>${comprobante.tipoComprobante.code}</cbc:DocumentTypeCode>
+        <sac:DocumentSerialID>${comprobante.serie}</sac:DocumentSerialID>
+        <sac:DocumentNumberID>${comprobante.numero}</sac:DocumentNumberID>
+        <sac:VoidReasonDescription><![CDATA[${descripcionSustento}]]></sac:VoidReasonDescription>
     </sac:VoidedDocumentsLine>
 </VoidedDocuments>

@@ -18,7 +18,6 @@ package org.openublpe.xmlbuilder.apisigner.models.jpa;
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.panache.common.Page;
-import io.quarkus.panache.common.Sort;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationModel;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationProvider;
 import org.openublpe.xmlbuilder.apisigner.models.OrganizationType;

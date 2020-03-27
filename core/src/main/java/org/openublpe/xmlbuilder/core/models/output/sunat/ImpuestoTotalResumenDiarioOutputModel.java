@@ -16,8 +16,39 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.sunat;
 
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
 import org.openublpe.xmlbuilder.core.models.output.standard.ImpuestoOutputModel;
+
+import java.math.BigDecimal;
 
 public class ImpuestoTotalResumenDiarioOutputModel extends ImpuestoOutputModel {
 
+    public static final class Builder {
+        private BigDecimal importe;
+        private Catalog5 categoria;
+
+        private Builder() {
+        }
+
+        public static Builder anImpuestoTotalResumenDiarioOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withImporte(BigDecimal importe) {
+            this.importe = importe;
+            return this;
+        }
+
+        public Builder withCategoria(Catalog5 categoria) {
+            this.categoria = categoria;
+            return this;
+        }
+
+        public ImpuestoTotalResumenDiarioOutputModel build() {
+            ImpuestoTotalResumenDiarioOutputModel impuestoTotalResumenDiarioOutputModel = new ImpuestoTotalResumenDiarioOutputModel();
+            impuestoTotalResumenDiarioOutputModel.setImporte(importe);
+            impuestoTotalResumenDiarioOutputModel.setCategoria(categoria);
+            return impuestoTotalResumenDiarioOutputModel;
+        }
+    }
 }

@@ -18,15 +18,9 @@ package org.openublpe.xmlbuilder.apisigner.keys;
 
 public class KeyMetadata {
 
-    public enum Status {
-        ACTIVE, PASSIVE, DISABLED
-    }
-
     private String providerId;
     private long providerPriority;
-
     private String kid;
-
     private Status status;
 
     public String getProviderId() {
@@ -59,6 +53,10 @@ public class KeyMetadata {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public enum Status {
+        ACTIVE, PASSIVE, DISABLED
     }
 
 }

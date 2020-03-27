@@ -16,44 +16,37 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.sunat;
 
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 public class VoidedDocumentOutputModel {
 
     @NotBlank
+    @Pattern(regexp = "^([RA])[-]([0-9]{6})$")
     private String serieNumero;
 
     @NotBlank
     private String fechaEmision;
 
-    @Valid
     @NotNull
-    private ProveedorOutputModel proveedor;
-
     @Valid
-    @NotNull
     private FirmanteOutputModel firmante;
 
+    @NotNull
+    @Valid
+    private ProveedorOutputModel proveedor;
+
     @NotBlank
-    private String fechaEmisionDocumentReference;
+    private String descripcionSustento;
 
     @NotNull
-    private Catalog1 tipoDocumentReference;
-
-    @NotBlank
-    private String serieDocumentReference;
-
-    @NotBlank
-    private String numeroDocumentReference;
-
-    @NotBlank
-    private String motivoBajaDocumentReference;
+    @Valid
+    private VoidedDocumentLineOutputModel comprobante;
 
     public String getSerieNumero() {
         return serieNumero;
@@ -71,6 +64,14 @@ public class VoidedDocumentOutputModel {
         this.fechaEmision = fechaEmision;
     }
 
+    public FirmanteOutputModel getFirmante() {
+        return firmante;
+    }
+
+    public void setFirmante(FirmanteOutputModel firmante) {
+        this.firmante = firmante;
+    }
+
     public ProveedorOutputModel getProveedor() {
         return proveedor;
     }
@@ -79,51 +80,76 @@ public class VoidedDocumentOutputModel {
         this.proveedor = proveedor;
     }
 
-    public String getFechaEmisionDocumentReference() {
-        return fechaEmisionDocumentReference;
+    public String getDescripcionSustento() {
+        return descripcionSustento;
     }
 
-    public void setFechaEmisionDocumentReference(String fechaEmisionDocumentReference) {
-        this.fechaEmisionDocumentReference = fechaEmisionDocumentReference;
+    public void setDescripcionSustento(String descripcionSustento) {
+        this.descripcionSustento = descripcionSustento;
     }
 
-    public Catalog1 getTipoDocumentReference() {
-        return tipoDocumentReference;
+    public VoidedDocumentLineOutputModel getComprobante() {
+        return comprobante;
     }
 
-    public void setTipoDocumentReference(Catalog1 tipoDocumentReference) {
-        this.tipoDocumentReference = tipoDocumentReference;
+    public void setComprobante(VoidedDocumentLineOutputModel comprobante) {
+        this.comprobante = comprobante;
     }
 
-    public String getSerieDocumentReference() {
-        return serieDocumentReference;
-    }
+    public static final class Builder {
+        private String serieNumero;
+        private String fechaEmision;
+        private FirmanteOutputModel firmante;
+        private ProveedorOutputModel proveedor;
+        private String descripcionSustento;
+        private VoidedDocumentLineOutputModel comprobante;
 
-    public void setSerieDocumentReference(String serieDocumentReference) {
-        this.serieDocumentReference = serieDocumentReference;
-    }
+        private Builder() {
+        }
 
-    public String getNumeroDocumentReference() {
-        return numeroDocumentReference;
-    }
+        public static Builder aVoidedDocumentOutputModel() {
+            return new Builder();
+        }
 
-    public void setNumeroDocumentReference(String numeroDocumentReference) {
-        this.numeroDocumentReference = numeroDocumentReference;
-    }
+        public Builder withSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+            return this;
+        }
 
-    public String getMotivoBajaDocumentReference() {
-        return motivoBajaDocumentReference;
-    }
+        public Builder withFechaEmision(String fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
 
-    public void setMotivoBajaDocumentReference(String motivoBajaDocumentReference) {
-        this.motivoBajaDocumentReference = motivoBajaDocumentReference;
-    }
+        public Builder withFirmante(FirmanteOutputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
 
-    public FirmanteOutputModel getFirmante() {
-        return firmante;
-    }
+        public Builder withProveedor(ProveedorOutputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
 
-    public void setFirmante(FirmanteOutputModel firmante) {
-        this.firmante = firmante;
+        public Builder withDescripcionSustento(String descripcionSustento) {
+            this.descripcionSustento = descripcionSustento;
+            return this;
+        }
+
+        public Builder withComprobante(VoidedDocumentLineOutputModel comprobante) {
+            this.comprobante = comprobante;
+            return this;
+        }
+
+        public VoidedDocumentOutputModel build() {
+            VoidedDocumentOutputModel voidedDocumentOutputModel = new VoidedDocumentOutputModel();
+            voidedDocumentOutputModel.setSerieNumero(serieNumero);
+            voidedDocumentOutputModel.setFechaEmision(fechaEmision);
+            voidedDocumentOutputModel.setFirmante(firmante);
+            voidedDocumentOutputModel.setProveedor(proveedor);
+            voidedDocumentOutputModel.setDescripcionSustento(descripcionSustento);
+            voidedDocumentOutputModel.setComprobante(comprobante);
+            return voidedDocumentOutputModel;
+        }
     }
 }

@@ -30,6 +30,6 @@ public class FreemarkerBuildConfig {
      * Locations starting with filesystem: point to a directory on the filesystem, may only contain FTL templates and are only
      * scanned recursively down non-hidden directories.
      */
-    @ConfigItem
+    @ConfigItem(defaultValue = "freemarker/templates")
     public List<String> locations;
 }

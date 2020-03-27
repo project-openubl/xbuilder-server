@@ -17,20 +17,15 @@
 package org.openublpe.xmlbuilder.api.resources;
 
 import org.openublpe.xmlbuilder.api.resources.utils.ResourceUtils;
-import org.openublpe.xmlbuilder.core.models.input.standard.despatchadvice.DespatchAdviceInputModel;
+import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
-import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
-import org.openublpe.xmlbuilder.core.models.output.standard.despatchadvice.DespatchAdviceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.PerceptionOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.RetentionOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.rules.executors.KieExecutor;
@@ -38,6 +33,7 @@ import org.openublpe.xmlbuilder.templates.executors.FreemarkerExecutor;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.groups.ConvertGroup;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -59,64 +55,76 @@ public class DocumentsResource {
     @POST
     @Path("/invoice/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    public InvoiceOutputModel enrichInvoiceModel(@Valid InvoiceInputModel input) {
+    public InvoiceOutputModel enrichInvoiceModel(
+            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
+    ) {
         return kieExecutor.getInvoiceOutputModel(input);
     }
 
     @POST
     @Path("/credit-note/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    public CreditNoteOutputModel enrichCreditNoteModel(@Valid CreditNoteInputModel input) {
+    public CreditNoteOutputModel enrichCreditNoteModel(
+            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+    ) {
         return kieExecutor.getCreditNoteOutputModel(input);
     }
 
     @POST
     @Path("/debit-note/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    public DebitNoteOutputModel enrichDebitNoteModel(@Valid DebitNoteInputModel input) {
+    public DebitNoteOutputModel enrichDebitNoteModel(
+            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+    ) {
         return kieExecutor.getDebitNoteOutputModel(input);
     }
 
     @POST
     @Path("/voided-document/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    public VoidedDocumentOutputModel enrichVoidedDocumentModel(@Valid VoidedDocumentInputModel input) {
+    public VoidedDocumentOutputModel enrichVoidedDocumentModel(
+            @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
+    ) {
         return kieExecutor.getVoidedDocumentOutputModel(input);
     }
 
     @POST
     @Path("/summary-document/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    public SummaryDocumentOutputModel enrichSummaryDocumentModel(@Valid SummaryDocumentInputModel input) {
+    public SummaryDocumentOutputModel enrichSummaryDocumentModel(
+            @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
+    ) {
         return kieExecutor.getSummaryDocumentOutputModel(input);
     }
 
-    @POST
-    @Path("/perception/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public PerceptionOutputModel enrichPerceptionOutputModel(@Valid PerceptionInputModel input) {
-        return kieExecutor.getPerceptionOutputModel(input);
-    }
-
-    @POST
-    @Path("/retention/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public RetentionOutputModel enrichRetentionOutputModel(@Valid RetentionInputModel input) {
-        return kieExecutor.getRetentionOutputModel(input);
-    }
-
-    @POST
-    @Path("/despatch-advice/enrich")
-    @Produces(MediaType.APPLICATION_JSON)
-    public DespatchAdviceOutputModel enrichDespatchAdviceOutputModel(@Valid DespatchAdviceInputModel input) {
-        return kieExecutor.getDespatchAdviceOutputModel(input);
-    }
+//    @POST
+//    @Path("/perception/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public PerceptionOutputModel enrichPerceptionOutputModel(@Valid PerceptionInputModel input) {
+//        return kieExecutor.getPerceptionOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/retention/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public RetentionOutputModel enrichRetentionOutputModel(@Valid RetentionInputModel input) {
+//        return kieExecutor.getRetentionOutputModel(input);
+//    }
+//
+//    @POST
+//    @Path("/despatch-advice/enrich")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public DespatchAdviceOutputModel enrichDespatchAdviceOutputModel(@Valid DespatchAdviceInputModel input) {
+//        return kieExecutor.getDespatchAdviceOutputModel(input);
+//    }
 
 
     @POST
     @Path("/invoice/create")
     @Produces(MediaType.TEXT_XML)
-    public Response createInvoiceXml(@Valid InvoiceInputModel input) {
+    public Response createInvoiceXml(
+            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
+    ) {
         InvoiceOutputModel output = kieExecutor.getInvoiceOutputModel(input);
         String xml = freemarkerExecutor.createInvoiceXml(output);
 
@@ -128,7 +136,9 @@ public class DocumentsResource {
     @POST
     @Path("/credit-note/create")
     @Produces(MediaType.TEXT_XML)
-    public Response createCreditNote(@Valid CreditNoteInputModel input) {
+    public Response createCreditNote(
+            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+    ) {
         CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
         String xml = freemarkerExecutor.createCreditNote(output);
 
@@ -140,7 +150,9 @@ public class DocumentsResource {
     @POST
     @Path("/debit-note/create")
     @Produces(MediaType.TEXT_XML)
-    public Response createDebitNote(@Valid DebitNoteInputModel input) {
+    public Response createDebitNote(
+            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+    ) {
         DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
         String xml = freemarkerExecutor.createDebitNote(output);
 
@@ -152,7 +164,9 @@ public class DocumentsResource {
     @POST
     @Path("/voided-document/create")
     @Produces(MediaType.TEXT_XML)
-    public Response createVoidedDocument(@Valid VoidedDocumentInputModel input) {
+    public Response createVoidedDocument(
+            @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
+    ) {
         VoidedDocumentOutputModel output = kieExecutor.getVoidedDocumentOutputModel(input);
         String xml = freemarkerExecutor.createVoidedDocument(output);
 
@@ -164,7 +178,9 @@ public class DocumentsResource {
     @POST
     @Path("/summary-document/create")
     @Produces(MediaType.TEXT_XML)
-    public Response createSummaryDocument(@Valid SummaryDocumentInputModel input) {
+    public Response createSummaryDocument(
+            @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
+    ) {
         SummaryDocumentOutputModel output = kieExecutor.getSummaryDocumentOutputModel(input);
         String xml = freemarkerExecutor.createSummaryDocument(output);
 
@@ -173,39 +189,39 @@ public class DocumentsResource {
                 .build();
     }
 
-    @POST
-    @Path("/perception/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createPerception(@Valid PerceptionInputModel input) {
-        PerceptionOutputModel output = kieExecutor.getPerceptionOutputModel(input);
-        String xml = freemarkerExecutor.createPerception(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/retention/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createRetention(@Valid RetentionInputModel input) {
-        RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
-        String xml = freemarkerExecutor.createRetention(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
-
-    @POST
-    @Path("/despatch-advice/create")
-    @Produces(MediaType.TEXT_XML)
-    public Response createDespatchAdvice(@Valid DespatchAdviceInputModel input) {
-        DespatchAdviceOutputModel output = kieExecutor.getDespatchAdviceOutputModel(input);
-        String xml = freemarkerExecutor.createDespatchAdvice(output);
-
-        return Response.ok(xml)
-                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                .build();
-    }
+//    @POST
+//    @Path("/perception/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createPerception(@Valid PerceptionInputModel input) {
+//        PerceptionOutputModel output = kieExecutor.getPerceptionOutputModel(input);
+//        String xml = freemarkerExecutor.createPerception(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/retention/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createRetention(@Valid RetentionInputModel input) {
+//        RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
+//        String xml = freemarkerExecutor.createRetention(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
+//
+//    @POST
+//    @Path("/despatch-advice/create")
+//    @Produces(MediaType.TEXT_XML)
+//    public Response createDespatchAdvice(@Valid DespatchAdviceInputModel input) {
+//        DespatchAdviceOutputModel output = kieExecutor.getDespatchAdviceOutputModel(input);
+//        String xml = freemarkerExecutor.createDespatchAdvice(output);
+//
+//        return Response.ok(xml)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+//                .build();
+//    }
 }

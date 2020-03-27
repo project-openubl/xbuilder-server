@@ -16,7 +16,6 @@
  */
 package org.openublpe.xmlbuilder.apisigner.resources;
 
-import org.openublpe.xmlbuilder.apisigner.keys.KeyProvider;
 import org.openublpe.xmlbuilder.apisigner.keys.KeyProviderFactory;
 import org.openublpe.xmlbuilder.apisigner.keys.component.ComponentFactory;
 import org.openublpe.xmlbuilder.apisigner.keys.provider.ProviderConfigProperty;
@@ -43,7 +42,7 @@ public class ServerInfoAdminResource {
 
     @Inject
     @Any
-    private Instance<KeyProviderFactory> componentFactories;
+    Instance<KeyProviderFactory> componentFactories;
 
     /**
      * General information about the server

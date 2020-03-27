@@ -17,50 +17,91 @@
     <cbc:UBLVersionID>2.0</cbc:UBLVersionID>
     <cbc:CustomizationID>1.1</cbc:CustomizationID>
     <cbc:ID>${serieNumero}</cbc:ID>
-    <cbc:ReferenceDate>${fechaEmisionDocumentReference}</cbc:ReferenceDate>
+    <cbc:ReferenceDate>${fechaEmisionDeComprobantesAsociados}</cbc:ReferenceDate>
     <cbc:IssueDate>${fechaEmision}</cbc:IssueDate>
     <#include "../signature.ftl">
     <#include "./common/supplier.ftl">
     <#list detalle as item>
     <sac:SummaryDocumentsLine>
         <cbc:LineID>${item?index + 1}</cbc:LineID>
-        <cbc:DocumentTypeCode>${item.tipoComprobante.code}</cbc:DocumentTypeCode>
-        <cbc:ID>${item.serieNumero}</cbc:ID>
+        <cbc:DocumentTypeCode>${item.comprobante.tipo.code}</cbc:DocumentTypeCode>
+        <cbc:ID>${item.comprobante.serieNumero}</cbc:ID>
         <cac:AccountingCustomerParty>
-            <cbc:CustomerAssignedAccountID>${item.cliente.numeroDocumentoIdentidad}</cbc:CustomerAssignedAccountID>
-            <cbc:AdditionalAccountID>${item.cliente.tipoDocumentoIdentidad}</cbc:AdditionalAccountID>
+            <cbc:CustomerAssignedAccountID>${item.comprobante.cliente.numeroDocumentoIdentidad}</cbc:CustomerAssignedAccountID>
+            <cbc:AdditionalAccountID>${item.comprobante.cliente.tipoDocumentoIdentidad.code}</cbc:AdditionalAccountID>
         </cac:AccountingCustomerParty>
+        <#if item.comprobanteAfectado??>
+        <cac:BillingReference>
+            <cac:InvoiceDocumentReference>
+                <cbc:ID>${item.comprobanteAfectado.serieNumero}</cbc:ID>
+                <cbc:DocumentTypeCode>${item.comprobanteAfectado.tipo.code}</cbc:DocumentTypeCode>
+            </cac:InvoiceDocumentReference>
+        </cac:BillingReference>
+        </#if>
         <cac:Status>
             <cbc:ConditionCode>${item.tipoOperacion.code}</cbc:ConditionCode>
         </cac:Status>
-        <sac:TotalAmount currencyID="${moneda}">${item.importeTotal}</sac:TotalAmount>
-        <#list item.totales as total>
+        <sac:TotalAmount currencyID="${moneda}">${item.comprobante.valorVenta.importeTotal}</sac:TotalAmount>
+        <#if item.comprobante.valorVenta.gravado??>
         <sac:BillingPayment>
-            <cbc:PaidAmount currencyID="${moneda}">${total.importe}</cbc:PaidAmount>
-            <cbc:InstructionID>${total.tipo.code}</cbc:InstructionID>
+            <cbc:PaidAmount currencyID="${moneda}">${item.comprobante.valorVenta.gravado.importe}</cbc:PaidAmount>
+            <cbc:InstructionID>${item.comprobante.valorVenta.gravado.tipo.code}</cbc:InstructionID>
         </sac:BillingPayment>
-        </#list>
-        <#if item.totalOtrosCargos??>
+        </#if>
+        <#if item.comprobante.valorVenta.exonerado??>
+        <sac:BillingPayment>
+            <cbc:PaidAmount currencyID="${moneda}">${item.comprobante.valorVenta.exonerado.importe}</cbc:PaidAmount>
+            <cbc:InstructionID>${item.comprobante.valorVenta.exonerado.tipo.code}</cbc:InstructionID>
+        </sac:BillingPayment>
+        </#if>
+        <#if item.comprobante.valorVenta.inafecto??>
+        <sac:BillingPayment>
+            <cbc:PaidAmount currencyID="${moneda}">${item.comprobante.valorVenta.inafecto.importe}</cbc:PaidAmount>
+            <cbc:InstructionID>${item.comprobante.valorVenta.inafecto.tipo.code}</cbc:InstructionID>
+        </sac:BillingPayment>
+        </#if>
+        <#if item.comprobante.valorVenta.gratuito??>
+        <sac:BillingPayment>
+            <cbc:PaidAmount currencyID="${moneda}">${item.comprobante.valorVenta.gratuito.importe}</cbc:PaidAmount>
+            <cbc:InstructionID>${item.comprobante.valorVenta.gratuito.tipo.code}</cbc:InstructionID>
+        </sac:BillingPayment>
+        </#if>
+        <#if item.comprobante.valorVenta.otrosCargos??>
         <cac:AllowanceCharge>
             <cbc:ChargeIndicator>true</cbc:ChargeIndicator>
-            <cbc:Amount currencyID="${moneda}">${item.totalOtrosCargos}</cbc:Amount>
+            <cbc:Amount currencyID="${moneda}">${item.comprobante.valorVenta.otrosCargos}</cbc:Amount>
         </cac:AllowanceCharge>
         </#if>
-        <#list item.impuestos as impuesto>
+        <#if item.comprobante.impuestos.igv??>
         <cac:TaxTotal>
-            <cbc:TaxAmount currencyID="${moneda}">${impuesto.importe}</cbc:TaxAmount>
+            <cbc:TaxAmount currencyID="${moneda}">${item.comprobante.impuestos.igv.importe}</cbc:TaxAmount>
             <cac:TaxSubtotal>
-                <cbc:TaxAmount currencyID="${moneda}">${impuesto.importe}</cbc:TaxAmount>
+                <cbc:TaxAmount currencyID="${moneda}">${item.comprobante.impuestos.igv.importe}</cbc:TaxAmount>
                 <cac:TaxCategory>
                     <cac:TaxScheme>
-                        <cbc:ID>${impuesto.categoria.code}</cbc:ID>
-                        <cbc:Name>${impuesto.categoria.nombre}</cbc:Name>
-                        <cbc:TaxTypeCode>${impuesto.categoria.tipo}</cbc:TaxTypeCode>
+                        <cbc:ID>${item.comprobante.impuestos.igv.categoria.code}</cbc:ID>
+                        <cbc:Name>${item.comprobante.impuestos.igv.categoria.nombre}</cbc:Name>
+                        <cbc:TaxTypeCode>${item.comprobante.impuestos.igv.categoria.tipo}</cbc:TaxTypeCode>
                     </cac:TaxScheme>
                 </cac:TaxCategory>
             </cac:TaxSubtotal>
         </cac:TaxTotal>
-        </#list>
+        </#if>
+        <#if item.comprobante.impuestos.icb??>
+        <cac:TaxTotal>
+            <cbc:TaxAmount currencyID="${moneda}">${item.comprobante.impuestos.icb.importe}</cbc:TaxAmount>
+            <cac:TaxSubtotal>
+                <cbc:TaxAmount currencyID="${moneda}">${item.comprobante.impuestos.icb.importe}</cbc:TaxAmount>
+                <cac:TaxCategory>
+                    <cac:TaxScheme>
+                        <cbc:ID>${item.comprobante.impuestos.icb.categoria.code}</cbc:ID>
+                        <cbc:Name>${item.comprobante.impuestos.icb.categoria.nombre}</cbc:Name>
+                        <cbc:TaxTypeCode>${item.comprobante.impuestos.icb.categoria.tipo}</cbc:TaxTypeCode>
+                    </cac:TaxScheme>
+                </cac:TaxCategory>
+            </cac:TaxSubtotal>
+        </cac:TaxTotal>
+        </#if>
     </sac:SummaryDocumentsLine>
     </#list>
 </SummaryDocuments>

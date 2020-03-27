@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- * <p>
+ *
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * https://www.eclipse.org/legal/epl-2.0/
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,32 +31,24 @@ import java.util.List;
 
 public abstract class PerceptionRetentionOutputModel {
 
+    @Valid
+    @NotNull ClienteOutputModel cliente;
     @NotBlank
     private String serieNumero;
-
     @NotBlank
     private String fechaEmision;
-
     @Size(min = 3, max = 3)
     private String moneda;
-
     private String observacion;
-
     @NotNull
     @Min(0)
     private BigDecimal importeTotalPercibidoRetenido;
-
     @NotNull
     @Min(0)
     private BigDecimal importeTotalCobradoPagado;
-
     @Valid
     @NotNull
     private ProveedorOutputModel proveedor;
-
-    @Valid
-    @NotNull ClienteOutputModel cliente;
-
     @Valid
     @NotNull
     private FirmanteOutputModel firmante;

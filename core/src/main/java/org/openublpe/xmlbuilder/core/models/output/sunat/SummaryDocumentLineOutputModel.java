@@ -16,71 +16,22 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.sunat;
 
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
-import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
-import java.util.List;
 
 public class SummaryDocumentLineOutputModel {
-
-    @NotNull
-    private Catalog1 tipoComprobante;
-
-    @NotBlank
-    private String serieNumero;
-
-    @Valid
-    @NotNull
-    private ClienteOutputModel cliente;
 
     @NotNull
     private Catalog19 tipoOperacion;
 
     @NotNull
-    @Min(0)
-    private BigDecimal importeTotal;
-
-    @Min(0)
-    private BigDecimal totalOtrosCargos;
+    @Valid
+    private SummaryDocumentComprobanteOutputModel comprobante;
 
     @Valid
-    @NotEmpty
-    private List<TotalValorVentaOutputModel> totales;
-
-    @Valid
-    @NotEmpty
-    private List<ImpuestoTotalResumenDiarioOutputModel> impuestos;
-
-    public Catalog1 getTipoComprobante() {
-        return tipoComprobante;
-    }
-
-    public void setTipoComprobante(Catalog1 tipoComprobante) {
-        this.tipoComprobante = tipoComprobante;
-    }
-
-    public String getSerieNumero() {
-        return serieNumero;
-    }
-
-    public void setSerieNumero(String serieNumero) {
-        this.serieNumero = serieNumero;
-    }
-
-    public ClienteOutputModel getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(ClienteOutputModel cliente) {
-        this.cliente = cliente;
-    }
+    private SummaryDocumentComprobanteAfectadoOutputModel comprobanteAfectado;
 
     public Catalog19 getTipoOperacion() {
         return tipoOperacion;
@@ -90,36 +41,55 @@ public class SummaryDocumentLineOutputModel {
         this.tipoOperacion = tipoOperacion;
     }
 
-    public BigDecimal getImporteTotal() {
-        return importeTotal;
+    public SummaryDocumentComprobanteOutputModel getComprobante() {
+        return comprobante;
     }
 
-    public void setImporteTotal(BigDecimal importeTotal) {
-        this.importeTotal = importeTotal;
+    public void setComprobante(SummaryDocumentComprobanteOutputModel comprobante) {
+        this.comprobante = comprobante;
     }
 
-    public BigDecimal getTotalOtrosCargos() {
-        return totalOtrosCargos;
+    public SummaryDocumentComprobanteAfectadoOutputModel getComprobanteAfectado() {
+        return comprobanteAfectado;
     }
 
-    public void setTotalOtrosCargos(BigDecimal totalOtrosCargos) {
-        this.totalOtrosCargos = totalOtrosCargos;
+    public void setComprobanteAfectado(SummaryDocumentComprobanteAfectadoOutputModel comprobanteAfectado) {
+        this.comprobanteAfectado = comprobanteAfectado;
     }
 
-    public List<TotalValorVentaOutputModel> getTotales() {
-        return totales;
-    }
+    public static final class Builder {
+        private Catalog19 tipoOperacion;
+        private SummaryDocumentComprobanteOutputModel comprobante;
+        private SummaryDocumentComprobanteAfectadoOutputModel comprobanteAfectado;
 
-    public void setTotales(List<TotalValorVentaOutputModel> totales) {
-        this.totales = totales;
-    }
+        private Builder() {
+        }
 
-    public List<ImpuestoTotalResumenDiarioOutputModel> getImpuestos() {
-        return impuestos;
-    }
+        public static Builder aSummaryDocumentLineOutputModel() {
+            return new Builder();
+        }
 
-    public void setImpuestos(List<ImpuestoTotalResumenDiarioOutputModel> impuestos) {
-        this.impuestos = impuestos;
-    }
+        public Builder withTipoOperacion(Catalog19 tipoOperacion) {
+            this.tipoOperacion = tipoOperacion;
+            return this;
+        }
 
+        public Builder withComprobante(SummaryDocumentComprobanteOutputModel comprobante) {
+            this.comprobante = comprobante;
+            return this;
+        }
+
+        public Builder withComprobanteAfectado(SummaryDocumentComprobanteAfectadoOutputModel comprobanteAfectado) {
+            this.comprobanteAfectado = comprobanteAfectado;
+            return this;
+        }
+
+        public SummaryDocumentLineOutputModel build() {
+            SummaryDocumentLineOutputModel summaryDocumentLineOutputModel = new SummaryDocumentLineOutputModel();
+            summaryDocumentLineOutputModel.setTipoOperacion(tipoOperacion);
+            summaryDocumentLineOutputModel.setComprobante(comprobante);
+            summaryDocumentLineOutputModel.setComprobanteAfectado(comprobanteAfectado);
+            return summaryDocumentLineOutputModel;
+        }
+    }
 }

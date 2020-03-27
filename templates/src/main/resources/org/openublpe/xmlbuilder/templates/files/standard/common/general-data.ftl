@@ -2,4 +2,4 @@
     <cbc:CustomizationID>2.0</cbc:CustomizationID>
     <cbc:ID>${serieNumero}</cbc:ID>
     <cbc:IssueDate>${fechaEmision}</cbc:IssueDate>
-    <#if horaEmision??><cbc:IssueTime>${horaEmision}</cbc:IssueTime></#if>
+    <cbc:IssueTime>${horaEmision}</cbc:IssueTime>

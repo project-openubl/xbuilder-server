@@ -19,53 +19,48 @@ package org.openublpe.xmlbuilder.core.models.input.standard;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
+import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentInputModel_PuedeCrearComprobanteConSerieFConstraint;
+import org.openublpe.xmlbuilder.core.models.input.constraints.DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.math.BigDecimal;
 import java.util.List;
 
+@DocumentInputModel_PuedeCrearComprobanteConSerieFConstraint(groups = DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class)
 public abstract class DocumentInputModel {
 
-    @NotNull
     @NotBlank
-    @Pattern(regexp = "^[F|B].*$")
+    @Pattern(regexp = "^[F|f|B|b].*$")
     @Size(min = 4, max = 4)
     protected String serie;
 
-    @Min(1)
     @NotNull
+    @Min(1)
+    @Max(99999999)
     private Integer numero;
 
-    private String moneda;
     private Long fechaEmision;
 
-    @Min(0)
-    private BigDecimal totalDescuentos;
-
-    @Min(0)
-    private BigDecimal totalOtrosCargos;
-
-    @Valid
     @NotNull
+    @Valid
     private ClienteInputModel cliente;
+
+    @NotNull
+    @Valid
+    private ProveedorInputModel proveedor;
 
     @Valid
     private FirmanteInputModel firmante;
 
-    @Valid
-    @NotNull
-    private ProveedorInputModel proveedor;
-
-    @Valid
-    @NotNull
     @NotEmpty
-    private List<DetalleInputModel> detalle;
+    @Valid
+    private List<DocumentLineInputModel> detalle;
 
     public String getSerie() {
         return serie;
@@ -83,36 +78,12 @@ public abstract class DocumentInputModel {
         this.numero = numero;
     }
 
-    public String getMoneda() {
-        return moneda;
-    }
-
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
-    }
-
     public Long getFechaEmision() {
         return fechaEmision;
     }
 
     public void setFechaEmision(Long fechaEmision) {
         this.fechaEmision = fechaEmision;
-    }
-
-    public BigDecimal getTotalDescuentos() {
-        return totalDescuentos;
-    }
-
-    public void setTotalDescuentos(BigDecimal totalDescuentos) {
-        this.totalDescuentos = totalDescuentos;
-    }
-
-    public BigDecimal getTotalOtrosCargos() {
-        return totalOtrosCargos;
-    }
-
-    public void setTotalOtrosCargos(BigDecimal totalOtrosCargos) {
-        this.totalOtrosCargos = totalOtrosCargos;
     }
 
     public ClienteInputModel getCliente() {
@@ -123,14 +94,6 @@ public abstract class DocumentInputModel {
         this.cliente = cliente;
     }
 
-    public FirmanteInputModel getFirmante() {
-        return firmante;
-    }
-
-    public void setFirmante(FirmanteInputModel firmante) {
-        this.firmante = firmante;
-    }
-
     public ProveedorInputModel getProveedor() {
         return proveedor;
     }
@@ -139,11 +102,19 @@ public abstract class DocumentInputModel {
         this.proveedor = proveedor;
     }
 
-    public List<DetalleInputModel> getDetalle() {
+    public FirmanteInputModel getFirmante() {
+        return firmante;
+    }
+
+    public void setFirmante(FirmanteInputModel firmante) {
+        this.firmante = firmante;
+    }
+
+    public List<DocumentLineInputModel> getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(List<DetalleInputModel> detalle) {
+    public void setDetalle(List<DocumentLineInputModel> detalle) {
         this.detalle = detalle;
     }
 }

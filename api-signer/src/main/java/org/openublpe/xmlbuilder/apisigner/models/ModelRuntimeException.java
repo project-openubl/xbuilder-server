@@ -16,7 +16,7 @@
  */
 package org.openublpe.xmlbuilder.apisigner.models;
 
-public class ModelRuntimeException extends RuntimeException{
+public class ModelRuntimeException extends RuntimeException {
 
     private Object[] parameters;
 

@@ -31,30 +31,29 @@ public class SummaryDocumentInputModel {
     @NotNull
     private Integer numero;
 
-    private String moneda;
     private Long fechaEmision;
 
     @NotNull
-    private Long fechaEmisionDocumentReference;
-
-    @Valid
-    @NotNull
-    private ProveedorInputModel proveedor;
+    private Long fechaEmisionDeComprobantesAsociados;
 
     @Valid
     private FirmanteInputModel firmante;
 
     @NotNull
     @Valid
+    private ProveedorInputModel proveedor;
+
+    @NotNull
     @NotEmpty
+    @Valid
     private List<SummaryDocumentLineInputModel> detalle;
 
-    public String getMoneda() {
-        return moneda;
+    public Integer getNumero() {
+        return numero;
     }
 
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
+    public void setNumero(Integer numero) {
+        this.numero = numero;
     }
 
     public Long getFechaEmision() {
@@ -65,20 +64,12 @@ public class SummaryDocumentInputModel {
         this.fechaEmision = fechaEmision;
     }
 
-    public Long getFechaEmisionDocumentReference() {
-        return fechaEmisionDocumentReference;
+    public Long getFechaEmisionDeComprobantesAsociados() {
+        return fechaEmisionDeComprobantesAsociados;
     }
 
-    public void setFechaEmisionDocumentReference(Long fechaEmisionDocumentReference) {
-        this.fechaEmisionDocumentReference = fechaEmisionDocumentReference;
-    }
-
-    public ProveedorInputModel getProveedor() {
-        return proveedor;
-    }
-
-    public void setProveedor(ProveedorInputModel proveedor) {
-        this.proveedor = proveedor;
+    public void setFechaEmisionDeComprobantesAsociados(Long fechaEmisionDeComprobantesAsociados) {
+        this.fechaEmisionDeComprobantesAsociados = fechaEmisionDeComprobantesAsociados;
     }
 
     public FirmanteInputModel getFirmante() {
@@ -89,12 +80,12 @@ public class SummaryDocumentInputModel {
         this.firmante = firmante;
     }
 
-    public Integer getNumero() {
-        return numero;
+    public ProveedorInputModel getProveedor() {
+        return proveedor;
     }
 
-    public void setNumero(Integer numero) {
-        this.numero = numero;
+    public void setProveedor(ProveedorInputModel proveedor) {
+        this.proveedor = proveedor;
     }
 
     public List<SummaryDocumentLineInputModel> getDetalle() {
@@ -103,5 +94,62 @@ public class SummaryDocumentInputModel {
 
     public void setDetalle(List<SummaryDocumentLineInputModel> detalle) {
         this.detalle = detalle;
+    }
+
+    public static final class Builder {
+        private Integer numero;
+        private Long fechaEmision;
+        private Long fechaEmisionDeComprobantesAsociados;
+        private FirmanteInputModel firmante;
+        private ProveedorInputModel proveedor;
+        private List<SummaryDocumentLineInputModel> detalle;
+
+        private Builder() {
+        }
+
+        public static Builder aSummaryDocumentInputModel() {
+            return new Builder();
+        }
+
+        public Builder withNumero(Integer numero) {
+            this.numero = numero;
+            return this;
+        }
+
+        public Builder withFechaEmision(Long fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
+
+        public Builder withFechaEmisionDeComprobantesAsociados(Long fechaEmisionDeComprobantesAsociados) {
+            this.fechaEmisionDeComprobantesAsociados = fechaEmisionDeComprobantesAsociados;
+            return this;
+        }
+
+        public Builder withFirmante(FirmanteInputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorInputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withDetalle(List<SummaryDocumentLineInputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
+
+        public SummaryDocumentInputModel build() {
+            SummaryDocumentInputModel summaryDocumentInputModel = new SummaryDocumentInputModel();
+            summaryDocumentInputModel.setNumero(numero);
+            summaryDocumentInputModel.setFechaEmision(fechaEmision);
+            summaryDocumentInputModel.setFechaEmisionDeComprobantesAsociados(fechaEmisionDeComprobantesAsociados);
+            summaryDocumentInputModel.setFirmante(firmante);
+            summaryDocumentInputModel.setProveedor(proveedor);
+            summaryDocumentInputModel.setDetalle(detalle);
+            return summaryDocumentInputModel;
+        }
     }
 }

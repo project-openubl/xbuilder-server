@@ -37,18 +37,19 @@ public class SummaryDocumentOutputModel {
     private String fechaEmision;
 
     @NotBlank
-    private String fechaEmisionDocumentReference;
+    private String fechaEmisionDeComprobantesAsociados;
 
-    @Valid
     @NotNull
-    private ProveedorOutputModel proveedor;
-
     @Valid
-    @NotNull
     private FirmanteOutputModel firmante;
 
+    @NotNull
     @Valid
+    private ProveedorOutputModel proveedor;
+
+    @NotNull
     @NotEmpty
+    @Valid
     private List<SummaryDocumentLineOutputModel> detalle;
 
     public String getSerieNumero() {
@@ -59,6 +60,14 @@ public class SummaryDocumentOutputModel {
         this.serieNumero = serieNumero;
     }
 
+    public String getMoneda() {
+        return moneda;
+    }
+
+    public void setMoneda(String moneda) {
+        this.moneda = moneda;
+    }
+
     public String getFechaEmision() {
         return fechaEmision;
     }
@@ -67,20 +76,12 @@ public class SummaryDocumentOutputModel {
         this.fechaEmision = fechaEmision;
     }
 
-    public String getFechaEmisionDocumentReference() {
-        return fechaEmisionDocumentReference;
+    public String getFechaEmisionDeComprobantesAsociados() {
+        return fechaEmisionDeComprobantesAsociados;
     }
 
-    public void setFechaEmisionDocumentReference(String fechaEmisionDocumentReference) {
-        this.fechaEmisionDocumentReference = fechaEmisionDocumentReference;
-    }
-
-    public ProveedorOutputModel getProveedor() {
-        return proveedor;
-    }
-
-    public void setProveedor(ProveedorOutputModel proveedor) {
-        this.proveedor = proveedor;
+    public void setFechaEmisionDeComprobantesAsociados(String fechaEmisionDeComprobantesAsociados) {
+        this.fechaEmisionDeComprobantesAsociados = fechaEmisionDeComprobantesAsociados;
     }
 
     public FirmanteOutputModel getFirmante() {
@@ -91,19 +92,83 @@ public class SummaryDocumentOutputModel {
         this.firmante = firmante;
     }
 
-    public List<SummaryDocumentLineOutputModel>  getDetalle() {
+    public ProveedorOutputModel getProveedor() {
+        return proveedor;
+    }
+
+    public void setProveedor(ProveedorOutputModel proveedor) {
+        this.proveedor = proveedor;
+    }
+
+    public List<SummaryDocumentLineOutputModel> getDetalle() {
         return detalle;
     }
 
-    public void setDetalle(List<SummaryDocumentLineOutputModel>  detalle) {
+    public void setDetalle(List<SummaryDocumentLineOutputModel> detalle) {
         this.detalle = detalle;
     }
 
-    public String getMoneda() {
-        return moneda;
-    }
+    public static final class Builder {
+        private String serieNumero;
+        private String moneda;
+        private String fechaEmision;
+        private String fechaEmisionDeComprobantesAsociados;
+        private FirmanteOutputModel firmante;
+        private ProveedorOutputModel proveedor;
+        private List<SummaryDocumentLineOutputModel> detalle;
 
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
+        private Builder() {
+        }
+
+        public static Builder aSummaryDocumentOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+            return this;
+        }
+
+        public Builder withMoneda(String moneda) {
+            this.moneda = moneda;
+            return this;
+        }
+
+        public Builder withFechaEmision(String fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
+
+        public Builder withFechaEmisionDeComprobantesAsociados(String fechaEmisionDeComprobantesAsociados) {
+            this.fechaEmisionDeComprobantesAsociados = fechaEmisionDeComprobantesAsociados;
+            return this;
+        }
+
+        public Builder withFirmante(FirmanteOutputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorOutputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withDetalle(List<SummaryDocumentLineOutputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
+
+        public SummaryDocumentOutputModel build() {
+            SummaryDocumentOutputModel summaryDocumentOutputModel = new SummaryDocumentOutputModel();
+            summaryDocumentOutputModel.setSerieNumero(serieNumero);
+            summaryDocumentOutputModel.setMoneda(moneda);
+            summaryDocumentOutputModel.setFechaEmision(fechaEmision);
+            summaryDocumentOutputModel.setFechaEmisionDeComprobantesAsociados(fechaEmisionDeComprobantesAsociados);
+            summaryDocumentOutputModel.setFirmante(firmante);
+            summaryDocumentOutputModel.setProveedor(proveedor);
+            summaryDocumentOutputModel.setDetalle(detalle);
+            return summaryDocumentOutputModel;
+        }
     }
 }

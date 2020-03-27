@@ -18,7 +18,13 @@ package org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
+import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
+
+import java.util.List;
 
 public class DebitNoteInputModel extends NoteInputModel {
 
@@ -31,5 +37,90 @@ public class DebitNoteInputModel extends NoteInputModel {
 
     public void setTipoNota(String tipoNota) {
         this.tipoNota = tipoNota;
+    }
+
+    public static final class Builder {
+        protected String serie;
+        private String serieNumeroComprobanteAfectado;
+        private String tipoNota;
+        private String descripcionSustento;
+        private Integer numero;
+        private Long fechaEmision;
+        private ClienteInputModel cliente;
+        private ProveedorInputModel proveedor;
+        private FirmanteInputModel firmante;
+        private List<DocumentLineInputModel> detalle;
+
+        private Builder() {
+        }
+
+        public static Builder aDebitNoteInputModel() {
+            return new Builder();
+        }
+
+        public Builder withSerieNumeroComprobanteAfectado(String serieNumeroComprobanteAfectado) {
+            this.serieNumeroComprobanteAfectado = serieNumeroComprobanteAfectado;
+            return this;
+        }
+
+        public Builder withTipoNota(String tipoNota) {
+            this.tipoNota = tipoNota;
+            return this;
+        }
+
+        public Builder withDescripcionSustento(String descripcionSustento) {
+            this.descripcionSustento = descripcionSustento;
+            return this;
+        }
+
+        public Builder withSerie(String serie) {
+            this.serie = serie;
+            return this;
+        }
+
+        public Builder withNumero(Integer numero) {
+            this.numero = numero;
+            return this;
+        }
+
+        public Builder withFechaEmision(Long fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
+
+        public Builder withCliente(ClienteInputModel cliente) {
+            this.cliente = cliente;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorInputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withFirmante(FirmanteInputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withDetalle(List<DocumentLineInputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
+
+        public DebitNoteInputModel build() {
+            DebitNoteInputModel debitNoteInputModel = new DebitNoteInputModel();
+            debitNoteInputModel.setSerieNumeroComprobanteAfectado(serieNumeroComprobanteAfectado);
+            debitNoteInputModel.setTipoNota(tipoNota);
+            debitNoteInputModel.setDescripcionSustentoDeNota(descripcionSustento);
+            debitNoteInputModel.setSerie(serie);
+            debitNoteInputModel.setNumero(numero);
+            debitNoteInputModel.setFechaEmision(fechaEmision);
+            debitNoteInputModel.setCliente(cliente);
+            debitNoteInputModel.setProveedor(proveedor);
+            debitNoteInputModel.setFirmante(firmante);
+            debitNoteInputModel.setDetalle(detalle);
+            return debitNoteInputModel;
+        }
     }
 }

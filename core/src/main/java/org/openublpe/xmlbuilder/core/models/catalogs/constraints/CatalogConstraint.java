@@ -37,8 +37,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
 public @interface CatalogConstraint {
-    String message() default "Invalid value {value}";
+    String message() default "";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 
     Class<? extends Enum<? extends Catalog>> value();

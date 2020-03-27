@@ -46,4 +46,33 @@ public class TotalValorVentaOutputModel {
     public void setTipo(Catalog7_1 tipo) {
         this.tipo = tipo;
     }
+
+    public static final class Builder {
+        private BigDecimal importe;
+        private Catalog7_1 tipo;
+
+        private Builder() {
+        }
+
+        public static Builder aTotalValorVentaOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withImporte(BigDecimal importe) {
+            this.importe = importe;
+            return this;
+        }
+
+        public Builder withTipo(Catalog7_1 tipo) {
+            this.tipo = tipo;
+            return this;
+        }
+
+        public TotalValorVentaOutputModel build() {
+            TotalValorVentaOutputModel totalValorVentaOutputModel = new TotalValorVentaOutputModel();
+            totalValorVentaOutputModel.setImporte(importe);
+            totalValorVentaOutputModel.setTipo(tipo);
+            return totalValorVentaOutputModel;
+        }
+    }
 }

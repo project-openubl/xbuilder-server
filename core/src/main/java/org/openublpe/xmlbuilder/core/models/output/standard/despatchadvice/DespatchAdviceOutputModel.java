@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- * <p>
+ *
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * https://www.eclipse.org/legal/epl-2.0/
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -76,43 +76,6 @@ public class DespatchAdviceOutputModel {
     @NotNull
     @NotEmpty
     private List<DespatchAdviceLineDetalleOutputModel> detalle;
-
-    public static class DocumentoRelacionadoOutputModel<T extends Catalog> {
-        @NotBlank
-        private String serieNumero;
-
-        @NotNull
-        private T tipoDocumento;
-
-        public String getSerieNumero() {
-            return serieNumero;
-        }
-
-        public void setSerieNumero(String serieNumero) {
-            this.serieNumero = serieNumero;
-        }
-
-        public T getTipoDocumento() {
-            return tipoDocumento;
-        }
-
-        public void setTipoDocumento(T tipoDocumento) {
-            this.tipoDocumento = tipoDocumento;
-        }
-    }
-
-    public static class VehiculoOutputModel {
-        @NotBlank
-        private String placa;
-
-        public String getPlaca() {
-            return placa;
-        }
-
-        public void setPlaca(String placa) {
-            this.placa = placa;
-        }
-    }
 
     public String getSerieNumero() {
         return serieNumero;
@@ -216,6 +179,43 @@ public class DespatchAdviceOutputModel {
 
     public void setDetalle(List<DespatchAdviceLineDetalleOutputModel> detalle) {
         this.detalle = detalle;
+    }
+
+    public static class DocumentoRelacionadoOutputModel<T extends Catalog> {
+        @NotBlank
+        private String serieNumero;
+
+        @NotNull
+        private T tipoDocumento;
+
+        public String getSerieNumero() {
+            return serieNumero;
+        }
+
+        public void setSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+        }
+
+        public T getTipoDocumento() {
+            return tipoDocumento;
+        }
+
+        public void setTipoDocumento(T tipoDocumento) {
+            this.tipoDocumento = tipoDocumento;
+        }
+    }
+
+    public static class VehiculoOutputModel {
+        @NotBlank
+        private String placa;
+
+        public String getPlaca() {
+            return placa;
+        }
+
+        public void setPlaca(String placa) {
+            this.placa = placa;
+        }
     }
 
 }

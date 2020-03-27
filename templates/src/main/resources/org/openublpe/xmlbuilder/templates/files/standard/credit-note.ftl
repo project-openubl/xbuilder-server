@@ -1,13 +1,15 @@
 <#setting number_format="computer">
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"
-            <#include "./common/namespaces.ftl">
+        <#include "./common/namespaces.ftl">
 >
     <#include "./common/ubl-extensions.ftl">
     <#include "./common/general-data.ftl">
+<#--    <#include "./common/legends.ftl">-->
     <cbc:DocumentCurrencyCode listID="ISO 4217 Alpha" listAgencyName="United Nations Economic Commission for Europe" listName="Currency">${moneda}</cbc:DocumentCurrencyCode>
-    <cbc:LineCountNumeric>${detalleSize}</cbc:LineCountNumeric>
     <#include "./common/note/invoice-reference.ftl">
+<#--    <#include "./common/despatch-document-reference.ftl">-->
+<#--    <#include "./common/additional-document-reference.ftl">-->
     <#include "../signature.ftl">
     <#include "./common/supplier.ftl">
     <#include "./common/customer.ftl">

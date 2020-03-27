@@ -34,4 +34,35 @@ public class InvoiceOutputModel extends DocumentOutputModel {
         this.tipoInvoice = tipoInvoice;
     }
 
+    public static final class Builder extends DocumentOutputModel.Builder {
+        private Catalog1 tipoInvoice;
+
+        private Builder() {
+        }
+
+        public static Builder anInvoiceOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withTipoInvoice(Catalog1 tipoInvoice) {
+            this.tipoInvoice = tipoInvoice;
+            return this;
+        }
+
+        public InvoiceOutputModel build() {
+            InvoiceOutputModel invoiceOutputModel = new InvoiceOutputModel();
+            invoiceOutputModel.setMoneda(moneda);
+            invoiceOutputModel.setSerieNumero(serieNumero);
+            invoiceOutputModel.setHoraEmision(horaEmision);
+            invoiceOutputModel.setFechaEmision(fechaEmision);
+            invoiceOutputModel.setCliente(cliente);
+            invoiceOutputModel.setFirmante(firmante);
+            invoiceOutputModel.setProveedor(proveedor);
+            invoiceOutputModel.setTotales(totales);
+            invoiceOutputModel.setImpuestos(impuestos);
+            invoiceOutputModel.setDetalle(detalle);
+            invoiceOutputModel.setTipoInvoice(tipoInvoice);
+            return invoiceOutputModel;
+        }
+    }
 }

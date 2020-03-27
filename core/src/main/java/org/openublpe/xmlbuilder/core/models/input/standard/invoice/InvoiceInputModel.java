@@ -16,7 +16,77 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.standard.invoice;
 
+import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputModel;
+
+import java.util.List;
 
 public class InvoiceInputModel extends DocumentInputModel {
+
+    public static final class Builder {
+        protected String serie;
+        private Integer numero;
+        private Long fechaEmision;
+        private ClienteInputModel cliente;
+        private ProveedorInputModel proveedor;
+        private FirmanteInputModel firmante;
+        private List<DocumentLineInputModel> detalle;
+
+        private Builder() {
+        }
+
+        public static Builder anInvoiceInputModel() {
+            return new Builder();
+        }
+
+        public Builder withSerie(String serie) {
+            this.serie = serie;
+            return this;
+        }
+
+        public Builder withNumero(Integer numero) {
+            this.numero = numero;
+            return this;
+        }
+
+        public Builder withFechaEmision(Long fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
+
+        public Builder withCliente(ClienteInputModel cliente) {
+            this.cliente = cliente;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorInputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withFirmante(FirmanteInputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withDetalle(List<DocumentLineInputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
+
+        public InvoiceInputModel build() {
+            InvoiceInputModel invoiceInputModel = new InvoiceInputModel();
+            invoiceInputModel.setSerie(serie);
+            invoiceInputModel.setNumero(numero);
+            invoiceInputModel.setFechaEmision(fechaEmision);
+            invoiceInputModel.setCliente(cliente);
+            invoiceInputModel.setProveedor(proveedor);
+            invoiceInputModel.setFirmante(firmante);
+            invoiceInputModel.setDetalle(detalle);
+            return invoiceInputModel;
+        }
+    }
 }

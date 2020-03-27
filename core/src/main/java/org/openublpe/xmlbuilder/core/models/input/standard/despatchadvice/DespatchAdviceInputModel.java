@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- * <p>
+ *
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * https://www.eclipse.org/legal/epl-2.0/
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -81,69 +81,6 @@ public class DespatchAdviceInputModel {
     @NotNull
     @NotEmpty
     private List<DespatchAdviceLineDetalleInputModel> detalle;
-
-    public static class GuiaRemisionBajaInputModel {
-        @NotBlank
-        private String serieNumero;
-
-        @NotBlank
-        @CatalogConstraint(value = Catalog1.class)
-        private String tipoDocumento;
-
-        public String getSerieNumero() {
-            return serieNumero;
-        }
-
-        public void setSerieNumero(String serieNumero) {
-            this.serieNumero = serieNumero;
-        }
-
-        public String getTipoDocumento() {
-            return tipoDocumento;
-        }
-
-        public void setTipoDocumento(String tipoDocumento) {
-            this.tipoDocumento = tipoDocumento;
-        }
-    }
-
-    public static class DocumentoAdicionalRelacionadoInputModel {
-        @NotBlank
-        private String serieNumero;
-
-        @NotBlank
-        @CatalogConstraint(value = Catalog21.class)
-        private String tipoDocumento;
-
-        public String getSerieNumero() {
-            return serieNumero;
-        }
-
-        public void setSerieNumero(String serieNumero) {
-            this.serieNumero = serieNumero;
-        }
-
-        public String getTipoDocumento() {
-            return tipoDocumento;
-        }
-
-        public void setTipoDocumento(String tipoDocumento) {
-            this.tipoDocumento = tipoDocumento;
-        }
-    }
-
-    public static class VehiculoInputModel {
-        @NotBlank
-        private String placa;
-
-        public String getPlaca() {
-            return placa;
-        }
-
-        public void setPlaca(String placa) {
-            this.placa = placa;
-        }
-    }
 
     public String getSerie() {
         return serie;
@@ -255,5 +192,68 @@ public class DespatchAdviceInputModel {
 
     public void setDetalle(List<DespatchAdviceLineDetalleInputModel> detalle) {
         this.detalle = detalle;
+    }
+
+    public static class GuiaRemisionBajaInputModel {
+        @NotBlank
+        private String serieNumero;
+
+        @NotBlank
+        @CatalogConstraint(value = Catalog1.class)
+        private String tipoDocumento;
+
+        public String getSerieNumero() {
+            return serieNumero;
+        }
+
+        public void setSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+        }
+
+        public String getTipoDocumento() {
+            return tipoDocumento;
+        }
+
+        public void setTipoDocumento(String tipoDocumento) {
+            this.tipoDocumento = tipoDocumento;
+        }
+    }
+
+    public static class DocumentoAdicionalRelacionadoInputModel {
+        @NotBlank
+        private String serieNumero;
+
+        @NotBlank
+        @CatalogConstraint(value = Catalog21.class)
+        private String tipoDocumento;
+
+        public String getSerieNumero() {
+            return serieNumero;
+        }
+
+        public void setSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+        }
+
+        public String getTipoDocumento() {
+            return tipoDocumento;
+        }
+
+        public void setTipoDocumento(String tipoDocumento) {
+            this.tipoDocumento = tipoDocumento;
+        }
+    }
+
+    public static class VehiculoInputModel {
+        @NotBlank
+        private String placa;
+
+        public String getPlaca() {
+            return placa;
+        }
+
+        public void setPlaca(String placa) {
+            this.placa = placa;
+        }
     }
 }

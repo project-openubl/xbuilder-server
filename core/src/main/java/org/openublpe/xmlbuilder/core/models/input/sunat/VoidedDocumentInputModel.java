@@ -16,53 +16,44 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.sunat;
 
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 public class VoidedDocumentInputModel {
 
-    @Min(1)
     @NotNull
+    @Min(1)
+    @Max(99999999)
     private Integer numero;
 
     private Long fechaEmision;
 
     @Valid
-    @NotNull
-    private ProveedorInputModel proveedor;
-
-    @Valid
     private FirmanteInputModel firmante;
 
     @NotNull
+    @Valid
+    private ProveedorInputModel proveedor;
+
     @NotBlank
-    @CatalogConstraint(value = Catalog1.class)
-    private String tipoDocumentReference;
+    private String descripcionSustento;
 
     @NotNull
-    private Long fechaEmisionDocumentReference;
-
-    @NotNull
-    @NotBlank
-    private String serieNumeroDocumentReference;
-
-    @NotNull
-    @NotBlank
-    private String motivoBajaDocumentReference;
+    @Valid
+    private VoidedDocumentLineInputModel comprobante;
 
     public Integer getNumero() {
         return numero;
     }
 
-    public void setNumero(Integer serieNumero) {
-        this.numero = serieNumero;
+    public void setNumero(Integer numero) {
+        this.numero = numero;
     }
 
     public Long getFechaEmision() {
@@ -73,6 +64,14 @@ public class VoidedDocumentInputModel {
         this.fechaEmision = fechaEmision;
     }
 
+    public FirmanteInputModel getFirmante() {
+        return firmante;
+    }
+
+    public void setFirmante(FirmanteInputModel firmante) {
+        this.firmante = firmante;
+    }
+
     public ProveedorInputModel getProveedor() {
         return proveedor;
     }
@@ -81,43 +80,76 @@ public class VoidedDocumentInputModel {
         this.proveedor = proveedor;
     }
 
-    public String getTipoDocumentReference() {
-        return tipoDocumentReference;
+    public String getDescripcionSustento() {
+        return descripcionSustento;
     }
 
-    public void setTipoDocumentReference(String tipoDocumentReference) {
-        this.tipoDocumentReference = tipoDocumentReference;
+    public void setDescripcionSustento(String descripcionSustento) {
+        this.descripcionSustento = descripcionSustento;
     }
 
-    public Long getFechaEmisionDocumentReference() {
-        return fechaEmisionDocumentReference;
+    public VoidedDocumentLineInputModel getComprobante() {
+        return comprobante;
     }
 
-    public void setFechaEmisionDocumentReference(Long fechaEmisionDocumentReference) {
-        this.fechaEmisionDocumentReference = fechaEmisionDocumentReference;
+    public void setComprobante(VoidedDocumentLineInputModel comprobante) {
+        this.comprobante = comprobante;
     }
 
-    public String getSerieNumeroDocumentReference() {
-        return serieNumeroDocumentReference;
-    }
+    public static final class Builder {
+        private Integer numero;
+        private Long fechaEmision;
+        private FirmanteInputModel firmante;
+        private ProveedorInputModel proveedor;
+        private String descripcionSustento;
+        private VoidedDocumentLineInputModel comprobante;
 
-    public void setSerieNumeroDocumentReference(String serieNumeroDocumentReference) {
-        this.serieNumeroDocumentReference = serieNumeroDocumentReference;
-    }
+        private Builder() {
+        }
 
-    public String getMotivoBajaDocumentReference() {
-        return motivoBajaDocumentReference;
-    }
+        public static Builder aVoidedDocumentInputModel() {
+            return new Builder();
+        }
 
-    public void setMotivoBajaDocumentReference(String motivoBajaDocumentReference) {
-        this.motivoBajaDocumentReference = motivoBajaDocumentReference;
-    }
+        public Builder withNumero(Integer numero) {
+            this.numero = numero;
+            return this;
+        }
 
-    public FirmanteInputModel getFirmante() {
-        return firmante;
-    }
+        public Builder withFechaEmision(Long fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
 
-    public void setFirmante(FirmanteInputModel firmante) {
-        this.firmante = firmante;
+        public Builder withFirmante(FirmanteInputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorInputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withDescripcionSustento(String descripcionSustento) {
+            this.descripcionSustento = descripcionSustento;
+            return this;
+        }
+
+        public Builder withComprobante(VoidedDocumentLineInputModel comprobante) {
+            this.comprobante = comprobante;
+            return this;
+        }
+
+        public VoidedDocumentInputModel build() {
+            VoidedDocumentInputModel voidedDocumentInputModel = new VoidedDocumentInputModel();
+            voidedDocumentInputModel.setNumero(numero);
+            voidedDocumentInputModel.setFechaEmision(fechaEmision);
+            voidedDocumentInputModel.setFirmante(firmante);
+            voidedDocumentInputModel.setProveedor(proveedor);
+            voidedDocumentInputModel.setDescripcionSustento(descripcionSustento);
+            voidedDocumentInputModel.setComprobante(comprobante);
+            return voidedDocumentInputModel;
+        }
     }
 }

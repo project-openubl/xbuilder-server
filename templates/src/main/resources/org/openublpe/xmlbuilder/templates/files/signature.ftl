@@ -1,6 +1,6 @@
     <cac:Signature>
     <#if firmante??>
-    <cbc:ID>#SIGN-ID</cbc:ID>
+        <cbc:ID>${firmante.ruc}</cbc:ID>
         <cac:SignatoryParty>
             <cac:PartyIdentification>
                 <cbc:ID>${firmante.ruc}</cbc:ID>
@@ -11,7 +11,7 @@
         </cac:SignatoryParty>
         <cac:DigitalSignatureAttachment>
             <cac:ExternalReference>
-                <cbc:URI>#SIGN-ID</cbc:URI>
+                <cbc:URI>#PROJECT-OPENUBL-SIGN</cbc:URI>
             </cac:ExternalReference>
         </cac:DigitalSignatureAttachment>
     </#if>

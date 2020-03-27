@@ -16,11 +16,11 @@
     <dependencies>
         <dependency>
             <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-api-core</artifactId>
+            <artifactId>xml-builder-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-core</artifactId>
+            <artifactId>xml-builder-api-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.openublpe</groupId>
@@ -59,39 +59,11 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-agroal</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-orm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-orm-panache</artifactId>
+            <artifactId>quarkus-resteasy-jsonb</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-kogito</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-jaxb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-undertow</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -105,6 +77,19 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-health</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-orm-panache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-agroal</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-undertow</artifactId>
         </dependency>
 
         <!--Quarkus jdbc-->
@@ -134,76 +119,10 @@
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-test-h2</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>xmlunit</groupId>
-            <artifactId>xmlunit</artifactId>
-            <version>${xmlunit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit4.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-input-test-data</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-ubl21</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-ublpe</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.github.carlosthe19916</groupId>
-            <artifactId>sunat-web-services</artifactId>
-            <version>${sunat-web-services.version}</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>${maven-resources-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>copy-to-output-directory</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>${project.parent.basedir}/rules/src/main/resources/</directory>
-                                    <includes>
-                                        <include>**/*.drl</include>
-                                        <include>**/*.xml</include>
-                                    </includes>
-                                </resource>
-                            </resources>
-                            <outputDirectory>${project.basedir}/src/main/resources/</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.jboss.jandex</groupId>
                 <artifactId>jandex-maven-plugin</artifactId>
@@ -264,22 +183,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>io.quarkus</groupId>
-                        <artifactId>quarkus-maven-plugin</artifactId>
-                        <version>${quarkus-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>native-image</goal>
-                                </goals>
-                                <configuration>
-                                    <enableHttpUrlHandler>true</enableHttpUrlHandler>
-                                    <enableJni>true</enableJni>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${surefire-plugin.version}</version>
                         <executions>
@@ -290,9 +193,7 @@
                                 </goals>
                                 <configuration>
                                     <systemProperties>
-                                        <native.image.path>
-                                            ${project.build.directory}/${project.build.finalName}-runner
-                                        </native.image.path>
+                                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
                                     </systemProperties>
                                 </configuration>
                             </execution>
@@ -300,6 +201,9 @@
                     </plugin>
                 </plugins>
             </build>
+            <properties>
+                <quarkus.package.type>native</quarkus.package.type>
+            </properties>
         </profile>
 
         <profile>

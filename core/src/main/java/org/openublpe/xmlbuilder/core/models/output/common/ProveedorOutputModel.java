@@ -16,12 +16,14 @@
  */
 package org.openublpe.xmlbuilder.core.models.output.common;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class ProveedorOutputModel {
 
     @NotBlank
+    @Size(min = 11, max = 11)
     private String ruc;
 
     private String nombreComercial;
@@ -29,8 +31,11 @@ public class ProveedorOutputModel {
     @NotBlank
     private String razonSocial;
 
-    @Size(min = 6, max = 6)
-    private String codigoPostal;
+    @Valid
+    private DireccionOutputModel direccion;
+
+    @Valid
+    private ContactoOutputModel contacto;
 
     public String getRuc() {
         return ruc;
@@ -56,11 +61,69 @@ public class ProveedorOutputModel {
         this.razonSocial = razonSocial;
     }
 
-    public String getCodigoPostal() {
-        return codigoPostal;
+    public DireccionOutputModel getDireccion() {
+        return direccion;
     }
 
-    public void setCodigoPostal(String codigoPostal) {
-        this.codigoPostal = codigoPostal;
+    public void setDireccion(DireccionOutputModel direccion) {
+        this.direccion = direccion;
+    }
+
+    public ContactoOutputModel getContacto() {
+        return contacto;
+    }
+
+    public void setContacto(ContactoOutputModel contacto) {
+        this.contacto = contacto;
+    }
+
+    public static final class Builder {
+        private String ruc;
+        private String nombreComercial;
+        private String razonSocial;
+        private DireccionOutputModel direccion;
+        private ContactoOutputModel contacto;
+
+        private Builder() {
+        }
+
+        public static Builder aProveedorOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withRuc(String ruc) {
+            this.ruc = ruc;
+            return this;
+        }
+
+        public Builder withNombreComercial(String nombreComercial) {
+            this.nombreComercial = nombreComercial;
+            return this;
+        }
+
+        public Builder withRazonSocial(String razonSocial) {
+            this.razonSocial = razonSocial;
+            return this;
+        }
+
+        public Builder withDireccion(DireccionOutputModel direccion) {
+            this.direccion = direccion;
+            return this;
+        }
+
+        public Builder withContacto(ContactoOutputModel contacto) {
+            this.contacto = contacto;
+            return this;
+        }
+
+        public ProveedorOutputModel build() {
+            ProveedorOutputModel proveedorOutputModel = new ProveedorOutputModel();
+            proveedorOutputModel.setRuc(ruc);
+            proveedorOutputModel.setNombreComercial(nombreComercial);
+            proveedorOutputModel.setRazonSocial(razonSocial);
+            proveedorOutputModel.setDireccion(direccion);
+            proveedorOutputModel.setContacto(contacto);
+            return proveedorOutputModel;
+        }
     }
 }

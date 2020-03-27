@@ -16,7 +16,7 @@
  */
 package org.openublpe.xmlbuilder.core.models.catalogs;
 
-public enum  Catalog19 implements Catalog {
+public enum Catalog19 implements Catalog {
 
     ADICIONAR("1"),
     MODIFICAR("2"),
