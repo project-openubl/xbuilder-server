@@ -1,21 +1,25 @@
 ## Stage 1 : build with maven builder image with native capabilities
 FROM quay.io/quarkus/centos-quarkus-maven:19.3.1-java8 AS build
 
-COPY api-core /usr/src/app/api-core
 COPY api /usr/src/app/api
+COPY api-core /usr/src/app/api-core
 COPY api-signer /usr/src/app/api-signer
 COPY core /usr/src/app/core
 COPY extensions /usr/src/app/extensions
-COPY input-test-data /usr/src/app/input-test-data
+COPY integration-tests /usr/src/app/integration-tests
 COPY rules /usr/src/app/rules
 COPY templates /usr/src/app/templates
 COPY ui /usr/src/app/ui
 COPY pom.xml /usr/src/app
 
+COPY .mvn /usr/src/app/.mvn
+COPY mvnw /usr/src/app/mvnw
+COPY mvnw.cmd /usr/src/app/mvnw.cmd
+
 USER root
 RUN chown -R quarkus /usr/src/app
 USER quarkus
-RUN mvn -f /usr/src/app/pom.xml -P ui,native -pl '!api-signer,!ui/api-signer' -DskipTests clean package
+RUN /usr/src/app/mvnw -f /usr/src/app/pom.xml -P native,ui,quarkus121Final clean package -DskipTests
 
 ## Stage 2 : create the docker final image
 FROM registry.access.redhat.com/ubi8/ubi-minimal

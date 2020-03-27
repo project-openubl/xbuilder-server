@@ -212,6 +212,10 @@
                 <dependency>
                     <groupId>org.openublpe</groupId>
                     <artifactId>xml-builder-ui-api-signer</artifactId>
+                    <version>${project.version}</version>
+                    <classifier>distribution</classifier>
+                    <type>zip</type>
+                    <scope>provided</scope>
                 </dependency>
             </dependencies>
             <build>
