@@ -13,7 +13,7 @@ on:
 
 env:
   JVM_TEST_MAVEN_OPTS: "-e -B -Dno-format"
-  NATIVE_TEST_MAVEN_OPTS: "-B --settings .github/mvn-settings.xml -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:19.3.1-java11 -Dtest-postgresql -Dtest-elasticsearch -Dtest-keycloak -Dtest-dynamodb -Dtest-mysql -Dtest-mariadb -Dmariadb.url='jdbc:mariadb://localhost:3308/hibernate_orm_test'  -Dtest-mssql -Dtest-vault -Dtest-neo4j -Dnative-image.xmx=5g -Dnative -Dno-format install"
+  NATIVE_TEST_MAVEN_OPTS: "-B -P native,ui,quarkus121Final -Dquarkus.profile=postgresql install"
 
 jobs:
   build-jdk11:
@@ -56,7 +56,7 @@ jobs:
           restore-only: ${{ github.event_name == 'pull_request' }}
       - name: Build
         run: |
-          mvn -e -B  -DskipTests=true -Dno-format -DskipDocs clean install
+          mvn -e -B  -DskipTests=true -DskipDocs clean install
       - name: Tar Maven Repo
         shell: bash
         run: tar -czvf maven-repo.tgz -C ~ .m2/repository
@@ -120,10 +120,10 @@ jobs:
         run: tar -xzvf maven-repo.tgz -C ~
       - name: Build with Maven
         shell: bash
-        run: mvn -B -Dno-format -DskipSunat=true install
+        run: mvn -B -DskipSunat=true install
 
   linux-jdk8-jvm-sunat-tests:
-    name: JDK 8 JVM SUNAT Test
+    name: JDK 11 JVM SUNAT Test
     timeout-minutes: 120
     needs: build-jdk11
 
@@ -131,11 +131,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 1.8
+      - name: Set up JDK 11
         # Uses sha for added security since tags can be updated
         uses: joschi/setup-jdk@b9cc6eabf7e7e3889766b5cee486f874c9e1bd2d
         with:
-          java-version: 8
+          java-version: 11
       - name: Download Maven Repo
         uses: actions/download-artifact@v1
         with:
@@ -146,3 +146,28 @@ jobs:
         run: tar -xzvf maven-repo.tgz -C ~
       - name: Build with Maven
         run: eval mvn $JVM_TEST_MAVEN_OPTS -DskipSunat=false install
+
+  native-tests:
+    name: Native Tests
+    needs: build-jdk11
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 11
+        # Uses sha for added security since tags can be updated
+        uses: joschi/setup-jdk@b9cc6eabf7e7e3889766b5cee486f874c9e1bd2d
+        with:
+          java-version: 11
+      - name: Download Maven Repo
+        uses: actions/download-artifact@v1
+        with:
+          name: maven-repo
+          path: .
+      - name: Extract Maven Repo
+        shell: bash
+        run: tar -xzvf maven-repo.tgz -C ~
+      - name: Build with Maven
+        env:
+          TEST_MODULES: ${{matrix.test-modules}}
+        run: |
+          eval mvn $NATIVE_TEST_MAVEN_OPTS
