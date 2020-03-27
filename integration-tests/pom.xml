@@ -23,95 +23,6 @@
             <artifactId>xml-builder-api-signer</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-api-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-templates</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>xml-builder-rules</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>quarkus-bouncycastle</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>quarkus-bouncycastle-deployment</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>quarkus-keycloak</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.openublpe</groupId>
-            <artifactId>quarkus-keycloak-deployment</artifactId>
-        </dependency>
-
-        <!--Quarkus-->
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-arc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-resteasy-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-agroal</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-orm</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-orm-panache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-jaxb</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-undertow</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-smallrye-openapi</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-kubernetes</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-smallrye-health</artifactId>
-        </dependency>
-
         <!--Quarkus jdbc-->
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -121,12 +32,6 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-test-h2</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.santuario</groupId>
-            <artifactId>xmlsec</artifactId>
-            <version>2.1.4</version>
         </dependency>
 
         <!--Test-->
