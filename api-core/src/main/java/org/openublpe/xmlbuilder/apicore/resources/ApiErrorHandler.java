@@ -32,10 +32,8 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class ApiErrorHandler implements ExceptionMapper<Throwable> {
 
-    private static final Logger LOGGER = Logger.getLogger(ApiErrorHandler.class);
-
     public static final String UNCAUGHT_SERVER_ERROR_TEXT = "Uncaught server error";
-
+    private static final Logger LOGGER = Logger.getLogger(ApiErrorHandler.class);
     @Context
     private HttpHeaders headers;
 

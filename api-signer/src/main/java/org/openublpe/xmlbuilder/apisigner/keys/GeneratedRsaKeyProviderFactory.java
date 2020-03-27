@@ -41,10 +41,8 @@ import java.util.List;
 @RsaKeyProviderType(type = RsaKeyType.GENERATED)
 public class GeneratedRsaKeyProviderFactory extends AbstractRsaKeyProviderFactory implements RsaKeyProviderFactory {
 
-    private static final Logger logger = Logger.getLogger(GeneratedRsaKeyProviderFactory.class);
-
     public static final String ID = "rsa-generated";
-
+    private static final Logger logger = Logger.getLogger(GeneratedRsaKeyProviderFactory.class);
     private static final String HELP_TEXT = "Generates RSA keys and creates a self-signed certificate";
 
     private static final List<ProviderConfigProperty> CONFIG_PROPERTIES = configurationBuilder()

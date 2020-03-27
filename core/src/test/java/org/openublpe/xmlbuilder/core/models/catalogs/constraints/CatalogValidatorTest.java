@@ -34,36 +34,6 @@ class CatalogValidatorTest {
     @Inject
     Validator validator;
 
-    enum CatalogTest implements Catalog {
-        ONE("uno"),
-        TWO("dos"),
-        THREE("tres");
-
-        private String code;
-
-        CatalogTest(String code){
-            this.code = code;
-        }
-
-        @Override
-        public String getCode() {
-            return code;
-        }
-    }
-
-    public static class MyClass {
-        @CatalogConstraint(value = CatalogTest.class)
-        private String myField;
-
-        public String getMyField() {
-            return myField;
-        }
-
-        public void setMyField(String myField) {
-            this.myField = myField;
-        }
-    }
-
     @Test
     void nullValue_isValid() {
         MyClass myClass = new MyClass();
@@ -97,5 +67,35 @@ class CatalogValidatorTest {
 
         Set<ConstraintViolation<MyClass>> violations = validator.validate(myClass);
         assertFalse(violations.isEmpty());
+    }
+
+    enum CatalogTest implements Catalog {
+        ONE("uno"),
+        TWO("dos"),
+        THREE("tres");
+
+        private String code;
+
+        CatalogTest(String code) {
+            this.code = code;
+        }
+
+        @Override
+        public String getCode() {
+            return code;
+        }
+    }
+
+    public static class MyClass {
+        @CatalogConstraint(value = CatalogTest.class)
+        private String myField;
+
+        public String getMyField() {
+            return myField;
+        }
+
+        public void setMyField(String myField) {
+            this.myField = myField;
+        }
     }
 }

@@ -46,13 +46,13 @@ public enum RsaKeyType {
         this.providerId = providerId;
     }
 
-    public String getProviderId() {
-        return providerId;
-    }
-
     public static Optional<RsaKeyType> findByProviderId(String providerId) {
         return Stream.of(RsaKeyType.values())
                 .filter(p -> p.getProviderId().equals(providerId))
                 .findFirst();
+    }
+
+    public String getProviderId() {
+        return providerId;
     }
 }

@@ -28,8 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Provider
-public class ValidationExceptionHandler implements ExceptionMapper<ResteasyViolationException>
-{
+public class ValidationExceptionHandler implements ExceptionMapper<ResteasyViolationException> {
     @Override
     public Response toResponse(ResteasyViolationException e) {
         Map<String, String> violationMessages = new HashMap<>();

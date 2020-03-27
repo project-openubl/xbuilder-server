@@ -23,11 +23,14 @@ public interface OrganizationModel extends Model {
     OrganizationType getType();
 
     String getName();
+
     void setName(String name);
 
     String getDescription();
+
     void setDescription(String description);
 
     boolean getUseCustomCertificates();
+
     void setUseCustomCertificates(boolean useCustomCertificates);
 }

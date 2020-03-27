@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- * <p>
+ *
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * https://www.eclipse.org/legal/epl-2.0/
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,31 +60,6 @@ public class DespatchAdviceTrasladoOutputModel {
     @Valid
     @NotNull
     private DespatchAdviceTrasladoOutputModel.PuntoOutputModel puntoLlegada;
-
-    public static class PuntoOutputModel {
-        @NotBlank
-        @Size(min = 6, max = 6)
-        private String codigoPostal;
-
-        @NotBlank
-        private String direccion;
-
-        public String getCodigoPostal() {
-            return codigoPostal;
-        }
-
-        public void setCodigoPostal(String codigoPostal) {
-            this.codigoPostal = codigoPostal;
-        }
-
-        public String getDireccion() {
-            return direccion;
-        }
-
-        public void setDireccion(String direccion) {
-            this.direccion = direccion;
-        }
-    }
 
     public Catalog20 getMotivo() {
         return motivo;
@@ -172,6 +147,31 @@ public class DespatchAdviceTrasladoOutputModel {
 
     public void setPuntoLlegada(PuntoOutputModel puntoLlegada) {
         this.puntoLlegada = puntoLlegada;
+    }
+
+    public static class PuntoOutputModel {
+        @NotBlank
+        @Size(min = 6, max = 6)
+        private String codigoPostal;
+
+        @NotBlank
+        private String direccion;
+
+        public String getCodigoPostal() {
+            return codigoPostal;
+        }
+
+        public void setCodigoPostal(String codigoPostal) {
+            this.codigoPostal = codigoPostal;
+        }
+
+        public String getDireccion() {
+            return direccion;
+        }
+
+        public void setDireccion(String direccion) {
+            this.direccion = direccion;
+        }
     }
 
 }
