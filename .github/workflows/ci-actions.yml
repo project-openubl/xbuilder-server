@@ -13,7 +13,7 @@ on:
 
 env:
   JVM_TEST_MAVEN_OPTS: "-e -B -Dno-format"
-  NATIVE_TEST_MAVEN_OPTS: "-B -P native,ui,quarkus121Final -Dquarkus.profile=postgresql install"
+  NATIVE_TEST_MAVEN_OPTS: "-B -P native,ui,quarkus121Final -Dquarkus.profile=postgresql -DskipSunat=true install"
 
 jobs:
   build-jdk11:
@@ -167,7 +167,5 @@ jobs:
         shell: bash
         run: tar -xzvf maven-repo.tgz -C ~
       - name: Build with Maven
-        env:
-          TEST_MODULES: ${{matrix.test-modules}}
         run: |
           eval mvn $NATIVE_TEST_MAVEN_OPTS
