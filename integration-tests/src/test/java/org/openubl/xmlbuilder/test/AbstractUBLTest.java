@@ -175,6 +175,7 @@ public abstract class AbstractUBLTest {
                         .compile("//cac:AccountingSupplierParty/cac:Party/cac:PartyIdentification/cbc:ID/text()")
                         .evaluate(inputSource, XPathConstants.STRING);
             case VOIDED_DOCUMENT:
+            case SUMMARY_DOCUMENT:
                 return (String) xPath
                         .compile("//cac:AccountingSupplierParty/cbc:CustomerAssignedAccountID/text()")
                         .evaluate(inputSource, XPathConstants.STRING);
@@ -190,6 +191,7 @@ public abstract class AbstractUBLTest {
             case CREDIT_NOTE:
             case DEBIT_NOTE:
             case VOIDED_DOCUMENT:
+            case SUMMARY_DOCUMENT:
                 return (String) xPath
                         .compile("//cbc:ID/text()")
                         .evaluate(inputSource, XPathConstants.STRING);
@@ -218,9 +220,10 @@ public abstract class AbstractUBLTest {
                 codigoDocumento = Catalog1.NOTA_DEBITO.getCode();
                 return MessageFormat.format("{0}-{1}-{2}.xml", ruc, codigoDocumento, documentID);
             case VOIDED_DOCUMENT:
+            case SUMMARY_DOCUMENT:
                 return MessageFormat.format("{0}-{1}.xml", ruc, documentID);
             default:
-                throw new IllegalStateException("Invalid type of UBL Document, can not extract Serie Numero");
+                throw new IllegalStateException("Invalid type of UBL Document, can not extract Serie Numero to create fileName");
         }
     }
 

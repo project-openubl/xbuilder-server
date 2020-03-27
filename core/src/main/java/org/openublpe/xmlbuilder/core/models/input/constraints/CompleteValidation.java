@@ -12,7 +12,8 @@ import javax.validation.groups.Default;
         HighLevelGroupValidation.class,
         DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class,
         NoteInputModel_SerieComprobanteAfectadoGroupValidation.class,
-        DocumentLineInputModel_CantidadValidaICBGroupValidation.class
+        DocumentLineInputModel_CantidadValidaICBGroupValidation.class,
+        SummaryDocumentLineInputModel_ComprobanteAfectadoRequeridoGroupValidation.class
 })
 public interface CompleteValidation {
 }

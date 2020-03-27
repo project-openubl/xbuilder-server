@@ -4,13 +4,20 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
+import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentComprobanteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentComprobanteValorVentaInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentImpuestosInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentLineInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentImpuestosOutputModel;
@@ -26,6 +33,14 @@ import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutpu
 import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.ImpuestoTotalResumenDiarioOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentComprobanteAfectadoOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentComprobanteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentComprobanteValorVentaOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentImpuestosOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentLineOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.TotalValorVentaOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentLineOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.rules.EnvironmentVariables;
@@ -35,9 +50,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
 import java.text.MessageFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -155,6 +170,118 @@ public class DocumentFactory {
 
         return builder.build();
     }
+
+    public SummaryDocumentOutputModel getSummaryDocument(SummaryDocumentInputModel input) {
+        Function<SummaryDocumentImpuestosInputModel, SummaryDocumentImpuestosOutputModel> summaryLineComprobanteImpuestosFn = inputImpuestos -> {
+            SummaryDocumentImpuestosOutputModel.Builder builder = SummaryDocumentImpuestosOutputModel.Builder.aSummaryDocumentImpuestosOutputModel()
+                    .withIgv(ImpuestoTotalResumenDiarioOutputModel.Builder.anImpuestoTotalResumenDiarioOutputModel()
+                            .withImporte(inputImpuestos.getIgv())
+                            .withCategoria(Catalog5.IGV)
+                            .build()
+                    );
+            if (inputImpuestos.getIcb() != null) {
+                builder.withIcb(ImpuestoTotalResumenDiarioOutputModel.Builder.anImpuestoTotalResumenDiarioOutputModel()
+                        .withImporte(inputImpuestos.getIcb())
+                        .withCategoria(Catalog5.ICBPER)
+                        .build()
+                );
+            }
+            return builder.build();
+        };
+
+        Function<SummaryDocumentComprobanteValorVentaInputModel, SummaryDocumentComprobanteValorVentaOutputModel> summaryLineComprobanteValorVentaFn = inputValorVenta -> {
+            SummaryDocumentComprobanteValorVentaOutputModel.Builder builder = SummaryDocumentComprobanteValorVentaOutputModel.Builder.aSummaryDocumentComprobanteValorVentaOutputModel()
+                    .withImporteTotal(inputValorVenta.getImporteTotal())
+                    .withOtrosCargos(inputValorVenta.getOtrosCargos());
+            if (inputValorVenta.getGravado() != null) {
+                builder.withGravado(TotalValorVentaOutputModel.Builder.aTotalValorVentaOutputModel()
+                        .withTipo(Catalog7_1.GRAVADO)
+                        .withImporte(inputValorVenta.getGravado())
+                        .build()
+                );
+            }
+            if (inputValorVenta.getExonerado() != null) {
+                builder.withExonerado(TotalValorVentaOutputModel.Builder.aTotalValorVentaOutputModel()
+                        .withTipo(Catalog7_1.EXONERADO)
+                        .withImporte(inputValorVenta.getExonerado())
+                        .build()
+                );
+            }
+            if (inputValorVenta.getInafecto() != null) {
+                builder.withInafecto(TotalValorVentaOutputModel.Builder.aTotalValorVentaOutputModel()
+                        .withTipo(Catalog7_1.INAFECTO)
+                        .withImporte(inputValorVenta.getInafecto())
+                        .build()
+                );
+            }
+            if (inputValorVenta.getGratuito() != null) {
+                builder.withGratuito(TotalValorVentaOutputModel.Builder.aTotalValorVentaOutputModel()
+                        .withTipo(Catalog7_1.GRATUITA)
+                        .withImporte(inputValorVenta.getGratuito())
+                        .build()
+                );
+            }
+            return builder.build();
+        };
+
+        Function<SummaryDocumentComprobanteInputModel, SummaryDocumentComprobanteOutputModel> summaryLineComprobanteFn = inputComprobante -> SummaryDocumentComprobanteOutputModel.Builder.aSummaryDocumentComprobanteOutputModel()
+                .withTipo(
+                        Catalog.valueOfCode(Catalog1.class, inputComprobante.getTipo()).orElseThrow(Catalog.invalidCatalogValue)
+                )
+                .withSerieNumero(inputComprobante.getSerieNumero())
+                .withCliente(ClienteFactory.getCliente(inputComprobante.getCliente()))
+                .withImpuestos(summaryLineComprobanteImpuestosFn.apply(inputComprobante.getImpuestos()))
+                .withValorVenta(summaryLineComprobanteValorVentaFn.apply(inputComprobante.getValorVenta()))
+                .build();
+
+        Function<SummaryDocumentLineInputModel, SummaryDocumentLineOutputModel> summaryLineFn = inputLineFn -> {
+            SummaryDocumentLineOutputModel.Builder builder = SummaryDocumentLineOutputModel.Builder.aSummaryDocumentLineOutputModel()
+                    .withTipoOperacion(
+                            Catalog.valueOfCode(Catalog19.class, inputLineFn.getTipoOperacion()).orElseThrow(Catalog.invalidCatalogValue)
+                    )
+                    .withComprobante(summaryLineComprobanteFn.apply(inputLineFn.getComprobante()));
+            if (inputLineFn.getComprobanteAfectado() != null) {
+                builder.withComprobanteAfectado(SummaryDocumentComprobanteAfectadoOutputModel.Builder.aSummaryDocumentComprobanteAfectadoOutputModel()
+                        .withSerieNumero(inputLineFn.getComprobanteAfectado().getSerieNumero())
+                        .withTipo(
+                                Catalog.valueOfCode(Catalog1.class, inputLineFn.getComprobanteAfectado().getTipo()).orElseThrow(Catalog.invalidCatalogValue)
+                        )
+                        .build()
+                );
+            }
+
+            return builder.build();
+        };
+
+
+        //
+
+
+        String fechaEmision = input.getFechaEmision() != null
+                ? toGregorianCalendarDate(input.getFechaEmision())
+                : toGregorianCalendarDate(dateTimeFactory.getCurrent().getTimeInMillis());
+        String serieNumero = MessageFormat.format("RC-{0}-{1}", fechaEmision.replaceAll("-", ""), input.getNumero());
+
+        return SummaryDocumentOutputModel.Builder.aSummaryDocumentOutputModel()
+                .withMoneda(defaultMoneda)
+                .withFechaEmision(fechaEmision)
+                .withSerieNumero(serieNumero)
+                .withFechaEmisionDeComprobantesAsociados(
+                        toGregorianCalendarDate(input.getFechaEmisionDeComprobantesAsociados())
+                )
+                .withProveedor(ProveedorFactory.getProveedor(input.getProveedor()))
+                .withFirmante(
+                        input.getFirmante() != null
+                                ? FirmanteFactory.getFirmante(input.getFirmante())
+                                : FirmanteFactory.getFirmante(input.getProveedor())
+                )
+                .withDetalle(input.getDetalle().stream()
+                        .map(summaryLineFn)
+                        .collect(Collectors.toList())
+                )
+                .build();
+    }
+
 
     // Enrich
 
@@ -328,5 +455,4 @@ public class DocumentFactory {
                 .withBaseImponible(baseImponible)
                 .build();
     }
-
 }
