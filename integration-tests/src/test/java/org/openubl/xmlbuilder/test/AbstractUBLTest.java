@@ -104,8 +104,8 @@ public abstract class AbstractUBLTest {
     }
 
     public void assertSendSunat(UBLDocumentType type, Response xmlWithSignature) throws TransformerException, ParserConfigurationException, SAXException, IOException, XPathExpressionException {
-        String skipSunat = System.getProperty("skipSunat", "true");
-        if (skipSunat != null && skipSunat.equals("true")) {
+        String skipSunat = System.getProperty("skipSunat", "false");
+        if (skipSunat != null && skipSunat.equals("false")) {
             sendFileToSunat(type, xmlWithSignature);
         }
     }

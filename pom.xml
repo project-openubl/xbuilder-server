@@ -158,15 +158,6 @@
 
     <profiles>
         <profile>
-            <id>sunat</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <skipSunat>false</skipSunat>
-            </properties>
-        </profile>
-        <profile>
             <id>license</id>
             <build>
                 <plugins>
