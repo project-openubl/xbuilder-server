@@ -12,6 +12,7 @@
 
     <artifactId>xml-builder-ui-api-signer</artifactId>
     <name>XML Builder :: UI :: API Signer</name>
+    <packaging>pom</packaging>
 
     <properties>
         <skipFrontendBuild>false</skipFrontendBuild>

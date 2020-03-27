@@ -12,6 +12,7 @@
 
     <artifactId>xml-builder-ui-api</artifactId>
     <name>XML Builder :: UI :: API</name>
+    <packaging>pom</packaging>
 
     <properties>
         <skipFrontendBuild>false</skipFrontendBuild>
