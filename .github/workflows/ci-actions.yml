@@ -191,10 +191,10 @@ jobs:
         run: tar -xzvf maven-repo.tgz -C ~
       - name: Build with Maven
         run: |
-          eval mvn $NATIVE_TEST_MAVEN_OPTS -Dquarkus.profile=postgresql -DskipTests -DskipSunat=true install
+          eval mvn $NATIVE_TEST_MAVEN_OPTS -P ui,quarkus121Final -Dquarkus.profile=postgresql -DskipTests -DskipSunat=true install
       - name: Prepare archive
         shell: bash
-        run: find . -name '*-runner' -type d | tar -czvf archives.tgz -T -
+        run: find . -name 'xml-builder-*-runner' -type f | tar -czvf archives.tgz -T -
       - name: Upload failure Archive (if maven failed)
         uses: actions/upload-artifact@v1
         with:
