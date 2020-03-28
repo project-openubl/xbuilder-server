@@ -216,7 +216,7 @@ jobs:
       - name: Extract Native Artifacs
         shell: bash
         run: tar -xzvf native-artifacts.tgz -C ~
-      - name: xml-builder
+      - name: Create xml-builder Image
         uses: mr-smithers-excellent/docker-build-push@v2
         with:
           image: projectopenubl/xml-builder
@@ -224,7 +224,7 @@ jobs:
           dockerfile: api/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: xml-builder-signer
+      - name: Create xml-builder-signer Image
         uses: mr-smithers-excellent/docker-build-push@v2
         with:
           image: projectopenubl/xml-builder-signer
@@ -232,7 +232,7 @@ jobs:
           dockerfile: api-signer/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: xml-builder latest
+      - name: Create xml-builder latest  Image
         uses: mr-smithers-excellent/docker-build-push@v2
         if: github.event_name == 'release'
         with:
@@ -242,7 +242,7 @@ jobs:
           dockerfile: api/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: xml-builder-signer latest
+      - name: Create xml-builder-signer latest Image
         uses: mr-smithers-excellent/docker-build-push@v2
         if: github.event_name == 'release'
         with:
