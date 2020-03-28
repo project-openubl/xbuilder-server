@@ -215,7 +215,7 @@ jobs:
           path: .
       - name: Extract Native Artifacs
         shell: bash
-        run: tar -xzvf native-artifacts.tgz -C ~
+        run: tar -xzvf native-artifacts.tgz
       - name: Prepare archive
         run: |
           pwd
