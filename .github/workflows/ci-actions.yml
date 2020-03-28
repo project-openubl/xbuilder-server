@@ -191,7 +191,7 @@ jobs:
         run: tar -xzvf maven-repo.tgz -C ~
       - name: Build with Maven
         run: |
-          eval mvn $NATIVE_TEST_MAVEN_OPTS -Dquarkus.profile=postgresql -DskipTests -P ui,quarkus121Final package
+          eval mvn $NATIVE_TEST_MAVEN_OPTS -Dquarkus.profile=postgresql -DskipTests -P ui package
       - name: Prepare archive
         shell: bash
         run: find . -name 'xml-builder-*-runner' -type f | tar -czvf native-artifacts.tgz -T -
