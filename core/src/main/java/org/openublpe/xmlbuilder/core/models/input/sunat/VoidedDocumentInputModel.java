@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.sunat;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 
@@ -25,13 +26,16 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@Schema(name = "VoidedDocument")
 public class VoidedDocumentInputModel {
 
     @NotNull
     @Min(1)
     @Max(99999999)
+    @Schema(example = "1", description = "Número de Comprobante de Baja emitida durante el día")
     private Integer numero;
 
+    @Schema(example = "1585398109198", description = "Fecha en la que se emite el comprobante de Baja. Fecha expresada en milliseconds")
     private Long fechaEmision;
 
     @Valid
@@ -41,7 +45,9 @@ public class VoidedDocumentInputModel {
     @Valid
     private ProveedorInputModel proveedor;
 
+    @NotNull
     @NotBlank
+    @Schema(example = "mi razón", description = "Razón por la que se da de baja el comprobante")
     private String descripcionSustento;
 
     @NotNull

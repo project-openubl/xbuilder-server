@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.apisigner.resources;
 
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.openublpe.xmlbuilder.apisigner.keys.KeyProviderFactory;
 import org.openublpe.xmlbuilder.apisigner.keys.component.ComponentFactory;
 import org.openublpe.xmlbuilder.apisigner.keys.provider.ProviderConfigProperty;
@@ -38,6 +39,7 @@ import java.util.List;
 
 @ApplicationScoped
 @Path("/server-info")
+@Tag(name = "server-info")
 public class ServerInfoAdminResource {
 
     @Inject

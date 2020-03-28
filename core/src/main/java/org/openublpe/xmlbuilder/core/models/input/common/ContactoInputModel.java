@@ -16,13 +16,18 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.common;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import javax.validation.constraints.Email;
 
+@Schema(name = "Contacto")
 public class ContactoInputModel {
 
+    @Schema(example = "+051 123 456 789")
     private String telefono;
 
     @Email
+    @Schema(example = "email@gmail.com")
     private String email;
 
     public String getTelefono() {
