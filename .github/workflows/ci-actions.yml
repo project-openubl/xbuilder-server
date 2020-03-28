@@ -13,7 +13,7 @@ on:
 
 env:
   JVM_TEST_MAVEN_OPTS: "-e -B"
-  NATIVE_TEST_MAVEN_OPTS: "-e -B -Dnative -Dquarkus.profile=native-test -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:19.3.1-java11 -Dnative-image.xmx=5g -Dnative -Dno-format"
+  NATIVE_TEST_MAVEN_OPTS: "-e -B -Dquarkus.profile=native-test -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:19.3.1-java11 -Dnative-image.xmx=5g -Dnative -Dno-format"
 
 jobs:
   build-jdk11:
