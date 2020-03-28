@@ -216,15 +216,6 @@ jobs:
       - name: Extract Native Artifacs
         shell: bash
         run: tar -xzvf native-artifacts.tgz
-      - name: Prepare archive
-        run: |
-          pwd
-      - name: Prepare archive
-        run: |
-          ls -l
-      - name: Prepare archive
-        run: |
-          ls -l api/target
       - name: Publish to Registry XML Builder
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
