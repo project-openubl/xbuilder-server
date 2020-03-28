@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.apisigner.resources;
 
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.keycloak.common.util.PemUtils;
 import org.keycloak.jose.jws.AlgorithmType;
 import org.keycloak.representations.idm.KeysMetadataRepresentation;
@@ -68,6 +69,7 @@ import java.util.stream.Collectors;
 @Path("organizations")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
+@Tag(name = "organization")
 public class OrganizationsResource {
 
     @Context

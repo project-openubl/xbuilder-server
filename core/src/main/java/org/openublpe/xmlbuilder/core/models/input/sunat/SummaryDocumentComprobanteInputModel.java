@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.sunat;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
@@ -25,14 +26,22 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+@Schema(name = "SummaryDocumentLineComprobante")
 public class SummaryDocumentComprobanteInputModel {
 
     @NotNull
     @CatalogConstraint(value = Catalog1.class)
+    @Schema(example = "NOTA_CREDITO", description = "Catalog 01", enumeration = {
+            "FACTURA", "01",
+            "BOLETA", "03",
+            "NOTA_CREDITO", "07",
+            "NOTA_DEBITO", "08"
+    })
     private String tipo;
 
     @NotBlank
     @Pattern(regexp = "^([A-Z]{1,3}[0-9]{1,3})[\\-]([0-9]{1,8})$")
+    @Schema(example = "BC001-1")
     private String serieNumero;
 
     @NotNull

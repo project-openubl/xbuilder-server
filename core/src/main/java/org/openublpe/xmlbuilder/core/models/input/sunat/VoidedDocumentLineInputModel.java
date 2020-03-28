@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.sunat;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 
@@ -23,17 +24,21 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+@Schema(name = "VoidedDocumentLine")
 public class VoidedDocumentLineInputModel {
 
     @NotBlank
     @Pattern(regexp = "^([F|B][A-Z]?[0-9]{0,3})[\\-]([0-9]{1,8})$")
+    @Schema(example = "F001-1", description = "Serie y número del comprobante a dar de baja")
     private String serieNumero;
 
     @NotBlank
     @CatalogConstraint(value = Catalog1.class)
+    @Schema(example = "FACTURA", description = "Catalogo 01")
     private String tipoComprobante;
 
     @NotNull
+    @Schema(example = "1585398109198", description = "Fecha en la que se emitió el comprobante a dar de baja. Fecha expresada en milliseconds")
     private Long fechaEmision;
 
     public String getSerieNumero() {

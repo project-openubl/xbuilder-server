@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.sunat;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 import org.openublpe.xmlbuilder.core.models.input.constraints.SummaryDocumentLineInputModel_ComprobanteAfectadoRequeridoConstraint;
@@ -26,17 +27,26 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @SummaryDocumentLineInputModel_ComprobanteAfectadoRequeridoConstraint(groups = SummaryDocumentLineInputModel_ComprobanteAfectadoRequeridoGroupValidation.class)
+@Schema(name = "SummaryDocumentLine")
 public class SummaryDocumentLineInputModel {
 
+    @NotNull
     @NotBlank
     @CatalogConstraint(value = Catalog19.class)
+    @Schema(example = "AGREGAR", description = "Catalogo 19", enumeration = {
+            "ADICIONAR", "1",
+            "MODIFICAR", "2",
+            "ANULADO", "3"
+    })
     private String tipoOperacion;
 
     @NotNull
     @Valid
+    @Schema(description = "Comprobante a incluir dentro del Resumen Diario")
     private SummaryDocumentComprobanteInputModel comprobante;
 
     @Valid
+    @Schema(description = "Si 'comprobante' es una Nota de Credito/Débito acá se incluye en comprobante asociado a la Nota Crédito/Débito")
     private SummaryDocumentComprobanteAfectadoInputModel comprobanteAfectado;
 
     public String getTipoOperacion() {

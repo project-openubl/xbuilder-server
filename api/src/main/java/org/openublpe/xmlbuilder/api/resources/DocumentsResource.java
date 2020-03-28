@@ -16,6 +16,10 @@
  */
 package org.openublpe.xmlbuilder.api.resources;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.openublpe.xmlbuilder.api.resources.utils.ResourceUtils;
 import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
@@ -55,6 +59,11 @@ public class DocumentsResource {
     @POST
     @Path("/invoice/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public InvoiceOutputModel enrichInvoiceModel(
             @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
@@ -64,6 +73,11 @@ public class DocumentsResource {
     @POST
     @Path("/credit-note/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public CreditNoteOutputModel enrichCreditNoteModel(
             @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
@@ -73,6 +87,11 @@ public class DocumentsResource {
     @POST
     @Path("/debit-note/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public DebitNoteOutputModel enrichDebitNoteModel(
             @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
@@ -82,6 +101,11 @@ public class DocumentsResource {
     @POST
     @Path("/voided-document/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public VoidedDocumentOutputModel enrichVoidedDocumentModel(
             @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
@@ -91,6 +115,11 @@ public class DocumentsResource {
     @POST
     @Path("/summary-document/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public SummaryDocumentOutputModel enrichSummaryDocumentModel(
             @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {
@@ -122,6 +151,11 @@ public class DocumentsResource {
     @POST
     @Path("/invoice/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createInvoiceXml(
             @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
@@ -136,6 +170,11 @@ public class DocumentsResource {
     @POST
     @Path("/credit-note/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createCreditNote(
             @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
@@ -150,6 +189,11 @@ public class DocumentsResource {
     @POST
     @Path("/debit-note/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createDebitNote(
             @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
@@ -164,6 +208,11 @@ public class DocumentsResource {
     @POST
     @Path("/voided-document/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createVoidedDocument(
             @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
@@ -178,6 +227,11 @@ public class DocumentsResource {
     @POST
     @Path("/summary-document/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createSummaryDocument(
             @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {

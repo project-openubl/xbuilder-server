@@ -16,22 +16,38 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.common;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog6;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
+@Schema(name = "Cliente")
 public class ClienteInputModel {
 
+    @NotNull
     @NotBlank
     @CatalogConstraint(value = Catalog6.class)
+    @Schema(example = "RUC", description = "Catalogo 06", enumeration = {
+            "DOC_TRIB_NO_DOM_SIN_RUC", "0",
+            "DNI", "1",
+            "EXTRANJERIA", "4",
+            "RUC", "6",
+            "PASAPORTE", "7",
+            "DEC_DIPLOMATICA", "A"
+    })
     private String tipoDocumentoIdentidad;
 
+    @NotNull
     @NotBlank
+    @Schema(example = "12345678912")
     private String numeroDocumentoIdentidad;
 
+    @NotNull
     @NotBlank
+    @Schema(example = "Carlos Feria", description = "Nombre o Razón Social del cliente")
     private String nombre;
 
     @Valid
