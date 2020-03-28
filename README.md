@@ -1,4 +1,4 @@
-[![Build Status](https://dev.azure.com/project-openubl/xml-builder/_apis/build/status/project-openubl.xml-builder?branchName=master)](https://dev.azure.com/project-openubl/xml-builder/_build/latest?definitionId=1&branchName=master)
+![XML Builder CI](https://github.com/project-openubl/xml-builder/workflows/XML%20Builder%20CI/badge.svg)
 
 # XML-Builder
 Crea archivos XML basados en UBL 2.1 - Facturación electrónica Perú. Facturas, boletas, notas de cŕedito, notas de débito, etc.
