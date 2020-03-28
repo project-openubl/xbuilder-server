@@ -216,41 +216,21 @@ jobs:
       - name: Extract Native Artifacs
         shell: bash
         run: tar -xzvf native-artifacts.tgz -C ~
-      - name: Create xml-builder Image
-        uses: mr-smithers-excellent/docker-build-push@v2
+      - name: Publish to Registry XML Builder
+        uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          image: projectopenubl/xml-builder
-          registry: registry.hub.docker.com
+          name: projectopenubl/xml-builder
           dockerfile: api/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Create xml-builder-signer Image
-        uses: mr-smithers-excellent/docker-build-push@v2
+          snapshot: true
+          tag_names: true
+      - name: Publish to Registry XML Builder Signer
+        uses: elgohr/Publish-Docker-Github-Action@master
         with:
-          image: projectopenubl/xml-builder-signer
-          registry: registry.hub.docker.com
+          name: projectopenubl/xml-builder-signer
           dockerfile: api-signer/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Create xml-builder latest  Image
-        uses: mr-smithers-excellent/docker-build-push@v2
-        if: github.event_name == 'release'
-        with:
-          image: projectopenubl/xml-builder
-          tag: latest
-          registry: registry.hub.docker.com
-          dockerfile: api/src/main/docker/Dockerfile.native
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Create xml-builder-signer latest Image
-        uses: mr-smithers-excellent/docker-build-push@v2
-        if: github.event_name == 'release'
-        with:
-          image: projectopenubl/xml-builder-signer
-          tag: latest
-          registry: registry.hub.docker.com
-          dockerfile: api-signer/src/main/docker/Dockerfile.native
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-
+          snapshot: true
+          tag_names: true
