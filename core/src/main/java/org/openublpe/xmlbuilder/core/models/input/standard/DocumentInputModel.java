@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.standard;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
@@ -35,16 +36,20 @@ import java.util.List;
 @DocumentInputModel_PuedeCrearComprobanteConSerieFConstraint(groups = DocumentInputModel_PuedeCrearComprobanteConSerieFGroupValidation.class)
 public abstract class DocumentInputModel {
 
+    @NotNull
     @NotBlank
     @Pattern(regexp = "^[F|f|B|b].*$")
     @Size(min = 4, max = 4)
+    @Schema(example = "F001")
     protected String serie;
 
     @NotNull
     @Min(1)
     @Max(99999999)
+    @Schema(example = "1")
     private Integer numero;
 
+    @Schema(example = "1585398109198", description = "Fecha expresada en milliseconds")
     private Long fechaEmision;
 
     @NotNull
@@ -56,8 +61,10 @@ public abstract class DocumentInputModel {
     private ProveedorInputModel proveedor;
 
     @Valid
+    @Schema(description = "Si 'firmante' es NULL se usa datos del proveedor")
     private FirmanteInputModel firmante;
 
+    @NotNull
     @NotEmpty
     @Valid
     private List<DocumentLineInputModel> detalle;

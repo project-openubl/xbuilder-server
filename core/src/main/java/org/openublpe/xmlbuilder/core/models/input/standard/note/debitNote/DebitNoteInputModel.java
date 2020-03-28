@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
 import org.openublpe.xmlbuilder.core.models.catalogs.constraints.CatalogConstraint;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
@@ -26,9 +27,15 @@ import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
 
 import java.util.List;
 
+@Schema(name = "DebitNote")
 public class DebitNoteInputModel extends NoteInputModel {
 
     @CatalogConstraint(value = Catalog10.class)
+    @Schema(example = "INTERES_POR_MORA", description = "Catalogo 10", enumeration = {
+            "INTERES_POR_MORA", "01",
+            "AUMENTO_EN_EL_VALOR", "02",
+            "PENALIDAD_OTROS_CONCEPTOS", "03"
+    })
     private String tipoNota;
 
     public String getTipoNota() {

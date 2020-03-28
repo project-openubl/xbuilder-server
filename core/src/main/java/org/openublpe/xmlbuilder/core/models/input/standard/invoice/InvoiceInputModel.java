@@ -16,6 +16,7 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.standard.invoice;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
@@ -24,6 +25,7 @@ import org.openublpe.xmlbuilder.core.models.input.standard.DocumentLineInputMode
 
 import java.util.List;
 
+@Schema(name = "Invoice")
 public class InvoiceInputModel extends DocumentInputModel {
 
     public static final class Builder {

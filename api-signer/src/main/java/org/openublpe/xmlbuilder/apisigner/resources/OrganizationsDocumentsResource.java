@@ -16,6 +16,14 @@
  */
 package org.openublpe.xmlbuilder.apisigner.resources;
 
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.openublpe.xmlbuilder.api.resources.utils.ResourceUtils;
 import org.openublpe.xmlbuilder.apisigner.models.KeyManager;
 import org.openublpe.xmlbuilder.apisigner.models.ModelRuntimeException;
@@ -96,7 +104,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/invoice/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public InvoiceOutputModel enrichInvoiceModel(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
@@ -106,7 +120,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/credit-note/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public CreditNoteOutputModel enrichCreditNoteModel(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
@@ -116,7 +136,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/debit-note/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public DebitNoteOutputModel enrichDebitNoteModel(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
@@ -126,7 +152,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/voided-document/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public VoidedDocumentOutputModel enrichVoidedDocumentModel(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
@@ -136,7 +168,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/summary-document/enrich")
     @Produces(MediaType.APPLICATION_JSON)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
     public SummaryDocumentOutputModel enrichSummaryDocumentModel(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {
@@ -177,7 +215,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/invoice/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createInvoiceXml(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) throws Exception {
@@ -202,7 +246,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/credit-note/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createCreditNoteXml(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) throws Exception {
@@ -227,7 +277,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/debit-note/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createDebitNoteXml(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) throws Exception {
@@ -252,7 +308,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/voided-document/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createVoidedDocumentXml(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) throws Exception {
@@ -277,7 +339,13 @@ public class OrganizationsDocumentsResource {
     @POST
     @Path("/summary-document/create")
     @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.")
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
     public Response createSummaryDocumentXml(
+            @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
             @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) throws Exception {
