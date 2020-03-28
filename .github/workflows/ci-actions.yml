@@ -195,8 +195,62 @@ jobs:
       - name: Prepare archive
         shell: bash
         run: find . -name 'xml-builder-*-runner' -type f | tar -czvf native-artifacts.tgz -T -
-      - name: Upload failure Archive (if maven failed)
+      - name: Upload Archive
         uses: actions/upload-artifact@v1
         with:
-          name: native-artifacts-linux-jvm11
+          name: native-artifacts
           path: 'native-artifacts.tgz'
+
+  native-container-images:
+    name: Native Container Images
+    needs: native-linux-artifacts
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Native Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: native-artifacts
+          path: .
+      - name: Extract Native Artifacs
+        shell: bash
+        run: tar -xzvf native-artifacts.tgz -C ~
+      - name: xml-builder
+        uses: mr-smithers-excellent/docker-build-push@v2
+        with:
+          image: projectopenubl/xml-builder
+          registry: registry.hub.docker.com
+          dockerfile: api/src/main/docker/Dockerfile.native
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: xml-builder-signer
+        uses: mr-smithers-excellent/docker-build-push@v2
+        with:
+          image: projectopenubl/xml-builder-signer
+          registry: registry.hub.docker.com
+          dockerfile: api-signer/src/main/docker/Dockerfile.native
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: xml-builder latest
+        uses: mr-smithers-excellent/docker-build-push@v2
+        if: github.event_name == 'release'
+        with:
+          image: projectopenubl/xml-builder
+          tag: latest
+          registry: registry.hub.docker.com
+          dockerfile: api/src/main/docker/Dockerfile.native
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: xml-builder-signer latest
+        uses: mr-smithers-excellent/docker-build-push@v2
+        if: github.event_name == 'release'
+        with:
+          image: projectopenubl/xml-builder-signer
+          tag: latest
+          registry: registry.hub.docker.com
+          dockerfile: api-signer/src/main/docker/Dockerfile.native
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+
