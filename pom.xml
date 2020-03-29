@@ -41,8 +41,8 @@
         <license.dir>${basedir}</license.dir>
 
         <!--UI-->
-        <xml-builder-ui.version>0.0.2</xml-builder-ui.version>
-        <xml-builder-ee-ui.version>0.0.2</xml-builder-ee-ui.version>
+        <xml-builder-ui.version>0.0.3</xml-builder-ui.version>
+        <xml-builder-ee-ui.version>0.0.3</xml-builder-ee-ui.version>
     </properties>
 
     <dependencyManagement>
