@@ -21,15 +21,28 @@ import io.quarkus.runtime.annotations.ConfigPhase;
 import io.quarkus.runtime.annotations.ConfigRoot;
 
 import java.util.List;
+import java.util.Optional;
 
 @ConfigRoot(name = "xml-builder.freemarker", phase = ConfigPhase.BUILD_AND_RUN_TIME_FIXED)
 public class FreemarkerBuildConfig {
+
     /**
-     * Comma-separated list of locations to scan recursively for templates. The location type is determined by its prefix.
-     * Unprefixed locations or locations starting with classpath: point to a package on the classpath and may FTL templates.
-     * Locations starting with filesystem: point to a directory on the filesystem, may only contain FTL templates and are only
-     * scanned recursively down non-hidden directories.
+     * Comma-separated list of locations to scan recursively for templates. All tree folder from 'locations'
+     * will be added as a resource.
+     * Unprefixed locations or locations starting with classpath will be processed in the same way.
      */
     @ConfigItem(defaultValue = "freemarker/templates")
     public List<String> locations;
+
+    /**
+     * List of canonical Java Class names that are used in the Freemarker Templates. This will help
+     * to add your JavaBeans to the list of Quarkus Refection classes. If you are already
+     * adding your Classes using @RegisterForReflection or any other method then
+     * you don't need to use this property.
+     *
+     *
+     * Tip: If you want to add a nested static classes you can use the something like: org.mycompany.MyClass$MyNestedClass
+     */
+    @ConfigItem
+    public Optional<List<String>> classModels;
 }

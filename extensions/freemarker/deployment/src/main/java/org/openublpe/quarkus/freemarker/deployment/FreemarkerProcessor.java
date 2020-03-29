@@ -23,8 +23,10 @@ import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
+import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem;
 import org.openublpe.quarkus.freemarker.ConfigurationProvider;
+import org.openublpe.quarkus.freemarker.FreemarkerBuildConfig;
 import org.openublpe.quarkus.freemarker.FreemarkerConfigurationRecorder;
 
 import static io.quarkus.deployment.annotations.ExecutionTime.STATIC_INIT;
@@ -49,7 +51,7 @@ class FreemarkerProcessor {
     }
 
     @BuildStep
-    void registerAdditionalBeans(BuildProducer<AdditionalBeanBuildItem> additionalBeans) {
+    void registerConfigurationProvider(BuildProducer<AdditionalBeanBuildItem> additionalBeans) {
         additionalBeans.produce(new AdditionalBeanBuildItem(ConfigurationProvider.class));
     }
 
@@ -57,5 +59,12 @@ class FreemarkerProcessor {
     @Record(STATIC_INIT)
     public void build(FreemarkerConfigurationRecorder recorder) {
         recorder.initializeConfiguration();
+    }
+
+    @BuildStep
+    void registerClassModelsForReflection(BuildProducer<ReflectiveClassBuildItem> reflectiveClass,
+                                          FreemarkerBuildConfig camelFreemarkerConfig) {
+        camelFreemarkerConfig.classModels.ifPresent(strings -> reflectiveClass.produce(
+                new ReflectiveClassBuildItem(true, false, strings.toArray(new String[0]))));
     }
 }
