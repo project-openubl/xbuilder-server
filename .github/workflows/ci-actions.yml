@@ -294,28 +294,7 @@ jobs:
       - name: Extract Native Artifacs
         shell: bash
         run: tar -xzvf native-linux-artifacts.tgz
-      - name: Publish to Registry XML Builder (Release)
-        if: github.event_name == 'release'
-        # Uses sha for added security since tags can be updated
-        uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
-        with:
-          name: projectopenubl/xml-builder
-          dockerfile: api/src/main/docker/Dockerfile.native
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tag_names: true
-      - name: Publish to Registry XML Builder Signer (Release)
-        if: github.event_name == 'release'
-        # Uses sha for added security since tags can be updated
-        uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
-        with:
-          name: projectopenubl/xml-builder-signer
-          dockerfile: api-signer/src/main/docker/Dockerfile.native
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          tag_names: true
       - name: Publish to Registry XML Builder
-        if: github.event_name != 'release' && github.event_name != 'pull_request'
         # Uses sha for added security since tags can be updated
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
@@ -326,7 +305,6 @@ jobs:
           snapshot: true
           tags: "master"
       - name: Publish to Registry XML Builder Signer
-        if: github.event_name != 'release' && github.event_name != 'pull_request'
         # Uses sha for added security since tags can be updated
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
