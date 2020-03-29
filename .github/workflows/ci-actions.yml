@@ -94,6 +94,16 @@ jobs:
         run: tar -xzvf maven-repo.tgz -C ~
       - name: Build with Maven
         run: eval mvn $JVM_TEST_MAVEN_OPTS -DskipSunat=true install
+      - name: Prepare failure archive (if maven failed)
+        if: failure()
+        shell: bash
+        run: find . -name '*-reports' -type d | tar -czvf test-reports.tgz -T - 
+      - name: Upload failure Archive (if maven failed)
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: test-reports-linux-jvm${{matrix.java-version}}
+          path: 'test-reports.tgz'
 
   windows-jdk11-jvm-tests:
     name: Windows JDK 11 JVM Tests
@@ -121,6 +131,18 @@ jobs:
       - name: Build with Maven
         shell: bash
         run: mvn -B -DskipSunat=true install
+      - name: Prepare failure archive (if maven failed)
+        if: failure()
+        shell: bash
+        run: |
+          # Disambiguate windows find from cygwin find
+          /usr/bin/find . -name '*-reports' -type d | tar -czvf test-reports.tgz -T - 
+      - name: Upload failure Archive (if maven failed)
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: test-reports-windows-jdk11-jvm
+          path: 'test-reports.tgz'
 
   linux-jdk8-jvm-sunat-tests:
     name: JDK 8 JVM SUNAT Test
@@ -146,6 +168,16 @@ jobs:
         run: tar -xzvf maven-repo.tgz -C ~
       - name: Build with Maven
         run: eval mvn $JVM_TEST_MAVEN_OPTS -DskipSunat=false install
+      - name: Prepare failure archive (if maven failed)
+        if: failure()
+        shell: bash
+        run: find . -name '*-reports' -type d | tar -czvf test-reports.tgz -T - 
+      - name: Upload failure Archive (if maven failed)
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: test-sunat-reports-linux-jdk8-jvm
+          path: 'test-reports.tgz'
 
   native-tests:
     name: Native Tests
@@ -169,6 +201,16 @@ jobs:
       - name: Build with Maven
         run: |
           eval mvn $NATIVE_TEST_MAVEN_OPTS -Dquarkus.profile=native-test -DskipSunat=true install
+      - name: Prepare failure archive (if maven failed)
+        if: failure()
+        shell: bash
+        run: find . -name '*-reports' -type d | tar -czvf test-reports.tgz -T - 
+      - name: Upload failure Archive (if maven failed)
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: test-reports-native-linux-jdk11-jvm
+          path: 'test-reports.tgz'
 
 
   native-linux-artifacts:
@@ -201,6 +243,7 @@ jobs:
         with:
           name: native-linux-artifacts
           path: 'native-linux-artifacts.tgz'
+
 
   native-windows-artifacts:
     name: Native Windows Artifacts
