@@ -194,7 +194,7 @@ jobs:
           draft: false
           prerelease: false
       - name: Upload Release Asset
-        id: upload-release-asset 
+        id: upload-release-asset1
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -204,7 +204,7 @@ jobs:
           asset_name: xml-builder-jdk.tgz
           asset_content_type: application/tar+gzip
       - name: Upload Release Asset
-        id: upload-release-asset 
+        id: upload-release-asset2
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -214,7 +214,7 @@ jobs:
           asset_name: xml-builder-signer-jdk.tgz
           asset_content_type: application/tar+gzip
       - name: Upload Release Asset
-        id: upload-release-asset 
+        id: upload-release-asset3
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
