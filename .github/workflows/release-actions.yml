@@ -153,73 +153,73 @@ jobs:
           tag_names: true
 
 
-release:
-  name: Create Release
-  runs-on: ubuntu-latest
-  needs: [java-artifacts, native-container-images]
-  steps:
-    - uses: actions/checkout@v2
-    - name: Download Java XML Builder Artifacts
-      uses: actions/download-artifact@v1
-      with:
-        name: xml-builder-java-artifacts
-        path: .
-    - name: Download Java XML Builder Signer Artifacts
-      uses: actions/download-artifact@v1
-      with:
-        name: xml-builder-signer-java-artifacts
-        path: .
-    - name: Download Native Artifacts
-      uses: actions/download-artifact@v1
-      with:
-        name: native-linux-artifacts
-        path: .
-    - name: changelog
-      # Uses sha for added security since tags can be updated
-      uses: scottbrenner/generate-changelog-action@a16a10a57b39a556fc8a3e2547723c1e08c84821
-      id: Changelog
-      env:
-        REPO: ${{ github.repository }}
-    - name: Create Release
-      id: create_release
-      # Uses sha for added security since tags can be updated
-      uses: actions/create-release@8f324cdc2e5470815db0a286b4b3aa7803c0e6ef
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        body: |
-          ${{ steps.Changelog.outputs.changelog }}
-        draft: false
-        prerelease: false
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./xml-builder-java-artifacts.tgz
-        asset_name: xml-builder-jdk.tgz
-        asset_content_type: application/tar+gzip
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./xml-builder-signer-java-artifacts.tgz
-        asset_name: xml-builder-signer-jdk.tgz
-        asset_content_type: application/tar+gzip
-    - name: Upload Release Asset
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./native-linux-artifacts.tgz
-        asset_name: native-linux-artifacts.tgz
-        asset_content_type: application/tar+gzip
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [java-artifacts, native-container-images]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Java XML Builder Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: xml-builder-java-artifacts
+          path: .
+      - name: Download Java XML Builder Signer Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: xml-builder-signer-java-artifacts
+          path: .
+      - name: Download Native Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: native-linux-artifacts
+          path: .
+      - name: changelog
+        # Uses sha for added security since tags can be updated
+        uses: scottbrenner/generate-changelog-action@a16a10a57b39a556fc8a3e2547723c1e08c84821
+        id: Changelog
+        env:
+          REPO: ${{ github.repository }}
+      - name: Create Release
+        id: create_release
+        # Uses sha for added security since tags can be updated
+        uses: actions/create-release@8f324cdc2e5470815db0a286b4b3aa7803c0e6ef
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body: |
+            ${{ steps.Changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./xml-builder-java-artifacts.tgz
+          asset_name: xml-builder-jdk.tgz
+          asset_content_type: application/tar+gzip
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./xml-builder-signer-java-artifacts.tgz
+          asset_name: xml-builder-signer-jdk.tgz
+          asset_content_type: application/tar+gzip
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./native-linux-artifacts.tgz
+          asset_name: native-linux-artifacts.tgz
+          asset_content_type: application/tar+gzip
