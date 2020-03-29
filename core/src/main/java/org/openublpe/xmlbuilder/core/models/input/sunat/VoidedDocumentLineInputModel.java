@@ -28,7 +28,7 @@ import javax.validation.constraints.Pattern;
 public class VoidedDocumentLineInputModel {
 
     @NotBlank
-    @Pattern(regexp = "^([F|B][A-Z]?[0-9]{0,3})[\\-]([0-9]{1,8})$")
+    @Pattern(regexp = "^([F|B|P|T][A-Z]?[0-9]{0,3})[\\-]([0-9]{1,8})$")
     @Schema(example = "F001-1", description = "Serie y número del comprobante a dar de baja")
     private String serieNumero;
 

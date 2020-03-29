@@ -25,7 +25,6 @@ public class SummaryDocumentImpuestosOutputModel {
     @Valid
     private ImpuestoTotalResumenDiarioOutputModel igv;
 
-    @NotNull
     @Valid
     private ImpuestoTotalResumenDiarioOutputModel icb;
 

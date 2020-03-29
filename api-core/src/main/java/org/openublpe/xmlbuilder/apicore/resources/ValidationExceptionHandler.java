@@ -23,7 +23,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,9 +32,10 @@ public class ValidationExceptionHandler implements ExceptionMapper<ResteasyViola
     public Response toResponse(ResteasyViolationException e) {
         Map<String, String> violationMessages = new HashMap<>();
         for (ResteasyConstraintViolation violation : e.getViolations()) {
-            String[] pathParts = violation.getPath().split("\\.");
-            String key = String.join(".", Arrays.copyOfRange(pathParts, 2, pathParts.length));
-            violationMessages.put(key, violation.getMessage());
+//            String[] pathParts = violation.getPath().split("\\.");
+//            String key = String.join(".", Arrays.copyOfRange(pathParts, 2, pathParts.length));
+            String key = violation.getPath();
+            violationMessages.put(key, "[" + violation.getValue() + "] " + violation.getMessage());
         }
 
         return Response.status(400)

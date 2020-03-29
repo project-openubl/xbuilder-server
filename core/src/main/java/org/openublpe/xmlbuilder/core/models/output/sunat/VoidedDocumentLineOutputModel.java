@@ -25,7 +25,7 @@ import javax.validation.constraints.Pattern;
 public class VoidedDocumentLineOutputModel {
 
     @NotBlank
-    @Pattern(regexp = "^([F|B][A-Z]?[0-9]{0,3})$")
+    @Pattern(regexp = "^([F|B|P|T|R][A-Z]?[0-9]{1,3})$")
     private String serie;
 
     @NotBlank

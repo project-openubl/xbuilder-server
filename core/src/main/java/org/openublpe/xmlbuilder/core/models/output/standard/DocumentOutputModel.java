@@ -19,7 +19,6 @@ package org.openublpe.xmlbuilder.core.models.output.standard;
 import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.constraints.DocumentOutputModelConstraint;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -28,7 +27,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@DocumentOutputModelConstraint
 public abstract class DocumentOutputModel {
 
     @NotBlank

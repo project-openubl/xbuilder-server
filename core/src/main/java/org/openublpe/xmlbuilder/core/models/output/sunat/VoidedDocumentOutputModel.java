@@ -27,7 +27,7 @@ import javax.validation.constraints.Pattern;
 public class VoidedDocumentOutputModel {
 
     @NotBlank
-    @Pattern(regexp = "^([RA])[-]([0-9]{6})$")
+    @Pattern(regexp = "^([R][A|R])[-]([0-9]{8})[-]([0-9]{1,8})$")
     private String serieNumero;
 
     @NotBlank
