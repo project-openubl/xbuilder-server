@@ -49,6 +49,7 @@ import org.xml.sax.SAXException;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.InternalServerErrorException;
@@ -112,7 +113,7 @@ public class OrganizationsDocumentsResource {
     public InvoiceOutputModel enrichInvoiceModel(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
         return kieExecutor.getInvoiceOutputModel(input);
     }
@@ -128,7 +129,7 @@ public class OrganizationsDocumentsResource {
     public CreditNoteOutputModel enrichCreditNoteModel(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
         return kieExecutor.getCreditNoteOutputModel(input);
     }
@@ -144,7 +145,7 @@ public class OrganizationsDocumentsResource {
     public DebitNoteOutputModel enrichDebitNoteModel(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
         return kieExecutor.getDebitNoteOutputModel(input);
     }
@@ -160,7 +161,7 @@ public class OrganizationsDocumentsResource {
     public VoidedDocumentOutputModel enrichVoidedDocumentModel(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
         return kieExecutor.getVoidedDocumentOutputModel(input);
     }
@@ -176,7 +177,7 @@ public class OrganizationsDocumentsResource {
     public SummaryDocumentOutputModel enrichSummaryDocumentModel(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {
         return kieExecutor.getSummaryDocumentOutputModel(input);
     }
@@ -216,14 +217,14 @@ public class OrganizationsDocumentsResource {
     @Path("/invoice/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createInvoiceXml(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
@@ -247,14 +248,14 @@ public class OrganizationsDocumentsResource {
     @Path("/credit-note/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createCreditNoteXml(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
@@ -278,14 +279,14 @@ public class OrganizationsDocumentsResource {
     @Path("/debit-note/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createDebitNoteXml(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
@@ -309,14 +310,14 @@ public class OrganizationsDocumentsResource {
     @Path("/voided-document/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createVoidedDocumentXml(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);
@@ -340,14 +341,14 @@ public class OrganizationsDocumentsResource {
     @Path("/summary-document/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createSummaryDocumentXml(
             @Parameter(example = "master")
             @PathParam(ORGANIZATION_ID) String organizationId,
-            @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) throws Exception {
         OrganizationModel organization = organizationProvider.getOrganizationById(organizationId).orElseThrow(() -> new NotFoundException("Organización no encontrada"));
         KeyManager.ActiveRsaKey activeRsaKey = getActiveRsaKey(organization);

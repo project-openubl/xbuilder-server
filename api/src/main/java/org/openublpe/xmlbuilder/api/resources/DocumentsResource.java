@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- *
+ * <p>
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * https://www.eclipse.org/legal/epl-2.0/
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,9 +17,12 @@
 package org.openublpe.xmlbuilder.api.resources;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.media.Content;
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.specimpl.BuiltResponse;
 import org.openublpe.xmlbuilder.api.resources.utils.ResourceUtils;
 import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
@@ -37,6 +40,7 @@ import org.openublpe.xmlbuilder.templates.executors.FreemarkerExecutor;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.groups.ConvertGroup;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -65,7 +69,7 @@ public class DocumentsResource {
     @Operation(summary = "Enriches the input")
     @Tag(name = "enrich")
     public InvoiceOutputModel enrichInvoiceModel(
-            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
         return kieExecutor.getInvoiceOutputModel(input);
     }
@@ -79,7 +83,7 @@ public class DocumentsResource {
     @Operation(summary = "Enriches the input")
     @Tag(name = "enrich")
     public CreditNoteOutputModel enrichCreditNoteModel(
-            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
         return kieExecutor.getCreditNoteOutputModel(input);
     }
@@ -93,7 +97,7 @@ public class DocumentsResource {
     @Operation(summary = "Enriches the input")
     @Tag(name = "enrich")
     public DebitNoteOutputModel enrichDebitNoteModel(
-            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
         return kieExecutor.getDebitNoteOutputModel(input);
     }
@@ -107,7 +111,7 @@ public class DocumentsResource {
     @Operation(summary = "Enriches the input")
     @Tag(name = "enrich")
     public VoidedDocumentOutputModel enrichVoidedDocumentModel(
-            @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
         return kieExecutor.getVoidedDocumentOutputModel(input);
     }
@@ -121,7 +125,7 @@ public class DocumentsResource {
     @Operation(summary = "Enriches the input")
     @Tag(name = "enrich")
     public SummaryDocumentOutputModel enrichSummaryDocumentModel(
-            @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {
         return kieExecutor.getSummaryDocumentOutputModel(input);
     }
@@ -152,12 +156,12 @@ public class DocumentsResource {
     @Path("/invoice/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createInvoiceXml(
-            @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
         InvoiceOutputModel output = kieExecutor.getInvoiceOutputModel(input);
         String xml = freemarkerExecutor.createInvoiceXml(output);
@@ -171,12 +175,12 @@ public class DocumentsResource {
     @Path("/credit-note/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createCreditNote(
-            @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
         CreditNoteOutputModel output = kieExecutor.getCreditNoteOutputModel(input);
         String xml = freemarkerExecutor.createCreditNote(output);
@@ -190,12 +194,12 @@ public class DocumentsResource {
     @Path("/debit-note/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createDebitNote(
-            @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
         DebitNoteOutputModel output = kieExecutor.getDebitNoteOutputModel(input);
         String xml = freemarkerExecutor.createDebitNote(output);
@@ -209,12 +213,12 @@ public class DocumentsResource {
     @Path("/voided-document/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createVoidedDocument(
-            @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
         VoidedDocumentOutputModel output = kieExecutor.getVoidedDocumentOutputModel(input);
         String xml = freemarkerExecutor.createVoidedDocument(output);
@@ -228,12 +232,12 @@ public class DocumentsResource {
     @Path("/summary-document/create")
     @Produces(MediaType.TEXT_XML)
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.")
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @Operation(summary = "Create a XML file from the input")
     @Tag(name = "create")
     public Response createSummaryDocument(
-            @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {
         SummaryDocumentOutputModel output = kieExecutor.getSummaryDocumentOutputModel(input);
         String xml = freemarkerExecutor.createSummaryDocument(output);
