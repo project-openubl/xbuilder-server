@@ -142,6 +142,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tag_names: true
+          tags: "latest"
       - name: Publish to Registry XML Builder Signer (Release)
         # Uses sha for added security since tags can be updated
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
@@ -151,6 +152,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tag_names: true
+          tags: "latest"
 
 
   release:
@@ -201,7 +203,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./xml-builder-java-artifacts.tgz
-          asset_name: xml-builder-jdk.tgz
+          asset_name: jdk-xml-builder.tgz
           asset_content_type: application/tar+gzip
       - name: Upload Release Asset
         id: upload-release-asset2
@@ -211,7 +213,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./xml-builder-signer-java-artifacts.tgz
-          asset_name: xml-builder-signer-jdk.tgz
+          asset_name: jdk-xml-builder-signer.tgz
           asset_content_type: application/tar+gzip
       - name: Upload Release Asset
         id: upload-release-asset3
@@ -221,5 +223,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./native-linux-artifacts.tgz
-          asset_name: native-linux-artifacts.tgz
+          asset_name: linux-native-artifacts.tgz
           asset_content_type: application/tar+gzip
