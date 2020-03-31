@@ -34,6 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: n1hility/cancel-previous-runs@v2
+        if: github.event_name == 'pull_request'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up JDK 11
