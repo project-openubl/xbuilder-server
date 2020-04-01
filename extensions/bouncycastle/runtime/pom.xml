@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.openublpe</groupId>
         <artifactId>quarkus-extensions-bouncycastle-parent</artifactId>
-        <version>1.0.0.RC10</version>
+        <version>1.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>quarkus-bouncycastle</artifactId>
