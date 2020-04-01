@@ -5,7 +5,8 @@ Crea archivos XML basados en UBL 2.1 - Facturación electrónica Perú. Facturas
 
 
 # Documentación y ayuda
-- [Documentación](https://project-openubl.gitbook.io/xml-builder/)
+- [Documentación](https://project-openubl.github.io/xml-builder-docs/)
+- [GitBook](https://project-openubl.gitbook.io/xml-builder/)
 - [Videos](https://www.youtube.com/channel/UChq3xxjyDgjcU346rp0bbtA/)
 
 
