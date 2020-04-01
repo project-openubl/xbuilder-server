@@ -133,7 +133,7 @@ jobs:
       - name: Extract Native Artifacs
         shell: bash
         run: tar -xzvf native-linux-artifacts.tgz
-      - name: Publish to Registry XML Builder (Release)
+      - name: Publish to Registry XML Builder (Release tag)
         # Uses sha for added security since tags can be updated
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
@@ -142,8 +142,16 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tag_names: true
+      - name: Publish to Registry XML Builder (Release latest)
+        # Uses sha for added security since tags can be updated
+        uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
+        with:
+          name: projectopenubl/xml-builder
+          dockerfile: api/src/main/docker/Dockerfile.native
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "latest"
-      - name: Publish to Registry XML Builder Signer (Release)
+      - name: Publish to Registry XML Builder Signer (Release tag)
         # Uses sha for added security since tags can be updated
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
@@ -152,6 +160,14 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tag_names: true
+      - name: Publish to Registry XML Builder Signer (Release latest)
+        # Uses sha for added security since tags can be updated
+        uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
+        with:
+          name: projectopenubl/xml-builder-signer
+          dockerfile: api-signer/src/main/docker/Dockerfile.native
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "latest"
 
 
@@ -177,9 +193,10 @@ jobs:
           name: native-linux-artifacts
           path: .
       - name: changelog
-        # Uses sha for added security since tags can be updated
-        uses: scottbrenner/generate-changelog-action@a16a10a57b39a556fc8a3e2547723c1e08c84821
+        uses: heinrichreimer/github-changelog-generator-action@v2.1.1
         id: Changelog
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
         env:
           REPO: ${{ github.repository }}
       - name: Create Release
