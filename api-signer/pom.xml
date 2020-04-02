@@ -92,9 +92,14 @@
             <artifactId>quarkus-undertow</artifactId>
         </dependency>
 
+        <!--Added for making Document to String/Byte[] work-->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-jaxb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel.quarkus</groupId>
+            <artifactId>camel-quarkus-xml-jaxp</artifactId>
         </dependency>
 
         <!--Quarkus jdbc-->
