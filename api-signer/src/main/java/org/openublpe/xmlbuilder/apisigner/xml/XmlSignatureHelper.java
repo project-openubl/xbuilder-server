@@ -29,16 +29,11 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import javax.xml.validation.Schema;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
 
 public class XmlSignatureHelper {
 
@@ -85,16 +80,10 @@ public class XmlSignatureHelper {
         lss.write(node, lsOutput);
     }
 
-    public static String getBytesFromDocument(Document outputDoc) throws Exception {
-//        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-//        XmlSignatureHelper.transformNonTextNodeToOutputStream(outputDoc, outStream, false, "UTF-8");
-//        return outStream.toByteArray();
-
-        StringWriter sw = new StringWriter();
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.transform(new DOMSource(outputDoc), new StreamResult(sw));
-        return sw.toString();
+    public static byte[] getBytesFromDocument(Document outputDoc) throws Exception {
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        XmlSignatureHelper.transformNonTextNodeToOutputStream(outputDoc, outStream, false, "UTF-8");
+        return outStream.toByteArray();
     }
 
     public static Document convertStringToXMLDocument(String xmlString) throws ParserConfigurationException, IOException, SAXException {
