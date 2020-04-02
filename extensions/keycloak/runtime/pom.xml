@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.openublpe</groupId>
         <artifactId>quarkus-extensions-keycloak-parent</artifactId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>1.0.0.Final</version>
     </parent>
 
     <artifactId>quarkus-keycloak</artifactId>
