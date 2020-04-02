@@ -92,6 +92,11 @@
             <artifactId>quarkus-undertow</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-jaxb</artifactId>
+        </dependency>
+
         <!--Quarkus jdbc-->
         <dependency>
             <groupId>io.quarkus</groupId>
