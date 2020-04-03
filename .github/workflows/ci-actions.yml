@@ -215,7 +215,7 @@ jobs:
 
 
   native-linux-artifacts:
-    name: Native Linux Artifacts
+    name: Native Linux Artifacts JDK8
     needs: build-jdk11
     runs-on: ubuntu-latest
     steps:
