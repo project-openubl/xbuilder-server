@@ -16,8 +16,8 @@ env:
   NATIVE_TEST_MAVEN_OPTS: "-e -B -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:19.3.1-java8 -Dnative-image.xmx=5g -Dnative -Dno-format"
 
 jobs:
-  build-jdk11:
-    name: "JDK 11 Build"
+  build-jdk8:
+    name: "JDK 8 Build"
     runs-on: ubuntu-latest
     # Skip draft PRs and those with WIP in the subject, rerun as soon as its removed
     if: "github.event_name != 'pull_request' || ( \
@@ -37,11 +37,11 @@ jobs:
         if: github.event_name == 'pull_request'
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Set up JDK 11
+      - name: Set up JDK 8
         # Uses sha for added security since tags can be updated
         uses: joschi/setup-jdk@b9cc6eabf7e7e3889766b5cee486f874c9e1bd2d
         with:
-          java-version: 11
+          java-version: 8
       - name: Compute cache restore key
         # Always recompute on a push so that the maven repo doesnt grow indefinitely with old versions
         run: |
@@ -70,7 +70,7 @@ jobs:
   linux-jvm-tests:
     name: JDK ${{matrix.java-version}} JVM Tests
     timeout-minutes: 120
-    needs: build-jdk11
+    needs: build-jdk8
     strategy:
       fail-fast: false
       matrix:
@@ -106,9 +106,9 @@ jobs:
           name: test-reports-linux-jvm${{matrix.java-version}}
           path: 'test-reports.tgz'
 
-  windows-jdk11-jvm-tests:
-    name: Windows JDK 11 JVM Tests
-    needs: build-jdk11
+  windows-jdk8-jvm-tests:
+    name: Windows JDK 8 JVM Tests
+    needs: build-jdk8
     runs-on: windows-latest
     timeout-minutes: 120
     env:
@@ -116,11 +116,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK 11
+      - name: Set up JDK 8
         # Uses sha for added security since tags can be updated
         uses: joschi/setup-jdk@b9cc6eabf7e7e3889766b5cee486f874c9e1bd2d
         with:
-          java-version: 11
+          java-version: 8
       - name: Download Maven Repo
         uses: actions/download-artifact@v1
         with:
@@ -142,13 +142,13 @@ jobs:
         uses: actions/upload-artifact@v1
         if: failure()
         with:
-          name: test-reports-windows-jdk11-jvm
+          name: test-reports-windows-jdk8-jvm
           path: 'test-reports.tgz'
 
   linux-jdk8-jvm-sunat-tests:
     name: JDK 8 JVM SUNAT Test
     timeout-minutes: 120
-    needs: build-jdk11
+    needs: build-jdk8
 
     runs-on: ubuntu-latest
 
@@ -181,8 +181,8 @@ jobs:
           path: 'test-reports.tgz'
 
   native-tests:
-    name: Native Tests
-    needs: build-jdk11
+    name: Native Tests JDK8
+    needs: build-jdk8
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -216,7 +216,7 @@ jobs:
 
   native-linux-artifacts:
     name: Native Linux Artifacts JDK8
-    needs: build-jdk11
+    needs: build-jdk8
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -244,40 +244,6 @@ jobs:
         with:
           name: native-linux-artifacts
           path: 'native-linux-artifacts.tgz'
-
-
-#  native-windows-artifacts:
-#    name: Native Windows Artifacts
-#    needs: build-jdk11
-#    runs-on: windows-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#      - name: Set up JDK 11
-#        # Uses sha for added security since tags can be updated
-#        uses: joschi/setup-jdk@b9cc6eabf7e7e3889766b5cee486f874c9e1bd2d
-#        with:
-#          java-version: 11
-#      - name: Download Maven Repo
-#        uses: actions/download-artifact@v1
-#        with:
-#          name: maven-repo
-#          path: .
-#      - name: Extract Maven Repo
-#        shell: bash
-#        run: tar -xzvf maven-repo.tgz -C ~
-#      - name: Build with Maven
-#        run: |
-#          mvn -e -B -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:19.3.1-java11 -Dnative-image.xmx=5g -Dnative -Dno-format -Dquarkus.profile=postgresql -DskipTests -P ui package
-#      - name: Prepare archive
-#        shell: bash
-#        run: |
-#          # Disambiguate windows find from cygwin find
-#          /usr/bin/find . -name 'xml-builder-*-runner' -type d | tar -czvf native-windows-artifacts.tgz -T -
-#      - name: Upload Archive
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: native-windows-artifacts
-#          path: 'native-windows-artifacts.tgz'
 
 
   native-container-images:
