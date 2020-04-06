@@ -1,4 +1,4 @@
-[![Gitter](https://badges.gitter.im/project-openubl/community.svg)](https://gitter.im/project-openubl/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge) ![XML Builder CI](https://github.com/project-openubl/xml-builder/workflows/XML%20Builder%20CI/badge.svg)
+[![project chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://projectopenubl.zulipchat.com) ![XML Builder CI](https://github.com/project-openubl/xml-builder/workflows/XML%20Builder%20CI/badge.svg)
 
 # XML-Builder
 Crea archivos XML basados en UBL 2.1 - Facturación electrónica Perú. Facturas, boletas, notas de cŕedito, notas de débito, etc.
