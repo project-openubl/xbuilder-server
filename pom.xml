@@ -22,7 +22,7 @@
         <jacoco.version>0.8.5</jacoco.version>
 
         <freemarker.version>2.3.28</freemarker.version>
-        <bouncycastle.version>1.64</bouncycastle.version>
+        <bouncycastle.version>1.65</bouncycastle.version>
         <keycloak.version>8.0.1</keycloak.version>
 
         <xmlunit.version>2.6.4</xmlunit.version>
