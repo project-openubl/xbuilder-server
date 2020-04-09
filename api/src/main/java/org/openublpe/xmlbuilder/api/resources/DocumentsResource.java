@@ -130,20 +130,20 @@ public class DocumentsResource {
         return kieExecutor.getSummaryDocumentOutputModel(input);
     }
 
-//    @POST
-//    @Path("/perception/enrich")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public PerceptionOutputModel enrichPerceptionOutputModel(@Valid PerceptionInputModel input) {
-//        return kieExecutor.getPerceptionOutputModel(input);
-//    }
-//
-//    @POST
-//    @Path("/retention/enrich")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public RetentionOutputModel enrichRetentionOutputModel(@Valid RetentionInputModel input) {
-//        return kieExecutor.getRetentionOutputModel(input);
-//    }
-//
+    @POST
+    @Path("/perception/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public PerceptionOutputModel enrichPerceptionOutputModel(@Valid PerceptionInputModel input) {
+        return kieExecutor.getPerceptionOutputModel(input);
+    }
+
+    @POST
+    @Path("/retention/enrich")
+    @Produces(MediaType.APPLICATION_JSON)
+    public RetentionOutputModel enrichRetentionOutputModel(@Valid RetentionInputModel input) {
+        return kieExecutor.getRetentionOutputModel(input);
+    }
+
 //    @POST
 //    @Path("/despatch-advice/enrich")
 //    @Produces(MediaType.APPLICATION_JSON)
