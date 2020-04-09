@@ -28,11 +28,15 @@ import org.openublpe.xmlbuilder.core.models.input.constraints.CompleteValidation
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.PerceptionInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.RetentionInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.PerceptionOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.RetentionOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
 import org.openublpe.xmlbuilder.rules.executors.KieExecutor;
@@ -133,14 +137,28 @@ public class DocumentsResource {
     @POST
     @Path("/perception/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    public PerceptionOutputModel enrichPerceptionOutputModel(@Valid PerceptionInputModel input) {
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
+    public PerceptionOutputModel enrichPerceptionOutputModel(
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) PerceptionInputModel input
+    ) {
         return kieExecutor.getPerceptionOutputModel(input);
     }
 
     @POST
     @Path("/retention/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    public RetentionOutputModel enrichRetentionOutputModel(@Valid RetentionInputModel input) {
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Enriched object created.")
+    })
+    @Operation(summary = "Enriches the input")
+    @Tag(name = "enrich")
+    public RetentionOutputModel enrichRetentionOutputModel(
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) RetentionInputModel input
+    ) {
         return kieExecutor.getRetentionOutputModel(input);
     }
 
@@ -247,30 +265,44 @@ public class DocumentsResource {
                 .build();
     }
 
-//    @POST
-//    @Path("/perception/create")
-//    @Produces(MediaType.TEXT_XML)
-//    public Response createPerception(@Valid PerceptionInputModel input) {
-//        PerceptionOutputModel output = kieExecutor.getPerceptionOutputModel(input);
-//        String xml = freemarkerExecutor.createPerception(output);
-//
-//        return Response.ok(xml)
-//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-//                .build();
-//    }
-//
-//    @POST
-//    @Path("/retention/create")
-//    @Produces(MediaType.TEXT_XML)
-//    public Response createRetention(@Valid RetentionInputModel input) {
-//        RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
-//        String xml = freemarkerExecutor.createRetention(output);
-//
-//        return Response.ok(xml)
-//                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-//                .build();
-//    }
-//
+    @POST
+    @Path("/perception/create")
+    @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
+    public Response createPerception(
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) PerceptionInputModel input
+    ) {
+        PerceptionOutputModel output = kieExecutor.getPerceptionOutputModel(input);
+        String xml = freemarkerExecutor.createPerception(output);
+
+        return Response.ok(xml)
+                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .build();
+    }
+
+    @POST
+    @Path("/retention/create")
+    @Produces(MediaType.TEXT_XML)
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @Operation(summary = "Create a XML file from the input")
+    @Tag(name = "create")
+    public Response createRetention(
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) RetentionInputModel input
+    ) {
+        RetentionOutputModel output = kieExecutor.getRetentionOutputModel(input);
+        String xml = freemarkerExecutor.createRetention(output);
+
+        return Response.ok(xml)
+                .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .build();
+    }
+
 //    @POST
 //    @Path("/despatch-advice/create")
 //    @Produces(MediaType.TEXT_XML)

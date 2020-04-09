@@ -29,13 +29,7 @@ import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputM
 import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.creditNote.CreditNoteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.debitNote.DebitNoteInputModel;
-import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentComprobanteInputModel;
-import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentComprobanteValorVentaInputModel;
-import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentImpuestosInputModel;
-import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentInputModel;
-import org.openublpe.xmlbuilder.core.models.input.sunat.SummaryDocumentLineInputModel;
-import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentInputModel;
-import org.openublpe.xmlbuilder.core.models.input.sunat.VoidedDocumentLineInputModel;
+import org.openublpe.xmlbuilder.core.models.input.sunat.*;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentImpuestosOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineImpuestosOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.DocumentLineOutputModel;
@@ -49,16 +43,7 @@ import org.openublpe.xmlbuilder.core.models.output.standard.invoice.InvoiceOutpu
 import org.openublpe.xmlbuilder.core.models.output.standard.note.NoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.creditNote.CreditNoteOutputModel;
 import org.openublpe.xmlbuilder.core.models.output.standard.note.debitNote.DebitNoteOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.ImpuestoTotalResumenDiarioOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentComprobanteAfectadoOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentComprobanteOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentComprobanteValorVentaOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentImpuestosOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentLineOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.SummaryDocumentOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.TotalValorVentaOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentLineOutputModel;
-import org.openublpe.xmlbuilder.core.models.output.sunat.VoidedDocumentOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.sunat.*;
 import org.openublpe.xmlbuilder.rules.EnvironmentVariables;
 import org.openublpe.xmlbuilder.rules.datetime.DateTimeFactory;
 
@@ -298,6 +283,13 @@ public class DocumentFactory {
                 .build();
     }
 
+    public PerceptionOutputModel getPerception(PerceptionInputModel input) {
+        return null;
+    }
+
+    public RetentionOutputModel getRetention(RetentionInputModel input) {
+        return null;
+    }
 
     // Enrich
 
@@ -471,4 +463,5 @@ public class DocumentFactory {
                 .withBaseImponible(baseImponible)
                 .build();
     }
+
 }
