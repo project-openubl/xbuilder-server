@@ -16,44 +16,44 @@
  */
 package org.openublpe.xmlbuilder.core.models.input.sunat;
 
+import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.openublpe.xmlbuilder.core.models.input.common.ClienteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.FirmanteInputModel;
 import org.openublpe.xmlbuilder.core.models.input.common.ProveedorInputModel;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.List;
 
 public abstract class PerceptionRetentionInputModel {
 
-    @Min(1)
     @NotNull
+    @Min(1)
+    @Max(99999999)
+    @Schema(example = "1")
     private Integer numero;
 
+    @Schema(example = "1585398109198", description = "Fecha expresada en milliseconds")
     private Long fechaEmision;
 
-    @Size(min = 3, max = 3)
-    private String moneda;
-
+    @Schema(example = "mi observación")
     private String observacion;
 
-    @Valid
     @NotNull
+    @Valid
     private ProveedorInputModel proveedor;
 
-    @Valid
     @NotNull
+    @Valid
     private ClienteInputModel cliente;
 
     @Valid
+    @Schema(description = "Si 'firmante' es NULL se usa datos del proveedor")
     private FirmanteInputModel firmante;
 
     @NotNull
-    @Valid
     @NotEmpty
+    @Valid
     private List<PerceptionRetentionLineInputModel> detalle;
 
     public Integer getNumero() {
@@ -70,14 +70,6 @@ public abstract class PerceptionRetentionInputModel {
 
     public void setFechaEmision(Long fechaEmision) {
         this.fechaEmision = fechaEmision;
-    }
-
-    public String getMoneda() {
-        return moneda;
-    }
-
-    public void setMoneda(String moneda) {
-        this.moneda = moneda;
     }
 
     public String getObservacion() {

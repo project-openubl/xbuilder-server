@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- *
+ * <p>
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * https://www.eclipse.org/legal/epl-2.0/
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package org.openublpe.xmlbuilder.core.models.output.sunat;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -28,31 +29,17 @@ import java.math.BigDecimal;
 public class PerceptionRetentionLineOutputModel {
 
     @NotNull
-    private Catalog1 tipoComprobante;
-
-    @NotBlank
-    @Pattern(regexp = "^[F|B|0-9].*$")
-    private String serieNumeroComprobante;
-
-    @NotBlank
-    private String fechaEmisionComprobante;
-
-    @Min(0)
-    @NotNull
-    private BigDecimal importeTotalComprobante;
-
-    @NotBlank
-    @Size(min = 3, max = 3)
-    private String monedaComprobante;
+    @Valid
+    private PerceptionRetentionComprobanteOutputModel comprobante;
 
 
     //
-
 
     @Min(1)
     @NotNull
     private Integer numeroCobroPago;
 
+    @NotNull
     @NotBlank
     private String fechaCobroPago;
 
@@ -72,44 +59,13 @@ public class PerceptionRetentionLineOutputModel {
     @NotNull
     private BigDecimal importeTotalCobradoPagado;
 
-    public Catalog1 getTipoComprobante() {
-        return tipoComprobante;
+
+    public PerceptionRetentionComprobanteOutputModel getComprobante() {
+        return comprobante;
     }
 
-    public void setTipoComprobante(Catalog1 tipoComprobante) {
-        this.tipoComprobante = tipoComprobante;
-    }
-
-    public String getSerieNumeroComprobante() {
-        return serieNumeroComprobante;
-    }
-
-    public void setSerieNumeroComprobante(String serieNumeroComprobante) {
-        this.serieNumeroComprobante = serieNumeroComprobante;
-    }
-
-    public String getFechaEmisionComprobante() {
-        return fechaEmisionComprobante;
-    }
-
-    public void setFechaEmisionComprobante(String fechaEmisionComprobante) {
-        this.fechaEmisionComprobante = fechaEmisionComprobante;
-    }
-
-    public BigDecimal getImporteTotalComprobante() {
-        return importeTotalComprobante;
-    }
-
-    public void setImporteTotalComprobante(BigDecimal importeTotalComprobante) {
-        this.importeTotalComprobante = importeTotalComprobante;
-    }
-
-    public String getMonedaComprobante() {
-        return monedaComprobante;
-    }
-
-    public void setMonedaComprobante(String monedaComprobante) {
-        this.monedaComprobante = monedaComprobante;
+    public void setComprobante(PerceptionRetentionComprobanteOutputModel comprobante) {
+        this.comprobante = comprobante;
     }
 
     public Integer getNumeroCobroPago() {
@@ -152,4 +108,60 @@ public class PerceptionRetentionLineOutputModel {
         this.importeTotalCobradoPagado = importeTotalCobradoPagado;
     }
 
+    public static final class Builder {
+        private PerceptionRetentionComprobanteOutputModel comprobante;
+        private Integer numeroCobroPago;
+        private String fechaCobroPago;
+        private BigDecimal importeCobroPago;
+        private BigDecimal importePercibidoRetenido;
+        private BigDecimal importeTotalCobradoPagado;
+
+        private Builder() {
+        }
+
+        public static Builder aPerceptionRetentionLineOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withComprobante(PerceptionRetentionComprobanteOutputModel comprobante) {
+            this.comprobante = comprobante;
+            return this;
+        }
+
+        public Builder withNumeroCobroPago(Integer numeroCobroPago) {
+            this.numeroCobroPago = numeroCobroPago;
+            return this;
+        }
+
+        public Builder withFechaCobroPago(String fechaCobroPago) {
+            this.fechaCobroPago = fechaCobroPago;
+            return this;
+        }
+
+        public Builder withImporteCobroPago(BigDecimal importeCobroPago) {
+            this.importeCobroPago = importeCobroPago;
+            return this;
+        }
+
+        public Builder withImportePercibidoRetenido(BigDecimal importePercibidoRetenido) {
+            this.importePercibidoRetenido = importePercibidoRetenido;
+            return this;
+        }
+
+        public Builder withImporteTotalCobradoPagado(BigDecimal importeTotalCobradoPagado) {
+            this.importeTotalCobradoPagado = importeTotalCobradoPagado;
+            return this;
+        }
+
+        public PerceptionRetentionLineOutputModel build() {
+            PerceptionRetentionLineOutputModel perceptionRetentionLineOutputModel = new PerceptionRetentionLineOutputModel();
+            perceptionRetentionLineOutputModel.setComprobante(comprobante);
+            perceptionRetentionLineOutputModel.setNumeroCobroPago(numeroCobroPago);
+            perceptionRetentionLineOutputModel.setFechaCobroPago(fechaCobroPago);
+            perceptionRetentionLineOutputModel.setImporteCobroPago(importeCobroPago);
+            perceptionRetentionLineOutputModel.setImportePercibidoRetenido(importePercibidoRetenido);
+            perceptionRetentionLineOutputModel.setImporteTotalCobradoPagado(importeTotalCobradoPagado);
+            return perceptionRetentionLineOutputModel;
+        }
+    }
 }

@@ -34,7 +34,18 @@ public class VoidedDocumentLineInputModel {
 
     @NotBlank
     @CatalogConstraint(value = Catalog1.class)
-    @Schema(example = "FACTURA", description = "Catalogo 01")
+    @Schema(example = "FACTURA", description = "Catalog 01", enumeration = {
+            "FACTURA", "01",
+            "BOLETA", "03",
+            "NOTA_CREDITO", "07",
+            "NOTA_DEBITO", "08",
+            "GUIA_REMISION_REMITENTE", "09",
+            "GUIA_REMISION_TRANSPORTISTA", "31",
+            "GUIA_REMISION_REMITENTE_COMPLEMENTARIA", "71",
+            "GUIA_REMISION_TRANSPORTISTA_COMPLEMENTARIA", "72",
+            "RETENCION", "20",
+            "PERCEPCION", "40",
+    })
     private String tipoComprobante;
 
     @NotNull

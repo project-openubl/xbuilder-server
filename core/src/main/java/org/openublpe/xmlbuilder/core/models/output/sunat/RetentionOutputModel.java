@@ -17,8 +17,13 @@
 package org.openublpe.xmlbuilder.core.models.output.sunat;
 
 import org.openublpe.xmlbuilder.core.models.catalogs.Catalog23;
+import org.openublpe.xmlbuilder.core.models.output.common.ClienteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.common.FirmanteOutputModel;
+import org.openublpe.xmlbuilder.core.models.output.common.ProveedorOutputModel;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.util.List;
 
 public class RetentionOutputModel extends PerceptionRetentionOutputModel {
 
@@ -31,5 +36,97 @@ public class RetentionOutputModel extends PerceptionRetentionOutputModel {
 
     public void setRegimen(Catalog23 regimen) {
         this.regimen = regimen;
+    }
+
+    public static final class Builder extends PerceptionRetentionOutputModel.Builder {
+        private Catalog23 regimen;
+        private String serieNumero;
+        private String fechaEmision;
+        private String observacion;
+        private String moneda;
+        private BigDecimal importeTotalPercibidoRetenido;
+        private BigDecimal importeTotalCobradoPagado;
+        private ProveedorOutputModel proveedor;
+        private ClienteOutputModel cliente;
+        private FirmanteOutputModel firmante;
+        private List<PerceptionRetentionLineOutputModel> detalle;
+
+        private Builder() {
+        }
+
+        public static Builder aRetentionOutputModel() {
+            return new Builder();
+        }
+
+        public Builder withRegimen(Catalog23 regimen) {
+            this.regimen = regimen;
+            return this;
+        }
+
+        public Builder withSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+            return this;
+        }
+
+        public Builder withFechaEmision(String fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
+
+        public Builder withObservacion(String observacion) {
+            this.observacion = observacion;
+            return this;
+        }
+
+        public Builder withMoneda(String moneda) {
+            this.moneda = moneda;
+            return this;
+        }
+
+        public Builder withImporteTotalPercibidoRetenido(BigDecimal importeTotalPercibidoRetenido) {
+            this.importeTotalPercibidoRetenido = importeTotalPercibidoRetenido;
+            return this;
+        }
+
+        public Builder withImporteTotalCobradoPagado(BigDecimal importeTotalCobradoPagado) {
+            this.importeTotalCobradoPagado = importeTotalCobradoPagado;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorOutputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withCliente(ClienteOutputModel cliente) {
+            this.cliente = cliente;
+            return this;
+        }
+
+        public Builder withFirmante(FirmanteOutputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withDetalle(List<PerceptionRetentionLineOutputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
+
+        public RetentionOutputModel build() {
+            RetentionOutputModel retentionOutputModel = new RetentionOutputModel();
+            retentionOutputModel.setRegimen(regimen);
+            retentionOutputModel.setSerieNumero(serieNumero);
+            retentionOutputModel.setFechaEmision(fechaEmision);
+            retentionOutputModel.setObservacion(observacion);
+            retentionOutputModel.setMoneda(moneda);
+            retentionOutputModel.setImporteTotalPercibidoRetenido(importeTotalPercibidoRetenido);
+            retentionOutputModel.setImporteTotalCobradoPagado(importeTotalCobradoPagado);
+            retentionOutputModel.setProveedor(proveedor);
+            retentionOutputModel.setCliente(cliente);
+            retentionOutputModel.setFirmante(firmante);
+            retentionOutputModel.setDetalle(detalle);
+            return retentionOutputModel;
+        }
     }
 }

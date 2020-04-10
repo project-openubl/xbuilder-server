@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- *
+ * <p>
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * https://www.eclipse.org/legal/epl-2.0/
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,13 +17,7 @@
 package org.openublpe.xmlbuilder.rules.factory;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog1;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog10;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog19;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog5;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog7_1;
-import org.openublpe.xmlbuilder.core.models.catalogs.Catalog9;
+import org.openublpe.xmlbuilder.core.models.catalogs.*;
 import org.openublpe.xmlbuilder.core.models.input.standard.DocumentInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.invoice.InvoiceInputModel;
 import org.openublpe.xmlbuilder.core.models.input.standard.note.NoteInputModel;
@@ -50,6 +44,7 @@ import org.openublpe.xmlbuilder.rules.datetime.DateTimeFactory;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Objects;
@@ -284,11 +279,83 @@ public class DocumentFactory {
     }
 
     public PerceptionOutputModel getPerception(PerceptionInputModel input) {
-        return null;
+        Catalog22 regimen = Catalog.valueOfCode(Catalog22.class, input.getRegimen()).orElseThrow(Catalog.invalidCatalogValue);
+
+        PerceptionOutputModel.Builder builder = PerceptionOutputModel.Builder.aPerceptionOutputModel()
+                .withSerieNumero(input.getSerie() + "-" + input.getNumero())
+                .withRegimen(regimen);
+
+        enrichPerceptionRetention(input, builder);
+
+        // Result
+        PerceptionOutputModel result = builder.build();
+
+        // Detalle regimen
+        result.getDetalle().forEach(f -> {
+            BigDecimal importePercibidoRetenido = f.getComprobante().getImporteTotal()
+                    .multiply(regimen.getPercent())
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN);
+            BigDecimal importeTotalCobradoPagado = f.getComprobante().getImporteTotal()
+                    .add(importePercibidoRetenido);
+
+            f.setImportePercibidoRetenido(importePercibidoRetenido);
+            f.setImporteTotalCobradoPagado(importeTotalCobradoPagado);
+        });
+
+        // Totales
+        BigDecimal importeTotalCobradoPagado = result.getDetalle()
+                .stream()
+                .map(PerceptionRetentionLineOutputModel::getImporteTotalCobradoPagado)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal importeTotalPercibidoRetenido = result.getDetalle()
+                .stream()
+                .map(PerceptionRetentionLineOutputModel::getImportePercibidoRetenido)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        result.setImporteTotalCobradoPagado(importeTotalCobradoPagado);
+        result.setImporteTotalPercibidoRetenido(importeTotalPercibidoRetenido);
+
+        return result;
     }
 
     public RetentionOutputModel getRetention(RetentionInputModel input) {
-        return null;
+        Catalog23 regimen = Catalog.valueOfCode(Catalog23.class, input.getRegimen()).orElseThrow(Catalog.invalidCatalogValue);
+
+        RetentionOutputModel.Builder builder = RetentionOutputModel.Builder.aRetentionOutputModel()
+                .withSerieNumero(input.getSerie() + "-" + input.getNumero())
+                .withRegimen(regimen);
+
+        enrichPerceptionRetention(input, builder);
+
+        // Result
+        RetentionOutputModel result = builder.build();
+
+        // Detalle regimen
+        result.getDetalle().forEach(f -> {
+            BigDecimal importePercibidoRetenido = f.getComprobante().getImporteTotal()
+                    .multiply(regimen.getPercent())
+                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_EVEN);
+            BigDecimal importeTotalCobradoPagado = f.getComprobante().getImporteTotal()
+                    .subtract(importePercibidoRetenido);
+
+            f.setImportePercibidoRetenido(importePercibidoRetenido);
+            f.setImporteTotalCobradoPagado(importeTotalCobradoPagado);
+        });
+
+        // Totales
+        BigDecimal importeTotalCobradoPagado = result.getDetalle()
+                .stream()
+                .map(PerceptionRetentionLineOutputModel::getImporteTotalCobradoPagado)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal importeTotalPercibidoRetenido = result.getDetalle()
+                .stream()
+                .map(PerceptionRetentionLineOutputModel::getImportePercibidoRetenido)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        result.setImporteTotalCobradoPagado(importeTotalCobradoPagado);
+        result.setImporteTotalPercibidoRetenido(importeTotalPercibidoRetenido);
+
+        return result;
     }
 
     // Enrich
@@ -440,6 +507,72 @@ public class DocumentFactory {
         } else {
             throw new IllegalStateException("Invalid Serie");
         }
+    }
+
+    private void enrichPerceptionRetention(PerceptionRetentionInputModel input, PerceptionRetentionOutputModel.Builder builder) {
+        builder
+                .withMoneda(defaultMoneda)
+                .withObservacion(input.getObservacion());
+
+        // Fecha y hora de emision
+        long fechaEmision = input.getFechaEmision() != null ? input.getFechaEmision() : dateTimeFactory.getCurrent().getTimeInMillis();
+        builder.withFechaEmision(toGregorianCalendarDate(fechaEmision));
+
+        // Proveedor
+        builder.withProveedor(ProveedorFactory.getProveedor(input.getProveedor()));
+
+        // Cliente
+        builder.withCliente(ClienteFactory.getCliente(input.getCliente()));
+
+        // Firmante
+        builder.withFirmante(
+                input.getFirmante() != null
+                        ? FirmanteFactory.getFirmante(input.getFirmante())
+                        : FirmanteFactory.getFirmante(input.getProveedor())
+        );
+
+        // Detalle
+        List<PerceptionRetentionLineOutputModel> outputDetalle = input.getDetalle().stream()
+                .map(f -> {
+                    PerceptionRetentionLineOutputModel.Builder.aPerceptionRetentionLineOutputModel()
+                            .withFechaCobroPago(f.getFechaCobroPago() != null
+                                    ? toGregorianCalendarDate(f.getFechaCobroPago())
+                                    : toGregorianCalendarDate(fechaEmision)
+                            )
+                            .withNumeroCobroPago(f.getNumeroCobroPago() != null
+                                    ? f.getNumeroCobroPago()
+                                    : 1
+                            )
+                            .withImporteCobroPago(f.getImporteCobroPago() != null
+                                    ? f.getImporteCobroPago()
+                                    : f.getComprobante().getImporteTotal()
+                            )
+                            .withComprobante(PerceptionRetentionComprobanteOutputModel.Builder.aPerceptionRetentionComprobanteOutputModel()
+                                    .withTipo(Catalog.valueOfCode(Catalog1.class, f.getComprobante().getTipo()).orElseThrow(Catalog.invalidCatalogValue))
+                                    .withMoneda(f.getComprobante().getMoneda())
+                                    .withSerieNumero(f.getComprobante().getSerieNumero())
+                                    .withImporteTotal(f.getComprobante().getImporteTotal())
+                                    .withFechaEmision(toGregorianCalendarDate(f.getComprobante().getFechaEmision()))
+                                    .build()
+                            )
+                            .build();
+                    return new PerceptionRetentionLineOutputModel();
+                })
+                .collect(Collectors.toList());
+
+        builder.withDetalle(outputDetalle);
+
+        // Totales
+        BigDecimal importeTotalCobradoPagado = outputDetalle.stream()
+                .map(PerceptionRetentionLineOutputModel::getImporteTotalCobradoPagado)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal importeTotalPercibidoRetenido = outputDetalle.stream()
+                .map(PerceptionRetentionLineOutputModel::getImportePercibidoRetenido)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        builder
+                .withImporteTotalCobradoPagado(importeTotalCobradoPagado)
+                .withImporteTotalPercibidoRetenido(importeTotalPercibidoRetenido);
     }
 
     private ImpuestoTotalOutputModel getImpuestoTotal(List<DocumentLineOutputModel> lineOutput, Catalog5 categoria) {

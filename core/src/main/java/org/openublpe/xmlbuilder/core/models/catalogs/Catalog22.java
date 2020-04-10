@@ -22,8 +22,7 @@ public enum Catalog22 implements Catalog {
 
     VENTA_INTERNA("01", BigDecimal.valueOf(2)),
     ADQUISICION_DE_COMBUSTIBLE("02", BigDecimal.valueOf(1)),
-    AGENTE_DE_PERCEPCION_CON_TASA_ESPECIAL("03", BigDecimal.valueOf(0.5)),
-    ;
+    AGENTE_DE_PERCEPCION_CON_TASA_ESPECIAL("03", BigDecimal.valueOf(0.5));
 
     private final String code;
     private final BigDecimal percent;

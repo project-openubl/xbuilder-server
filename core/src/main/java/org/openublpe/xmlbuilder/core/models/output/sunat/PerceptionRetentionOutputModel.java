@@ -31,32 +31,44 @@ import java.util.List;
 
 public abstract class PerceptionRetentionOutputModel {
 
-    @Valid
-    @NotNull ClienteOutputModel cliente;
+    @NotNull
     @NotBlank
-    private String serieNumero;
+    protected String serieNumero;
+
+    @NotNull
     @NotBlank
-    private String fechaEmision;
+    protected String fechaEmision;
+
+    protected String observacion;
+
+    @NotNull
     @Size(min = 3, max = 3)
-    private String moneda;
-    private String observacion;
+    protected String moneda;
+
     @NotNull
     @Min(0)
-    private BigDecimal importeTotalPercibidoRetenido;
+    protected BigDecimal importeTotalPercibidoRetenido;
+
     @NotNull
     @Min(0)
-    private BigDecimal importeTotalCobradoPagado;
-    @Valid
-    @NotNull
-    private ProveedorOutputModel proveedor;
-    @Valid
-    @NotNull
-    private FirmanteOutputModel firmante;
+    protected BigDecimal importeTotalCobradoPagado;
 
     @NotNull
     @Valid
+    protected ProveedorOutputModel proveedor;
+
+    @NotNull
+    @Valid
+    protected ClienteOutputModel cliente;
+
+    @NotNull
+    @Valid
+    protected FirmanteOutputModel firmante;
+
+    @NotNull
     @NotEmpty
-    private List<PerceptionRetentionLineOutputModel> detalle;
+    @Valid
+    protected List<PerceptionRetentionLineOutputModel> detalle;
 
     public String getSerieNumero() {
         return serieNumero;
@@ -136,5 +148,68 @@ public abstract class PerceptionRetentionOutputModel {
 
     public void setImporteTotalCobradoPagado(BigDecimal importeTotalCobradoPagado) {
         this.importeTotalCobradoPagado = importeTotalCobradoPagado;
+    }
+
+    public static abstract class Builder {
+        protected String serieNumero;
+        protected String fechaEmision;
+        protected String observacion;
+        protected String moneda;
+        protected BigDecimal importeTotalPercibidoRetenido;
+        protected BigDecimal importeTotalCobradoPagado;
+        protected ProveedorOutputModel proveedor;
+        protected ClienteOutputModel cliente;
+        protected FirmanteOutputModel firmante;
+        protected List<PerceptionRetentionLineOutputModel> detalle;
+
+        public Builder withSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+            return this;
+        }
+
+        public Builder withFechaEmision(String fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
+
+        public Builder withObservacion(String observacion) {
+            this.observacion = observacion;
+            return this;
+        }
+
+        public Builder withMoneda(String moneda) {
+            this.moneda = moneda;
+            return this;
+        }
+
+        public Builder withImporteTotalPercibidoRetenido(BigDecimal importeTotalPercibidoRetenido) {
+            this.importeTotalPercibidoRetenido = importeTotalPercibidoRetenido;
+            return this;
+        }
+
+        public Builder withImporteTotalCobradoPagado(BigDecimal importeTotalCobradoPagado) {
+            this.importeTotalCobradoPagado = importeTotalCobradoPagado;
+            return this;
+        }
+
+        public Builder withProveedor(ProveedorOutputModel proveedor) {
+            this.proveedor = proveedor;
+            return this;
+        }
+
+        public Builder withCliente(ClienteOutputModel cliente) {
+            this.cliente = cliente;
+            return this;
+        }
+
+        public Builder withFirmante(FirmanteOutputModel firmante) {
+            this.firmante = firmante;
+            return this;
+        }
+
+        public Builder withDetalle(List<PerceptionRetentionLineOutputModel> detalle) {
+            this.detalle = detalle;
+            return this;
+        }
     }
 }
