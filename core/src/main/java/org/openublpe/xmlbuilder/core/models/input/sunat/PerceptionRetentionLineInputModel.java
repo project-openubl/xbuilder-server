@@ -33,7 +33,6 @@ public class PerceptionRetentionLineInputModel {
     @Schema(example = "1585398109198", description = "Fecha expresada en milliseconds")
     private Long fechaCobroPago;
 
-    @NotNull
     @Positive
     @Schema(example = "1", description = "importe de cobro o pago de la percepcion")
     private BigDecimal importeCobroPago;

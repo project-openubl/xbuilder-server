@@ -533,46 +533,31 @@ public class DocumentFactory {
 
         // Detalle
         List<PerceptionRetentionLineOutputModel> outputDetalle = input.getDetalle().stream()
-                .map(f -> {
-                    PerceptionRetentionLineOutputModel.Builder.aPerceptionRetentionLineOutputModel()
-                            .withFechaCobroPago(f.getFechaCobroPago() != null
-                                    ? toGregorianCalendarDate(f.getFechaCobroPago())
-                                    : toGregorianCalendarDate(fechaEmision)
-                            )
-                            .withNumeroCobroPago(f.getNumeroCobroPago() != null
-                                    ? f.getNumeroCobroPago()
-                                    : 1
-                            )
-                            .withImporteCobroPago(f.getImporteCobroPago() != null
-                                    ? f.getImporteCobroPago()
-                                    : f.getComprobante().getImporteTotal()
-                            )
-                            .withComprobante(PerceptionRetentionComprobanteOutputModel.Builder.aPerceptionRetentionComprobanteOutputModel()
-                                    .withTipo(Catalog.valueOfCode(Catalog1.class, f.getComprobante().getTipo()).orElseThrow(Catalog.invalidCatalogValue))
-                                    .withMoneda(f.getComprobante().getMoneda())
-                                    .withSerieNumero(f.getComprobante().getSerieNumero())
-                                    .withImporteTotal(f.getComprobante().getImporteTotal())
-                                    .withFechaEmision(toGregorianCalendarDate(f.getComprobante().getFechaEmision()))
-                                    .build()
-                            )
-                            .build();
-                    return new PerceptionRetentionLineOutputModel();
-                })
+                .map(f -> PerceptionRetentionLineOutputModel.Builder.aPerceptionRetentionLineOutputModel()
+                         .withFechaCobroPago(f.getFechaCobroPago() != null
+                                 ? toGregorianCalendarDate(f.getFechaCobroPago())
+                                 : toGregorianCalendarDate(fechaEmision)
+                         )
+                         .withNumeroCobroPago(f.getNumeroCobroPago() != null
+                                 ? f.getNumeroCobroPago()
+                                 : 1
+                         )
+                         .withImporteCobroPago(f.getImporteCobroPago() != null
+                                 ? f.getImporteCobroPago()
+                                 : f.getComprobante().getImporteTotal()
+                         )
+                         .withComprobante(PerceptionRetentionComprobanteOutputModel.Builder.aPerceptionRetentionComprobanteOutputModel()
+                                 .withTipo(Catalog.valueOfCode(Catalog1.class, f.getComprobante().getTipo()).orElseThrow(Catalog.invalidCatalogValue))
+                                 .withMoneda(f.getComprobante().getMoneda())
+                                 .withSerieNumero(f.getComprobante().getSerieNumero())
+                                 .withImporteTotal(f.getComprobante().getImporteTotal())
+                                 .withFechaEmision(toGregorianCalendarDate(f.getComprobante().getFechaEmision()))
+                                 .build()
+                         )
+                         .build())
                 .collect(Collectors.toList());
 
         builder.withDetalle(outputDetalle);
-
-        // Totales
-        BigDecimal importeTotalCobradoPagado = outputDetalle.stream()
-                .map(PerceptionRetentionLineOutputModel::getImporteTotalCobradoPagado)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal importeTotalPercibidoRetenido = outputDetalle.stream()
-                .map(PerceptionRetentionLineOutputModel::getImportePercibidoRetenido)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        builder
-                .withImporteTotalCobradoPagado(importeTotalCobradoPagado)
-                .withImporteTotalPercibidoRetenido(importeTotalPercibidoRetenido);
     }
 
     private ImpuestoTotalOutputModel getImpuestoTotal(List<DocumentLineOutputModel> lineOutput, Catalog5 categoria) {

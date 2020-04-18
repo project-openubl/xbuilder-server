@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 
 public class PerceptionRetentionComprobanteInputModel {
 
+    @NotNull
     @Size(min = 3, max = 3)
     @Schema(example = "PEN", description = "Moneda en la que se emitió el comprobante a Retener o Percibir")
     private String moneda;
@@ -93,5 +94,55 @@ public class PerceptionRetentionComprobanteInputModel {
 
     public void setImporteTotal(BigDecimal importeTotal) {
         this.importeTotal = importeTotal;
+    }
+
+    public static final class Builder {
+        private String moneda;
+        private String tipo;
+        private String serieNumero;
+        private Long fechaEmision;
+        private BigDecimal importeTotal;
+
+        private Builder() {
+        }
+
+        public static Builder aPerceptionRetentionComprobanteInputModel() {
+            return new Builder();
+        }
+
+        public Builder withMoneda(String moneda) {
+            this.moneda = moneda;
+            return this;
+        }
+
+        public Builder withTipo(String tipo) {
+            this.tipo = tipo;
+            return this;
+        }
+
+        public Builder withSerieNumero(String serieNumero) {
+            this.serieNumero = serieNumero;
+            return this;
+        }
+
+        public Builder withFechaEmision(Long fechaEmision) {
+            this.fechaEmision = fechaEmision;
+            return this;
+        }
+
+        public Builder withImporteTotal(BigDecimal importeTotal) {
+            this.importeTotal = importeTotal;
+            return this;
+        }
+
+        public PerceptionRetentionComprobanteInputModel build() {
+            PerceptionRetentionComprobanteInputModel perceptionRetentionComprobanteInputModel = new PerceptionRetentionComprobanteInputModel();
+            perceptionRetentionComprobanteInputModel.setMoneda(moneda);
+            perceptionRetentionComprobanteInputModel.setTipo(tipo);
+            perceptionRetentionComprobanteInputModel.setSerieNumero(serieNumero);
+            perceptionRetentionComprobanteInputModel.setFechaEmision(fechaEmision);
+            perceptionRetentionComprobanteInputModel.setImporteTotal(importeTotal);
+            return perceptionRetentionComprobanteInputModel;
+        }
     }
 }
