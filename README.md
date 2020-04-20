@@ -1,4 +1,5 @@
 [![project chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://projectopenubl.zulipchat.com) ![XML Builder CI](https://github.com/project-openubl/xml-builder/workflows/XML%20Builder%20CI/badge.svg)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fproject-openubl%2Fxml-builder.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fproject-openubl%2Fxml-builder?ref=badge_shield)
 
 # XML-Builder
 Crea archivos XML basados en UBL 2.1 - Facturación electrónica Perú. Facturas, boletas, notas de cŕedito, notas de débito, etc.
@@ -54,3 +55,6 @@ Si crees que descubriste un defecto en XML Builder, por favor repórtalo en [Git
 
 # Licencia
 - [Eclipse Public License - v 2.0](./LICENSE)
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fproject-openubl%2Fxml-builder.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fproject-openubl%2Fxml-builder?ref=badge_large)
