@@ -23,7 +23,7 @@ public class ConfigurationHolder {
     private static Configuration configuration;
 
     static void initialize() {
-        ConfigurationHolder.configuration = new Configuration(Configuration.VERSION_2_3_28);
+        ConfigurationHolder.configuration = new Configuration(Configuration.VERSION_2_3_30);
     }
 
     static Configuration getConfiguration() {

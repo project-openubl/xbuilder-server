@@ -30,6 +30,15 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>io.github.project-openubl</groupId>
+            <artifactId>quarkus-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.project-openubl</groupId>
+            <artifactId>quarkus-freemarker-deployment</artifactId>
+        </dependency>
+
         <!--Quarkus-->
         <dependency>
             <groupId>io.quarkus</groupId>

@@ -20,7 +20,7 @@
         <jandex.version>1.0.7</jandex.version>
         <jacoco.version>0.8.5</jacoco.version>
 
-        <freemarker.version>2.3.28</freemarker.version>
+        <freemarker.version>2.3.30</freemarker.version>
 
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -49,7 +49,7 @@ class FreemarkerNativeImageProcessor {
 
     private static final Logger LOGGER = Logger.getLogger(FreemarkerNativeImageProcessor.class);
 
-    @BuildStep(loadsApplicationClasses = true)
+    @BuildStep
     void build(BuildProducer<NativeImageResourceBuildItem> resourceProducer,
                FreemarkerBuildConfig freemarkerBuildConfig) throws IOException, URISyntaxException {
         List<String> templates = discoverFreemarkerTemplates(freemarkerBuildConfig);
