@@ -53,7 +53,7 @@ class FreemarkerProcessor {
 
     @BuildStep
     RuntimeInitializedClassBuildItem log4jOverSLF4JTester() {
-        return new RuntimeInitializedClassBuildItem(_Log4jOverSLF4JTester.class.getCanonicalName());
+        return new RuntimeInitializedClassBuildItem("org.apache.log4j.MDC");
     }
 
     @BuildStep
