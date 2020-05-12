@@ -16,6 +16,7 @@
  */
 package io.github.project.openubl.xmlbuilder.resources;
 
+import io.github.project.openubl.xmlbuilder.idm.representation.Book;
 import io.github.project.openubl.xmlbuilder.resources.utils.ResourceUtils;
 import io.github.project.openubl.xmlbuilderlib.config.XMLBuilderConfig;
 import io.github.project.openubl.xmlbuilderlib.facade.DocumentFacade;
@@ -55,6 +56,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.math.BigDecimal;
 
 @Path("/documents")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -65,6 +67,26 @@ public class DocumentsResource {
 
     @Inject
     SystemClock systemClock;
+
+    @POST
+    @Path("/invoice/test1")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Tag(name = "enrich")
+    public Book test(
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) Book input
+    ) {
+        return input;
+    }
+
+    @POST
+    @Path("/invoice/test2")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Tag(name = "enrich")
+    public BigDecimal test2(
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) Book input
+    ) {
+        return BigDecimal.ONE;
+    }
 
     @POST
     @Path("/invoice/enrich")
