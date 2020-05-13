@@ -1,152 +1,67 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>code-with-quarkus - 1.0.0-SNAPSHOT</title>
-    <style>
-        h1, h2, h3, h4, h5, h6 {
-            margin-bottom: 0.5rem;
-            font-weight: 400;
-            line-height: 1.5;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-        }
-
-        h2 {
-            font-size: 2rem
-        }
-
-        h3 {
-            font-size: 1.75rem
-        }
-
-        h4 {
-            font-size: 1.5rem
-        }
-
-        h5 {
-            font-size: 1.25rem
-        }
-
-        h6 {
-            font-size: 1rem
-        }
-
-        .lead {
-            font-weight: 300;
-            font-size: 2rem;
-        }
-
-        .banner {
-            font-size: 2.7rem;
-            margin: 0;
-            padding: 2rem 1rem;
-            background-color: #00A1E2;
-            color: white;
-        }
-
-        body {
-            margin: 0;
-            font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        }
-
-        code {
-            font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-            font-size: 87.5%;
-            color: #e83e8c;
-            word-break: break-word;
-        }
-
-        .left-column {
-            padding: .75rem;
-            max-width: 75%;
-            min-width: 55%;
-        }
-
-        .right-column {
-            padding: .75rem;
-            max-width: 25%;
-        }
-
-        .container {
-            display: flex;
-            width: 100%;
-        }
-
-        li {
-            margin: 0.75rem;
-        }
-
-        .right-section {
-            margin-left: 1rem;
-            padding-left: 0.5rem;
-        }
-
-        .right-section h3 {
-            padding-top: 0;
-            font-weight: 200;
-        }
-
-        .right-section ul {
-            border-left: 0.3rem solid #00A1E2;
-            list-style-type: none;
-            padding-left: 0;
-        }
-
-    </style>
+<html lang="en" class="pf-m-redhat-font">
+<head class="pf-m-redhat-font">
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="assets/styles/fonts.css"/>
+    <!-- Include latest PatternFly CSS via CDN -->
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/@patternfly/patternfly/patternfly.css"
+            crossorigin="anonymous"
+    >
+    <title>XML Builder</title>
+    <link rel="icon" href="assets/images/favicon.ico" />
 </head>
 <body>
-
-<div class="banner lead">
-    Your new Cloud-Native application is ready!
-</div>
-
-<div class="container">
-    <div class="left-column">
-        <p class="lead"> Congratulations, you have created a new Quarkus application.</p>
-
-        <h2>Why do you see this?</h2>
-
-        <p>This page is served by Quarkus. The source is in
-            <code>src/main/resources/META-INF/resources/index.html</code>.</p>
-
-        <h2>What can I do from here?</h2>
-
-        <p>If not already done, run the application in <em>dev mode</em> using: <code>mvn compile quarkus:dev</code>.
-        </p>
-        <ul>
-            <li>Add REST resources, Servlets, functions and other services in <code>src/main/java</code>.</li>
-            <li>Your static assets are located in <code>src/main/resources/META-INF/resources</code>.</li>
-            <li>Configure your application in <code>src/main/resources/application.properties</code>.
-            </li>
-        </ul>
-
-        <h2>How do I get rid of this page?</h2>
-        <p>Just delete the <code>src/main/resources/META-INF/resources/index.html</code> file.</p>
-    </div>
-    <div class="right-column">
-        <div class="right-section">
-            <h3>Application</h3>
-            <ul>
-                <li>GroupId: org.acme</li>
-                <li>ArtifactId: code-with-quarkus</li>
-                <li>Version: 1.0.0-SNAPSHOT</li>
-                <li>Quarkus Version: 1.4.2.Final</li>
-            </ul>
+<div class="pf-c-page" id="page-layout-horizontal-nav">
+    <a class="pf-c-skip-to-content pf-c-button pf-m-primary" href="#main-content-page-layout-horizontal-nav">Skip to content</a>
+    <header role="banner" class="pf-c-page__header">
+        <div class="pf-c-page__header-brand">
+            <a class="pf-c-page__header-brand-link">
+                <img class="pf-c-brand" src="assets/images/logo-navbar.svg" alt="PatternFly logo"/>
+            </a>
         </div>
-        <div class="right-section">
-            <h3>Next steps</h3>
-            <ul>
-                <li><a href="https://quarkus.io/guides/maven-tooling.html" target="_blank">Setup your IDE</a></li>
-                <li><a href="https://quarkus.io/guides/getting-started.html" target="_blank">Getting started</a></li>
-                <li><a href="https://quarkus.io" target="_blank">Quarkus Web Site</a></li>
-            </ul>
+        <div class="pf-c-page__header-nav">
+            <nav class="pf-c-nav pf-m-end" id="page-layout-horizontal-nav-horizontal-nav" aria-label="Global">
+                <button class="pf-c-nav__scroll-button" aria-label="Scroll left">
+                    <i class="fas fa-angle-left" aria-hidden="true"></i>
+                </button>
+                <ul class="pf-c-nav__horizontal-list">
+                    <li class="pf-c-nav__item">
+                        <a href="#" class="pf-c-nav__link pf-m-current" aria-current="page">Home</a>
+                    </li>
+                </ul>
+            </nav>
         </div>
-    </div>
+        <div class="pf-c-page__header-tools">
+            <img class="pf-c-avatar" src="assets/images/img_avatar.svg" alt="Avatar image">
+        </div>
+    </header>
+    <main role="main" class="pf-c-page__main" tabindex="-1" id="main-content-page-layout-horizontal-nav">
+        <section class="pf-c-page__main-section">
+            <div class="pf-l-bullseye">
+                <div class="pf-l-bullseye__item">
+                    <div class="pf-c-empty-state">
+                        <i class="fas fa-file-code pf-c-empty-state__icon" aria-hidden="true"></i>
+                        <h1 class="pf-c-title pf-m-lg">Welcome to XML Builder</h1>
+                        <div class="pf-c-empty-state__body">
+                            <p>XML Builder is a microservice that can create XML files based on UBL standards.</p>
+                            <p>To start using XML Builder you can visit the API Documentation and start using our REST endpoints.</p>
+                        </div>
+                        <a class="pf-c-button pf-m-primary" href="https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder">API Documentation</a>
+                        <div class="pf-c-empty-state__secondary">
+                            <a class="pf-c-button pf-m-link" href="https://project-openubl.github.io">Documentation</a>
+                            <a class="pf-c-button pf-m-link" href="https://github.com/project-openubl/xml-builder">Source code</a>
+                            <a class="pf-c-button pf-m-link" href="https://github.com/project-openubl/xml-builder-lib">Library</a>
+                            <a class="pf-c-button pf-m-link" href="mailto:projectopenubl+subscribe@googlegroups.com">Mailing list</a>
+                            <a class="pf-c-button pf-m-link" href="https://www.youtube.com/channel/UChq3xxjyDgjcU346rp0bbtA">Videos</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 </div>
-
-
 </body>
 </html>

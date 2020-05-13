@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openublpe.quarkus.freemarker.deployment;
+package io.github.project.openubl.xmlbuilder.quarkus.freemarker.deployment;
 
 import freemarker.ext.jython.JythonModel;
 import freemarker.ext.jython.JythonWrapper;
@@ -25,9 +25,9 @@ import io.quarkus.deployment.annotations.Record;
 import io.quarkus.deployment.builditem.FeatureBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.ReflectiveClassBuildItem;
 import io.quarkus.deployment.builditem.nativeimage.RuntimeInitializedClassBuildItem;
-import org.openublpe.quarkus.freemarker.ConfigurationProvider;
-import org.openublpe.quarkus.freemarker.FreemarkerBuildConfig;
-import org.openublpe.quarkus.freemarker.FreemarkerConfigurationRecorder;
+import io.github.project.openubl.xmlbuilder.quarkus.freemarker.ConfigurationProvider;
+import io.github.project.openubl.xmlbuilder.quarkus.freemarker.FreemarkerBuildConfig;
+import io.github.project.openubl.xmlbuilder.quarkus.freemarker.FreemarkerConfigurationRecorder;
 
 import static io.quarkus.deployment.annotations.ExecutionTime.STATIC_INIT;
 

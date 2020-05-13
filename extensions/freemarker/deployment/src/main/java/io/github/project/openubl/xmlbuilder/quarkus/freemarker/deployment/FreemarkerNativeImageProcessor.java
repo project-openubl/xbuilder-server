@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openublpe.quarkus.freemarker.deployment;
+package io.github.project.openubl.xmlbuilder.quarkus.freemarker.deployment;
 
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
 import io.quarkus.deployment.builditem.nativeimage.NativeImageResourceBuildItem;
 import org.apache.commons.io.FilenameUtils;
 import org.jboss.logging.Logger;
-import org.openublpe.quarkus.freemarker.FreemarkerBuildConfig;
+import io.github.project.openubl.xmlbuilder.quarkus.freemarker.FreemarkerBuildConfig;
 
 import java.io.IOException;
 import java.net.URI;

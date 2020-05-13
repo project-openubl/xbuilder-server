@@ -14,15 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.openublpe.quarkus.freemarker;
+package io.github.project.openubl.xmlbuilder.quarkus.freemarker;
 
-import io.quarkus.runtime.annotations.Recorder;
+import freemarker.template.Configuration;
 
-@Recorder
-public class FreemarkerConfigurationRecorder {
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Produces;
 
-    public void initializeConfiguration() {
-        ConfigurationHolder.initialize();
+@ApplicationScoped
+public class ConfigurationProvider {
+
+    @Produces
+    public Configuration configuration() {
+        return ConfigurationHolder.getConfiguration();
     }
 
 }
