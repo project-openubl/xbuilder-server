@@ -18,7 +18,6 @@ package org.openublpe.quarkus.freemarker.deployment;
 
 import freemarker.ext.jython.JythonModel;
 import freemarker.ext.jython.JythonWrapper;
-import freemarker.log._Log4jOverSLF4JTester;
 import io.quarkus.arc.deployment.AdditionalBeanBuildItem;
 import io.quarkus.deployment.annotations.BuildProducer;
 import io.quarkus.deployment.annotations.BuildStep;
@@ -49,11 +48,6 @@ class FreemarkerProcessor {
     @BuildStep
     RuntimeInitializedClassBuildItem jythonWrapper() {
         return new RuntimeInitializedClassBuildItem(JythonWrapper.class.getCanonicalName());
-    }
-
-    @BuildStep
-    RuntimeInitializedClassBuildItem log4jOverSLF4JTester() {
-        return new RuntimeInitializedClassBuildItem("org.apache.log4j.MDC");
     }
 
     @BuildStep
