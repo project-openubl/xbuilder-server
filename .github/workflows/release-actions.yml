@@ -300,7 +300,7 @@ jobs:
           path: .
       - name: Extract Native Linux artifacts
         shell: bash
-        run: tar -xzvf native-linux-artifacts.tgz -C ~
+        run: tar -xzvf native-linux-artifacts.tgz
       - name: Upload Release Linux Asset
         uses: actions/upload-release-asset@v1
         env:
@@ -320,7 +320,7 @@ jobs:
           path: .
       - name: Extract Native Windows artifacts
         shell: bash
-        run: tar -xzvf native-windows-artifacts.tgz -C ~
+        run: tar -xzvf native-windows-artifacts.tgz
       - name: Upload Release Windows Asset
         uses: actions/upload-release-asset@v1
         env:
@@ -341,7 +341,7 @@ jobs:
           path: .
       - name: Extract Native MacOS artifacts
         shell: bash
-        run: tar -xzvf native-macos-artifacts.tgz -C ~
+        run: tar -xzvf native-macos-artifacts.tgz
       - name: Upload Release MacOS Asset
         uses: actions/upload-release-asset@v1
         env:
