@@ -44,7 +44,6 @@ jobs:
           name: maven-repo
           path: maven-repo.tgz
 
-
   java-artifacts:
     name: Java Artifacts
     needs: build-jdk11
@@ -66,20 +65,20 @@ jobs:
         run: tar -xzvf maven-repo.tgz -C ~
       - name: Build with Maven
         run: |
-          eval mvn -DskipTests package
+          ./mvnw package
       - name: Prepare XML Builder archive
         shell: bash
         run: |
-          find api/target -name 'lib' -o -name 'xml-builder-*-runner.jar' | tar -czvf xml-builder-java-artifacts.tgz -T -
+          find api/target -name 'lib' -o -name 'xml-builder-*-runner.jar' | tar -czvf jvm-artifacts.tgz -T -
       - name: Upload Archive XML Builder
         uses: actions/upload-artifact@v1
         with:
-          name: xml-builder-java-artifacts
-          path: 'xml-builder-java-artifacts.tgz'
+          name: jvm-artifacts
+          path: 'jvm-artifacts.tgz'
 
 
-  native-linux-artifacts:
-    name: Native Linux Artifacts JDK11
+  native-container-artifacts:
+    name: Native Container Artifacts JDK11
     needs: build-jdk11
     runs-on: ubuntu-latest
     steps:
@@ -99,31 +98,30 @@ jobs:
         run: tar -xzvf maven-repo.tgz -C ~
       - name: Build with Maven
         run: |
-          eval mvn $NATIVE_TEST_MAVEN_OPTS -DskipTests package
+          eval mvn $NATIVE_TEST_MAVEN_OPTS package
       - name: Prepare archive
         shell: bash
-        run: find . -name 'xml-builder-*-runner' -type f | tar -czvf native-linux-artifacts.tgz -T -
+        run: find . -name 'xml-builder-*-runner' -type f | tar -czvf native-container-artifacts.tgz -T -
       - name: Upload Archive
         uses: actions/upload-artifact@v1
         with:
-          name: native-linux-artifacts
-          path: 'native-linux-artifacts.tgz'
-
+          name: native-container-artifacts
+          path: 'native-container-artifacts.tgz'
 
   native-container-images:
     name: Release Native Container Images
-    needs: native-linux-artifacts
+    needs: native-container-artifacts
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Download Native Artifacts
         uses: actions/download-artifact@v1
         with:
-          name: native-linux-artifacts
+          name: native-container-artifacts
           path: .
       - name: Extract Native Artifacs
         shell: bash
-        run: tar -xzvf native-linux-artifacts.tgz
+        run: tar -xzvf native-container-artifacts.tgz
       - name: Publish to Registry XML Builder (Release tag)
         # Uses sha for added security since tags can be updated
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
@@ -143,23 +141,117 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "latest"
 
+  native-linux-artifacts:
+    name: Native Linux Artifacts JDK11
+    needs: build-jdk11
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Maven Repo
+        uses: actions/download-artifact@v1
+        with:
+          name: maven-repo
+          path: .
+      - name: Extract Maven Repo
+        shell: bash
+        run: tar -xzvf maven-repo.tgz -C ~
+      - name: Install graalvm
+        uses: DeLaGuardo/setup-graalvm@3
+        with:
+          graalvm-version: '20.0.0.java11'
+      - name: Install native-image
+        run: gu install native-image
+      - name: Build native executable
+        run: ./mvnw package -Dnative
+      - name: Prepare archive
+        shell: bash
+        run: find . -name 'xml-builder-*-runner' -type f | tar -czvf native-linux-artifacts.tgz -T -
+      - name: Upload Archive
+        uses: actions/upload-artifact@v1
+        with:
+          name: native-linux-artifacts
+          path: 'native-linux-artifacts.tgz'
+
+  native-windows-artifacts:
+    name: Native Windows Artifacts JDK11
+    needs: build-jdk11
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Maven Repo
+        uses: actions/download-artifact@v1
+        with:
+          name: maven-repo
+          path: .
+      - name: Extract Maven Repo
+        shell: bash
+        run: tar -xzvf maven-repo.tgz -C ~
+      - name: Install graalvm
+        uses: DeLaGuardo/setup-graalvm@3
+        with:
+          graalvm-version: '20.0.0.java11'
+      - name: Install native-image
+        run: |
+          %JAVA_HOME%/bin/gu.cmd install native-image
+        shell: cmd
+      - name: Configure Pagefile
+        # Increased the page-file size due to memory-consumption of native-image command
+        # For details see https://github.com/actions/virtual-environments/issues/785
+        uses: al-cheb/configure-pagefile-action@v1.2
+      - name: Build native executable
+        # Invoke the native-image build with the necessary Visual Studio tooling/environment intialized
+        run: |
+          call "C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64
+          mvnw package -Dnative"
+        shell: cmd
+      - name: Prepare failure archive
+        shell: bash
+        run: |
+          # Disambiguate windows find from cygwin find
+          /usr/bin/find . -name 'xml-builder-*-runner.exe' -type f | tar -czvf native-windows-artifacts.tgz -T -
+      - name: Upload failure Archive
+        uses: actions/upload-artifact@v1
+        with:
+          name: native-windows-artifacts
+          path: 'native-windows-artifacts.tgz'
+
+  native-macos-artifacts:
+    name: Native MacOS Artifacts JDK11
+    needs: build-jdk11
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download Maven Repo
+        uses: actions/download-artifact@v1
+        with:
+          name: maven-repo
+          path: .
+      - name: Extract Maven Repo
+        shell: bash
+        run: tar -xzvf maven-repo.tgz -C ~
+      - name: Install graalvm
+        uses: DeLaGuardo/setup-graalvm@3
+        with:
+          graalvm-version: '20.0.0.java11'
+      - name: Install native-image
+        run: gu install native-image
+      - name: Build native executable
+        run: ./mvnw package -Dnative
+      - name: Prepare archive
+        shell: bash
+        run: find . -name 'xml-builder-*-runner' -type f | tar -czvf native-macos-artifacts.tgz -T -
+      - name: Upload Archive
+        uses: actions/upload-artifact@v1
+        with:
+          name: native-macos-artifacts
+          path: 'native-macos-artifacts.tgz'
 
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: [java-artifacts, native-container-images]
+    needs: [native-container-images, java-artifacts, native-linux-artifacts, native-windows-artifacts, native-macos-artifacts]
     steps:
       - uses: actions/checkout@v2
-      - name: Download Java XML Builder Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: xml-builder-java-artifacts
-          path: .
-      - name: Download Native Artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: native-linux-artifacts
-          path: .
       - name: changelog
         uses: heinrichreimer/github-changelog-generator-action@v2.1.1
         id: Changelog
@@ -180,23 +272,83 @@ jobs:
             ${{ steps.Changelog.outputs.changelog }}
           draft: false
           prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset1
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
+      - name: Download Java Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: jvm-artifacts
+          path: .
+      - name: Upload Release JVM Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./xml-builder-java-artifacts.tgz
-          asset_name: jdk-xml-builder.tgz
+          asset_path: ./jvm-artifacts.tgz
+          asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-jvm.tgz
           asset_content_type: application/tar+gzip
-      - name: Upload Release Asset
-        id: upload-release-asset2
+
+      - name: Clear for Linux Release
+        run: rm -rf ./target
+      - name: Download Linux Native Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: native-linux-artifacts
+          path: .
+      - name: Extract Native Linux artifacts
+        shell: bash
+        run: tar -xzvf native-linux-artifacts.tgz -C ~
+      - name: Upload Release Linux Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./native-linux-artifacts.tgz
-          asset_name: linux-native-artifacts.tgz
-          asset_content_type: application/tar+gzip
+          asset_path: ./target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner
+          asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-linux
+          asset_content_type: application/octet-stream
+
+      - name: Clear for Windows Release
+        run: rm -rf ./target
+      - name: Download Windows Native Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: native-windows-artifacts
+          path: .
+      - name: Extract Native Windows artifacts
+        shell: bash
+        run: tar -xzvf native-windows-artifacts.tgz -C ~
+      - name: Upload Release Windows Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner.exe
+          asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-win64.exe
+          asset_label: win64
+          asset_content_type: application/octet-stream
+
+      - name: Clear for MacOS Release
+        run: rm -rf ./target
+      - name: Download MacOS Native Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: native-macos-artifacts
+          path: .
+      - name: Extract Native MacOS artifacts
+        shell: bash
+        run: tar -xzvf native-macos-artifacts.tgz -C ~
+      - name: Upload Release MacOS Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner
+          asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-macos
+          asset_label: macos
+          asset_content_type: application/octet-stream
