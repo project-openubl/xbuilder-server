@@ -16,10 +16,9 @@
  */
 package io.github.project.openubl.xmlbuilder.resources;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import io.quarkus.test.junit.NativeImageTest;
 
-@ApplicationPath(ApiApplication.API_BASE)
-public class ApiApplication extends Application {
-    public static final String API_BASE = "/api";
+@NativeImageTest
+class NativeDocumentsResourceIT extends DocumentsResourceTest {
+    // Execute the same tests but in native mode.
 }

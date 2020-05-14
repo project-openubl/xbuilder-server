@@ -1,13 +1,13 @@
 /**
  * Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
- * <p>
+ *
  * Licensed under the Eclipse Public License - v 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * https://www.eclipse.org/legal/epl-2.0/
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,11 +16,9 @@
  */
 package io.github.project.openubl.xmlbuilder.resources;
 
-import io.github.project.openubl.xmlbuilder.idm.representation.Book;
 import io.github.project.openubl.xmlbuilder.resources.utils.ResourceUtils;
 import io.github.project.openubl.xmlbuilderlib.config.XMLBuilderConfig;
-import io.github.project.openubl.xmlbuilderlib.facade.DocumentFacade;
-import io.github.project.openubl.xmlbuilderlib.facade.DocumentWrapper;
+import io.github.project.openubl.xmlbuilderlib.freemarker.FreemarkerExecutor;
 import io.github.project.openubl.xmlbuilderlib.models.input.constraints.CompleteValidation;
 import io.github.project.openubl.xmlbuilderlib.models.input.standard.invoice.InvoiceInputModel;
 import io.github.project.openubl.xmlbuilderlib.models.input.standard.note.creditNote.CreditNoteInputModel;
@@ -38,12 +36,6 @@ import io.github.project.openubl.xmlbuilderlib.models.output.sunat.SummaryDocume
 import io.github.project.openubl.xmlbuilderlib.models.output.sunat.VoidedDocumentOutputModel;
 import io.github.project.openubl.xmlbuilderlib.utils.InputToOutput;
 import io.github.project.openubl.xmlbuilderlib.utils.SystemClock;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
-import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -56,7 +48,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.math.BigDecimal;
 
 @Path("/documents")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -69,33 +60,8 @@ public class DocumentsResource {
     SystemClock systemClock;
 
     @POST
-    @Path("/invoice/test1")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Tag(name = "enrich")
-    public Book test(
-            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) Book input
-    ) {
-        return input;
-    }
-
-    @POST
-    @Path("/invoice/test2")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Tag(name = "enrich")
-    public BigDecimal test2(
-            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) Book input
-    ) {
-        return BigDecimal.ONE;
-    }
-
-    @POST
     @Path("/invoice/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Enriched object created.")
-    })
-    @Operation(summary = "Enriches the input")
-    @Tag(name = "enrich")
     public InvoiceOutputModel enrichInvoiceModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
@@ -105,11 +71,6 @@ public class DocumentsResource {
     @POST
     @Path("/credit-note/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Enriched object created.")
-    })
-    @Operation(summary = "Enriches the input")
-    @Tag(name = "enrich")
     public CreditNoteOutputModel enrichCreditNoteModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
@@ -119,11 +80,6 @@ public class DocumentsResource {
     @POST
     @Path("/debit-note/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Enriched object created.")
-    })
-    @Operation(summary = "Enriches the input")
-    @Tag(name = "enrich")
     public DebitNoteOutputModel enrichDebitNoteModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
@@ -133,11 +89,6 @@ public class DocumentsResource {
     @POST
     @Path("/voided-document/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Enriched object created.")
-    })
-    @Operation(summary = "Enriches the input")
-    @Tag(name = "enrich")
     public VoidedDocumentOutputModel enrichVoidedDocumentModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
@@ -147,11 +98,6 @@ public class DocumentsResource {
     @POST
     @Path("/summary-document/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Enriched object created.")
-    })
-    @Operation(summary = "Enriches the input")
-    @Tag(name = "enrich")
     public SummaryDocumentOutputModel enrichSummaryDocumentModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {
@@ -161,11 +107,6 @@ public class DocumentsResource {
     @POST
     @Path("/perception/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Enriched object created.")
-    })
-    @Operation(summary = "Enriches the input")
-    @Tag(name = "enrich")
     public PerceptionOutputModel enrichPerceptionOutputModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) PerceptionInputModel input
     ) {
@@ -175,11 +116,6 @@ public class DocumentsResource {
     @POST
     @Path("/retention/enrich")
     @Produces(MediaType.APPLICATION_JSON)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Enriched object created.")
-    })
-    @Operation(summary = "Enriches the input")
-    @Tag(name = "enrich")
     public RetentionOutputModel enrichRetentionOutputModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) RetentionInputModel input
     ) {
@@ -197,17 +133,12 @@ public class DocumentsResource {
     @POST
     @Path("/invoice/create")
     @Produces(MediaType.TEXT_XML)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
-    })
-    @Operation(summary = "Create a XML file from the input")
-    @Tag(name = "create")
     public Response createInvoiceXml(
-            @NotNull InvoiceInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
-        DocumentWrapper<InvoiceOutputModel> documentWrapper = DocumentFacade.createXML(input, xmlBuilderConfig, systemClock);
-        InvoiceOutputModel output = documentWrapper.getOutput();
-        return Response.ok(documentWrapper.getXml())
+        InvoiceOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        String xml = FreemarkerExecutor.createXML(output);
+        return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -215,17 +146,12 @@ public class DocumentsResource {
     @POST
     @Path("/credit-note/create")
     @Produces(MediaType.TEXT_XML)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
-    })
-    @Operation(summary = "Create a XML file from the input")
-    @Tag(name = "create")
     public Response createCreditNote(
-            @NotNull CreditNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
-        DocumentWrapper<CreditNoteOutputModel> documentWrapper = DocumentFacade.createXML(input, xmlBuilderConfig, systemClock);
-        CreditNoteOutputModel output = documentWrapper.getOutput();
-        return Response.ok(documentWrapper.getXml())
+        CreditNoteOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        String xml = FreemarkerExecutor.createXML(output);
+        return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -233,17 +159,12 @@ public class DocumentsResource {
     @POST
     @Path("/debit-note/create")
     @Produces(MediaType.TEXT_XML)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
-    })
-    @Operation(summary = "Create a XML file from the input")
-    @Tag(name = "create")
     public Response createDebitNote(
-            @NotNull DebitNoteInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
-        DocumentWrapper<DebitNoteOutputModel> documentWrapper = DocumentFacade.createXML(input, xmlBuilderConfig, systemClock);
-        DebitNoteOutputModel output = documentWrapper.getOutput();
-        return Response.ok(documentWrapper.getXml())
+        DebitNoteOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        String xml = FreemarkerExecutor.createXML(output);
+        return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -251,17 +172,12 @@ public class DocumentsResource {
     @POST
     @Path("/voided-document/create")
     @Produces(MediaType.TEXT_XML)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
-    })
-    @Operation(summary = "Create a XML file from the input")
-    @Tag(name = "create")
     public Response createVoidedDocument(
-            @NotNull VoidedDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
-        DocumentWrapper<VoidedDocumentOutputModel> documentWrapper = DocumentFacade.createXML(input, xmlBuilderConfig, systemClock);
-        VoidedDocumentOutputModel output = documentWrapper.getOutput();
-        return Response.ok(documentWrapper.getXml())
+        VoidedDocumentOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        String xml = FreemarkerExecutor.createXML(output);
+        return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -269,17 +185,12 @@ public class DocumentsResource {
     @POST
     @Path("/summary-document/create")
     @Produces(MediaType.TEXT_XML)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
-    })
-    @Operation(summary = "Create a XML file from the input")
-    @Tag(name = "create")
     public Response createSummaryDocument(
-            @NotNull SummaryDocumentInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {
-        DocumentWrapper<SummaryDocumentOutputModel> documentWrapper = DocumentFacade.createXML(input, xmlBuilderConfig, systemClock);
-        SummaryDocumentOutputModel output = documentWrapper.getOutput();
-        return Response.ok(documentWrapper.getXml())
+        SummaryDocumentOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        String xml = FreemarkerExecutor.createXML(output);
+        return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -287,17 +198,12 @@ public class DocumentsResource {
     @POST
     @Path("/perception/create")
     @Produces(MediaType.TEXT_XML)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
-    })
-    @Operation(summary = "Create a XML file from the input")
-    @Tag(name = "create")
     public Response createPerception(
-            @NotNull PerceptionInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) PerceptionInputModel input
     ) {
-        DocumentWrapper<PerceptionOutputModel> documentWrapper = DocumentFacade.createXML(input, xmlBuilderConfig, systemClock);
-        PerceptionOutputModel output = documentWrapper.getOutput();
-        return Response.ok(documentWrapper.getXml())
+        PerceptionOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        String xml = FreemarkerExecutor.createXML(output);
+        return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -305,17 +211,12 @@ public class DocumentsResource {
     @POST
     @Path("/retention/create")
     @Produces(MediaType.TEXT_XML)
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "XML created.", content = @Content(schema = @Schema(implementation = String.class)))
-    })
-    @Operation(summary = "Create a XML file from the input")
-    @Tag(name = "create")
     public Response createRetention(
-            @NotNull RetentionInputModel input
+            @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) RetentionInputModel input
     ) {
-        DocumentWrapper<RetentionOutputModel> documentWrapper = DocumentFacade.createXML(input, xmlBuilderConfig, systemClock);
-        RetentionOutputModel output = documentWrapper.getOutput();
-        return Response.ok(documentWrapper.getXml())
+        RetentionOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        String xml = FreemarkerExecutor.createXML(output);
+        return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
