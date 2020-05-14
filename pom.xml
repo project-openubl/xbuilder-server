@@ -1,12 +1,30 @@
 <?xml version="1.0"?>
+<!--
+
+    Copyright 2019 Project OpenUBL, Inc. and/or its affiliates
+    and other contributors as indicated by the @author tags.
+
+    Licensed under the Eclipse Public License - v 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+    https://www.eclipse.org/legal/epl-2.0/
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.openublpe</groupId>
+    <groupId>io.github.project-openubl</groupId>
     <artifactId>xml-builder</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>2.0.0-SNAPSHOT</version>
 
     <name>XML Builder :: Parent</name>
     <packaging>pom</packaging>
@@ -14,35 +32,27 @@
     <properties>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
 
-        <quarkus-plugin.version>1.3.1.Final</quarkus-plugin.version>
-        <quarkus.platform.version>1.3.1.Final</quarkus.platform.version>
+        <quarkus-plugin.version>1.4.2.Final</quarkus-plugin.version>
+        <quarkus.platform.version>1.4.2.Final</quarkus.platform.version>
 
         <jandex.version>1.0.7</jandex.version>
-        <camel.quarkus.version>0.2.0</camel.quarkus.version>
         <jacoco.version>0.8.5</jacoco.version>
 
         <freemarker.version>2.3.28</freemarker.version>
-        <bouncycastle.version>1.64</bouncycastle.version>
-        <keycloak.version>8.0.1</keycloak.version>
-
-        <xmlunit.version>2.6.4</xmlunit.version>
-        <sunat-web-services.version>1.3.4.Final</sunat-web-services.version>
 
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
 
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
 
         <license.dir>${basedir}</license.dir>
 
-        <!--UI-->
-        <xml-builder-ui.version>0.0.3</xml-builder-ui.version>
-        <xml-builder-ee-ui.version>0.0.3</xml-builder-ee-ui.version>
+        <xmlbuilder.lib.version>1.0.0.Beta4</xmlbuilder.lib.version>
     </properties>
 
     <dependencyManagement>
@@ -66,94 +76,63 @@
             </dependency>
 
             <dependency>
-                <groupId>org.openublpe</groupId>
+                <groupId>io.github.project-openubl</groupId>
                 <artifactId>quarkus-freemarker</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.openublpe</groupId>
+                <groupId>io.github.project-openubl</groupId>
                 <artifactId>quarkus-freemarker-deployment</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>quarkus-bouncycastle</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>quarkus-bouncycastle-deployment</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>quarkus-keycloak</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>quarkus-keycloak-deployment</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-input-test-data</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-templates</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-rules</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-api-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
+                <groupId>io.github.project-openubl</groupId>
                 <artifactId>xml-builder-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-api-signer</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-ui-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.openublpe</groupId>
-                <artifactId>xml-builder-ui-api-signer</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <modules>
-        <module>core</module>
         <module>extensions</module>
-        <module>templates</module>
-        <module>rules</module>
-        <module>api-core</module>
         <module>api</module>
-        <module>api-signer</module>
-        <module>ui</module>
-        <module>integration-tests</module>
     </modules>
+
+    <build>
+        <plugins>
+            <!-- License information -->
+            <!--mvn license:format-->
+            <plugin>
+                <groupId>com.mycila</groupId>
+                <artifactId>license-maven-plugin</artifactId>
+                <version>3.0</version>
+                <configuration>
+                    <header>copyright.txt</header>
+                    <properties>
+                        <owner>Project OpenUBL</owner>
+                        <email>projectopenubl+subscribe@googlegroups.com</email>
+                    </properties>
+                    <excludes>
+                        <exclude>**/README</exclude>
+                        <exclude>**/src/test/resources/**</exclude>
+                        <exclude>**/src/main/resources/**</exclude>
+                        <exclude>.github/**</exclude>
+                        <exclude>.mvn/**</exclude>
+                        <exclude>mvnw</exclude>
+                        <exclude>mvnw.cmd</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <profiles>
         <profile>

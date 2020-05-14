@@ -1,0 +1,1885 @@
+---
+openapi: 3.0.1
+info:
+  title: XML Builder API
+  contact:
+    name: XML Builder API Support
+    url: https://github.com/project-openubl/xml-builder/issues
+    email: projectopenubl+subscribe@googlegroups.com
+  license:
+    name: Eclipse Public License - v 2.0
+    url: https://www.eclipse.org/legal/epl-2.0/
+  version: "1.0.0.Final"
+tags:
+  - name: enrich
+    description: Enrichment related operations.
+  - name: create
+    description: Create XML related operations
+paths:
+  /api/documents/credit-note/create:
+    post:
+      tags:
+        - create
+      summary: Create a XML file from the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditNote'
+      responses:
+        "200":
+          description: XML created.
+          content:
+            text/xml:
+              schema:
+                type: string
+  /api/documents/credit-note/enrich:
+    post:
+      tags:
+        - enrich
+      summary: Enriches the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditNote'
+      responses:
+        "200":
+          description: Enriched object created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditNoteOutputModel'
+  /api/documents/debit-note/create:
+    post:
+      tags:
+        - create
+      summary: Create a XML file from the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebitNote'
+      responses:
+        "200":
+          description: XML created.
+          content:
+            text/xml:
+              schema:
+                type: string
+  /api/documents/debit-note/enrich:
+    post:
+      tags:
+        - enrich
+      summary: Enriches the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DebitNote'
+      responses:
+        "200":
+          description: Enriched object created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DebitNoteOutputModel'
+  /api/documents/invoice/create:
+    post:
+      tags:
+        - create
+      summary: Create a XML file from the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Invoice'
+      responses:
+        "200":
+          description: XML created.
+          content:
+            text/xml:
+              schema:
+                type: string
+  /api/documents/invoice/enrich:
+    post:
+      tags:
+        - enrich
+      summary: Enriches the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Invoice'
+      responses:
+        "200":
+          description: Enriched object created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceOutputModel'
+  /api/documents/summary-document/create:
+    post:
+      tags:
+        - create
+      summary: Create a XML file from the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SummaryDocument'
+      responses:
+        "200":
+          description: XML created.
+          content:
+            text/xml:
+              schema:
+                type: string
+  /api/documents/summary-document/enrich:
+    post:
+      tags:
+        - enrich
+      summary: Enriches the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SummaryDocument'
+      responses:
+        "200":
+          description: Enriched object created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SummaryDocumentOutputModel'
+  /api/documents/voided-document/create:
+    post:
+      tags:
+        - create
+      summary: Create a XML file from the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoidedDocument'
+      responses:
+        "200":
+          description: XML created.
+          content:
+            text/xml:
+              schema:
+                type: string
+  /api/documents/voided-document/enrich:
+    post:
+      tags:
+        - enrich
+      summary: Enriches the input
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoidedDocument'
+      responses:
+        "200":
+          description: Enriched object created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoidedDocumentOutputModel'
+components:
+  schemas:
+    CreditNote:
+      required:
+        - cliente
+        - detalle
+        - numero
+        - proveedor
+        - serie
+        - descripcionSustentoDeNota
+        - serieNumeroComprobanteAfectado
+      type: object
+      properties:
+        cliente:
+          allOf:
+            - $ref: '#/components/schemas/Cliente'
+            - nullable: false
+        detalle:
+          allOf:
+            - $ref: '#/components/schemas/ListDocumentLineInputModel'
+            - minItems: 1
+              items:
+                $ref: '#/components/schemas/DocumentLine'
+              nullable: false
+        fechaEmision:
+          format: int64
+          description: Fecha expresada en milliseconds
+          type: integer
+          example: "1585398109198"
+        firmante:
+          allOf:
+            - $ref: '#/components/schemas/Firmante'
+            - description: Si 'firmante' es NULL se usa datos del proveedor
+        numero:
+          format: int32
+          maximum: 99999999
+          minimum: 1
+          type: integer
+          example: "1"
+          nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/Proveedor'
+            - nullable: false
+        serie:
+          maxLength: 4
+          minLength: 4
+          pattern: \S
+          type: string
+          example: F001
+          nullable: false
+        descripcionSustentoDeNota:
+          description: Razón por la que se crea la nota
+          pattern: \S
+          type: string
+          example: Nota creada por error
+          nullable: false
+        serieNumeroComprobanteAfectado:
+          description: Serie y número del comprobante afectado por la nota
+          pattern: \S
+          type: string
+          example: F001-1
+          nullable: false
+        tipoNota:
+          description: Catalogo 09
+          enum:
+            - ANULACION_DE_LA_OPERACION
+            - "01"
+            - ANULACION_POR_ERROR_EN_EL_RUC
+            - "02"
+            - CORRECCION_POR_ERROR_EN_LA_DESCRIPCION
+            - "03"
+            - DESCUENTO_GLOBAL
+            - "04"
+            - DESCUENTO_POR_ITEM
+            - "05"
+            - DEVOLUCION_TOTAL
+            - "06"
+            - DEVOLUCION_POR_ITEM
+            - "07"
+            - BONIFICACION
+            - "08"
+            - DISMINUCION_EN_EL_VALOR
+            - "09"
+            - OTROS_CONCEPTOS
+            - "10"
+          type: string
+          example: ANULACION_DE_LA_OPERACION
+    Cliente:
+      required:
+        - nombre
+        - numeroDocumentoIdentidad
+        - tipoDocumentoIdentidad
+      type: object
+      properties:
+        contacto:
+          $ref: '#/components/schemas/Contacto'
+        direccion:
+          $ref: '#/components/schemas/Direccion'
+        nombre:
+          description: Nombre o Razón Social del cliente
+          pattern: \S
+          type: string
+          example: Carlos Feria
+          nullable: false
+        numeroDocumentoIdentidad:
+          pattern: \S
+          type: string
+          example: "12345678912"
+          nullable: false
+        tipoDocumentoIdentidad:
+          description: Catalogo 06
+          pattern: \S
+          enum:
+            - DOC_TRIB_NO_DOM_SIN_RUC
+            - "0"
+            - DNI
+            - "1"
+            - EXTRANJERIA
+            - "4"
+            - RUC
+            - "6"
+            - PASAPORTE
+            - "7"
+            - DEC_DIPLOMATICA
+            - A
+          type: string
+          example: RUC
+          nullable: false
+    DocumentLine:
+      required:
+        - cantidad
+        - descripcion
+      type: object
+      properties:
+        cantidad:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 1
+              pattern: ^\d{1,100}([.]\d{1,3})?$
+              example: "1"
+              nullable: false
+        descripcion:
+          description: Descripción del producto/servicio
+          pattern: \S
+          type: string
+          example: Item1
+          nullable: false
+        icb:
+          description: True si el producto está afecto al impuesto ICB_PE
+          type: boolean
+          example: "false"
+        precioConIgv:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - description: Precio del producto/servicio incluyendo impuestos
+              minimum: 1
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              example: "10"
+        precioUnitario:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - description: Precio del producto/servicio sin incluir impuestos
+              minimum: 1
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              example: "10"
+        tipoIgv:
+          description: Catalogo 07
+          enum:
+            - GRAVADO_OPERACION_ONEROSA
+            - "10"
+            - GRAVADO_RETIRO_POR_PREMIO
+            - "11"
+            - GRAVADO_RETIRO_POR_DONACION
+            - "12"
+            - GRAVADO_RETIRO
+            - "13"
+            - GRAVADO_RETIRO_POR_PUBLICIDAD
+            - "14"
+            - GRAVADO_BONIFICACIONES
+            - "15"
+            - GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES
+            - "16"
+            - GRAVADO_IVAP
+            - "17"
+            - EXONERADO_OPERACION_ONEROSA
+            - "20"
+            - EXONERADO_TRANSFERENCIA_GRATUITA
+            - "21"
+            - INAFECTO_OPERACION_ONEROSA
+            - "30"
+            - INAFECTO_RETIRO_POR_BONIFICACION
+            - "31"
+            - INAFECTO_RETIRO
+            - "32"
+            - INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS
+            - "33"
+            - INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO
+            - "34"
+            - INAFECTO_RETIRO_POR_PREMIO
+            - "35"
+            - INAFECTO_RETIRO_POR_PUBLICIDAD
+            - "36"
+            - EXPORTACION
+            - "40"
+          type: string
+          example: GRAVADO_OPERACION_ONEROSA
+        unidadMedida:
+          type: string
+          example: NIU
+    ListDocumentLineInputModel:
+      type: array
+      items:
+        $ref: '#/components/schemas/DocumentLine'
+    Firmante:
+      description: Entidad que firma electrónicamente el archivo XML.
+      required:
+        - razonSocial
+        - ruc
+      type: object
+      properties:
+        razonSocial:
+          pattern: \S
+          type: string
+          example: Project OpenUBL S.A.C.
+          nullable: false
+        ruc:
+          pattern: \S
+          type: string
+          example: "12312312312"
+          nullable: false
+    Proveedor:
+      required:
+        - razonSocial
+        - ruc
+      type: object
+      properties:
+        contacto:
+          $ref: '#/components/schemas/Contacto'
+        direccion:
+          $ref: '#/components/schemas/Direccion'
+        nombreComercial:
+          type: string
+          example: mi nombre comercial
+        razonSocial:
+          pattern: \S
+          type: string
+          example: mi razon social
+          nullable: false
+        ruc:
+          maxLength: 11
+          minLength: 11
+          pattern: \S
+          type: string
+          example: "12345678912"
+          nullable: false
+    Contacto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: email@gmail.com
+        telefono:
+          type: string
+          example: +051 123 456 789
+    Direccion:
+      type: object
+      properties:
+        codigoLocal:
+          type: string
+          example: "123456"
+        codigoPais:
+          type: string
+          example: PE
+        departamento:
+          type: string
+          example: Ayacucho
+        direccion:
+          type: string
+          example: Jr. Las rocas 123
+        distrito:
+          type: string
+          example: Mariscal Caceres
+        provincia:
+          type: string
+          example: Huamanga
+        ubigeo:
+          maxLength: 6
+          minLength: 6
+          type: string
+          example: "050101"
+        urbanizacion:
+          type: string
+          example: Las Flores
+    BigDecimal:
+      type: number
+    DebitNote:
+      required:
+        - cliente
+        - detalle
+        - numero
+        - proveedor
+        - serie
+        - descripcionSustentoDeNota
+        - serieNumeroComprobanteAfectado
+      type: object
+      properties:
+        cliente:
+          allOf:
+            - $ref: '#/components/schemas/Cliente'
+            - nullable: false
+        detalle:
+          allOf:
+            - $ref: '#/components/schemas/ListDocumentLineInputModel'
+            - minItems: 1
+              items:
+                $ref: '#/components/schemas/DocumentLine'
+              nullable: false
+        fechaEmision:
+          format: int64
+          description: Fecha expresada en milliseconds
+          type: integer
+          example: "1585398109198"
+        firmante:
+          allOf:
+            - $ref: '#/components/schemas/Firmante'
+            - description: Si 'firmante' es NULL se usa datos del proveedor
+        numero:
+          format: int32
+          maximum: 99999999
+          minimum: 1
+          type: integer
+          example: "1"
+          nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/Proveedor'
+            - nullable: false
+        serie:
+          maxLength: 4
+          minLength: 4
+          pattern: \S
+          type: string
+          example: F001
+          nullable: false
+        descripcionSustentoDeNota:
+          description: Razón por la que se crea la nota
+          pattern: \S
+          type: string
+          example: Nota creada por error
+          nullable: false
+        serieNumeroComprobanteAfectado:
+          description: Serie y número del comprobante afectado por la nota
+          pattern: \S
+          type: string
+          example: F001-1
+          nullable: false
+        tipoNota:
+          description: Catalogo 10
+          enum:
+            - INTERES_POR_MORA
+            - "01"
+            - AUMENTO_EN_EL_VALOR
+            - "02"
+            - PENALIDAD_OTROS_CONCEPTOS
+            - "03"
+          type: string
+          example: INTERES_POR_MORA
+    Invoice:
+      required:
+        - cliente
+        - detalle
+        - numero
+        - proveedor
+        - serie
+      type: object
+      properties:
+        cliente:
+          allOf:
+            - $ref: '#/components/schemas/Cliente'
+            - nullable: false
+        detalle:
+          allOf:
+            - $ref: '#/components/schemas/ListDocumentLineInputModel'
+            - minItems: 1
+              items:
+                $ref: '#/components/schemas/DocumentLine'
+              nullable: false
+        fechaEmision:
+          format: int64
+          description: Fecha expresada en milliseconds
+          type: integer
+          example: "1585398109198"
+        firmante:
+          allOf:
+            - $ref: '#/components/schemas/Firmante'
+            - description: Si 'firmante' es NULL se usa datos del proveedor
+        numero:
+          format: int32
+          maximum: 99999999
+          minimum: 1
+          type: integer
+          example: "1"
+          nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/Proveedor'
+            - nullable: false
+        serie:
+          maxLength: 4
+          minLength: 4
+          pattern: \S
+          type: string
+          example: F001
+          nullable: false
+    SummaryDocument:
+      required:
+        - detalle
+        - fechaEmisionDeComprobantesAsociados
+        - numero
+        - proveedor
+      type: object
+      properties:
+        detalle:
+          allOf:
+            - $ref: '#/components/schemas/ListSummaryDocumentLineInputModel'
+            - minItems: 1
+              items:
+                $ref: '#/components/schemas/SummaryDocumentLine'
+              nullable: false
+        fechaEmision:
+          format: int64
+          description: Fecha en la que se emite el comprobante de Resumen Diario.
+            Fecha expresada en milliseconds
+          type: integer
+          example: "1585398109198"
+        fechaEmisionDeComprobantesAsociados:
+          format: int64
+          description: Fecha en la que todos los comprobantes, dentro del resumen,
+            fueron emitidos. Fecha expresada en milliseconds
+          type: integer
+          example: "1585398109198"
+          nullable: false
+        firmante:
+          $ref: '#/components/schemas/Firmante'
+        numero:
+          format: int32
+          description: Número de Resumen Diario emitido en el día
+          minimum: 1
+          type: integer
+          example: "1"
+          nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/Proveedor'
+            - nullable: false
+    SummaryDocumentLine:
+      required:
+        - comprobante
+        - tipoOperacion
+      type: object
+      properties:
+        comprobante:
+          allOf:
+            - $ref: '#/components/schemas/SummaryDocumentLineComprobante'
+            - description: Comprobante a incluir dentro del Resumen Diario
+              nullable: false
+        comprobanteAfectado:
+          allOf:
+            - $ref: '#/components/schemas/SummaryDocumentComprobanteAfectadoInputModel'
+            - description: Si 'comprobante' es una Nota de Credito/Débito acá se incluye
+                en comprobante asociado a la Nota Crédito/Débito
+        tipoOperacion:
+          description: Catalogo 19
+          pattern: \S
+          enum:
+            - ADICIONAR
+            - "1"
+            - MODIFICAR
+            - "2"
+            - ANULADO
+            - "3"
+          type: string
+          example: AGREGAR
+          nullable: false
+    ListSummaryDocumentLineInputModel:
+      type: array
+      items:
+        $ref: '#/components/schemas/SummaryDocumentLine'
+    SummaryDocumentLineComprobante:
+      required:
+        - cliente
+        - impuestos
+        - tipo
+        - valorVenta
+      type: object
+      properties:
+        cliente:
+          allOf:
+            - $ref: '#/components/schemas/Cliente'
+            - nullable: false
+        impuestos:
+          allOf:
+            - $ref: '#/components/schemas/SummaryDocumentLineComprobanteImpuestos'
+            - nullable: false
+        serieNumero:
+          pattern: \S
+          type: string
+          example: BC001-1
+          nullable: false
+        tipo:
+          description: Catalog 01
+          enum:
+            - FACTURA
+            - "01"
+            - BOLETA
+            - "03"
+            - NOTA_CREDITO
+            - "07"
+            - NOTA_DEBITO
+            - "08"
+          type: string
+          example: NOTA_CREDITO
+          nullable: false
+        valorVenta:
+          allOf:
+            - $ref: '#/components/schemas/SummaryDocumentLineComprobanteValorVenta'
+            - nullable: false
+    SummaryDocumentComprobanteAfectadoInputModel:
+      required:
+        - serieNumero
+        - tipo
+      type: object
+      properties:
+        serieNumero:
+          description: Serie y número del coprobante afectado por Nota de Crédito/Débito
+          pattern: \S
+          type: string
+          example: B001-1
+          nullable: false
+        tipo:
+          description: Catalog 01
+          enum:
+            - FACTURA
+            - "01"
+            - BOLETA
+            - "03"
+            - NOTA_CREDITO
+            - "07"
+            - NOTA_DEBITO
+            - "08"
+          type: string
+          example: BOLETA
+          nullable: false
+    SummaryDocumentLineComprobanteImpuestos:
+      required:
+        - igv
+      type: object
+      properties:
+        icb:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - description: Importe total de ICB_PE
+              minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              example: "0"
+        igv:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - description: Importe total de IGV
+              minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              example: "18"
+              nullable: false
+    SummaryDocumentLineComprobanteValorVenta:
+      required:
+        - importeTotal
+      type: object
+      properties:
+        exonerado:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              example: "0"
+        gratuito:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              example: "0"
+        gravado:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              example: "0"
+        importeTotal:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - description: Importe total de la venta. Incluye impuestos, cargos, descuentos
+              minimum: 0
+              example: "100"
+              nullable: false
+        inafecto:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              example: "0"
+        otrosCargos:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - description: Total 'otros cargos' aplicados al comprobante
+              minimum: 0
+              example: "0"
+    VoidedDocument:
+      required:
+        - comprobante
+        - descripcionSustento
+        - numero
+        - proveedor
+      type: object
+      properties:
+        comprobante:
+          allOf:
+            - $ref: '#/components/schemas/VoidedDocumentLine'
+            - nullable: false
+        descripcionSustento:
+          description: Razón por la que se da de baja el comprobante
+          pattern: \S
+          type: string
+          example: mi razón
+          nullable: false
+        fechaEmision:
+          format: int64
+          description: Fecha en la que se emite el comprobante de Baja. Fecha expresada
+            en milliseconds
+          type: integer
+          example: "1585398109198"
+        firmante:
+          $ref: '#/components/schemas/Firmante'
+        numero:
+          format: int32
+          description: Número de Comprobante de Baja emitida durante el día
+          maximum: 99999999
+          minimum: 1
+          type: integer
+          example: "1"
+          nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/Proveedor'
+            - nullable: false
+    VoidedDocumentLine:
+      required:
+        - fechaEmision
+      type: object
+      properties:
+        fechaEmision:
+          format: int64
+          description: Fecha en la que se emitió el comprobante a dar de baja. Fecha
+            expresada en milliseconds
+          type: integer
+          example: "1585398109198"
+          nullable: false
+        serieNumero:
+          description: Serie y número del comprobante a dar de baja
+          pattern: \S
+          type: string
+          example: F001-1
+          nullable: false
+        tipoComprobante:
+          description: Catalogo 01
+          pattern: \S
+          type: string
+          example: FACTURA
+          nullable: false
+    ClienteOutputModel:
+      required:
+        - tipoDocumentoIdentidad
+      type: object
+      properties:
+        contacto:
+          $ref: '#/components/schemas/ContactoOutputModel'
+        direccion:
+          $ref: '#/components/schemas/DireccionOutputModel'
+        nombre:
+          pattern: \S
+          type: string
+          nullable: false
+        numeroDocumentoIdentidad:
+          pattern: \S
+          type: string
+          nullable: false
+        tipoDocumentoIdentidad:
+          allOf:
+            - $ref: '#/components/schemas/Catalog6'
+            - enum:
+                - DEC_DIPLOMATICA
+                - DNI
+                - DOC_TRIB_NO_DOM_SIN_RUC
+                - EXTRANJERIA
+                - PASAPORTE
+                - RUC
+              nullable: false
+    DocumentLineOutputModel:
+      required:
+        - cantidad
+        - impuestos
+        - precioConIgv
+        - precioDeReferencia
+        - precioUnitario
+        - valorVentaSinImpuestos
+      type: object
+      properties:
+        cantidad:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 1
+              pattern: ^\d{1,100}([.]\d{1,3})?$
+              nullable: false
+        descripcion:
+          pattern: \S
+          type: string
+          nullable: false
+        impuestos:
+          allOf:
+            - $ref: '#/components/schemas/DocumentLineImpuestosOutputModel'
+            - nullable: false
+        precioConIgv:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+        precioDeReferencia:
+          allOf:
+            - $ref: '#/components/schemas/DocumentLinePrecioReferenciaOutputModel'
+            - nullable: false
+        precioUnitario:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+        unidadMedida:
+          pattern: \S
+          type: string
+          nullable: false
+        valorVentaSinImpuestos:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+    ListDocumentLineOutputModel:
+      type: array
+      items:
+        $ref: '#/components/schemas/DocumentLineOutputModel'
+    FirmanteOutputModel:
+      type: object
+      properties:
+        razonSocial:
+          pattern: \S
+          type: string
+          nullable: false
+        ruc:
+          pattern: \S
+          type: string
+          nullable: false
+    DocumentImpuestosOutputModel:
+      required:
+        - importeTotal
+      type: object
+      properties:
+        exoneradas:
+          $ref: '#/components/schemas/ImpuestoTotalOutputModel'
+        gratuitas:
+          $ref: '#/components/schemas/ImpuestoTotalOutputModel'
+        gravadas:
+          $ref: '#/components/schemas/ImpuestoTotalOutputModel'
+        icb:
+          $ref: '#/components/schemas/ImpuestoTotalICBOutputModel'
+        importeTotal:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+        inafectas:
+          $ref: '#/components/schemas/ImpuestoTotalOutputModel'
+        ivap:
+          $ref: '#/components/schemas/ImpuestoTotalOutputModel'
+    ProveedorOutputModel:
+      type: object
+      properties:
+        contacto:
+          $ref: '#/components/schemas/ContactoOutputModel'
+        direccion:
+          $ref: '#/components/schemas/DireccionOutputModel'
+        nombreComercial:
+          type: string
+        razonSocial:
+          pattern: \S
+          type: string
+          nullable: false
+        ruc:
+          maxLength: 11
+          minLength: 11
+          pattern: \S
+          type: string
+          nullable: false
+    DocumentMonetaryTotalOutputModel:
+      required:
+        - importeTotal
+        - valorVentaConImpuestos
+        - valorVentaSinImpuestos
+      type: object
+      properties:
+        importeTotal:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+        valorVentaConImpuestos:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+        valorVentaSinImpuestos:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+    Catalog1:
+      enum:
+        - BOLETA
+        - COMPROBANTE_PAGO_SEAE
+        - DOCUMENTOS_AFP
+        - DOCUMENTOS_FINANCIEROS
+        - FACTURA
+        - GUIA_REMISION_REMITENTE
+        - GUIA_REMISION_REMITENTE_COMPLEMENTARIA
+        - GUIA_REMISION_TRANSPORTISTA
+        - GUIA_REMISION_TRANSPORTISTA_COMPLEMENTARIA
+        - NOTA_CREDITO
+        - NOTA_DEBITO
+        - PERCEPCION
+        - PERCEPCION_VENTA_INTERNA
+        - RETENCION
+        - TICKET_MAQUINA_REGISTRADORA
+      type: string
+    Catalog9:
+      enum:
+        - ANULACION_DE_LA_OPERACION
+        - ANULACION_POR_ERROR_EN_EL_RUC
+        - BONIFICACION
+        - CORRECCION_POR_ERROR_EN_LA_DESCRIPCION
+        - DESCUENTO_GLOBAL
+        - DESCUENTO_POR_ITEM
+        - DEVOLUCION_POR_ITEM
+        - DEVOLUCION_TOTAL
+        - DISMINUCION_EN_EL_VALOR
+        - OTROS_CONCEPTOS
+      type: string
+    ContactoOutputModel:
+      type: object
+      properties:
+        email:
+          type: string
+        telefono:
+          type: string
+    DireccionOutputModel:
+      type: object
+      properties:
+        codigoLocal:
+          type: string
+        codigoPais:
+          type: string
+        departamento:
+          type: string
+        direccion:
+          type: string
+        distrito:
+          type: string
+        provincia:
+          type: string
+        ubigeo:
+          maxLength: 6
+          minLength: 6
+          type: string
+        urbanizacion:
+          type: string
+    ImpuestoTotalOutputModel:
+      required:
+        - categoria
+        - importe
+        - baseImponible
+      type: object
+      properties:
+        categoria:
+          allOf:
+            - $ref: '#/components/schemas/Catalog5'
+            - enum:
+                - EXONERADO
+                - EXPORTACION
+                - GRATUITO
+                - ICBPER
+                - IGV
+                - IMPUESTO_ARROZ_PILADO
+                - INAFECTO
+                - ISC
+                - OTROS
+              nullable: false
+        importe:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+        baseImponible:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              nullable: false
+    ImpuestoTotalICBOutputModel:
+      required:
+        - categoria
+        - importe
+      type: object
+      properties:
+        categoria:
+          allOf:
+            - $ref: '#/components/schemas/Catalog5'
+            - enum:
+                - EXONERADO
+                - EXPORTACION
+                - GRATUITO
+                - ICBPER
+                - IGV
+                - IMPUESTO_ARROZ_PILADO
+                - INAFECTO
+                - ISC
+                - OTROS
+              nullable: false
+        importe:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+    Catalog5:
+      enum:
+        - EXONERADO
+        - EXPORTACION
+        - GRATUITO
+        - ICBPER
+        - IGV
+        - IMPUESTO_ARROZ_PILADO
+        - INAFECTO
+        - ISC
+        - OTROS
+      type: string
+    DocumentLineImpuestosOutputModel:
+      required:
+        - igv
+        - importeTotal
+      type: object
+      properties:
+        icb:
+          $ref: '#/components/schemas/ImpuestoDetalladoICBOutputModel'
+        igv:
+          allOf:
+            - $ref: '#/components/schemas/ImpuestoDetalladoIGVOutputModel'
+            - nullable: false
+        importeTotal:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+    DocumentLinePrecioReferenciaOutputModel:
+      required:
+        - precio
+        - tipoPrecio
+      type: object
+      properties:
+        precio:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+        tipoPrecio:
+          allOf:
+            - $ref: '#/components/schemas/Catalog16'
+            - enum:
+                - PRECIO_UNITARIO_INCLUYE_IGV
+                - VALOR_FERENCIAL_UNITARIO_EN_OPERACIONES_NO_ONEROSAS
+              nullable: false
+    Catalog16:
+      enum:
+        - PRECIO_UNITARIO_INCLUYE_IGV
+        - VALOR_FERENCIAL_UNITARIO_EN_OPERACIONES_NO_ONEROSAS
+      type: string
+    ImpuestoDetalladoICBOutputModel:
+      required:
+        - categoria
+        - importe
+        - icbValor
+      type: object
+      properties:
+        categoria:
+          allOf:
+            - $ref: '#/components/schemas/Catalog5'
+            - enum:
+                - EXONERADO
+                - EXPORTACION
+                - GRATUITO
+                - ICBPER
+                - IGV
+                - IMPUESTO_ARROZ_PILADO
+                - INAFECTO
+                - ISC
+                - OTROS
+              nullable: false
+        importe:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+        icbValor:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+    ImpuestoDetalladoIGVOutputModel:
+      required:
+        - categoria
+        - importe
+        - baseImponible
+        - porcentaje
+        - tipo
+      type: object
+      properties:
+        categoria:
+          allOf:
+            - $ref: '#/components/schemas/Catalog5'
+            - enum:
+                - EXONERADO
+                - EXPORTACION
+                - GRATUITO
+                - ICBPER
+                - IGV
+                - IMPUESTO_ARROZ_PILADO
+                - INAFECTO
+                - ISC
+                - OTROS
+              nullable: false
+        importe:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+        baseImponible:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              nullable: false
+        porcentaje:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - maximum: 100
+              minimum: 0
+              nullable: false
+        tipo:
+          allOf:
+            - $ref: '#/components/schemas/Catalog7'
+            - enum:
+                - EXONERADO_OPERACION_ONEROSA
+                - EXONERADO_TRANSFERENCIA_GRATUITA
+                - EXPORTACION
+                - GRAVADO_BONIFICACIONES
+                - GRAVADO_IVAP
+                - GRAVADO_OPERACION_ONEROSA
+                - GRAVADO_RETIRO
+                - GRAVADO_RETIRO_POR_DONACION
+                - GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES
+                - GRAVADO_RETIRO_POR_PREMIO
+                - GRAVADO_RETIRO_POR_PUBLICIDAD
+                - INAFECTO_OPERACION_ONEROSA
+                - INAFECTO_RETIRO
+                - INAFECTO_RETIRO_POR_BONIFICACION
+                - INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO
+                - INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS
+                - INAFECTO_RETIRO_POR_PREMIO
+                - INAFECTO_RETIRO_POR_PUBLICIDAD
+              nullable: false
+    Catalog7:
+      enum:
+        - EXONERADO_OPERACION_ONEROSA
+        - EXONERADO_TRANSFERENCIA_GRATUITA
+        - EXPORTACION
+        - GRAVADO_BONIFICACIONES
+        - GRAVADO_IVAP
+        - GRAVADO_OPERACION_ONEROSA
+        - GRAVADO_RETIRO
+        - GRAVADO_RETIRO_POR_DONACION
+        - GRAVADO_RETIRO_POR_ENTREGA_A_TRABAJADORES
+        - GRAVADO_RETIRO_POR_PREMIO
+        - GRAVADO_RETIRO_POR_PUBLICIDAD
+        - INAFECTO_OPERACION_ONEROSA
+        - INAFECTO_RETIRO
+        - INAFECTO_RETIRO_POR_BONIFICACION
+        - INAFECTO_RETIRO_POR_CONVENIO_COLECTIVO
+        - INAFECTO_RETIRO_POR_MUESTRAS_MEDICAS
+        - INAFECTO_RETIRO_POR_PREMIO
+        - INAFECTO_RETIRO_POR_PUBLICIDAD
+      type: string
+    Catalog6:
+      enum:
+        - DEC_DIPLOMATICA
+        - DNI
+        - DOC_TRIB_NO_DOM_SIN_RUC
+        - EXTRANJERIA
+        - PASAPORTE
+        - RUC
+      type: string
+    CreditNoteOutputModel:
+      required:
+        - cliente
+        - firmante
+        - impuestos
+        - proveedor
+        - totales
+        - tipoDocumentoComprobanteAfectado
+        - tipoNota
+      type: object
+      properties:
+        cliente:
+          allOf:
+            - $ref: '#/components/schemas/ClienteOutputModel'
+            - nullable: false
+        detalle:
+          allOf:
+            - $ref: '#/components/schemas/ListDocumentLineOutputModel'
+            - minItems: 1
+              items:
+                $ref: '#/components/schemas/DocumentLineOutputModel'
+        fechaEmision:
+          pattern: \S
+          type: string
+          nullable: false
+        firmante:
+          allOf:
+            - $ref: '#/components/schemas/FirmanteOutputModel'
+            - nullable: false
+        horaEmision:
+          pattern: \S
+          type: string
+          nullable: false
+        impuestos:
+          allOf:
+            - $ref: '#/components/schemas/DocumentImpuestosOutputModel'
+            - nullable: false
+        moneda:
+          maxLength: 3
+          minLength: 3
+          pattern: \S
+          type: string
+          nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/ProveedorOutputModel'
+            - nullable: false
+        serieNumero:
+          pattern: \S
+          type: string
+          nullable: false
+        totales:
+          allOf:
+            - $ref: '#/components/schemas/DocumentMonetaryTotalOutputModel'
+            - nullable: false
+        descripcionSustentoDeNota:
+          pattern: \S
+          type: string
+          nullable: false
+        serieNumeroComprobanteAfectado:
+          pattern: \S
+          type: string
+          nullable: false
+        tipoDocumentoComprobanteAfectado:
+          allOf:
+            - $ref: '#/components/schemas/Catalog1'
+            - enum:
+                - BOLETA
+                - COMPROBANTE_PAGO_SEAE
+                - DOCUMENTOS_AFP
+                - DOCUMENTOS_FINANCIEROS
+                - FACTURA
+                - GUIA_REMISION_REMITENTE
+                - GUIA_REMISION_REMITENTE_COMPLEMENTARIA
+                - GUIA_REMISION_TRANSPORTISTA
+                - GUIA_REMISION_TRANSPORTISTA_COMPLEMENTARIA
+                - NOTA_CREDITO
+                - NOTA_DEBITO
+                - PERCEPCION
+                - PERCEPCION_VENTA_INTERNA
+                - RETENCION
+                - TICKET_MAQUINA_REGISTRADORA
+              nullable: false
+        tipoNota:
+          allOf:
+            - $ref: '#/components/schemas/Catalog9'
+            - enum:
+                - ANULACION_DE_LA_OPERACION
+                - ANULACION_POR_ERROR_EN_EL_RUC
+                - BONIFICACION
+                - CORRECCION_POR_ERROR_EN_LA_DESCRIPCION
+                - DESCUENTO_GLOBAL
+                - DESCUENTO_POR_ITEM
+                - DEVOLUCION_POR_ITEM
+                - DEVOLUCION_TOTAL
+                - DISMINUCION_EN_EL_VALOR
+                - OTROS_CONCEPTOS
+              nullable: false
+    Catalog10:
+      enum:
+        - AUMENTO_EN_EL_VALOR
+        - INTERES_POR_MORA
+        - PENALIDAD_OTROS_CONCEPTOS
+      type: string
+    DebitNoteOutputModel:
+      required:
+        - cliente
+        - firmante
+        - impuestos
+        - proveedor
+        - totales
+        - tipoDocumentoComprobanteAfectado
+        - tipoNota
+      type: object
+      properties:
+        cliente:
+          allOf:
+            - $ref: '#/components/schemas/ClienteOutputModel'
+            - nullable: false
+        detalle:
+          allOf:
+            - $ref: '#/components/schemas/ListDocumentLineOutputModel'
+            - minItems: 1
+              items:
+                $ref: '#/components/schemas/DocumentLineOutputModel'
+        fechaEmision:
+          pattern: \S
+          type: string
+          nullable: false
+        firmante:
+          allOf:
+            - $ref: '#/components/schemas/FirmanteOutputModel'
+            - nullable: false
+        horaEmision:
+          pattern: \S
+          type: string
+          nullable: false
+        impuestos:
+          allOf:
+            - $ref: '#/components/schemas/DocumentImpuestosOutputModel'
+            - nullable: false
+        moneda:
+          maxLength: 3
+          minLength: 3
+          pattern: \S
+          type: string
+          nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/ProveedorOutputModel'
+            - nullable: false
+        serieNumero:
+          pattern: \S
+          type: string
+          nullable: false
+        totales:
+          allOf:
+            - $ref: '#/components/schemas/DocumentMonetaryTotalOutputModel'
+            - nullable: false
+        descripcionSustentoDeNota:
+          pattern: \S
+          type: string
+          nullable: false
+        serieNumeroComprobanteAfectado:
+          pattern: \S
+          type: string
+          nullable: false
+        tipoDocumentoComprobanteAfectado:
+          allOf:
+            - $ref: '#/components/schemas/Catalog1'
+            - enum:
+                - BOLETA
+                - COMPROBANTE_PAGO_SEAE
+                - DOCUMENTOS_AFP
+                - DOCUMENTOS_FINANCIEROS
+                - FACTURA
+                - GUIA_REMISION_REMITENTE
+                - GUIA_REMISION_REMITENTE_COMPLEMENTARIA
+                - GUIA_REMISION_TRANSPORTISTA
+                - GUIA_REMISION_TRANSPORTISTA_COMPLEMENTARIA
+                - NOTA_CREDITO
+                - NOTA_DEBITO
+                - PERCEPCION
+                - PERCEPCION_VENTA_INTERNA
+                - RETENCION
+                - TICKET_MAQUINA_REGISTRADORA
+              nullable: false
+        tipoNota:
+          allOf:
+            - $ref: '#/components/schemas/Catalog10'
+            - enum:
+                - AUMENTO_EN_EL_VALOR
+                - INTERES_POR_MORA
+                - PENALIDAD_OTROS_CONCEPTOS
+              nullable: false
+    InvoiceOutputModel:
+      required:
+        - cliente
+        - firmante
+        - impuestos
+        - proveedor
+        - totales
+        - tipoInvoice
+      type: object
+      properties:
+        cliente:
+          allOf:
+            - $ref: '#/components/schemas/ClienteOutputModel'
+            - nullable: false
+        detalle:
+          allOf:
+            - $ref: '#/components/schemas/ListDocumentLineOutputModel'
+            - minItems: 1
+              items:
+                $ref: '#/components/schemas/DocumentLineOutputModel'
+        fechaEmision:
+          pattern: \S
+          type: string
+          nullable: false
+        firmante:
+          allOf:
+            - $ref: '#/components/schemas/FirmanteOutputModel'
+            - nullable: false
+        horaEmision:
+          pattern: \S
+          type: string
+          nullable: false
+        impuestos:
+          allOf:
+            - $ref: '#/components/schemas/DocumentImpuestosOutputModel'
+            - nullable: false
+        moneda:
+          maxLength: 3
+          minLength: 3
+          pattern: \S
+          type: string
+          nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/ProveedorOutputModel'
+            - nullable: false
+        serieNumero:
+          pattern: \S
+          type: string
+          nullable: false
+        totales:
+          allOf:
+            - $ref: '#/components/schemas/DocumentMonetaryTotalOutputModel'
+            - nullable: false
+        tipoInvoice:
+          allOf:
+            - $ref: '#/components/schemas/Catalog1'
+            - enum:
+                - BOLETA
+                - COMPROBANTE_PAGO_SEAE
+                - DOCUMENTOS_AFP
+                - DOCUMENTOS_FINANCIEROS
+                - FACTURA
+                - GUIA_REMISION_REMITENTE
+                - GUIA_REMISION_REMITENTE_COMPLEMENTARIA
+                - GUIA_REMISION_TRANSPORTISTA
+                - GUIA_REMISION_TRANSPORTISTA_COMPLEMENTARIA
+                - NOTA_CREDITO
+                - NOTA_DEBITO
+                - PERCEPCION
+                - PERCEPCION_VENTA_INTERNA
+                - RETENCION
+                - TICKET_MAQUINA_REGISTRADORA
+              nullable: false
+    SummaryDocumentLineOutputModel:
+      required:
+        - comprobante
+        - tipoOperacion
+      type: object
+      properties:
+        comprobante:
+          allOf:
+            - $ref: '#/components/schemas/SummaryDocumentComprobanteOutputModel'
+            - nullable: false
+        comprobanteAfectado:
+          $ref: '#/components/schemas/SummaryDocumentComprobanteAfectadoOutputModel'
+        tipoOperacion:
+          allOf:
+            - $ref: '#/components/schemas/Catalog19'
+            - enum:
+                - ADICIONAR
+                - ANULADO
+                - MODIFICAR
+              nullable: false
+    ListSummaryDocumentLineOutputModel:
+      type: array
+      items:
+        $ref: '#/components/schemas/SummaryDocumentLineOutputModel'
+    SummaryDocumentComprobanteOutputModel:
+      required:
+        - cliente
+        - impuestos
+        - tipo
+        - valorVenta
+      type: object
+      properties:
+        cliente:
+          allOf:
+            - $ref: '#/components/schemas/ClienteOutputModel'
+            - nullable: false
+        impuestos:
+          allOf:
+            - $ref: '#/components/schemas/SummaryDocumentImpuestosOutputModel'
+            - nullable: false
+        serieNumero:
+          pattern: \S
+          type: string
+          nullable: false
+        tipo:
+          allOf:
+            - $ref: '#/components/schemas/Catalog1'
+            - enum:
+                - BOLETA
+                - COMPROBANTE_PAGO_SEAE
+                - DOCUMENTOS_AFP
+                - DOCUMENTOS_FINANCIEROS
+                - FACTURA
+                - GUIA_REMISION_REMITENTE
+                - GUIA_REMISION_REMITENTE_COMPLEMENTARIA
+                - GUIA_REMISION_TRANSPORTISTA
+                - GUIA_REMISION_TRANSPORTISTA_COMPLEMENTARIA
+                - NOTA_CREDITO
+                - NOTA_DEBITO
+                - PERCEPCION
+                - PERCEPCION_VENTA_INTERNA
+                - RETENCION
+                - TICKET_MAQUINA_REGISTRADORA
+              nullable: false
+        valorVenta:
+          allOf:
+            - $ref: '#/components/schemas/SummaryDocumentComprobanteValorVentaOutputModel'
+            - nullable: false
+    SummaryDocumentComprobanteAfectadoOutputModel:
+      required:
+        - tipo
+      type: object
+      properties:
+        serieNumero:
+          pattern: \S
+          type: string
+          nullable: false
+        tipo:
+          allOf:
+            - $ref: '#/components/schemas/Catalog1'
+            - enum:
+                - BOLETA
+                - COMPROBANTE_PAGO_SEAE
+                - DOCUMENTOS_AFP
+                - DOCUMENTOS_FINANCIEROS
+                - FACTURA
+                - GUIA_REMISION_REMITENTE
+                - GUIA_REMISION_REMITENTE_COMPLEMENTARIA
+                - GUIA_REMISION_TRANSPORTISTA
+                - GUIA_REMISION_TRANSPORTISTA_COMPLEMENTARIA
+                - NOTA_CREDITO
+                - NOTA_DEBITO
+                - PERCEPCION
+                - PERCEPCION_VENTA_INTERNA
+                - RETENCION
+                - TICKET_MAQUINA_REGISTRADORA
+              nullable: false
+    Catalog19:
+      enum:
+        - ADICIONAR
+        - ANULADO
+        - MODIFICAR
+      type: string
+    SummaryDocumentImpuestosOutputModel:
+      required:
+        - igv
+      type: object
+      properties:
+        icb:
+          $ref: '#/components/schemas/ImpuestoTotalResumenDiarioOutputModel'
+        igv:
+          allOf:
+            - $ref: '#/components/schemas/ImpuestoTotalResumenDiarioOutputModel'
+            - nullable: false
+    SummaryDocumentComprobanteValorVentaOutputModel:
+      required:
+        - importeTotal
+      type: object
+      properties:
+        exonerado:
+          $ref: '#/components/schemas/TotalValorVentaOutputModel'
+        gratuito:
+          $ref: '#/components/schemas/TotalValorVentaOutputModel'
+        gravado:
+          $ref: '#/components/schemas/TotalValorVentaOutputModel'
+        importeTotal:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              nullable: false
+        inafecto:
+          $ref: '#/components/schemas/TotalValorVentaOutputModel'
+        otrosCargos:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+    TotalValorVentaOutputModel:
+      required:
+        - importe
+        - tipo
+      type: object
+      properties:
+        importe:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              nullable: false
+        tipo:
+          allOf:
+            - $ref: '#/components/schemas/Catalog7_1'
+            - enum:
+                - EXONERADO
+                - EXPORTACION
+                - GRATUITA
+                - GRAVADO
+                - INAFECTO
+              nullable: false
+    Catalog7_1:
+      enum:
+        - EXONERADO
+        - EXPORTACION
+        - GRATUITA
+        - GRAVADO
+        - INAFECTO
+      type: string
+    ImpuestoTotalResumenDiarioOutputModel:
+      required:
+        - categoria
+        - importe
+      type: object
+      properties:
+        categoria:
+          allOf:
+            - $ref: '#/components/schemas/Catalog5'
+            - enum:
+                - EXONERADO
+                - EXPORTACION
+                - GRATUITO
+                - ICBPER
+                - IGV
+                - IMPUESTO_ARROZ_PILADO
+                - INAFECTO
+                - ISC
+                - OTROS
+              nullable: false
+        importe:
+          allOf:
+            - $ref: '#/components/schemas/BigDecimal'
+            - minimum: 0
+              pattern: ^\d{1,100}([.]\d{1,2})?$
+              nullable: false
+    SummaryDocumentOutputModel:
+      required:
+        - detalle
+        - firmante
+        - proveedor
+      type: object
+      properties:
+        detalle:
+          allOf:
+            - $ref: '#/components/schemas/ListSummaryDocumentLineOutputModel'
+            - minItems: 1
+              items:
+                $ref: '#/components/schemas/SummaryDocumentLineOutputModel'
+              nullable: false
+        fechaEmision:
+          pattern: \S
+          type: string
+          nullable: false
+        fechaEmisionDeComprobantesAsociados:
+          pattern: \S
+          type: string
+          nullable: false
+        firmante:
+          allOf:
+            - $ref: '#/components/schemas/FirmanteOutputModel'
+            - nullable: false
+        moneda:
+          pattern: \S
+          type: string
+          nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/ProveedorOutputModel'
+            - nullable: false
+        serieNumero:
+          pattern: \S
+          type: string
+          nullable: false
+    VoidedDocumentLineOutputModel:
+      required:
+        - tipoComprobante
+      type: object
+      properties:
+        fechaEmision:
+          pattern: \S
+          type: string
+          nullable: false
+        numero:
+          pattern: \S
+          type: string
+          nullable: false
+        serie:
+          pattern: \S
+          type: string
+          nullable: false
+        tipoComprobante:
+          allOf:
+            - $ref: '#/components/schemas/Catalog1'
+            - enum:
+                - BOLETA
+                - COMPROBANTE_PAGO_SEAE
+                - DOCUMENTOS_AFP
+                - DOCUMENTOS_FINANCIEROS
+                - FACTURA
+                - GUIA_REMISION_REMITENTE
+                - GUIA_REMISION_REMITENTE_COMPLEMENTARIA
+                - GUIA_REMISION_TRANSPORTISTA
+                - GUIA_REMISION_TRANSPORTISTA_COMPLEMENTARIA
+                - NOTA_CREDITO
+                - NOTA_DEBITO
+                - PERCEPCION
+                - PERCEPCION_VENTA_INTERNA
+                - RETENCION
+                - TICKET_MAQUINA_REGISTRADORA
+              nullable: false
+    VoidedDocumentOutputModel:
+      required:
+        - comprobante
+        - firmante
+        - proveedor
+      type: object
+      properties:
+        comprobante:
+          allOf:
+            - $ref: '#/components/schemas/VoidedDocumentLineOutputModel'
+            - nullable: false
+        descripcionSustento:
+          pattern: \S
+          type: string
+          nullable: false
+        fechaEmision:
+          pattern: \S
+          type: string
+          nullable: false
+        firmante:
+          allOf:
+            - $ref: '#/components/schemas/FirmanteOutputModel'
+            - nullable: false
+        proveedor:
+          allOf:
+            - $ref: '#/components/schemas/ProveedorOutputModel'
+            - nullable: false
+        serieNumero:
+          pattern: \S
+          type: string
+          nullable: false
