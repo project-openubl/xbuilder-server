@@ -22,7 +22,7 @@ jobs:
       - name: Compute cache restore key
         # Always recompute on a push so that the maven repo doesnt grow indefinitely with old versions
         run: |
-           if ${{ github.event_name == 'pull_request' }}; then echo "::set-env name=COMPUTED_RESTORE_KEY::q2maven-"; fi
+          if ${{ github.event_name == 'pull_request' }}; then echo "::set-env name=COMPUTED_RESTORE_KEY::q2maven-"; fi
       - name: Cache Maven Repository
         id: cache-maven
         uses: n1hility/cache@v2
@@ -292,7 +292,7 @@ jobs:
           asset_content_type: application/tar+gzip
 
       - name: Clear for Linux Release
-        run: rm -rf ./target
+        run: rm -rf ./api/target
       - name: Download Linux Native Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -307,12 +307,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner
+          asset_path: ./api/target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner
           asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-linux
           asset_content_type: application/octet-stream
 
       - name: Clear for Windows Release
-        run: rm -rf ./target
+        run: rm -rf ./api/target
       - name: Download Windows Native Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -327,13 +327,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner.exe
+          asset_path: ./api/target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner.exe
           asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-win64.exe
           asset_label: win64
           asset_content_type: application/octet-stream
 
       - name: Clear for MacOS Release
-        run: rm -rf ./target
+        run: rm -rf ./api/target
       - name: Download MacOS Native Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -348,7 +348,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner
+          asset_path: ./api/target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner
           asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-macos
           asset_label: macos
           asset_content_type: application/octet-stream
