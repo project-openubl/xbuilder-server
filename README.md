@@ -1,4 +1,5 @@
-[![project chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://projectopenubl.zulipchat.com) ![XML Builder CI](https://github.com/project-openubl/xml-builder/workflows/XML%20Builder%20CI/badge.svg)
+[![project chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://projectopenubl.zulipchat.com)
+![XML Builder CI](https://github.com/project-openubl/xml-builder/workflows/XML%20Builder%20CI/badge.svg)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fproject-openubl%2Fxml-builder.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fproject-openubl%2Fxml-builder?ref=badge_shield)
 
 # XML-Builder
@@ -7,7 +8,6 @@ Crea archivos XML basados en UBL 2.1 - Facturación electrónica Perú. Facturas
 
 # Documentación y ayuda
 - [Documentación](https://project-openubl.github.io/xml-builder-docs/)
-- [GitBook](https://project-openubl.gitbook.io/xml-builder/)
 - [Videos](https://www.youtube.com/channel/UChq3xxjyDgjcU346rp0bbtA/)
 
 
@@ -18,10 +18,13 @@ Puedes hacer preguntas y recibir noticias a travéz de nuestro mailing list.
 - Uniéndote al grupo [https://groups.google.com/d/forum/projectopenubl](https://groups.google.com/d/forum/projectopenubl)
 
 
-# Distribuciones
-El proyecto XML Builder distribuye dos versiones:
-- ***XML Builder***.- Crea XMLs sin firma digital. Útil para empresas que ya cuentan con algun software para firmar sus XMLs.
-- ***XML Builder Signer***.- Incluye todas las funcionalidades de ***XML Builder*** pero además permite firmar electrónicamente los archivos XMLs; permite administrar los certificados digitales de varias empresas en un solo lugar.
+# Inicio rápido
+Si quieres jugar con XML Builder entonces puedes hacerlo rápidamente usando Docker:
+```shell script
+docker run -p 8080:8080 projectopenubl/xml-builder
+```
+
+Eso es todo, podrás ver el servidor funcionando en [http://localhost:8080](http://localhost:8080)
 
 # APIs
 XML Builder está hecho para ser consumido a travéz de peticiones HTTP.
@@ -40,7 +43,6 @@ O simplemente puedes utilizar **XML Builder** a travéz de:
 
 Para saber saber más acerca de los endpoints visita:
 - XML Builder [API Docs](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder)
-- XML Builder Signer: [API Docs](https://app.swaggerhub.com/apis-docs/project-openubl/xml-builder-signer)
 
 # Contribuye
 Aún hay muchas cosas por mejorar, tu ayuda es siempre bienvenida; no necesitas ser programador para contribuir ya que existen muchas formas de hacerlo:
