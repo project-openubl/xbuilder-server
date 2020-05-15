@@ -79,13 +79,6 @@ class DocumentsResourceTest {
         ObjectMapper mapper = new ObjectMapper();
         String body = mapper.writeValueAsString(input);
 
-        Response response = given()
-                .body(body)
-                .header("Content-Type", "application/json")
-                .when()
-                .post(ApiApplication.API_BASE + "/documents/invoice/enrich")
-                .thenReturn();
-        String s = response.getBody().asString();
         given()
                 .body(body)
                 .header("Content-Type", "application/json")
