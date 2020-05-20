@@ -16,7 +16,7 @@
  */
 package io.github.project.openubl.xmlbuilder.config;
 
-import io.github.project.openubl.xmlbuilderlib.utils.SystemClock;
+import io.github.project.openubl.xmlbuilderlib.clock.SystemClock;
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;
 

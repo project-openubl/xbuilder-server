@@ -17,7 +17,7 @@
 package io.github.project.openubl.xmlbuilder.resources;
 
 import io.github.project.openubl.xmlbuilder.resources.utils.ResourceUtils;
-import io.github.project.openubl.xmlbuilderlib.config.XMLBuilderConfig;
+import io.github.project.openubl.xmlbuilderlib.config.Config;
 import io.github.project.openubl.xmlbuilderlib.freemarker.FreemarkerExecutor;
 import io.github.project.openubl.xmlbuilderlib.models.input.constraints.CompleteValidation;
 import io.github.project.openubl.xmlbuilderlib.models.input.standard.invoice.InvoiceInputModel;
@@ -35,7 +35,7 @@ import io.github.project.openubl.xmlbuilderlib.models.output.sunat.RetentionOutp
 import io.github.project.openubl.xmlbuilderlib.models.output.sunat.SummaryDocumentOutputModel;
 import io.github.project.openubl.xmlbuilderlib.models.output.sunat.VoidedDocumentOutputModel;
 import io.github.project.openubl.xmlbuilderlib.utils.InputToOutput;
-import io.github.project.openubl.xmlbuilderlib.utils.SystemClock;
+import io.github.project.openubl.xmlbuilderlib.clock.SystemClock;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -54,7 +54,7 @@ import javax.ws.rs.core.Response;
 public class DocumentsResource {
 
     @Inject
-    XMLBuilderConfig xmlBuilderConfig;
+    Config config;
 
     @Inject
     SystemClock systemClock;
@@ -65,7 +65,7 @@ public class DocumentsResource {
     public InvoiceOutputModel enrichInvoiceModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
-        return InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        return InputToOutput.toOutput(input, config, systemClock);
     }
 
     @POST
@@ -74,7 +74,7 @@ public class DocumentsResource {
     public CreditNoteOutputModel enrichCreditNoteModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
-        return InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        return InputToOutput.toOutput(input, config, systemClock);
     }
 
     @POST
@@ -83,7 +83,7 @@ public class DocumentsResource {
     public DebitNoteOutputModel enrichDebitNoteModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
-        return InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        return InputToOutput.toOutput(input, config, systemClock);
     }
 
     @POST
@@ -92,7 +92,7 @@ public class DocumentsResource {
     public VoidedDocumentOutputModel enrichVoidedDocumentModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
-        return InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        return InputToOutput.toOutput(input, config, systemClock);
     }
 
     @POST
@@ -101,7 +101,7 @@ public class DocumentsResource {
     public SummaryDocumentOutputModel enrichSummaryDocumentModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {
-        return InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        return InputToOutput.toOutput(input, config, systemClock);
     }
 
     @POST
@@ -110,7 +110,7 @@ public class DocumentsResource {
     public PerceptionOutputModel enrichPerceptionOutputModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) PerceptionInputModel input
     ) {
-        return InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        return InputToOutput.toOutput(input, config, systemClock);
     }
 
     @POST
@@ -119,7 +119,7 @@ public class DocumentsResource {
     public RetentionOutputModel enrichRetentionOutputModel(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) RetentionInputModel input
     ) {
-        return InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        return InputToOutput.toOutput(input, config, systemClock);
     }
 
 //    @POST
@@ -136,10 +136,12 @@ public class DocumentsResource {
     public Response createInvoiceXml(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
     ) {
-        InvoiceOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        InvoiceOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
+
         return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
+                .header("", null)
                 .build();
     }
 
@@ -149,7 +151,7 @@ public class DocumentsResource {
     public Response createCreditNote(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
     ) {
-        CreditNoteOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        CreditNoteOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
         return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
@@ -162,7 +164,7 @@ public class DocumentsResource {
     public Response createDebitNote(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
     ) {
-        DebitNoteOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        DebitNoteOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
         return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
@@ -175,7 +177,7 @@ public class DocumentsResource {
     public Response createVoidedDocument(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
     ) {
-        VoidedDocumentOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        VoidedDocumentOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
         return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
@@ -188,7 +190,7 @@ public class DocumentsResource {
     public Response createSummaryDocument(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
     ) {
-        SummaryDocumentOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        SummaryDocumentOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
         return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
@@ -201,7 +203,7 @@ public class DocumentsResource {
     public Response createPerception(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) PerceptionInputModel input
     ) {
-        PerceptionOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        PerceptionOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
         return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
@@ -214,7 +216,7 @@ public class DocumentsResource {
     public Response createRetention(
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) RetentionInputModel input
     ) {
-        RetentionOutputModel output = InputToOutput.toOutput(input, xmlBuilderConfig, systemClock);
+        RetentionOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
         return Response.ok(xml)
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
