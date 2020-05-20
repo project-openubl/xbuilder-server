@@ -30,6 +30,7 @@ import io.github.project.openubl.xmlbuilderlib.models.input.standard.note.credit
 import io.github.project.openubl.xmlbuilderlib.models.input.standard.note.debitNote.DebitNoteInputModel;
 import io.github.project.openubl.xmlbuilderlib.models.input.sunat.*;
 import io.quarkus.test.junit.QuarkusTest;
+import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

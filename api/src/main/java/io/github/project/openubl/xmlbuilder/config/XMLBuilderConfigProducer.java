@@ -16,7 +16,7 @@
  */
 package io.github.project.openubl.xmlbuilder.config;
 
-import io.github.project.openubl.xmlbuilderlib.config.XMLBuilderConfig;
+import io.github.project.openubl.xmlbuilderlib.config.Config;
 import io.github.project.openubl.xmlbuilderlib.models.catalogs.Catalog;
 import io.github.project.openubl.xmlbuilderlib.models.catalogs.Catalog10;
 import io.github.project.openubl.xmlbuilderlib.models.catalogs.Catalog7;
@@ -27,7 +27,7 @@ import javax.enterprise.context.ApplicationScoped;
 import java.math.BigDecimal;
 
 @ApplicationScoped
-public class XMLBuilderConfigProducer implements XMLBuilderConfig {
+public class XMLBuilderConfigProducer implements Config {
 
     @ConfigProperty(name = "openubl.igv")
     BigDecimal igv;
