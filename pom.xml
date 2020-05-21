@@ -53,6 +53,7 @@
 
         <license.dir>${basedir}</license.dir>
 
+        <keycloak.version>9.0.3</keycloak.version>
         <xmlbuilder.lib.version>1.0.0.Final</xmlbuilder.lib.version>
     </properties>
 

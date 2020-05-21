@@ -18,6 +18,8 @@ package io.github.project.openubl.xmlbuilder.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.project.openubl.xmlbuilder.utils.CertificateDetails;
+import io.github.project.openubl.xmlbuilder.utils.CertificateDetailsFactory;
 import io.github.project.openubl.xmlbuilderlib.models.catalogs.Catalog1;
 import io.github.project.openubl.xmlbuilderlib.models.catalogs.Catalog19;
 import io.github.project.openubl.xmlbuilderlib.models.catalogs.Catalog22;
@@ -30,19 +32,19 @@ import io.github.project.openubl.xmlbuilderlib.models.input.standard.note.credit
 import io.github.project.openubl.xmlbuilderlib.models.input.standard.note.debitNote.DebitNoteInputModel;
 import io.github.project.openubl.xmlbuilderlib.models.input.sunat.*;
 import io.quarkus.test.junit.QuarkusTest;
-import io.restassured.response.ExtractableResponse;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.keycloak.common.util.PemUtils;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
+import java.security.PrivateKey;
+import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.jupiter.api.Assertions.*;
 
 @QuarkusTest
 class DocumentsResourceTest {
@@ -364,6 +366,66 @@ class DocumentsResourceTest {
     @Disabled("Disabled until retention is implemented")
     @Test
     void testRetention() {
+    }
+
+
+    // Other tests
+
+    @Test
+    void testSignInvoice() throws Exception {
+        final String KEYSTORE = "LLAMA-PE-CERTIFICADO-DEMO-10467793549.pfx";
+        final String KEYSTORE_PASSWORD = "password";
+
+        InputStream ksInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(KEYSTORE);
+        CertificateDetails CERTIFICATE = CertificateDetailsFactory.create(ksInputStream, KEYSTORE_PASSWORD);
+
+        PrivateKey privateKey = CERTIFICATE.getPrivateKey();
+        X509Certificate certificate = CERTIFICATE.getX509Certificate();
+
+        String privateRsaKeyPem = PemUtils.encodeKey(privateKey);
+        String certificatePem = PemUtils.encodeCertificate(certificate);
+
+        // input
+        InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
+                .withSerie("F001")
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Project OpenUBL S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .build())
+                )
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(input);
+
+        given()
+                .body(body)
+                .header("Content-Type", "application/json")
+                .header(DocumentsResource.X_HEADER_PRIVATEKEY, privateRsaKeyPem)
+                .header(DocumentsResource.X_HEADER_CERTIFICATEKEY, certificatePem)
+                .when()
+                .post(ApiApplication.API_BASE + "/documents/invoice/create")
+                .then()
+                .statusCode(200);
     }
 
 }
