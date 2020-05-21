@@ -39,8 +39,6 @@
         <jandex.version>1.0.7</jandex.version>
         <jacoco.version>0.8.5</jacoco.version>
 
-        <freemarker.version>2.3.28</freemarker.version>
-
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -53,6 +51,8 @@
 
         <license.dir>${basedir}</license.dir>
 
+        <freemarker.version>2.3.28</freemarker.version>
+        <bouncycastle.version>1.64</bouncycastle.version>
         <keycloak.version>9.0.3</keycloak.version>
         <xmlbuilder.lib.version>1.0.0.Final</xmlbuilder.lib.version>
     </properties>
@@ -125,6 +125,16 @@
             <dependency>
                 <groupId>io.github.project-openubl</groupId>
                 <artifactId>quarkus-freemarker-deployment</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.project-openubl</groupId>
+                <artifactId>quarkus-bouncycastle</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.project-openubl</groupId>
+                <artifactId>quarkus-bouncycastle-deployment</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

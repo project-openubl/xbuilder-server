@@ -61,6 +61,14 @@
             <groupId>io.github.project-openubl</groupId>
             <artifactId>quarkus-freemarker-deployment</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.github.project-openubl</groupId>
+            <artifactId>quarkus-bouncycastle</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.project-openubl</groupId>
+            <artifactId>quarkus-bouncycastle-deployment</artifactId>
+        </dependency>
 
         <!--Quarkus-->
         <dependency>
