@@ -53,7 +53,7 @@
 
         <license.dir>${basedir}</license.dir>
 
-        <xmlbuilder.lib.version>1.0.0.Final</xmlbuilder.lib.version>
+        <xmlbuilder.lib.version>1.0.1.Final</xmlbuilder.lib.version>
     </properties>
 
     <url>https://project-openubl.github.io/</url>
