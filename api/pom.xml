@@ -47,6 +47,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.keycloak</groupId>
+            <artifactId>keycloak-core</artifactId>
+            <version>${keycloak.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>io.github.project-openubl</groupId>
@@ -55,6 +60,14 @@
         <dependency>
             <groupId>io.github.project-openubl</groupId>
             <artifactId>quarkus-freemarker-deployment</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.project-openubl</groupId>
+            <artifactId>quarkus-bouncycastle</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.github.project-openubl</groupId>
+            <artifactId>quarkus-bouncycastle-deployment</artifactId>
         </dependency>
 
         <!--Quarkus-->
