@@ -14,11 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.project.openubl.xmlbuilder.resources;
+package io.github.project.openubl.xmlbuilder.utils;
 
 import io.quarkus.test.junit.NativeImageTest;
 
 @NativeImageTest
-class NativeDocumentsServerKeystoreResourceIT extends DocumentsServerKeystoreResourceTest {
-    // Execute the same tests but in native mode.
+class NativeCertificateDetailsFactoryIT extends CertificateDetailsFactoryTest {
 }
