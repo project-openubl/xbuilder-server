@@ -16,7 +16,9 @@
  */
 package io.github.project.openubl.xmlbuilder.resources;
 
+import io.github.project.openubl.xmlbuilder.config.ServerKeystore;
 import io.github.project.openubl.xmlbuilder.resources.utils.ResourceUtils;
+import io.github.project.openubl.xmlbuilder.utils.CertificateDetails;
 import io.github.project.openubl.xmlbuilderlib.clock.SystemClock;
 import io.github.project.openubl.xmlbuilderlib.config.Config;
 import io.github.project.openubl.xmlbuilderlib.freemarker.FreemarkerExecutor;
@@ -50,11 +52,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.*;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 @Path("/documents")
@@ -71,6 +71,9 @@ public class DocumentsResource {
 
     @Inject
     SystemClock systemClock;
+
+    @Inject
+    ServerKeystore serverKeystore;
 
     @POST
     @Path("/invoice/enrich")
@@ -142,6 +145,15 @@ public class DocumentsResource {
 //        return kieExecutor.getDespatchAdviceOutputModel(input);
 //    }
 
+    private Document signXML(String xml) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableEntryException, IOException {
+        CertificateDetails serverKeystoreCertificate = serverKeystore.getCertificate();
+
+        PrivateKey privateKey = serverKeystoreCertificate.getPrivateKey();
+        X509Certificate certificate = serverKeystoreCertificate.getX509Certificate();
+
+        return signXML(xml, privateKey, certificate);
+    }
+
     private Document signXML(String xml, String privateRsaKeyPem, String certificatePem) {
         PrivateKey privateKey = PemUtils.decodePrivateKey(privateRsaKeyPem);
         X509Certificate certificate = PemUtils.decodeCertificate(certificatePem);
@@ -149,11 +161,33 @@ public class DocumentsResource {
         PublicKey publicKey = KeyUtils.extractPublicKey(privateKey);
         KeyPair keyPair = new KeyPair(publicKey, privateKey);
 
+        return signXML(xml, keyPair.getPrivate(), certificate);
+    }
+
+    private Document signXML(String xml, PrivateKey privateKey, X509Certificate certificate) {
+        PublicKey publicKey = KeyUtils.extractPublicKey(privateKey);
+        KeyPair keyPair = new KeyPair(publicKey, privateKey);
         try {
             return XMLSigner.signXML(xml, SIGNATURE_ID, certificate, keyPair.getPrivate());
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private Response.ResponseBuilder buildResponseBuilder(String xml, String privateRsaKeyPem, String certificatePem) throws Exception {
+        Response.ResponseBuilder responseBuilder = Response.ok();
+        if (privateRsaKeyPem != null && certificatePem != null) {
+            Document document = signXML(xml, privateRsaKeyPem, certificatePem);
+            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
+            responseBuilder.entity(bytesFromDocument);
+        } else if (serverKeystore.hasKeys()) {
+            Document document = signXML(xml);
+            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
+            responseBuilder.entity(bytesFromDocument);
+        } else {
+            responseBuilder.entity(xml);
+        }
+        return responseBuilder;
     }
 
     @POST
@@ -167,15 +201,8 @@ public class DocumentsResource {
         InvoiceOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
-        if (privateRsaKeyPem != null && certificatePem != null) {
-            Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
-            return Response.ok(bytesFromDocument)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                    .build();
-        }
-
-        return Response.ok(xml)
+        Response.ResponseBuilder responseBuilder = buildResponseBuilder(xml, privateRsaKeyPem, certificatePem);
+        return responseBuilder
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -191,15 +218,8 @@ public class DocumentsResource {
         CreditNoteOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
-        if (privateRsaKeyPem != null && certificatePem != null) {
-            Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
-            return Response.ok(bytesFromDocument)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                    .build();
-        }
-
-        return Response.ok(xml)
+        Response.ResponseBuilder responseBuilder = buildResponseBuilder(xml, privateRsaKeyPem, certificatePem);
+        return responseBuilder
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -215,15 +235,8 @@ public class DocumentsResource {
         DebitNoteOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
-        if (privateRsaKeyPem != null && certificatePem != null) {
-            Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
-            return Response.ok(bytesFromDocument)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                    .build();
-        }
-
-        return Response.ok(xml)
+        Response.ResponseBuilder responseBuilder = buildResponseBuilder(xml, privateRsaKeyPem, certificatePem);
+        return responseBuilder
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -239,15 +252,8 @@ public class DocumentsResource {
         VoidedDocumentOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
-        if (privateRsaKeyPem != null && certificatePem != null) {
-            Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
-            return Response.ok(bytesFromDocument)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                    .build();
-        }
-
-        return Response.ok(xml)
+        Response.ResponseBuilder responseBuilder = buildResponseBuilder(xml, privateRsaKeyPem, certificatePem);
+        return responseBuilder
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -263,15 +269,8 @@ public class DocumentsResource {
         SummaryDocumentOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
-        if (privateRsaKeyPem != null && certificatePem != null) {
-            Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
-            return Response.ok(bytesFromDocument)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                    .build();
-        }
-
-        return Response.ok(xml)
+        Response.ResponseBuilder responseBuilder = buildResponseBuilder(xml, privateRsaKeyPem, certificatePem);
+        return responseBuilder
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -287,15 +286,8 @@ public class DocumentsResource {
         PerceptionOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
-        if (privateRsaKeyPem != null && certificatePem != null) {
-            Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
-            return Response.ok(bytesFromDocument)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                    .build();
-        }
-
-        return Response.ok(xml)
+        Response.ResponseBuilder responseBuilder = buildResponseBuilder(xml, privateRsaKeyPem, certificatePem);
+        return responseBuilder
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
@@ -311,15 +303,8 @@ public class DocumentsResource {
         RetentionOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
-        if (privateRsaKeyPem != null && certificatePem != null) {
-            Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
-            return Response.ok(bytesFromDocument)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
-                    .build();
-        }
-
-        return Response.ok(xml)
+        Response.ResponseBuilder responseBuilder = buildResponseBuilder(xml, privateRsaKeyPem, certificatePem);
+        return responseBuilder
                 .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                 .build();
     }
