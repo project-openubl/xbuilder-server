@@ -39,6 +39,37 @@ class BouncycastleProcessor {
                         false,
                         "org.bouncycastle.jcajce.provider.asymmetric.rsa.KeyFactorySpi",
                         "org.bouncycastle.jcajce.provider.asymmetric.x509.CertificateFactory"));
+
+        reflectiveClass.produce(
+                new ReflectiveClassBuildItem(
+                        false,
+                        false,
+                        "org.jcp.xml.dsig.internal.dom.DOMXMLSignatureFactory",
+                        "org.jcp.xml.dsig.internal.dom.DOMEnvelopedTransform",
+                        "org.jcp.xml.dsig.internal.dom.DOMCanonicalXMLC14NMethod",
+                        "org.jcp.xml.dsig.internal.dom.DOMKeyInfoFactory",
+                        "sun.security.rsa.RSASignature$SHA1withRSA"));
+
+        // Workaround until https://github.com/quarkusio/quarkus/issues/1762 is solved
+        reflectiveClass.produce(
+                new ReflectiveClassBuildItem(
+                        false,
+                        false,
+                        "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl",
+                        "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl"));
+
+        reflectiveClass.produce(
+                new ReflectiveClassBuildItem(
+                        false,
+                        false,
+                        "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformEnvelopedSignature",
+                        "com.sun.org.apache.xml.internal.security.transforms.implementations.TransformC14N"));
+
+        reflectiveClass.produce(
+                new ReflectiveClassBuildItem(
+                        false,
+                        false,
+                        "com.sun.org.apache.xerces.internal.dom.DOMXSImplementationSourceImpl"));
     }
 
     @BuildStep

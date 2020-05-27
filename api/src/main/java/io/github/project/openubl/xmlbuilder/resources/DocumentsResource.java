@@ -37,6 +37,7 @@ import io.github.project.openubl.xmlbuilderlib.models.output.sunat.SummaryDocume
 import io.github.project.openubl.xmlbuilderlib.models.output.sunat.VoidedDocumentOutputModel;
 import io.github.project.openubl.xmlbuilderlib.utils.InputToOutput;
 import io.github.project.openubl.xmlbuilderlib.xml.XMLSigner;
+import io.github.project.openubl.xmlbuilderlib.xml.XmlSignatureHelper;
 import org.keycloak.common.util.KeyUtils;
 import org.keycloak.common.util.PemUtils;
 import org.w3c.dom.Document;
@@ -162,14 +163,14 @@ public class DocumentsResource {
             @HeaderParam(X_HEADER_PRIVATEKEY) String privateRsaKeyPem,
             @HeaderParam(X_HEADER_CERTIFICATEKEY) String certificatePem,
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) InvoiceInputModel input
-    ) {
+    ) throws Exception {
         InvoiceOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
         if (privateRsaKeyPem != null && certificatePem != null) {
             Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-
-            return Response.ok(document)
+            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
+            return Response.ok(bytesFromDocument)
                     .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                     .build();
         }
@@ -186,13 +187,14 @@ public class DocumentsResource {
             @HeaderParam(X_HEADER_PRIVATEKEY) String privateRsaKeyPem,
             @HeaderParam(X_HEADER_CERTIFICATEKEY) String certificatePem,
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) CreditNoteInputModel input
-    ) {
+    ) throws Exception {
         CreditNoteOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
         if (privateRsaKeyPem != null && certificatePem != null) {
             Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            return Response.ok(document)
+            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
+            return Response.ok(bytesFromDocument)
                     .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                     .build();
         }
@@ -209,13 +211,14 @@ public class DocumentsResource {
             @HeaderParam(X_HEADER_PRIVATEKEY) String privateRsaKeyPem,
             @HeaderParam(X_HEADER_CERTIFICATEKEY) String certificatePem,
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) DebitNoteInputModel input
-    ) {
+    ) throws Exception {
         DebitNoteOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
         if (privateRsaKeyPem != null && certificatePem != null) {
             Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            return Response.ok(document)
+            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
+            return Response.ok(bytesFromDocument)
                     .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                     .build();
         }
@@ -232,13 +235,14 @@ public class DocumentsResource {
             @HeaderParam(X_HEADER_PRIVATEKEY) String privateRsaKeyPem,
             @HeaderParam(X_HEADER_CERTIFICATEKEY) String certificatePem,
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) VoidedDocumentInputModel input
-    ) {
+    ) throws Exception {
         VoidedDocumentOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
         if (privateRsaKeyPem != null && certificatePem != null) {
             Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            return Response.ok(document)
+            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
+            return Response.ok(bytesFromDocument)
                     .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                     .build();
         }
@@ -255,13 +259,14 @@ public class DocumentsResource {
             @HeaderParam(X_HEADER_PRIVATEKEY) String privateRsaKeyPem,
             @HeaderParam(X_HEADER_CERTIFICATEKEY) String certificatePem,
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) SummaryDocumentInputModel input
-    ) {
+    ) throws Exception {
         SummaryDocumentOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
         if (privateRsaKeyPem != null && certificatePem != null) {
             Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            return Response.ok(document)
+            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
+            return Response.ok(bytesFromDocument)
                     .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                     .build();
         }
@@ -278,13 +283,14 @@ public class DocumentsResource {
             @HeaderParam(X_HEADER_PRIVATEKEY) String privateRsaKeyPem,
             @HeaderParam(X_HEADER_CERTIFICATEKEY) String certificatePem,
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) PerceptionInputModel input
-    ) {
+    ) throws Exception {
         PerceptionOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
         if (privateRsaKeyPem != null && certificatePem != null) {
             Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            return Response.ok(document)
+            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
+            return Response.ok(bytesFromDocument)
                     .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                     .build();
         }
@@ -301,13 +307,14 @@ public class DocumentsResource {
             @HeaderParam(X_HEADER_PRIVATEKEY) String privateRsaKeyPem,
             @HeaderParam(X_HEADER_CERTIFICATEKEY) String certificatePem,
             @NotNull @Valid @ConvertGroup(to = CompleteValidation.class) RetentionInputModel input
-    ) {
+    ) throws Exception {
         RetentionOutputModel output = InputToOutput.toOutput(input, config, systemClock);
         String xml = FreemarkerExecutor.createXML(output);
 
         if (privateRsaKeyPem != null && certificatePem != null) {
             Document document = signXML(xml, privateRsaKeyPem, certificatePem);
-            return Response.ok(document)
+            byte[] bytesFromDocument = XmlSignatureHelper.getBytesFromDocument(document);
+            return Response.ok(bytesFromDocument)
                     .header(HttpHeaders.CONTENT_DISPOSITION, ResourceUtils.getAttachmentFileName(output.getSerieNumero() + ".xml"))
                     .build();
         }

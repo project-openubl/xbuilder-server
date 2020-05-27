@@ -49,6 +49,9 @@ import static io.restassured.RestAssured.given;
 @QuarkusTest
 class DocumentsResourceTest {
 
+    final String KEYSTORE = "LLAMA-PE-CERTIFICADO-DEMO-10467793549.pfx";
+    final String KEYSTORE_PASSWORD = "password";
+
     @Test
     void testInvoice() throws JsonProcessingException {
         InvoiceInputModel input = InvoiceInputModel.Builder.anInvoiceInputModel()
@@ -373,9 +376,6 @@ class DocumentsResourceTest {
 
     @Test
     void testSignInvoice() throws Exception {
-        final String KEYSTORE = "LLAMA-PE-CERTIFICADO-DEMO-10467793549.pfx";
-        final String KEYSTORE_PASSWORD = "password";
-
         InputStream ksInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(KEYSTORE);
         CertificateDetails CERTIFICATE = CertificateDetailsFactory.create(ksInputStream, KEYSTORE_PASSWORD);
 
@@ -428,4 +428,224 @@ class DocumentsResourceTest {
                 .statusCode(200);
     }
 
+    @Test
+    void testSignCreditNote() throws Exception {
+        InputStream ksInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(KEYSTORE);
+        CertificateDetails CERTIFICATE = CertificateDetailsFactory.create(ksInputStream, KEYSTORE_PASSWORD);
+
+        PrivateKey privateKey = CERTIFICATE.getPrivateKey();
+        X509Certificate certificate = CERTIFICATE.getX509Certificate();
+
+        String privateRsaKeyPem = PemUtils.encodeKey(privateKey);
+        String certificatePem = PemUtils.encodeCertificate(certificate);
+
+        // input
+        CreditNoteInputModel input = CreditNoteInputModel.Builder.aCreditNoteInputModel()
+                .withSerie("FC01")
+                .withNumero(1)
+                .withSerieNumeroComprobanteAfectado("F001-1")
+                .withDescripcionSustento("mi sustento")
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .build())
+                )
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(input);
+
+        given()
+                .body(body)
+                .header("Content-Type", "application/json")
+                .header(DocumentsResource.X_HEADER_PRIVATEKEY, privateRsaKeyPem)
+                .header(DocumentsResource.X_HEADER_CERTIFICATEKEY, certificatePem)
+                .when()
+                .post(ApiApplication.API_BASE + "/documents/credit-note/create")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testSignDebitNote() throws Exception {
+        InputStream ksInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(KEYSTORE);
+        CertificateDetails CERTIFICATE = CertificateDetailsFactory.create(ksInputStream, KEYSTORE_PASSWORD);
+
+        PrivateKey privateKey = CERTIFICATE.getPrivateKey();
+        X509Certificate certificate = CERTIFICATE.getX509Certificate();
+
+        String privateRsaKeyPem = PemUtils.encodeKey(privateKey);
+        String certificatePem = PemUtils.encodeCertificate(certificate);
+
+        // input
+        DebitNoteInputModel input = DebitNoteInputModel.Builder.aDebitNoteInputModel()
+                .withSerie("FD01")
+                .withNumero(1)
+                .withSerieNumeroComprobanteAfectado("F001-1")
+                .withDescripcionSustento("mi sustento")
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                        .withNombre("Carlos Feria")
+                        .withNumeroDocumentoIdentidad("12121212121")
+                        .withTipoDocumentoIdentidad(Catalog6.RUC.toString())
+                        .build()
+                )
+                .withDetalle(Arrays.asList(
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item1")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .build(),
+                        DocumentLineInputModel.Builder.aDocumentLineInputModel()
+                                .withDescripcion("Item2")
+                                .withCantidad(new BigDecimal(10))
+                                .withPrecioUnitario(new BigDecimal(100))
+                                .build())
+                )
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(input);
+
+        given()
+                .body(body)
+                .header("Content-Type", "application/json")
+                .header(DocumentsResource.X_HEADER_PRIVATEKEY, privateRsaKeyPem)
+                .header(DocumentsResource.X_HEADER_CERTIFICATEKEY, certificatePem)
+                .when()
+                .post(ApiApplication.API_BASE + "/documents/debit-note/create")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testSignVoidedDocument() throws Exception {
+        InputStream ksInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(KEYSTORE);
+        CertificateDetails CERTIFICATE = CertificateDetailsFactory.create(ksInputStream, KEYSTORE_PASSWORD);
+
+        PrivateKey privateKey = CERTIFICATE.getPrivateKey();
+        X509Certificate certificate = CERTIFICATE.getX509Certificate();
+
+        String privateRsaKeyPem = PemUtils.encodeKey(privateKey);
+        String certificatePem = PemUtils.encodeCertificate(certificate);
+
+        // input
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2019, Calendar.DECEMBER, 1, 20, 30, 59);
+
+        VoidedDocumentInputModel input = VoidedDocumentInputModel.Builder.aVoidedDocumentInputModel()
+                .withNumero(1)
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withDescripcionSustento("mi razon de baja")
+                .withComprobante(VoidedDocumentLineInputModel.Builder.aVoidedDocumentLineInputModel()
+                        .withSerieNumero("F001-1")
+                        .withTipoComprobante(Catalog1.FACTURA.toString())
+                        .withFechaEmision(calendar.getTimeInMillis())
+                        .build()
+                )
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(input);
+
+        given()
+                .body(body)
+                .header("Content-Type", "application/json")
+                .header(DocumentsResource.X_HEADER_PRIVATEKEY, privateRsaKeyPem)
+                .header(DocumentsResource.X_HEADER_CERTIFICATEKEY, certificatePem)
+                .when()
+                .post(ApiApplication.API_BASE + "/documents/voided-document/create")
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testSignSummaryDocument() throws Exception {
+        InputStream ksInputStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(KEYSTORE);
+        CertificateDetails CERTIFICATE = CertificateDetailsFactory.create(ksInputStream, KEYSTORE_PASSWORD);
+
+        PrivateKey privateKey = CERTIFICATE.getPrivateKey();
+        X509Certificate certificate = CERTIFICATE.getX509Certificate();
+
+        String privateRsaKeyPem = PemUtils.encodeKey(privateKey);
+        String certificatePem = PemUtils.encodeCertificate(certificate);
+
+        // input
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(2019, Calendar.DECEMBER, 1, 20, 30, 59);
+
+        SummaryDocumentInputModel input = SummaryDocumentInputModel.Builder.aSummaryDocumentInputModel()
+                .withNumero(1)
+                .withFechaEmisionDeComprobantesAsociados(calendar.getTimeInMillis())
+                .withProveedor(ProveedorInputModel.Builder.aProveedorInputModel()
+                        .withRuc("12345678912")
+                        .withRazonSocial("Softgreen S.A.C.")
+                        .build()
+                )
+                .withDetalle(Collections.singletonList(
+                        SummaryDocumentLineInputModel.Builder.aSummaryDocumentLineInputModel()
+                                .withTipoOperacion(Catalog19.ADICIONAR.toString())
+                                .withComprobante(SummaryDocumentComprobanteInputModel.Builder.aSummaryDocumentComprobanteInputModel()
+                                        .withTipo(Catalog1.BOLETA.toString())
+                                        .withSerieNumero("B001-1")
+                                        .withCliente(ClienteInputModel.Builder.aClienteInputModel()
+                                                .withNombre("Carlos Feria")
+                                                .withNumeroDocumentoIdentidad("12345678")
+                                                .withTipoDocumentoIdentidad(Catalog6.DNI.toString())
+                                                .build()
+                                        )
+                                        .withImpuestos(SummaryDocumentImpuestosInputModel.Builder.aSummaryDocumentImpuestosInputModel()
+                                                .withIgv(new BigDecimal("100"))
+                                                .build()
+                                        )
+                                        .withValorVenta(SummaryDocumentComprobanteValorVentaInputModel.Builder.aSummaryDocumentComprobanteValorVentaInputModel()
+                                                .withImporteTotal(new BigDecimal("118"))
+                                                .withGravado(new BigDecimal("100"))
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                ))
+                .build();
+
+        ObjectMapper mapper = new ObjectMapper();
+        String body = mapper.writeValueAsString(input);
+
+        given()
+                .body(body)
+                .header("Content-Type", "application/json")
+                .header(DocumentsResource.X_HEADER_PRIVATEKEY, privateRsaKeyPem)
+                .header(DocumentsResource.X_HEADER_CERTIFICATEKEY, certificatePem)
+                .when()
+                .post(ApiApplication.API_BASE + "/documents/summary-document/create")
+                .then()
+                .statusCode(200);
+    }
 }

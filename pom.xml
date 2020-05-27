@@ -43,8 +43,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <compiler-plugin.version>3.8.1</compiler-plugin.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
 
         <maven.compiler.parameters>true</maven.compiler.parameters>
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
@@ -54,7 +54,7 @@
         <freemarker.version>2.3.28</freemarker.version>
         <bouncycastle.version>1.64</bouncycastle.version>
         <keycloak.version>9.0.3</keycloak.version>
-        <xmlbuilder.lib.version>1.0.0.Final</xmlbuilder.lib.version>
+        <xmlbuilder.lib.version>1.0.1.Final</xmlbuilder.lib.version>
     </properties>
 
     <url>https://project-openubl.github.io/</url>
