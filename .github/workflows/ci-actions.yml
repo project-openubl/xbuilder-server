@@ -12,7 +12,7 @@ on:
     - cron:  '0 0 * * *'
 
 env:
-  NATIVE_TEST_MAVEN_OPTS: "-e -B -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:20.0.0-java11"
+  NATIVE_TEST_MAVEN_OPTS: "-e -B -Dquarkus.native.container-build=true -Dquarkus.native.builder-image=quay.io/quarkus/ubi-quarkus-native-image:20.1.0-java11"
 
 jobs:
   build-jdk11:
@@ -207,7 +207,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
           name: projectopenubl/xml-builder
-          dockerfile: api/src/main/docker/Dockerfile.native
+          dockerfile: distribution/server-x/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           snapshot: false

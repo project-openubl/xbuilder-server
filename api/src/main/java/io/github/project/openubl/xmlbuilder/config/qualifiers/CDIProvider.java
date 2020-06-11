@@ -14,13 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.project.openubl.xmlbuilder.resources;
+package io.github.project.openubl.xmlbuilder.config.qualifiers;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import javax.inject.Qualifier;
+import java.lang.annotation.*;
 
-@ApplicationPath(ApiApplication.API_BASE)
-public class ApiApplication extends Application {
-    public static final String API_BASE = "/api";
-    public static final String API_BASE2 = "api";
+@Qualifier
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.TYPE})
+@Documented
+public @interface CDIProvider {
+
 }

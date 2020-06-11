@@ -18,29 +18,33 @@ package io.github.project.openubl.xmlbuilder.config;
 
 import io.github.project.openubl.xmlbuilder.config.qualifiers.CDIProvider;
 import io.github.project.openubl.xmlbuilderlib.clock.SystemClock;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.util.Calendar;
+
 import java.util.TimeZone;
 
-@CDIProvider
-@ApplicationScoped
-public class DefaultSystemClock implements SystemClock {
+import static org.junit.jupiter.api.Assertions.*;
+
+@QuarkusTest
+class DefaultSystemClockTest {
 
     @Inject
-    @ConfigProperty(name = "openubl.timeZone")
-    String timeZone;
+    @CDIProvider
+    SystemClock systemClock;
 
-    @Override
-    public TimeZone getTimeZone() {
-        return TimeZone.getTimeZone(timeZone);
+    @Test
+    public void test_getTimeZone() {
+        TimeZone timeZone = systemClock.getTimeZone();
+
+        assertNotNull(timeZone);
+        assertEquals(TimeZone.getTimeZone("America/Lima"), timeZone);
     }
 
-    @Override
-    public Calendar getCalendarInstance() {
-        return Calendar.getInstance();
+    @Test
+    public void test_getCalendarInstance() {
+        assertNotNull(systemClock.getCalendarInstance());
     }
 
 }

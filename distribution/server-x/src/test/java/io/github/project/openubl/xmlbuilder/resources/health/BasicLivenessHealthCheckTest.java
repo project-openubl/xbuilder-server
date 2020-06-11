@@ -14,13 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.project.openubl.xmlbuilder.resources;
+package io.github.project.openubl.xmlbuilder.resources.health;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+import io.quarkus.test.junit.QuarkusTest;
+import org.junit.jupiter.api.Test;
 
-@ApplicationPath(ApiApplication.API_BASE)
-public class ApiApplication extends Application {
-    public static final String API_BASE = "/api";
-    public static final String API_BASE2 = "api";
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.CoreMatchers.is;
+
+@QuarkusTest
+public class BasicLivenessHealthCheckTest {
+
+    @Test
+    public void testEndpoint() {
+        given()
+                .when().get("/health/live")
+                .then()
+                .statusCode(200)
+                .body("status", is("UP"))
+                .body("checks.size()", is(1))
+                .body("checks[0].status", is("UP"))
+                .body("checks[0].name", is("Server liveness running"));
+    }
 }
