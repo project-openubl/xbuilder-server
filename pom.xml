@@ -119,6 +119,12 @@
 
             <dependency>
                 <groupId>io.github.project-openubl</groupId>
+                <artifactId>xml-builder-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.project-openubl</groupId>
                 <artifactId>quarkus-freemarker</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -149,6 +155,7 @@
     <modules>
         <module>extensions</module>
         <module>api</module>
+        <module>distribution</module>
     </modules>
 
     <build>

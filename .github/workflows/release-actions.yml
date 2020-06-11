@@ -66,16 +66,24 @@ jobs:
       - name: Build with Maven
         run: |
           ./mvnw package
-      - name: Prepare XML Builder archive
+      - name: Prepare XMLBuilder/Server-X archive
         shell: bash
         run: |
-          find api/target -name 'lib' -o -name 'xml-builder-*-runner.jar' | tar -czvf jvm-artifacts.tgz -T -
-      - name: Upload Archive XML Builder
+          find distribution/server-x/target -name 'lib' -o -name 'xml-builder-*-runner.jar' | tar -czvf jvm-server-x-artifacts.tgz -T -
+      - name: Upload Archive XMLBuilder Server-X
         uses: actions/upload-artifact@v1
         with:
-          name: jvm-artifacts
-          path: 'jvm-artifacts.tgz'
-
+          name: jvm-server-x-artifacts
+          path: 'jvm-server-x-artifacts.tgz'
+      - name: Prepare XMLBuilder/War archive
+          shell: bash
+          run: |
+            find distribution/war/target -name 'xml-builder*.war' -type f | tar -czvf jvm-war-artifacts.tgz -T -
+      - name: Upload Archive XMLBuilder War
+        uses: actions/upload-artifact@v1
+        with:
+          name: jvm-war-artifacts
+          path: 'jvm-war-artifacts.tgz'
 
   native-container-artifacts:
     name: Native Container Artifacts JDK11
@@ -127,7 +135,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
           name: projectopenubl/xml-builder
-          dockerfile: api/src/main/docker/Dockerfile.native
+          dockerfile: distribution/server-x/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tag_names: true
@@ -136,7 +144,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
           name: projectopenubl/xml-builder
-          dockerfile: api/src/main/docker/Dockerfile.native
+          dockerfile: distribution/server-x/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           tags: "latest"
@@ -279,7 +287,7 @@ jobs:
       - name: Download Java Artifacts
         uses: actions/download-artifact@v1
         with:
-          name: jvm-artifacts
+          name: jvm-server-x-artifacts
           path: .
       - name: Upload Release JVM Asset
         uses: actions/upload-release-asset@v1
@@ -287,12 +295,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./jvm-artifacts.tgz
-          asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-jvm.tgz
+          asset_path: ./jvm-server-x-artifacts.tgz
+          asset_name: xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-jvm.tgz
           asset_content_type: application/tar+gzip
 
       - name: Clear for Linux Release
-        run: rm -rf ./api/target
+        run: rm -rf ./distribution/server-x/target
       - name: Download Linux Native Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -307,12 +315,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./api/target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner
-          asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-linux
+          asset_path: ./distribution/server-x/target/xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-runner
+          asset_name: xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-linux
           asset_content_type: application/octet-stream
 
       - name: Clear for Windows Release
-        run: rm -rf ./api/target
+        run: rm -rf ./distribution/server-x/target
       - name: Download Windows Native Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -327,13 +335,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./api/target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner.exe
-          asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-win64.exe
+          asset_path: ./distribution/server-x/target/xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-runner.exe
+          asset_name: xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-win64.exe
           asset_label: win64
           asset_content_type: application/octet-stream
 
       - name: Clear for MacOS Release
-        run: rm -rf ./api/target
+        run: rm -rf ./distribution/server-x/target
       - name: Download MacOS Native Artifacts
         uses: actions/download-artifact@v1
         with:
@@ -348,8 +356,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./api/target/xml-builder-api-${{ steps.get_version.outputs.VERSION }}-runner
-          asset_name: xml-builder-api-${{ steps.get_version.outputs.VERSION }}-macos
+          asset_path: ./distribution/server-x/target/xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-runner
+          asset_name: xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-macos
           asset_label: macos
           asset_content_type: application/octet-stream
 

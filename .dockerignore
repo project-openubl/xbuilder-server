@@ -1,7 +1,4 @@
 *
-!api/target/*-runner
-!api/target/*-runner.jar
-!api/target/lib/*
-!api-signer/target/*-runner
-!api-signer/target/*-runner.jar
-!api-signer/target/lib/*
+!distribution/server-x/target/*-runner
+!distribution/server-x/target/*-runner.jar
+!distribution/server-x/target/lib/*

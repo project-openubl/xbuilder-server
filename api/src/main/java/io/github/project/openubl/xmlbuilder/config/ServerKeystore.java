@@ -21,6 +21,7 @@ import io.github.project.openubl.xmlbuilder.utils.CertificateDetailsFactory;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.io.*;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -31,9 +32,11 @@ import java.util.Optional;
 @ApplicationScoped
 public class ServerKeystore {
 
+    @Inject
     @ConfigProperty(name = "openubl.server.keystore.location")
     Optional<String> keystoreLocation;
 
+    @Inject
     @ConfigProperty(name = "openubl.server.keystore.password")
     Optional<String> keystorePassword;
 

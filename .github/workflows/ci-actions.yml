@@ -207,7 +207,7 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
           name: projectopenubl/xml-builder
-          dockerfile: api/src/main/docker/Dockerfile.native
+          dockerfile: distribution/server-x/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           snapshot: false

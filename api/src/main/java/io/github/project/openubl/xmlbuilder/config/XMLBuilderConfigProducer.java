@@ -16,6 +16,7 @@
  */
 package io.github.project.openubl.xmlbuilder.config;
 
+import io.github.project.openubl.xmlbuilder.config.qualifiers.CDIProvider;
 import io.github.project.openubl.xmlbuilderlib.config.Config;
 import io.github.project.openubl.xmlbuilderlib.models.catalogs.Catalog;
 import io.github.project.openubl.xmlbuilderlib.models.catalogs.Catalog10;
@@ -24,32 +25,42 @@ import io.github.project.openubl.xmlbuilderlib.models.catalogs.Catalog9;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import java.math.BigDecimal;
 
+@CDIProvider
 @ApplicationScoped
 public class XMLBuilderConfigProducer implements Config {
 
+    @Inject
     @ConfigProperty(name = "openubl.igv")
     BigDecimal igv;
 
+    @Inject
     @ConfigProperty(name = "openubl.ivap")
     BigDecimal ivap;
 
+    @Inject
     @ConfigProperty(name = "openubl.icb")
     BigDecimal icb;
 
+    @Inject
     @ConfigProperty(name = "openubl.defaultMoneda")
     String defaultMoneda;
 
+    @Inject
     @ConfigProperty(name = "openubl.defaultUnidadMedida")
     String defaultUnidadMedida;
 
+    @Inject
     @ConfigProperty(name = "openubl.defaultTipoIgv")
     String defaultTipoIgv;
 
+    @Inject
     @ConfigProperty(name = "openubl.defaultTipoNotaCredito")
     String defaultTipoNotaCredito;
 
+    @Inject
     @ConfigProperty(name = "openubl.defaultTipoNotaDebito")
     String defaultTipoNotaDebito;
 

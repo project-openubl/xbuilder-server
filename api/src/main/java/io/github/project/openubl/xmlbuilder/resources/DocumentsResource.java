@@ -17,6 +17,7 @@
 package io.github.project.openubl.xmlbuilder.resources;
 
 import io.github.project.openubl.xmlbuilder.config.ServerKeystore;
+import io.github.project.openubl.xmlbuilder.config.qualifiers.CDIProvider;
 import io.github.project.openubl.xmlbuilder.resources.utils.ResourceUtils;
 import io.github.project.openubl.xmlbuilder.utils.CertificateDetails;
 import io.github.project.openubl.xmlbuilderlib.clock.SystemClock;
@@ -67,9 +68,11 @@ public class DocumentsResource {
     public final static String X_HEADER_CERTIFICATEKEY = "X-OPENUBL-CERTIFICATEKEY";
 
     @Inject
+    @CDIProvider
     Config config;
 
     @Inject
+    @CDIProvider
     SystemClock systemClock;
 
     @Inject
