@@ -76,9 +76,9 @@ jobs:
           name: jvm-server-x-artifacts
           path: 'jvm-server-x-artifacts.tgz'
       - name: Prepare XMLBuilder/War archive
-          shell: bash
-          run: |
-            find distribution/war/target -name 'xml-builder-*.war' -type f | tar -czvf jvm-war-artifacts.tgz -T -
+        shell: bash
+        run: |
+          find distribution/war/target -name 'xml-builder-*.war' -type f | tar -czvf jvm-war-artifacts.tgz -T -
       - name: Upload Archive XMLBuilder War
         uses: actions/upload-artifact@v1
         with:
