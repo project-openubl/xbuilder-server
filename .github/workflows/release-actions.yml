@@ -78,7 +78,7 @@ jobs:
       - name: Prepare XMLBuilder/War archive
           shell: bash
           run: |
-            find distribution/war/target -name 'xml-builder*.war' -type f | tar -czvf jvm-war-artifacts.tgz -T -
+            find distribution/war/target -name 'xml-builder-*.war' -type f | tar -czvf jvm-war-artifacts.tgz -T -
       - name: Upload Archive XMLBuilder War
         uses: actions/upload-artifact@v1
         with:
@@ -284,12 +284,12 @@ jobs:
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
 
-      - name: Download Java Artifacts
+      - name: Download Java Server-X Artifacts
         uses: actions/download-artifact@v1
         with:
           name: jvm-server-x-artifacts
           path: .
-      - name: Upload Release JVM Asset
+      - name: Upload Release Server-X JVM Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -298,6 +298,24 @@ jobs:
           asset_path: ./jvm-server-x-artifacts.tgz
           asset_name: xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-jvm.tgz
           asset_content_type: application/tar+gzip
+
+      - name: Download Java War Artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: jvm-war-artifacts
+          path: .
+      - name: Extract Java War Artifacts
+        shell: bash
+        run: tar -xzvf jvm-war-artifacts.tgz
+      - name: Upload Release War JVM Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./distribution/war/target/xml-builder-${{ steps.get_version.outputs.VERSION }}.war
+          asset_name: xml-builder-${{ steps.get_version.outputs.VERSION }}.war
+          asset_content_type: application/octet-stream
 
       - name: Clear for Linux Release
         run: rm -rf ./distribution/server-x/target
