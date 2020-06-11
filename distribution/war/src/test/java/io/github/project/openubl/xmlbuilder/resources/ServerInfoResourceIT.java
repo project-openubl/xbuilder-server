@@ -40,15 +40,13 @@ import static io.restassured.RestAssured.given;
 public class ServerInfoResourceIT extends AbstractResourceTest {
 
     @Test
-    public void getServerInfo() {
+    public void testConfigProperties() {
         given()
                 .when()
                 .get(deploymentURL.toString() + ApiApplication.API_BASE2 + "/server-info")
                 .then()
                 .statusCode(200)
-                .body("clock.time", is(notNullValue()),
-                        "clock.timeZone", is("America/Lima"),
-                        "applicationConfig.igv", is(0.18f),
+                .body("applicationConfig.igv", is(0.18f),
                         "applicationConfig.ivap", is(0.04f),
                         "applicationConfig.icb", is(0.20f),
                         "applicationConfig.defaultMoneda", is("PEN"),
@@ -58,8 +56,22 @@ public class ServerInfoResourceIT extends AbstractResourceTest {
                         "applicationConfig.defaultTipoNotaDebito", is("AUMENTO_EN_EL_VALOR"),
                         "applicationConfig.defaultRegimenPercepcion", is("VENTA_INTERNA"),
                         "applicationConfig.defaultRegimenRetencion", is("TASA_TRES"),
+                        "applicationConfig.timeZone", is("America/Lima"),
                         "applicationConfig.serverKeystoreLocation", is(nullValue()),
                         "applicationConfig.serverKeystorePassword", is(nullValue())
+                );
+    }
+
+    @Test
+    public void testSystemClock() {
+        given()
+                .when()
+                .get(deploymentURL.toString() + ApiApplication.API_BASE2 + "/server-info")
+                .then()
+                .statusCode(200)
+                .body("applicationConfig.timeZone", is("America/Lima"),
+                        "clock.time", is(notNullValue()),
+                        "clock.timeZone", is("America/Lima")
                 );
     }
 
