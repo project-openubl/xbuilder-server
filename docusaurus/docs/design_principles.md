@@ -3,9 +3,9 @@ id: design_principles
 title: Design principles
 ---
 
-- **You don't have to know UBL standard** - XBuilder do not require you to know the UBL details, it exposes a set of POJOs that are, internally, transpiled into XML files that follows the UBL standards.
-- **Math operations must be provided out of the box** - XBuilder executes all math operations required to fill certain values in the XML files. Math operations like taxes, total amounts, discounts, etc. must be executed internally.
-- **Apply default values when possible** - XBuilder should fill all missing data with default values. XBuilder requires only minimal data.
+- **Easy integration** - _XBuilder Server_ allows easy integration with any third party software regardless of their programing language or architecture.
+- **Hybrid** - _XBuilder Server_ can be deployed in mutiple cloud platforms or bare-metals. You can go to the cloud and use container images and/or go as serveless. If the cloud if not for you then you can always deploy _XBuilder Server_ in your own datacenter.
+- **XBuilder Sync** - _XBuilder Server_ supports 100% of features of XBuilder so whenever a new feature or bug is solved into XBuilder you will have it for free.
 
 ## How XBuilder works
 

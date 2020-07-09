@@ -1,6 +1,6 @@
 module.exports = {
   someSidebar: {
-    XBuilder: ["introduction", "design_principles", "contributing"],
+    "XBuilder Server": ["introduction", "design_principles", "contributing"],
     "Getting started": ["installation", "example"],
     Guides: [
       "concepts",

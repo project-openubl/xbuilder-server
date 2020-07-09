@@ -8,35 +8,47 @@ import styles from "./styles.module.css";
 
 const features = [
   {
-    title: <>UBL knowledge not required</>,
-    imageUrl: "img/knowledge.png",
+    title: <>Easy integration</>,
+    imageUrl: "img/integration.png",
     description: (
       <>
-        <code>XBuilder</code> do not require you to know the <code>UBL</code>{" "}
-        details, it exposes a set of <code>POJOs</code> that are, internally,
-        transpiled into XML files that follows the <code>UBL</code> standards.
+        <code>XBuilder Server</code> exposes a set of REST endpoints that can be
+        consumed by any programing language.
       </>
     ),
   },
   {
-    title: <>Math operations</>,
-    imageUrl: "img/math.png",
+    title: <>Hybrid</>,
+    imageUrl: "img/hybrid.png",
     description: (
       <>
-        <code>XBuilder</code> executes all math operations required to fill
-        certain values in the <code>XML</code> files. Math operations like
-        taxes, total amounts, discounts, etc. must be executed internally.
+        <code>XBuilder Server</code> can be deployed in mutiple cloud platforms
+        or bare-metals. You can go to the cloud and use <i>container images</i>{" "}
+        and/or go as <i>serveless</i>. If the cloud if not for you then you can
+        always deploy <code>XBuilder Server</code> in your own datacenter.
       </>
     ),
   },
   {
-    title: <>Requires min data</>,
-    imageUrl: "img/mindata.png",
+    title: <>XBuilder</>,
+    imageUrl: "img/logo_icon.png",
     description: (
       <>
-        <code>XBuilder</code> fills all missing data with default values.{" "}
-        <code>XBuilder</code>
-        requires only minimal data.
+        <code>XBuilder Server</code> supports 100% of features of{" "}
+        <a
+          href="https://project-openubl.github.io/xbuilder-docs/"
+          target="_blank"
+        >
+          XBuilder
+        </a>{" "}
+        so whenever a new feature or bug is solved into{" "}
+        <a
+          href="https://project-openubl.github.io/xbuilder-docs/"
+          target="_blank"
+        >
+          XBuilder
+        </a>{" "}
+        you will have it for free.
       </>
     ),
   },
@@ -67,7 +79,10 @@ function Home() {
     >
       <header className={clsx("hero hero--primary", styles.heroBanner)}>
         <div className="container">
-          <h1 className="hero__title">{siteConfig.title}</h1>
+          <h1 className="hero__title">
+            {siteConfig.title}{" "}
+            <strong style={{ color: "#733a0f" }}>Server</strong>
+          </h1>
           <p className="hero__subtitle">{siteConfig.tagline}</p>
           <div className={styles.buttons}>
             <Link

@@ -1,16 +1,16 @@
 module.exports = {
   title: "XBuilder",
-  tagline: "Java library for creating and signing XML files based on Universal Bussiness Language (UBL)",
-  url: "https://project-openubl.github.io/xbuilder-docs/",
-  baseUrl: "/xbuilder-docs/",
+  tagline: "Microservice for creating and signing XML files based on Universal Bussiness Language (UBL)",
+  url: "https://project-openubl.github.io/xbuilder-server-docs/",
+  baseUrl: "/xbuilder-server-docs/",
   favicon: "img/favicon.ico",
   organizationName: "project-openubl", // Usually your GitHub org/user name.
-  projectName: "xbuilder-docs", // Usually your repo name.
+  projectName: "xbuilder-server-docs", // Usually your repo name.
   themeConfig: {
     navbar: {
       title: "",
       logo: {
-        alt: "XBuilder logo",
+        alt: "XBuilder Server logo",
         src: "img/logo.svg",
       },
       links: [
@@ -22,7 +22,7 @@ module.exports = {
         },
         // { to: "blog", label: "Blog", position: "left" },
         {
-          href: "https://github.com/project-openubl/xbuilder",
+          href: "https://github.com/project-openubl/xbuilder-server",
           label: "GitHub",
           position: "right",
         },
@@ -58,7 +58,7 @@ module.exports = {
           items: [
             {
               label: "GitHub",
-              href: "https://github.com/project-openubl/xbuilder",
+              href: "https://github.com/project-openubl/xbuilder-server",
             },
           ],
         },
@@ -86,13 +86,13 @@ module.exports = {
           sidebarPath: require.resolve("./sidebars.js"),
           // Please change this to your repo.
           editUrl:
-            "https://github.com/project-openubl/xbuilder/edit/master/docusaurus/",
+            "https://github.com/project-openubl/xbuilder-server/edit/master/docusaurus/",
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            "https://github.com/project-openubl/xbuilder/edit/master/docusaurus/blog/",
+            "https://github.com/project-openubl/xbuilder-server/edit/master/docusaurus/blog/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
