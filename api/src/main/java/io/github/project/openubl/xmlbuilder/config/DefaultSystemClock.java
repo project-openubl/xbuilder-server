@@ -30,7 +30,7 @@ import java.util.TimeZone;
 public class DefaultSystemClock implements SystemClock {
 
     @Inject
-    @ConfigProperty(name = "openubl.timeZone")
+    @ConfigProperty(name = "openubl.timezone")
     String timeZone;
 
     @Override

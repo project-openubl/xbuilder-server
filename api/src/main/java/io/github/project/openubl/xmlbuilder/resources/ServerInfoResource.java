@@ -55,35 +55,35 @@ public class ServerInfoResource {
     BigDecimal icb;
 
     @Inject
-    @ConfigProperty(name = "openubl.defaultMoneda")
+    @ConfigProperty(name = "openubl.defaults.moneda")
     String defaultMoneda;
 
     @Inject
-    @ConfigProperty(name = "openubl.defaultUnidadMedida")
+    @ConfigProperty(name = "openubl.defaults.unidad-medida")
     String defaultUnidadMedida;
 
     @Inject
-    @ConfigProperty(name = "openubl.defaultTipoIgv")
+    @ConfigProperty(name = "openubl.defaults.tipo-igv")
     String defaultTipoIgv;
 
     @Inject
-    @ConfigProperty(name = "openubl.defaultTipoNotaCredito")
+    @ConfigProperty(name = "openubl.defaults.tipo-nota-credito")
     String defaultTipoNotaCredito;
 
     @Inject
-    @ConfigProperty(name = "openubl.defaultTipoNotaDebito")
+    @ConfigProperty(name = "openubl.defaults.tipo-nota-debito")
     String defaultTipoNotaDebito;
 
     @Inject
-    @ConfigProperty(name = "openubl.defaultRegimenPercepcion")
+    @ConfigProperty(name = "openubl.defaults.regimen-percepcion")
     String defaultRegimenPercepcion;
 
     @Inject
-    @ConfigProperty(name = "openubl.defaultRegimenRetencion")
+    @ConfigProperty(name = "openubl.defaults.regimen-retencion")
     String defaultRegimenRetencion;
 
     @Inject
-    @ConfigProperty(name = "openubl.timeZone")
+    @ConfigProperty(name = "openubl.timezone")
     String timeZone;
 
     @Inject

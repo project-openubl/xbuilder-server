@@ -12,7 +12,7 @@ Microservice for creating and signing XML files based on Universal Bussiness Lan
 The easiest way of starting _XBuilder Server_ is using Docker.
 
 ```shell script
-docker run -p 8080:8080 docker.io/projectopenubl/xbuilder
+docker run -p 8080:8080 docker.io/projectopenubl/xbuilder-server
 ```
 
 Then open [http://localhost:8080](http://localhost:8080) and verify that the server is running.
