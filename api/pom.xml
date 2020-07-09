@@ -23,18 +23,18 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.project-openubl</groupId>
-        <artifactId>xml-builder</artifactId>
+        <artifactId>xbuilder-server</artifactId>
         <version>1.2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>xml-builder-api</artifactId>
-    <name>XML Builder :: API</name>
+    <artifactId>xbuilder-server-api</artifactId>
+    <name>XBuilder Server :: API</name>
 
     <dependencies>
         <dependency>
             <groupId>io.github.project-openubl</groupId>
-            <artifactId>xml-builder-lib</artifactId>
+            <artifactId>xbuilder</artifactId>
             <version>${xmlbuilder.lib.version}</version>
             <exclusions>
                 <exclusion>

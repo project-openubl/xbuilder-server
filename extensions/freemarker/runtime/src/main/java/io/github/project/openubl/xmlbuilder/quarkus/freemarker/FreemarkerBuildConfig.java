@@ -23,7 +23,7 @@ import io.quarkus.runtime.annotations.ConfigRoot;
 import java.util.List;
 import java.util.Optional;
 
-@ConfigRoot(name = "xml-builder.freemarker", phase = ConfigPhase.BUILD_AND_RUN_TIME_FIXED)
+@ConfigRoot(name = "xbuilder-server.freemarker", phase = ConfigPhase.BUILD_AND_RUN_TIME_FIXED)
 public class FreemarkerBuildConfig {
 
     /**

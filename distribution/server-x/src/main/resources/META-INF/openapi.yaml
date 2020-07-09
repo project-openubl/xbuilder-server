@@ -4,7 +4,7 @@ info:
   title: XML Builder API
   contact:
     name: XML Builder API Support
-    url: https://github.com/project-openubl/xml-builder/issues
+    url: https://github.com/project-openubl/xbuilder-server/issues
     email: projectopenubl+subscribe@googlegroups.com
   license:
     name: Eclipse Public License - v 2.0

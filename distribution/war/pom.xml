@@ -23,12 +23,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.github.project-openubl</groupId>
-        <artifactId>xml-builder-distribution-parent</artifactId>
+        <artifactId>xbuilder-server-distribution-parent</artifactId>
         <version>1.2.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>xml-builder-war</artifactId>
-    <name>XML Builder Distribution :: War</name>
+    <artifactId>xbuilder-server-war</artifactId>
+    <name>XBuilder Server Distribution :: War</name>
     <packaging>war</packaging>
 
     <properties>
@@ -63,7 +63,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.project-openubl</groupId>
-            <artifactId>xml-builder-api</artifactId>
+            <artifactId>xbuilder-server-api</artifactId>
         </dependency>
 
         <dependency>
@@ -101,7 +101,7 @@
     </dependencies>
 
     <build>
-        <finalName>xml-builder-${project.version}</finalName>
+        <finalName>xbuilder-server-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

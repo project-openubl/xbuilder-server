@@ -31,12 +31,3 @@ quarkus.log
 
 bin/
 .DS_Store
-
-# ommit
-/api/src/main/resources/META-INF/kmodule.xml
-/api/src/main/resources/org/openublpe/xmlbuilder/rules/files/
-/api-signer/src/main/resources/META-INF/kmodule.xml
-/api-signer/src/main/resources/org/openublpe/xmlbuilder/rules/files/
-
-/ui/api/xml-builder-ui/
-/ui/api-signer/xml-builder-ee-ui/

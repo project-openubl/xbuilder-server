@@ -66,20 +66,20 @@ jobs:
       - name: Build with Maven
         run: |
           ./mvnw package
-      - name: Prepare XMLBuilder/Server-X archive
+      - name: Prepare XBuilder/Server-X archive
         shell: bash
         run: |
-          find distribution/server-x/target -name 'lib' -o -name 'xml-builder-*-runner.jar' | tar -czvf jvm-server-x-artifacts.tgz -T -
-      - name: Upload Archive XMLBuilder Server-X
+          find distribution/server-x/target -name 'lib' -o -name 'xbuilder-server-*-runner.jar' | tar -czvf jvm-server-x-artifacts.tgz -T -
+      - name: Upload Archive XBuilder Server-X
         uses: actions/upload-artifact@v1
         with:
           name: jvm-server-x-artifacts
           path: 'jvm-server-x-artifacts.tgz'
-      - name: Prepare XMLBuilder/War archive
+      - name: Prepare XBuilder/War archive
         shell: bash
         run: |
-          find distribution/war/target -name 'xml-builder-*.war' -type f | tar -czvf jvm-war-artifacts.tgz -T -
-      - name: Upload Archive XMLBuilder War
+          find distribution/war/target -name 'xbuilder-server-*.war' -type f | tar -czvf jvm-war-artifacts.tgz -T -
+      - name: Upload Archive XBuilder War
         uses: actions/upload-artifact@v1
         with:
           name: jvm-war-artifacts
@@ -109,7 +109,7 @@ jobs:
           eval mvn $NATIVE_TEST_MAVEN_OPTS -Pnative package
       - name: Prepare archive
         shell: bash
-        run: find . -name 'xml-builder-*-runner' -type f | tar -czvf native-container-artifacts.tgz -T -
+        run: find . -name 'xbuilder-server-*-runner' -type f | tar -czvf native-container-artifacts.tgz -T -
       - name: Upload Archive
         uses: actions/upload-artifact@v1
         with:
@@ -134,7 +134,7 @@ jobs:
         # Uses sha for added security since tags can be updated
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
-          name: projectopenubl/xml-builder
+          name: projectopenubl/xbuilder-server
           dockerfile: distribution/server-x/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -143,7 +143,7 @@ jobs:
         # Uses sha for added security since tags can be updated
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
-          name: projectopenubl/xml-builder
+          name: projectopenubl/xbuilder-server
           dockerfile: distribution/server-x/src/main/docker/Dockerfile.native
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -173,7 +173,7 @@ jobs:
         run: ./mvnw package -Dnative
       - name: Prepare archive
         shell: bash
-        run: find . -name 'xml-builder-*-runner' -type f | tar -czvf native-linux-artifacts.tgz -T -
+        run: find . -name 'xbuilder-server-*-runner' -type f | tar -czvf native-linux-artifacts.tgz -T -
       - name: Upload Archive
         uses: actions/upload-artifact@v1
         with:
@@ -216,7 +216,7 @@ jobs:
         shell: bash
         run: |
           # Disambiguate windows find from cygwin find
-          /usr/bin/find . -name 'xml-builder-*-runner.exe' -type f | tar -czvf native-windows-artifacts.tgz -T -
+          /usr/bin/find . -name 'xbuilder-server-*-runner.exe' -type f | tar -czvf native-windows-artifacts.tgz -T -
       - name: Upload failure Archive
         uses: actions/upload-artifact@v1
         with:
@@ -247,7 +247,7 @@ jobs:
         run: ./mvnw package -Dnative
       - name: Prepare archive
         shell: bash
-        run: find . -name 'xml-builder-*-runner' -type f | tar -czvf native-macos-artifacts.tgz -T -
+        run: find . -name 'xbuilder-server-*-runner' -type f | tar -czvf native-macos-artifacts.tgz -T -
       - name: Upload Archive
         uses: actions/upload-artifact@v1
         with:
@@ -296,7 +296,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./jvm-server-x-artifacts.tgz
-          asset_name: xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-jvm.tgz
+          asset_name: xbuilder-server-${{ steps.get_version.outputs.VERSION }}-jvm.tgz
           asset_content_type: application/tar+gzip
 
       - name: Download Java War Artifacts
@@ -313,8 +313,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./distribution/war/target/xml-builder-${{ steps.get_version.outputs.VERSION }}.war
-          asset_name: xml-builder-${{ steps.get_version.outputs.VERSION }}.war
+          asset_path: ./distribution/war/target/xbuilder-server-${{ steps.get_version.outputs.VERSION }}.war
+          asset_name: xbuilder-server-${{ steps.get_version.outputs.VERSION }}.war
           asset_content_type: application/octet-stream
 
       - name: Clear for Linux Release
@@ -333,8 +333,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./distribution/server-x/target/xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-runner
-          asset_name: xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-linux
+          asset_path: ./distribution/server-x/target/xbuilder-server-${{ steps.get_version.outputs.VERSION }}-runner
+          asset_name: xbuilder-server-${{ steps.get_version.outputs.VERSION }}-linux
           asset_content_type: application/octet-stream
 
       - name: Clear for Windows Release
@@ -353,8 +353,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./distribution/server-x/target/xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-runner.exe
-          asset_name: xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-win64.exe
+          asset_path: ./distribution/server-x/target/xbuilder-server-${{ steps.get_version.outputs.VERSION }}-runner.exe
+          asset_name: xbuilder-server-${{ steps.get_version.outputs.VERSION }}-win64.exe
           asset_label: win64
           asset_content_type: application/octet-stream
 
@@ -374,8 +374,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./distribution/server-x/target/xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-runner
-          asset_name: xml-builder-server-x-${{ steps.get_version.outputs.VERSION }}-macos
+          asset_path: ./distribution/server-x/target/xbuilder-server-${{ steps.get_version.outputs.VERSION }}-runner
+          asset_name: xbuilder-server-${{ steps.get_version.outputs.VERSION }}-macos
           asset_label: macos
           asset_content_type: application/octet-stream
 

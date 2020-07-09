@@ -23,18 +23,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.project-openubl</groupId>
-    <artifactId>xml-builder</artifactId>
+    <artifactId>xbuilder-server</artifactId>
     <version>1.2.0-SNAPSHOT</version>
 
-    <name>XML Builder :: Parent</name>
-    <description>Microservice for sending XML files to SUNAT</description>
+    <name>XBuilder Server :: Parent</name>
+    <description>Microservice for creating XML files based on UBL</description>
     <packaging>pom</packaging>
 
     <properties>
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
 
-        <quarkus-plugin.version>1.5.1.Final</quarkus-plugin.version>
-        <quarkus.platform.version>1.5.1.Final</quarkus.platform.version>
+        <quarkus-plugin.version>1.6.0.Final</quarkus-plugin.version>
+        <quarkus.platform.version>1.6.0.Final</quarkus.platform.version>
 
         <jandex.version>1.0.7</jandex.version>
         <jacoco.version>0.8.5</jacoco.version>
@@ -54,10 +54,10 @@
         <freemarker.version>2.3.28</freemarker.version>
         <bouncycastle.version>1.64</bouncycastle.version>
         <keycloak.version>9.0.3</keycloak.version>
-        <xmlbuilder.lib.version>1.0.1.Final</xmlbuilder.lib.version>
+        <xmlbuilder.lib.version>1.1.0.Final</xmlbuilder.lib.version>
     </properties>
 
-    <url>https://project-openubl.github.io/</url>
+    <url>https://project-openubl.github.io/xbuilder-server-docs/</url>
 
     <licenses>
         <license>
@@ -81,9 +81,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/project-openubl/xml-builder</url>
-        <connection>scm:git:git://github.com/project-openubl/xml-builder.git</connection>
-        <developerConnection>scm:git:git@github.com:project-openubl/xml-builder.git</developerConnection>
+        <url>https://github.com/project-openubl/xbuilder-server</url>
+        <connection>scm:git:git://github.com/project-openubl/xbuilder-server.git</connection>
+        <developerConnection>scm:git:git@github.com:project-openubl/xbuilder-server.git</developerConnection>
     </scm>
 
     <distributionManagement>
@@ -140,7 +140,7 @@
 
             <dependency>
                 <groupId>io.github.project-openubl</groupId>
-                <artifactId>xml-builder-api</artifactId>
+                <artifactId>xbuilder-server-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
@@ -161,7 +161,7 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <version>3.0</version>
                 <configuration>
-                    <header>copyright.txt</header>
+                    <header>tools/copyright.txt</header>
                     <properties>
                         <owner>Project OpenUBL</owner>
                         <email>projectopenubl+subscribe@googlegroups.com</email>
@@ -171,6 +171,7 @@
                         <exclude>**/src/test/resources/**</exclude>
                         <exclude>**/src/main/resources/**</exclude>
                         <exclude>.github/**</exclude>
+                        <exclude>docusaurus/**</exclude>
                         <exclude>.mvn/**</exclude>
                         <exclude>mvnw</exclude>
                         <exclude>mvnw.cmd</exclude>
