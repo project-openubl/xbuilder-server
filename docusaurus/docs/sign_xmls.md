@@ -1,49 +1,18 @@
 ---
-id: example
-title: Example
+id: sign_xmls
+title: Sign XMLs
 ---
 
-Once you started _XBuilder Server_ following any of the methods described in [installation](./installation) you should be able to:
+There are 2 ways of signing your XMLs:
 
-- Create XML files based on UBL
-- Sign XML files
+- Create your XML files using `X-OPENBUL-PRIVATEKEY` and `X-OPENUBL-CERTIFICATEKEY` headers.
+- Configure the server and use a single certificate to sign all XMLs,
 
-## Create XML
+## Method 1: Sign using Headers
 
-Open a terminal or the tool of your preference and execute:
+You need to provide 3 things:
 
-```shell script
-curl -X POST \
--H "Content-Type: application/json" \
--d '{
-    "serie": "F001",
-    "numero": 1,
-    "proveedor": {
-        "ruc": "12345678912",
-        "razonSocial": "Project OpenUBL"
-    },
-    "cliente": {
-        "tipoDocumentoIdentidad": "RUC",
-        "numeroDocumentoIdentidad": "12312312312",
-        "nombre": "Nombre de mi cliente"
-    },
-    "detalle": [
-        {
-        "descripcion": "Nombre de producto o servicio",
-        "precioUnitario": 1,
-        "cantidad": 1,
-        "tipoIgv": "GRAVADO_OPERACION_ONEROSA"
-        }
-    ]
-}' \
-http://localhost:8080/api/documents/invoice/create
-```
-
-## Sign XML
-
-For creating an XML and also sign it you need to provide 3 things:
-
-- **JSON input** - The body of the request which contains info about the document you are about to create.
+- **Body** - The body of the request which contains info about the document you are about to create.
 - **X-OPENBUL-PRIVATEKEY** - The header which contains the PEM encoded version of your private key.
 - **X-OPENUBL-CERTIFICATEKEY** - The header which contains the PEM encoded version of your certificate.
 
@@ -75,3 +44,16 @@ curl -X POST \
 }' \
 http://localhost:8080/api/documents/invoice/create
 ```
+
+## Method 2: Sign configuring the server
+
+You need to configure the properties `openubl.server.keystore.location` and `openubl.server.keystore.password` so every single XML is signed.
+
+> Even after using this method you are always able to override the certificate to sign an XML using the previous method.
+
+| variable                         | default value | description                                                                                            |
+| -------------------------------- | ------------- | ------------------------------------------------------------------------------------------------------ |
+| openubl.server.keystore.location | _null_        | (Optional) The location of the certificate you want to use if you'd like to sign all your certificates |
+| openubl.server.keystore.password | _null_        | (Optional) The password of the certificate you want to use if you'd like to sign all your certificates |
+
+To know more about how to override properties in the server read [Configuration](./configuration)
