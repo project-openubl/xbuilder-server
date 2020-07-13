@@ -64,8 +64,8 @@ public class DocumentsResource {
 
     public final static String SIGNATURE_ID = "PROJECT-OPENUBL";
 
-    public final static String X_HEADER_PRIVATEKEY = "X-OPENBUL-PRIVATEKEY";
-    public final static String X_HEADER_CERTIFICATEKEY = "X-OPENUBL-CERTIFICATEKEY";
+    public final static String X_HEADER_PRIVATEKEY = "x-openubl-privatekey";
+    public final static String X_HEADER_CERTIFICATEKEY = "x-openubl-certificatekey";
 
     @Inject
     @CDIProvider

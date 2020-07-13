@@ -8,18 +8,18 @@
 /* You can override the default Infima variables here. */
 :root {
   --ifm-font-family-base: "Red Hat Text", "Overpass", helvetica, sans-serif;
-  --ifm-color-primary: #EC7A08;
-  --ifm-color-primary-dark: #C46100;
-  --ifm-color-primary-darker: #8F4700;
-  --ifm-color-primary-darkest: #773D00;
-  --ifm-color-primary-light: #EC7A08;
-  --ifm-color-primary-lighter: #EF9234;
-  --ifm-color-primary-lightest: #F4B678;
+  --ifm-color-primary: #ec7a08;
+  --ifm-color-primary-dark: #c46100;
+  --ifm-color-primary-darker: #8f4700;
+  --ifm-color-primary-darkest: #773d00;
+  --ifm-color-primary-light: #ec7a08;
+  --ifm-color-primary-lighter: #ef9234;
+  --ifm-color-primary-lightest: #f4b678;
   --ifm-code-font-size: 95%;
 }
 
 .hero.hero--primary {
-  --ifm-hero-background-color: #EC7A08;
+  --ifm-hero-background-color: #ec7a08;
   /* --ifm-hero-text-color: var(--ifm-font-color-base); */
   background-color: var(--ifm-hero-background-color);
   color: var(--ifm-hero-text-color);
@@ -32,7 +32,7 @@
   color: var(--ifm-hero-text-color);
 }
 
-.hero.hero--primary .button.button--secondary {  
+.hero.hero--primary .button.button--secondary {
   color: #fff !important;
 }
 
@@ -45,4 +45,9 @@
 
 .footer.footer--dark {
   --ifm-footer-background-color: #000;
+}
+
+/* Swagger */
+.swagger-ui pre {
+  background-color: transparent;
 }

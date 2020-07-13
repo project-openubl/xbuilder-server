@@ -14,7 +14,8 @@
     "@docusaurus/preset-classic": "^2.0.0-alpha.58",
     "clsx": "^1.1.1",
     "react": "^16.8.4",
-    "react-dom": "^16.8.4"
+    "react-dom": "^16.8.4",
+    "swagger-ui-react": "^3.28.0"
   },
   "browserslist": {
     "production": [

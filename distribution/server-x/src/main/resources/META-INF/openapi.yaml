@@ -1,15 +1,6 @@
 ---
-openapi: 3.0.1
 info:
-  title: XSender Server API
-  contact:
-    name: XSender Server Support
-    url: https://github.com/project-openubl/xbuilder-server/issues
-    email: projectopenubl+subscribe@googlegroups.com
-  license:
-    name: Eclipse Public License - v 2.0
-    url: https://www.eclipse.org/legal/epl-2.0/
-  version: "1.0.0.Final"
+  title: XBuilder Server API
 tags:
   - name: enrich
     description: Enrichment related operations.

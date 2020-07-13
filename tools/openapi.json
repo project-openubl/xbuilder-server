@@ -1,15 +1,8 @@
 ---
 openapi: 3.0.1
 info:
-  title: XSender Server API
-  contact:
-    name: XSender Server API Support
-    url: https://github.com/project-openubl/xbuilder-server/issues
-    email: projectopenubl+subscribe@googlegroups.com
-  license:
-    name: Eclipse Public License - v 2.0
-    url: https://www.eclipse.org/legal/epl-2.0/
-  version: 1.0.0.Final
+  title: XBuilder Server API
+  version: "1.0"
 tags:
 - name: enrich
   description: Enrichment related operations.
@@ -22,11 +15,11 @@ paths:
       - create
       summary: Create a XML file from the input
       parameters:
-      - name: X-OPENBUL-PRIVATEKEY
+      - name: x-openubl-certificatekey
         in: header
         schema:
           type: string
-      - name: X-OPENUBL-CERTIFICATEKEY
+      - name: x-openubl-privatekey
         in: header
         schema:
           type: string
@@ -65,11 +58,11 @@ paths:
       - create
       summary: Create a XML file from the input
       parameters:
-      - name: X-OPENBUL-PRIVATEKEY
+      - name: x-openubl-certificatekey
         in: header
         schema:
           type: string
-      - name: X-OPENUBL-CERTIFICATEKEY
+      - name: x-openubl-privatekey
         in: header
         schema:
           type: string
@@ -108,11 +101,11 @@ paths:
       - create
       summary: Create a XML file from the input
       parameters:
-      - name: X-OPENBUL-PRIVATEKEY
+      - name: x-openubl-certificatekey
         in: header
         schema:
           type: string
-      - name: X-OPENUBL-CERTIFICATEKEY
+      - name: x-openubl-privatekey
         in: header
         schema:
           type: string
@@ -151,11 +144,11 @@ paths:
       - create
       summary: Create a XML file from the input
       parameters:
-      - name: X-OPENBUL-PRIVATEKEY
+      - name: x-openubl-certificatekey
         in: header
         schema:
           type: string
-      - name: X-OPENUBL-CERTIFICATEKEY
+      - name: x-openubl-privatekey
         in: header
         schema:
           type: string
@@ -194,11 +187,11 @@ paths:
       - create
       summary: Create a XML file from the input
       parameters:
-      - name: X-OPENBUL-PRIVATEKEY
+      - name: x-openubl-certificatekey
         in: header
         schema:
           type: string
-      - name: X-OPENUBL-CERTIFICATEKEY
+      - name: x-openubl-privatekey
         in: header
         schema:
           type: string
@@ -234,11 +227,11 @@ paths:
   /api/documents/perception/create:
     post:
       parameters:
-      - name: X-OPENBUL-PRIVATEKEY
+      - name: x-openubl-certificatekey
         in: header
         schema:
           type: string
-      - name: X-OPENUBL-CERTIFICATEKEY
+      - name: x-openubl-privatekey
         in: header
         schema:
           type: string
@@ -267,11 +260,11 @@ paths:
   /api/documents/retention/create:
     post:
       parameters:
-      - name: X-OPENBUL-PRIVATEKEY
+      - name: x-openubl-certificatekey
         in: header
         schema:
           type: string
-      - name: X-OPENUBL-CERTIFICATEKEY
+      - name: x-openubl-privatekey
         in: header
         schema:
           type: string

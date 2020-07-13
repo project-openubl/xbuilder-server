@@ -1,6 +1,7 @@
 module.exports = {
   title: "XBuilder",
-  tagline: "Microservice for creating and signing XML files based on Universal Bussiness Language (UBL)",
+  tagline:
+    "Microservice for creating and signing XML files based on Universal Bussiness Language (UBL)",
   url: "https://project-openubl.github.io/xbuilder-server-docs/",
   baseUrl: "/xbuilder-server-docs/",
   favicon: "img/favicon.ico",
@@ -21,6 +22,7 @@ module.exports = {
           position: "left",
         },
         // { to: "blog", label: "Blog", position: "left" },
+        { to: "api", label: "API", position: "left" },
         {
           href: "https://github.com/project-openubl/xbuilder-server",
           label: "GitHub",
@@ -69,7 +71,7 @@ module.exports = {
       trackingID: "UA-152706512-2",
     },
     gtag: {
-      trackingID: 'UA-152706512-2',
+      trackingID: "UA-152706512-2",
     },
   },
   stylesheets: [
