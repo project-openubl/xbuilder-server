@@ -1,9 +1,9 @@
 ---
 openapi: 3.0.1
 info:
-  title: XML Builder API
+  title: XSender Server API
   contact:
-    name: XML Builder API Support
+    name: XSender Server Support
     url: https://github.com/project-openubl/xbuilder-server/issues
     email: projectopenubl+subscribe@googlegroups.com
   license:
