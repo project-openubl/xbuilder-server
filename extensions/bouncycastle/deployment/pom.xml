@@ -24,7 +24,7 @@
     <parent>
         <groupId>io.github.project-openubl</groupId>
         <artifactId>quarkus-extensions-bouncycastle-parent</artifactId>
-        <version>1.2.1.Final</version>
+        <version>1.2.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>quarkus-bouncycastle-deployment</artifactId>

@@ -24,7 +24,7 @@
 
     <groupId>io.github.project-openubl</groupId>
     <artifactId>xbuilder-server</artifactId>
-    <version>1.2.1.Final</version>
+    <version>1.2.2-SNAPSHOT</version>
 
     <name>XBuilder Server :: Parent</name>
     <description>Microservice for creating XML files based on UBL</description>
