@@ -22,6 +22,7 @@ module.exports = {
           position: "left",
         },
         // { to: "blog", label: "Blog", position: "left" },
+        // { to: "blog", label: "Blog", position: "left" },
         { to: "api", label: "API", position: "left" },
         {
           href: "https://github.com/project-openubl/xbuilder-server",
