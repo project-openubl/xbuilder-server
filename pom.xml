@@ -51,7 +51,7 @@
 
         <license.dir>${basedir}</license.dir>
 
-        <freemarker.version>2.3.28</freemarker.version>
+        <freemarker.version>2.3.31</freemarker.version>
         <bouncycastle.version>1.64</bouncycastle.version>
         <keycloak.version>9.0.3</keycloak.version>
         <xmlbuilder.lib.version>1.1.0.Final</xmlbuilder.lib.version>
