@@ -54,7 +54,7 @@
         <freemarker.version>2.3.28</freemarker.version>
         <bouncycastle.version>1.64</bouncycastle.version>
         <keycloak.version>9.0.3</keycloak.version>
-        <xmlbuilder.lib.version>1.1.0.Final</xmlbuilder.lib.version>
+        <xmlbuilder.lib.version>1.1.6.Final</xmlbuilder.lib.version>
     </properties>
 
     <url>https://project-openubl.github.io/xbuilder-server-docs/</url>
