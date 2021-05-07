@@ -53,7 +53,7 @@
 
         <freemarker.version>2.3.28</freemarker.version>
         <bouncycastle.version>1.64</bouncycastle.version>
-        <keycloak.version>9.0.3</keycloak.version>
+        <keycloak.version>13.0.0</keycloak.version>
         <xmlbuilder.lib.version>1.1.0.Final</xmlbuilder.lib.version>
     </properties>
 
