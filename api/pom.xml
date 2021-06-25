@@ -77,7 +77,7 @@
             <groupId>org.eclipse.microprofile.health</groupId>
             <artifactId>microprofile-health-api</artifactId>
             <scope>provided</scope>
-            <version>2.2</version>
+            <version>3.1</version>
         </dependency>
     </dependencies>
 </project>
