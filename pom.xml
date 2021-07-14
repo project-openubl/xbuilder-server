@@ -34,7 +34,7 @@
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
 
         <quarkus-plugin.version>1.8.3.Final</quarkus-plugin.version>
-        <quarkus.platform.version>1.8.3.Final</quarkus.platform.version>
+        <quarkus.platform.version>2.0.2.Final</quarkus.platform.version>
 
         <jandex.version>1.0.7</jandex.version>
         <jacoco.version>0.8.5</jacoco.version>
